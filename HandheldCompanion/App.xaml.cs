@@ -65,23 +65,7 @@ namespace HandheldCompanion
             }
 
             // define culture settings
-            string CurrentCulture = SettingsManager.GetString("CurrentCulture");
-            CultureInfo culture = CultureInfo.CurrentCulture;
-
-            switch (CurrentCulture)
-            {
-                default:
-                    culture = new CultureInfo("en-US");
-                    break;
-                case "fr-FR":
-                case "en-US":
-                case "zh-CN":
-                case "zh-Hant":
-                case "de-DE":
-                    culture = new CultureInfo(CurrentCulture);
-                    break;
-            }
-
+            CultureInfo culture = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentCulture = culture;
             Thread.CurrentThread.CurrentUICulture = culture;
             CultureInfo.DefaultThreadCurrentCulture = culture;

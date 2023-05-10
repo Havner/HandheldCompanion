@@ -45,13 +45,6 @@ namespace HandheldCompanion.Views.Pages
                 cB_StartupType.Items.Add(radio);
             }
 
-
-            cB_Language.Items.Add(new CultureInfo("en-US"));
-            cB_Language.Items.Add(new CultureInfo("fr-FR"));
-            cB_Language.Items.Add(new CultureInfo("de-DE"));
-            cB_Language.Items.Add(new CultureInfo("zh-CN"));
-            cB_Language.Items.Add(new CultureInfo("zh-Hant"));
-
             // call function
             UpdateDevice();
 
@@ -140,10 +133,6 @@ namespace HandheldCompanion.Views.Pages
                         break;
                     case "ConfigurableTDPOverrideUp":
                         NumberBox_TDPMax.Value = Convert.ToDouble(value);
-                        break;
-                    case "CurrentCulture":
-                        cB_Language.SelectedItem = new CultureInfo((string)value);
-                        cB_Language_SelectionChanged(this, null); // bug: SelectionChanged not triggered when control isn't loaded
                         break;
                     case "SensorPlacement":
                         UpdateUI_SensorPlacement(Convert.ToInt32(value));
@@ -366,27 +355,6 @@ namespace HandheldCompanion.Views.Pages
                 return;
 
             SettingsManager.SetProperty("StartServiceWithCompanion", Toggle_ServiceStartup.IsOn);
-        }
-
-        private void cB_Language_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
-        {
-            CultureInfo culture = (CultureInfo)cB_Language.SelectedItem;
-
-            if (culture is null)
-                return;
-
-            if (!IsLoaded)
-                return;
-
-            SettingsManager.SetProperty("CurrentCulture", culture.Name);
-
-            // prevent message from being displayed again...
-            if (culture.Name == CultureInfo.CurrentCulture.Name)
-                return;
-
-            _ = Dialog.ShowAsync($"{Properties.Resources.SettingsPage_AppLanguageWarning}",
-                Properties.Resources.SettingsPage_AppLanguageWarningDesc,
-                ContentDialogButton.Primary, string.Empty, $"{Properties.Resources.ProfilesPage_OK}");
         }
 
         private void Toggle_Notification_Toggled(object? sender, System.Windows.RoutedEventArgs? e)

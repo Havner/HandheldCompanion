@@ -59,9 +59,6 @@
     <Setting Name="OverlayTrackpadsSize" Type="System.Double" Scope="User">
       <Value Profile="(Default)">250</Value>
     </Setting>
-    <Setting Name="CurrentCulture" Type="System.String" Scope="User">
-      <Value Profile="(Default)">en-US</Value>
-    </Setting>
     <Setting Name="OverlayControllerRestingPitch" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
