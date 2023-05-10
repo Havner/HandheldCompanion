@@ -75,7 +75,7 @@ namespace neptune_hidapi.net
             return arr;
         }
 
-        public async Task<bool> SetHaptic2(HapticPad position, HapticStyle style, sbyte intensity)
+        public Task<byte[]> SetHaptic2(HapticPad position, HapticStyle style, sbyte intensity)
         {
             SDCHapticPacket2 haptic = new SDCHapticPacket2();
 
@@ -86,15 +86,13 @@ namespace neptune_hidapi.net
             haptic.unsure3 = 0x4;
             haptic.intensity = intensity;
 
-            var ts = new Random().Next();
+            var ts = Environment.TickCount;
             haptic.tsA = ts;
             haptic.tsB = ts;
 
             byte[] data = GetHapticDataBytes(haptic);
 
-            await _hidDevice.RequestFeatureReportAsync(data);
-
-            return true;
+            return _hidDevice.RequestFeatureReportAsync(data);
         }
 
         private byte[] GetHapticDataBytes(SDCHapticPacket2 packet)
