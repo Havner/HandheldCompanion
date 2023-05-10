@@ -1,4 +1,4 @@
-﻿using ControllerCommon.Pipes;
+using ControllerCommon.Pipes;
 using LiveCharts;
 using LiveCharts.Defaults;
 using System;

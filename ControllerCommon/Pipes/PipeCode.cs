@@ -1,4 +1,4 @@
-﻿namespace ControllerCommon.Pipes
+namespace ControllerCommon.Pipes
 {
     public enum PipeCode
     {

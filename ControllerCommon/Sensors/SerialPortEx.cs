@@ -1,4 +1,4 @@
-﻿using System.IO.Ports;
+using System.IO.Ports;
 using static ControllerCommon.OneEuroFilter;
 
 namespace ControllerCommon.Sensors

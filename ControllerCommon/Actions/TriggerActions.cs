@@ -1,4 +1,4 @@
-﻿using ControllerCommon.Inputs;
+using ControllerCommon.Inputs;
 using System;
 
 namespace ControllerCommon.Actions

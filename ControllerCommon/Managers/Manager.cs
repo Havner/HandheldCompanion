@@ -1,4 +1,4 @@
-﻿namespace ControllerCommon.Managers
+namespace ControllerCommon.Managers
 {
     public abstract class Manager
     {

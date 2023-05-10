@@ -1,4 +1,4 @@
-﻿using GregsStack.InputSimulatorStandard;
+using GregsStack.InputSimulatorStandard;
 using HandheldCompanion.Actions;
 using System;
 using System.Drawing;

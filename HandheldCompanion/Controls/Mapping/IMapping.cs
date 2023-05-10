@@ -1,4 +1,4 @@
-﻿using ControllerCommon.Actions;
+using ControllerCommon.Actions;
 using System.Windows.Controls;
 
 namespace HandheldCompanion.Controls

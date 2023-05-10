@@ -1,4 +1,4 @@
-﻿using ControllerCommon.Utils;
+using ControllerCommon.Utils;
 using HandheldCompanion.Managers;
 using ModernWpf.Controls;
 using System;

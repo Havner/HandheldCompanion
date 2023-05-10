@@ -1,4 +1,4 @@
-﻿using HandheldCompanion.Managers;
+using HandheldCompanion.Managers;
 using System.Linq;
 using System.Threading;
 using System.Windows;

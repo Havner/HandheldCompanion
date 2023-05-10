@@ -1,4 +1,4 @@
-﻿using ControllerCommon.Platforms;
+using ControllerCommon.Platforms;
 using ControllerCommon.Utils;
 using System;
 using System.Collections.Generic;

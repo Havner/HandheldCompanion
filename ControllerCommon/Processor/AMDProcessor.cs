@@ -1,4 +1,4 @@
-﻿using ControllerCommon.Processor.AMD;
+using ControllerCommon.Processor.AMD;
 using System;
 using System.Collections.Generic;
 using System.Linq;

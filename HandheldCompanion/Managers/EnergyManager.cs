@@ -1,4 +1,4 @@
-﻿using ControllerCommon.Managers;
+using ControllerCommon.Managers;
 using HandheldCompanion.Controls;
 using System;
 using System.Runtime.InteropServices;

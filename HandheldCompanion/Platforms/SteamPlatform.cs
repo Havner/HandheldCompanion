@@ -1,4 +1,4 @@
-﻿using ControllerCommon.Managers;
+using ControllerCommon.Managers;
 using ControllerCommon.Platforms;
 using ControllerCommon.Utils;
 using HandheldCompanion.Properties;

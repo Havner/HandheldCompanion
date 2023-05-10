@@ -1,4 +1,4 @@
-﻿using ControllerCommon.Inputs;
+using ControllerCommon.Inputs;
 using ControllerCommon.Utils;
 using System;
 using System.Numerics;

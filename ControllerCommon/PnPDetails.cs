@@ -1,4 +1,4 @@
-﻿using ControllerCommon.Managers.Hid;
+using ControllerCommon.Managers.Hid;
 using System;
 using System.Runtime.InteropServices;
 

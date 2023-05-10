@@ -1,4 +1,4 @@
-﻿using ControllerCommon.Managers;
+using ControllerCommon.Managers;
 using NamedPipeWrapper;
 using System;
 using System.Collections.Concurrent;

@@ -1,4 +1,4 @@
-﻿using ModernWpf;
+using ModernWpf;
 using System;
 using System.Windows;
 

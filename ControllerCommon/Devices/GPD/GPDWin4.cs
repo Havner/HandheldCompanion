@@ -1,4 +1,4 @@
-﻿using ControllerCommon.Inputs;
+using ControllerCommon.Inputs;
 using ControllerCommon.Managers;
 using System;
 using System.Collections.Generic;

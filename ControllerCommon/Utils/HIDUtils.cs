@@ -1,4 +1,4 @@
-﻿namespace ControllerCommon.Utils
+namespace ControllerCommon.Utils
 {
     public enum HIDmode
     {

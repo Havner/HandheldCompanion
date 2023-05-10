@@ -1,4 +1,4 @@
-﻿namespace ControllerCommon.Devices
+namespace ControllerCommon.Devices
 {
     public class GPDWin2 : IDevice
     {

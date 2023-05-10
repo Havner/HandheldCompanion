@@ -1,4 +1,4 @@
-﻿using PrecisionTiming;
+using PrecisionTiming;
 using System;
 using System.Diagnostics;
 

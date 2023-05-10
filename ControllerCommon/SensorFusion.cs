@@ -1,4 +1,4 @@
-﻿using ControllerCommon.Utils;
+using ControllerCommon.Utils;
 using System;
 using System.Numerics;
 

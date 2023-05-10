@@ -1,4 +1,4 @@
-﻿using ControllerCommon.Inputs;
+using ControllerCommon.Inputs;
 using ControllerCommon.Managers;
 using System.Collections.Generic;
 using WindowsInput.Events;

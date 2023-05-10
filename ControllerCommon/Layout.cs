@@ -1,4 +1,4 @@
-﻿using ControllerCommon.Actions;
+using ControllerCommon.Actions;
 using ControllerCommon.Controllers;
 using ControllerCommon.Inputs;
 using Newtonsoft.Json;

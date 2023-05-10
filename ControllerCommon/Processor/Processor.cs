@@ -1,4 +1,4 @@
-﻿using ControllerCommon.Managers;
+using ControllerCommon.Managers;
 using ControllerCommon.Processor.AMD;
 using ControllerCommon.Processor.Intel;
 using System;

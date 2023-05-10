@@ -1,4 +1,4 @@
-﻿using ControllerCommon;
+using ControllerCommon;
 using ControllerCommon.Controllers;
 using ControllerCommon.Managers;
 using Force.Crc32;

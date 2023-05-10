@@ -1,4 +1,4 @@
-﻿namespace HandheldCompanion.Properties
+namespace HandheldCompanion.Properties
 {
 
 

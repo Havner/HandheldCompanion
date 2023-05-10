@@ -1,4 +1,4 @@
-﻿using ControllerCommon.Managers.Hid;
+using ControllerCommon.Managers.Hid;
 using ControllerCommon.Sensors;
 using ControllerCommon.Utils;
 using Nefarius.Utilities.DeviceManagement.PnP;

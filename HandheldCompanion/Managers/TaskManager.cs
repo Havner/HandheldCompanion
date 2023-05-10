@@ -1,4 +1,4 @@
-﻿using ControllerCommon.Managers;
+using ControllerCommon.Managers;
 using Microsoft.Win32.TaskScheduler;
 using System;
 
