@@ -1,3 +1,11 @@
+# Fork info
+
+This is an opinionated fork for my own use. Its aim is to limit the number of features, clean the code a little and increase performance. It might be broken, not work for you and is not supported in any way.
+
+If for any reason you came here you're probably better of with the original Handheld Companion available [here](https://github.com/Valkirie/HandheldCompanion). 99% of the code here has been written by its original authors. Go buy them a beer! Links below.
+
+# Original readme
+
 [![Download Latest](https://img.shields.io/github/downloads/Valkirie/HandheldCompanion/latest/total?style=flat-square&color=orange&label=Download%20Latest)](https://github.com/Valkirie/ControllerService/releases/latest)
 [![discord](https://img.shields.io/discord/1054321983166365726?color=orange&label=Discord&logo=discord&logoColor=white&style=flat-square)](https://discord.gg/znHuywFz5M)
 [![YouTube Channel](https://img.shields.io/youtube/channel/subscribers/UCFLra6QVYJYeaWp2mGaq3Og?style=flat-square&color=orange&label=YouTube%20Channel&logo=youtube&logoColor=white)](https://www.youtube.com/channel/UCFLra6QVYJYeaWp2mGaq3Og)
@@ -57,7 +65,7 @@ The software is built for Windows 10/Windows 11 (x86 and amd64).
 ![image](https://user-images.githubusercontent.com/934757/188308184-e8893451-127a-48b3-be90-6229c614c317.png)
 
 ## Overlay
-The software has multiple built-in overlay options. 
+The software has multiple built-in overlay options.
 
 ### QuickTools
 
@@ -89,7 +97,7 @@ Display a 3D virtual controller, showcasing the motion of the device and all but
   - Xbox One controller
   - ZDO+ controller
   - Fisher-Price controller
-  - Machenike HG510 
+  - Machenike HG510
   - 8BitDo Lite 2
   - Nintendo 64
   - Dual Sense
