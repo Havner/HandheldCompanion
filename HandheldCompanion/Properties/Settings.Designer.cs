@@ -818,72 +818,12 @@ namespace HandheldCompanion.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool QuickToolsPerformanceFramerateEnabled {
-            get {
-                return ((bool)(this["QuickToolsPerformanceFramerateEnabled"]));
-            }
-            set {
-                this["QuickToolsPerformanceFramerateEnabled"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("60")]
-        public double QuickToolsPerformanceFramerateValue {
-            get {
-                return ((double)(this["QuickToolsPerformanceFramerateValue"]));
-            }
-            set {
-                this["QuickToolsPerformanceFramerateValue"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool QuietModeDisclosure {
             get {
                 return ((bool)(this["QuietModeDisclosure"]));
             }
             set {
                 this["QuietModeDisclosure"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool QuickToolsPerformanceFramerateToggled {
-            get {
-                return ((bool)(this["QuickToolsPerformanceFramerateToggled"]));
-            }
-            set {
-                this["QuickToolsPerformanceFramerateToggled"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public double OnScreenDisplayLevel {
-            get {
-                return ((double)(this["OnScreenDisplayLevel"]));
-            }
-            set {
-                this["OnScreenDisplayLevel"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
-        public double OnScreenDisplayRefreshRate {
-            get {
-                return ((double)(this["OnScreenDisplayRefreshRate"]));
-            }
-            set {
-                this["OnScreenDisplayRefreshRate"] = value;
             }
         }
     }

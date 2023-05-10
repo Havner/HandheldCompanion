@@ -12,10 +12,6 @@ namespace HandheldCompanion.Managers
         private static GOGGalaxy GOGGalaxy = new();
         private static UbisoftConnect UbisoftConnect = new();
 
-        // misc platforms
-        public static RTSS RTSS = new();
-        public static HWiNFO HWiNFO = new();
-
         private static bool IsInitialized;
 
         public static void Start()
@@ -33,16 +29,6 @@ namespace HandheldCompanion.Managers
             }
 
             if (UbisoftConnect.IsInstalled)
-            {
-                // do something
-            }
-
-            if (RTSS.IsInstalled)
-            {
-                // do something
-            }
-
-            if (HWiNFO.IsInstalled)
             {
                 // do something
             }
@@ -71,16 +57,6 @@ namespace HandheldCompanion.Managers
             if (UbisoftConnect.IsInstalled)
             {
                 UbisoftConnect.Dispose();
-            }
-
-            if (RTSS.IsInstalled)
-            {
-                RTSS.Dispose();
-            }
-
-            if (HWiNFO.IsInstalled)
-            {
-                HWiNFO.Dispose();
             }
 
             IsInitialized = false;

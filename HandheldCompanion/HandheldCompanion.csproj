@@ -33,12 +33,6 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Managers\HWiNFO\**" />
-    <EmbeddedResource Remove="Managers\HWiNFO\**" />
-    <None Remove="Managers\HWiNFO\**" />
-    <Page Remove="Managers\HWiNFO\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <Page Remove="Properties\DesignTimeResources.xaml" />
@@ -2132,15 +2126,6 @@
     <None Update="Resources\Segoe Fluent Icons.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="RTSSHooks.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="RTSSHooks64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Resources\RTSSSharedMemoryNET.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="WinRing0x64.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -2170,9 +2155,6 @@
     </Reference>
     <Reference Include="Nefarius.Utilities.DeviceManagement">
       <HintPath>..\Resources\Nefarius.Utilities.DeviceManagement.dll</HintPath>
-    </Reference>
-    <Reference Include="RTSSSharedMemoryNET">
-      <HintPath>Resources\RTSSSharedMemoryNET.dll</HintPath>
     </Reference>
     <Reference Include="System.Reactive">
       <HintPath>..\Resources\System.Reactive.dll</HintPath>

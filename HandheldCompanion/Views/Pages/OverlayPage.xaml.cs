@@ -21,8 +21,6 @@ namespace HandheldCompanion.Views.Pages
             InitializeComponent();
 
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
-
-            SliderOnScreenDisplay.IsEnabled = PlatformManager.RTSS.IsInstalled;
         }
 
         private void SettingsManager_SettingValueChanged(string name, object value)
@@ -74,12 +72,6 @@ namespace HandheldCompanion.Views.Pages
                         break;
                     case "OverlayControllerMotion":
                         Toggle_MotionActivated.IsOn = Convert.ToBoolean(value);
-                        break;
-                    case "OnScreenDisplayLevel":
-                        SliderOnScreenDisplay.Value = Convert.ToDouble(value);
-                        break;
-                    case "OnScreenDisplayRefreshRate":
-                        SliderOnScreenUpdateRate.Value = Convert.ToDouble(value);
                         break;
                 }
             });
@@ -321,33 +313,6 @@ namespace HandheldCompanion.Views.Pages
                 return;
 
             SettingsManager.SetProperty("OverlayControllerAlwaysOnTop", Toggle_AlwaysOnTop.IsOn);
-        }
-
-        private void SliderOnScreenDisplay_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (!IsLoaded)
-                return;
-
-            double value = SliderOnScreenDisplay.Value;
-            switch(value)
-            {
-                case 0:
-                    HelperOnScreenDisplay.Text = "OFF";
-                    break;
-                default:
-                    HelperOnScreenDisplay.Text = Convert.ToString(value);
-                    break;
-            }
-
-            SettingsManager.SetProperty("OnScreenDisplayLevel", value);
-        }
-
-        private void SliderOnScreenUpdateRate_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (!IsLoaded)
-                return;
-
-            SettingsManager.SetProperty("OnScreenDisplayRefreshRate", SliderOnScreenUpdateRate.Value);
         }
     }
 }

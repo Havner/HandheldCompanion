@@ -358,13 +358,6 @@ namespace HandheldCompanion.Managers
                         }
                         break;
 
-                    case "OnScreenDisplayLevel":
-                        {
-                            bool value = !SettingsManager.GetBoolean(listener);
-                            SettingsManager.SetProperty(listener, value);
-                        }
-                        break;
-
                     // temporary settings
                     case "shortcutDesktopLayout":
                         {

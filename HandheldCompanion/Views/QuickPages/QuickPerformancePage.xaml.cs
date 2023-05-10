@@ -46,7 +46,6 @@ namespace HandheldCompanion.Views.QuickPages
 
             // todo: move me ?
             SettingsManager.SetProperty("QuietModeEnabled", MainWindow.CurrentDevice.Capacities.HasFlag(DeviceCapacities.FanControl));
-            SettingsManager.SetProperty("QuickToolsPerformanceFramerateEnabled", PlatformManager.RTSS.IsInstalled);
         }
 
         private void DesktopManager_PrimaryScreenChanged(DesktopScreen screen)
@@ -60,19 +59,6 @@ namespace HandheldCompanion.Views.QuickPages
         {
             ComboBoxResolution.SelectedItem = resolution;
             ComboBoxFrequency.SelectedItem = SystemManager.GetScreenFrequency();
-
-            double frequency_current = SystemManager.GetScreenFrequency().frequency;
-            frequency_slider[0] = frequency_current / 4.0d;
-            frequency_slider[1] = frequency_current / 3.0d;
-            frequency_slider[2] = frequency_current / 2.0d;
-            frequency_slider[3] = frequency_current;
-
-            FramerateQuarter.Text = String.Format("{0:0.#}", frequency_slider[0]);
-            FramerateThird.Text = String.Format("{0:0.#}", frequency_slider[1]);
-            FramerateHalf.Text = String.Format("{0:0.#}", frequency_slider[2]);
-            FramerateFull.Text = String.Format("{0:0.#}", frequency_slider[3]);
-
-            UpdateFrequency();
         }
 
         private void HotkeysManager_CommandExecuted(string listener)
@@ -120,12 +106,6 @@ namespace HandheldCompanion.Views.QuickPages
                     case "QuickToolsPerformanceGPUEnabled":
                         GPUToggle.IsOn = Convert.ToBoolean(value);
                         break;
-                    case "QuickToolsPerformanceFramerateToggled":
-                        FramerateToggle.IsOn = Convert.ToBoolean(value);
-                        break;
-                    case "QuickToolsPerformanceFramerateEnabled":
-                        FramerateToggle.IsEnabled = Convert.ToBoolean(value);
-                        break;
                     case "QuickToolsPerformanceTDPSustainedValue":
                         {
                             double TDP = Convert.ToDouble(value);
@@ -157,9 +137,6 @@ namespace HandheldCompanion.Views.QuickPages
                     case "ConfigurableTDPOverrideDown":
                         TDPSustainedSlider.Minimum = Convert.ToInt32(value);
                         TDPBoostSlider.Minimum = Convert.ToInt32(value);
-                        break;
-                    case "QuickToolsPerformanceFramerateValue":
-                        FramerateSlider.Value = Convert.ToDouble(value);
                         break;
                     case "QuietModeToggled":
                         QuietModeToggle.IsOn = Convert.ToBoolean(value);
@@ -414,55 +391,6 @@ namespace HandheldCompanion.Views.QuickPages
 
             // update current screen resolution
             SystemManager.SetResolution(resolution.width, resolution.height, frequency.frequency);
-        }
-
-        private void FramerateToggle_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!IsLoaded)
-                return;
-
-            // restore default value is toggled off
-            if (!FramerateToggle.IsOn)
-                PlatformManager.RTSS.RequestFPS(0);
-            else
-            {
-                double framerate = SettingsManager.GetDouble("QuickToolsPerformanceFramerateValue");
-                PlatformManager.RTSS.RequestFPS(framerate);
-            }
-
-            SettingsManager.SetProperty("QuickToolsPerformanceFramerateToggled", FramerateToggle.IsOn);
-        }
-
-        private void FramerateSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            // update settings
-            int value = (int)FramerateSlider.Value;
-
-            // UI thread (async)
-            Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                foreach (TextBlock tb in FramerateModeGrid.Children)
-                    tb.SetResourceReference(Control.ForegroundProperty, "SystemControlForegroundBaseMediumBrush");
-
-                TextBlock TextBlock = (TextBlock)FramerateModeGrid.Children[value];
-                TextBlock.SetResourceReference(Control.ForegroundProperty, "AccentButtonBackground");
-            });
-
-            UpdateFrequency();
-        }
-
-        private void UpdateFrequency()
-        {
-            if (!SettingsManager.GetBoolean("QuickToolsPerformanceFramerateToggled"))
-                return;
-
-            double frequency = frequency_slider[(int)FramerateSlider.Value];
-            PlatformManager.RTSS.RequestFPS(frequency);
-
-            if (!IsLoaded)
-                return;
-
-            SettingsManager.SetProperty("QuickToolsPerformanceFramerateValue", FramerateSlider.Value);
         }
 
         private async void QuietModeToggle_Toggled(object sender, RoutedEventArgs e)

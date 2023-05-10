@@ -108,8 +108,6 @@ namespace HandheldCompanion.Managers
             ProfileManager.Updated += ProfileManager_Updated;
             ProfileManager.Discarded += ProfileManager_Discarded;
 
-            PlatformManager.HWiNFO.PowerLimitChanged += HWiNFO_PowerLimitChanged;
-
             // initialize settings
             double TDPdown = SettingsManager.GetDouble("QuickToolsPerformanceTDPSustainedValue");
             double TDPup = SettingsManager.GetDouble("QuickToolsPerformanceTDPBoostValue");
@@ -119,16 +117,6 @@ namespace HandheldCompanion.Managers
             RequestTDP(PowerType.Slow, TDPdown);
             RequestTDP(PowerType.Stapm, TDPdown);
             RequestTDP(PowerType.Fast, TDPup);
-
-            /*
-            CurrentTDP[(int)PowerType.Slow] = PlatformManager.HWiNFO.MonitoredSensors["PL1"].Value;
-            CurrentTDP[(int)PowerType.Stapm] = PlatformManager.HWiNFO.MonitoredSensors["PL1"].Value;
-            CurrentTDP[(int)PowerType.Fast] = PlatformManager.HWiNFO.MonitoredSensors["PL2"].Value;
-
-            // MSR
-            CurrentTDP[(int)PowerType.MsrSlow] = PlatformManager.HWiNFO.MonitoredSensors["PL1"].Value;
-            CurrentTDP[(int)PowerType.MsrFast] = PlatformManager.HWiNFO.MonitoredSensors["PL2"].Value;
-            */
 
             // request GPUclock
             if (GPU != 0)
@@ -366,28 +354,6 @@ namespace HandheldCompanion.Managers
         }
 
         #region events
-        private void HWiNFO_PowerLimitChanged(PowerType type, int limit)
-        {
-            int idx = (int)type;
-            CurrentTDP[idx] = limit;
-
-            // workaround, HWiNFO doesn't have the ability to report MSR
-            switch (type)
-            {
-                case PowerType.Slow:
-                    CurrentTDP[(int)PowerType.MsrSlow] = limit;
-                    break;
-                case PowerType.Fast:
-                    CurrentTDP[(int)PowerType.MsrFast] = limit;
-                    break;
-            }
-
-            // raise event
-            PowerLimitChanged?.Invoke(type, limit);
-
-            LogManager.LogDebug("PowerLimitChanged: {0}\t{1} W", type, limit);
-        }
-
         private void Processor_StatusChanged(bool CanChangeTDP, bool CanChangeGPU)
         {
             ProcessorStatusChanged?.Invoke(CanChangeTDP, CanChangeGPU);
