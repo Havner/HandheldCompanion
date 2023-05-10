@@ -70,10 +70,6 @@ namespace HandheldCompanion.Views.Pages
                         cB_Theme.SelectedIndex = Convert.ToInt32(value);
                         cB_Theme_SelectionChanged(this, null); // bug: SelectionChanged not triggered when control isn't loaded
                         break;
-                    case "MainWindowBackdrop":
-                        cB_Backdrop.SelectedIndex = Convert.ToInt32(value);
-                        cB_Backdrop_SelectionChanged(this, null); // bug: SelectionChanged not triggered when control isn't loaded
-                        break;
                     case "SensorSelection":
                         {
                             int idx = Convert.ToInt32(value);
@@ -380,41 +376,6 @@ namespace HandheldCompanion.Views.Pages
                 return;
 
             SettingsManager.SetProperty("MainWindowTheme", cB_Theme.SelectedIndex);
-        }
-
-        private void cB_Backdrop_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
-        {
-            if (cB_Backdrop.SelectedIndex == -1)
-                return;
-
-            switch (cB_Backdrop.SelectedIndex)
-            {
-                case 0: // "None":
-                    WindowHelper.SetSystemBackdropType(MainWindow.GetCurrent(), BackdropType.None);
-                    WindowHelper.SetUseAcrylicBackdrop(MainWindow.GetCurrent(), false);
-                    WindowHelper.SetUseAeroBackdrop(MainWindow.GetCurrent(), false);
-                    break;
-                case 1: // "Mica":
-                    WindowHelper.SetSystemBackdropType(MainWindow.GetCurrent(), BackdropType.Mica);
-                    WindowHelper.SetUseAcrylicBackdrop(MainWindow.GetCurrent(), false);
-                    WindowHelper.SetUseAeroBackdrop(MainWindow.GetCurrent(), false);
-                    break;
-                case 2: // "Tabbed":
-                    WindowHelper.SetSystemBackdropType(MainWindow.GetCurrent(), BackdropType.Tabbed);
-                    WindowHelper.SetUseAcrylicBackdrop(MainWindow.GetCurrent(), false);
-                    WindowHelper.SetUseAeroBackdrop(MainWindow.GetCurrent(), false);
-                    break;
-                case 3: // "Acrylic":
-                    WindowHelper.SetSystemBackdropType(MainWindow.GetCurrent(), BackdropType.Acrylic);
-                    WindowHelper.SetUseAcrylicBackdrop(MainWindow.GetCurrent(), true);
-                    WindowHelper.SetUseAeroBackdrop(MainWindow.GetCurrent(), true);
-                    break;
-            }
-
-            if (!IsLoaded)
-                return;
-
-            SettingsManager.SetProperty("MainWindowBackdrop", cB_Backdrop.SelectedIndex);
         }
 
         private async void Toggle_EnergyStar_Toggled(object? sender, RoutedEventArgs? e)
