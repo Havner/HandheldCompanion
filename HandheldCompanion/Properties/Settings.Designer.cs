@@ -650,18 +650,6 @@ namespace HandheldCompanion.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool HIDvibrateonconnect {
-            get {
-                return ((bool)(this["HIDvibrateonconnect"]));
-            }
-            set {
-                this["HIDvibrateonconnect"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool QuickToolsIsPaneOpen {
             get {
                 return ((bool)(this["QuickToolsIsPaneOpen"]));

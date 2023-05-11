@@ -77,9 +77,6 @@ namespace HandheldCompanion.Views.Pages
                     case "HIDuncloakonclose":
                         Toggle_Uncloak.IsOn = Convert.ToBoolean(value);
                         break;
-                    case "HIDvibrateonconnect":
-                        Toggle_Vibrate.IsOn = Convert.ToBoolean(value);
-                        break;
                     case "HIDstrength":
                         SliderStrength.Value = Convert.ToDouble(value);
                         break;
@@ -346,14 +343,6 @@ namespace HandheldCompanion.Views.Pages
                 return;
 
             SettingsManager.SetProperty("SteamDeckMuteController", Toggle_SDMuteController.IsOn);
-        }
-
-        private void Toggle_Vibrate_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!IsLoaded)
-                return;
-
-            SettingsManager.SetProperty("HIDvibrateonconnect", Toggle_Vibrate.IsOn);
         }
 
         private void Button_Layout_Click(object sender, RoutedEventArgs e)

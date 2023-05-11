@@ -280,22 +280,16 @@ namespace HandheldCompanion.Controllers
             return isVirtualMuted;
         }
 
-        public override void Rumble(int loop)
+        public override void Rumble()
         {
-            Task.Factory.StartNew(async () =>
+            Task.Factory.StartNew(() =>
             {
-                for (int i = 0; i < loop * 2; i++)
-                {
-                    if (i % 2 == 0)
-                        SetVibration(byte.MaxValue, byte.MaxValue);
-                    else
-                        SetVibration(0, 0);
-
-                    await Task.Delay(125);
-                }
+                SetVibration(byte.MaxValue, byte.MaxValue);
+                Thread.Sleep(125);
+                SetVibration(0, 0);
             });
 
-            base.Rumble(loop);
+            base.Rumble();
         }
 
         public override void Plug()
@@ -353,11 +347,10 @@ namespace HandheldCompanion.Controllers
             return true;
         }
 
-        public override void SetVibrationStrength(double value, bool rumble)
+        public override void SetVibrationStrength(double value)
         {
-            base.SetVibrationStrength(value, rumble);
-            if (rumble)
-                this.Rumble(1);
+            base.SetVibrationStrength(value);
+            this.Rumble();
         }
 
         public override void SetVibration(byte LargeMotor, byte SmallMotor)

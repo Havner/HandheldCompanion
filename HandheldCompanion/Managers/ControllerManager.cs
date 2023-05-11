@@ -166,7 +166,7 @@ namespace HandheldCompanion.Managers
             if (target is null)
                 return;
 
-            target.SetVibrationStrength(value, SettingsManager.IsInitialized);
+            target.SetVibrationStrength(value);
         }
 
         private static void HidDeviceArrived(PnPDetails details, DeviceEventArgs obj)
@@ -415,9 +415,6 @@ namespace HandheldCompanion.Managers
             targetController.MovementsUpdated += UpdateMovements;
 
             targetController.Plug();
-
-            if (SettingsManager.GetBoolean("HIDvibrateonconnect"))
-                targetController.Rumble(targetController.GetUserIndex() + 1);
 
             if (SettingsManager.GetBoolean("HIDcloakonconnect"))
                 targetController.Hide();

@@ -244,7 +244,7 @@ namespace ControllerCommon.Controllers
             LogManager.LogDebug("Injecting {0} (IsKeyDown:{1}) (IsKeyUp:{2}) to {3}", string.Join(',', State.Buttons), IsKeyDown, IsKeyUp, ToString());
         }
 
-        public virtual void SetVibrationStrength(double value, bool rumble)
+        public virtual void SetVibrationStrength(double value)
         {
             VibrationStrength = value / 100;
         }
@@ -257,7 +257,7 @@ namespace ControllerCommon.Controllers
             return false;
         }
 
-        public virtual void Rumble(int loop)
+        public virtual void Rumble()
         { }
 
         public virtual bool IsPlugged()
