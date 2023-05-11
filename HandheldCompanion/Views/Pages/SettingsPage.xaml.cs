@@ -16,7 +16,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using static ControllerCommon.Utils.DeviceUtils;
-using static HandheldCompanion.Managers.UpdateManager;
 using Page = System.Windows.Controls.Page;
 using ServiceControllerStatus = ControllerCommon.Managers.ServiceControllerStatus;
 
@@ -50,7 +49,6 @@ namespace HandheldCompanion.Views.Pages
 
             // initialize manager(s)
             MainWindow.serviceManager.Updated += OnServiceUpdate;
-            MainWindow.updateManager.Updated += UpdateManager_Updated;
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
         }
 
@@ -157,7 +155,6 @@ namespace HandheldCompanion.Views.Pages
 
         private void Page_Loaded(object? sender, RoutedEventArgs? e)
         {
-            MainWindow.updateManager.Start();
         }
 
         public void Page_Closed()
@@ -224,117 +221,6 @@ namespace HandheldCompanion.Views.Pages
                 return;
 
             SettingsManager.SetProperty("DesktopProfileOnStart", Toggle_DesktopProfileOnStart.IsOn);
-        }
-
-        private void UpdateManager_Updated(UpdateStatus status, UpdateFile updateFile, object value)
-        {
-            // UI thread (async)
-            Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                switch (status)
-                {
-                    case UpdateStatus.Failed: // lazy ?
-                    case UpdateStatus.Updated:
-                    case UpdateStatus.Initialized:
-                        {
-                            if (updateFile is not null)
-                            {
-                                updateFile.updateDownload.Visibility = Visibility.Visible;
-
-                                updateFile.updatePercentage.Visibility = Visibility.Collapsed;
-                                updateFile.updateInstall.Visibility = Visibility.Collapsed;
-                            }
-                            else
-                            {
-                                LabelUpdate.Text = Properties.Resources.SettingsPage_UpToDate;
-                                LabelUpdateDate.Text = Properties.Resources.SettingsPage_LastChecked + MainWindow.updateManager.GetTime();
-
-                                LabelUpdateDate.Visibility = Visibility.Visible;
-                                GridUpdateSymbol.Visibility = Visibility.Visible;
-                                ProgressBarUpdate.Visibility = Visibility.Collapsed;
-                                B_CheckUpdate.IsEnabled = true;
-                            }
-                        }
-                        break;
-
-                    case UpdateStatus.Checking:
-                        {
-                            LabelUpdate.Text = Properties.Resources.SettingsPage_UpdateCheck;
-
-                            GridUpdateSymbol.Visibility = Visibility.Collapsed;
-                            LabelUpdateDate.Visibility = Visibility.Collapsed;
-                            ProgressBarUpdate.Visibility = Visibility.Visible;
-                            B_CheckUpdate.IsEnabled = false;
-                        }
-                        break;
-
-                    case UpdateStatus.Ready:
-                        {
-                            ProgressBarUpdate.Visibility = Visibility.Collapsed;
-
-                            Dictionary<string, UpdateFile> updateFiles = (Dictionary<string, UpdateFile>)value;
-                            LabelUpdate.Text = Properties.Resources.SettingsPage_UpdateAvailable;
-
-                            foreach (UpdateFile update in updateFiles.Values)
-                            {
-                                var border = update.Draw();
-
-                                // Set download button action
-                                update.updateDownload.Click += (sender, e) =>
-                                {
-                                    MainWindow.updateManager.DownloadUpdateFile(update);
-                                };
-
-                                // Set button action
-                                update.updateInstall.Click += (sender, e) =>
-                                {
-                                    MainWindow.updateManager.InstallUpdate(update);
-                                };
-
-                                CurrentUpdates.Children.Add(border);
-                            }
-                        }
-                        break;
-
-                    case UpdateStatus.Changelog:
-                        {
-                            CurrentChangelog.Visibility = Visibility.Visible;
-                            CurrentChangelog.AppendText((string)value);
-                        }
-                        break;
-
-                    case UpdateStatus.Download:
-                        {
-                            updateFile.updateDownload.Visibility = Visibility.Collapsed;
-                            updateFile.updatePercentage.Visibility = Visibility.Visible;
-                        }
-                        break;
-
-                    case UpdateStatus.Downloading:
-                        {
-                            int progress = (int)value;
-                            updateFile.updatePercentage.Text = Properties.Resources.SettingsPage_DownloadingPercentage + $"{value} %";
-                        }
-                        break;
-
-                    case UpdateStatus.Downloaded:
-                        {
-                            updateFile.updateInstall.Visibility = Visibility.Visible;
-
-                            updateFile.updateDownload.Visibility = Visibility.Collapsed;
-                            updateFile.updatePercentage.Visibility = Visibility.Collapsed;
-                        }
-                        break;
-                }
-            });
-        }
-
-        private void B_CheckUpdate_Click(object? sender, System.Windows.RoutedEventArgs? e)
-        {
-            new Thread(() =>
-            {
-                MainWindow.updateManager.StartProcess();
-            }).Start();
         }
 
         private void Toggle_ServiceShutdown_Toggled(object? sender, System.Windows.RoutedEventArgs? e)

@@ -38,9 +38,6 @@
     <Setting Name="HaltServiceWithCompanion" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="UpdateLastChecked" Type="System.DateTime" Scope="User">
-      <Value Profile="(Default)">1989-12-20</Value>
-    </Setting>
     <Setting Name="OverlayModel" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
@@ -139,9 +136,6 @@
     </Setting>
     <Setting Name="QuickToolsPerformanceGPUValue" Type="System.Double" Scope="User">
       <Value Profile="(Default)">500</Value>
-    </Setting>
-    <Setting Name="UpdateUrl" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://api.github.com/repos/Valkirie/HandheldCompanion</Value>
     </Setting>
     <Setting Name="OverlayControllerAlwaysOnTop" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

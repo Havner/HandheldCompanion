@@ -59,7 +59,6 @@ namespace HandheldCompanion.Views
         public static ServiceManager serviceManager;
         public static TaskManager taskManager;
         public static PerformanceManager performanceManager;
-        public static UpdateManager updateManager;
 
         private WindowState prevWindowState;
         private NotifyIcon notifyIcon;
@@ -315,13 +314,11 @@ namespace HandheldCompanion.Views
             serviceManager = new ServiceManager("ControllerService", Properties.Resources.ServiceName, Properties.Resources.ServiceDescription);
             taskManager = new TaskManager("HandheldCompanion", CurrentExe);
             performanceManager = new();
-            updateManager = new();
 
             // store managers
             _managers.Add(serviceManager);
             _managers.Add(taskManager);
             _managers.Add(performanceManager);
-            _managers.Add(updateManager);
 
             serviceManager.Initialized += () =>
             {

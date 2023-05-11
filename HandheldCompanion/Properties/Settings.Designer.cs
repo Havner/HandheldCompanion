@@ -169,18 +169,6 @@ namespace HandheldCompanion.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1989-12-20")]
-        public global::System.DateTime UpdateLastChecked {
-            get {
-                return ((global::System.DateTime)(this["UpdateLastChecked"]));
-            }
-            set {
-                this["UpdateLastChecked"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int OverlayModel {
             get {
@@ -572,18 +560,6 @@ namespace HandheldCompanion.Properties {
             }
             set {
                 this["QuickToolsPerformanceGPUValue"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://api.github.com/repos/Valkirie/HandheldCompanion")]
-        public string UpdateUrl {
-            get {
-                return ((string)(this["UpdateUrl"]));
-            }
-            set {
-                this["UpdateUrl"] = value;
             }
         }
         
