@@ -323,19 +323,6 @@ namespace HandheldCompanion.Managers
                             var success = Windows.System.Launcher.LaunchUriAsync(uri);
                         }
                         break;
-                    case "suspendResumeTask":
-                        {
-                            var sProcess = ProcessManager.GetLastSuspendedProcess();
-
-                            if (sProcess is null || sProcess.Filter != ProcessEx.ProcessFilter.Allowed)
-                                break;
-
-                            if (sProcess.IsSuspended())
-                                ProcessManager.ResumeProcess(sProcess);
-                            else
-                                ProcessManager.SuspendProcess(fProcess);
-                        }
-                        break;
                     case "shortcutKillApp":
                         if (fProcess is not null)
                         {

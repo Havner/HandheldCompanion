@@ -76,15 +76,6 @@
                         <ui:FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE748;" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
-
-                <ui:NavigationViewItem
-                    Name="navSuspenderPage"
-                    Content="Suspender"
-                    Tag="QuickSuspenderPage">
-                    <ui:NavigationViewItem.Icon>
-                        <ui:FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE769;" />
-                    </ui:NavigationViewItem.Icon>
-                </ui:NavigationViewItem>
             </ui:NavigationView.MenuItems>
 
             <common:TouchScrollViewer x:Name="scrollViewer" PanningMode="VerticalOnly">

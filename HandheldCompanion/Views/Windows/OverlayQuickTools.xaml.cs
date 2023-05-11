@@ -29,7 +29,6 @@ namespace HandheldCompanion.Views.Windows
         public QuickPerformancePage performancePage;
         public QuickSettingsPage settingsPage;
         public QuickProfilesPage profilesPage;
-        public QuickSuspenderPage suspenderPage;
 
         private HwndSource hwndSource;
 
@@ -47,12 +46,10 @@ namespace HandheldCompanion.Views.Windows
             performancePage = new QuickPerformancePage();
             settingsPage = new QuickSettingsPage();
             profilesPage = new QuickProfilesPage();
-            suspenderPage = new QuickSuspenderPage();
 
             _pages.Add("QuickPerformancePage", performancePage);
             _pages.Add("QuickSettingsPage", settingsPage);
             _pages.Add("QuickProfilesPage", profilesPage);
-            _pages.Add("QuickSuspenderPage", suspenderPage);
 
             // update Position and Size
             Left = Math.Min(SystemParameters.PrimaryScreenWidth - MinWidth, SettingsManager.GetDouble("QuickToolsLeft"));

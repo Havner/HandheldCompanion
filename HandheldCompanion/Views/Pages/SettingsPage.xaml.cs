@@ -131,9 +131,6 @@ namespace HandheldCompanion.Views.Pages
                     case "SensorPlacement":
                         UpdateUI_SensorPlacement(Convert.ToInt32(value));
                         break;
-                    case "UseEnergyStar":
-                        Toggle_EnergyStar.IsOn = Convert.ToBoolean(value);
-                        break;
                     case "ServiceStartMode":
                         cB_StartupType.SelectedIndex = Convert.ToInt32(value);
                         cB_StartupType_SelectionChanged(this, null); // bug: SelectionChanged not triggered when control isn't loaded
@@ -262,36 +259,6 @@ namespace HandheldCompanion.Views.Pages
                 return;
 
             SettingsManager.SetProperty("MainWindowTheme", cB_Theme.SelectedIndex);
-        }
-
-        private async void Toggle_EnergyStar_Toggled(object? sender, RoutedEventArgs? e)
-        {
-            if (!IsLoaded)
-                return;
-
-            if (Toggle_EnergyStar.IsOn)
-            {
-                // todo: localize me !
-                Task<ContentDialogResult> result = Dialog.ShowAsync(
-                    "Warning",
-                    "EcoQoS is a new Quality of Service (QoS) level introduced to Windows, leading to better energy efficiency. Use at your own risk.",
-                    ContentDialogButton.Primary, "Cancel", Properties.Resources.ProfilesPage_OK);
-
-                await result; // sync call
-
-                switch (result.Result)
-                {
-                    case ContentDialogResult.Primary:
-                        break;
-                    default:
-                    case ContentDialogResult.None:
-                        // restore previous state
-                        Toggle_EnergyStar.IsOn = false;
-                        return;
-                }
-            }
-
-            SettingsManager.SetProperty("UseEnergyStar", Toggle_EnergyStar.IsOn);
         }
 
         private async void Toggle_cTDP_Toggled(object? sender, RoutedEventArgs? e)

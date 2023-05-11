@@ -17,8 +17,7 @@ using System.Windows;
 using System.Windows.Automation;
 using Windows.System.Diagnostics;
 using static ControllerCommon.WinAPI;
-using static HandheldCompanion.Controls.ProcessEx;
-using static HandheldCompanion.Managers.EnergyManager;
+using static HandheldCompanion.Managers.ProcessEx;
 using Timer = System.Timers.Timer;
 
 namespace HandheldCompanion.Managers
@@ -136,11 +135,6 @@ namespace HandheldCompanion.Managers
         public static ProcessEx GetForegroundProcess()
         {
             return currentProcess;
-        }
-
-        public static ProcessEx GetLastSuspendedProcess()
-        {
-            return Processes.Values.Where(item => item.IsSuspended()).LastOrDefault();
         }
 
         public static ProcessEx GetProcess(int processId)
@@ -374,15 +368,6 @@ namespace HandheldCompanion.Managers
             return false;
         }
 
-        private static void ChildProcessCreated(ProcessEx parent, int pId)
-        {
-            EfficiencyMode mode = parent.GetEfficiencyMode();
-            if (mode == EfficiencyMode.Default)
-                return;
-
-            ToggleEfficiencyMode(pId, mode, parent);
-        }
-
         private static ProcessFilter GetFilter(string exec, string path, string MainWindowTitle = "")
         {
             if (string.IsNullOrEmpty(path))
@@ -449,44 +434,6 @@ namespace HandheldCompanion.Managers
                 default:
                     return ProcessFilter.Allowed;
             }
-        }
-
-        public static void ResumeProcess(ProcessEx processEx)
-        {
-            // process has exited
-            if (processEx.Process.HasExited)
-                return;
-
-            ProcessUtils.NtResumeProcess(processEx.Process.Handle);
-
-            processEx.RefreshChildProcesses();
-            Parallel.ForEach(processEx.Children, new ParallelOptions { MaxDegreeOfParallelism = PerformanceManager.MaxDegreeOfParallelism }, childId =>
-            {
-                Process process = Process.GetProcessById(childId);
-                ProcessUtils.NtResumeProcess(process.Handle);
-            });
-
-            Task.Delay(500);
-            ProcessUtils.ShowWindow(processEx.MainWindowHandle, (int)ProcessUtils.ShowWindowCommands.Restored);
-        }
-
-        public static void SuspendProcess(ProcessEx processEx)
-        {
-            // process has exited
-            if (processEx.Process.HasExited)
-                return;
-
-            ProcessUtils.ShowWindow(processEx.MainWindowHandle, (int)ProcessUtils.ShowWindowCommands.Minimized);
-            Task.Delay(500);
-
-            ProcessUtils.NtSuspendProcess(processEx.Process.Handle);
-
-            processEx.RefreshChildProcesses();
-            Parallel.ForEach(processEx.Children, new ParallelOptions { MaxDegreeOfParallelism = PerformanceManager.MaxDegreeOfParallelism }, childId =>
-            {
-                Process process = Process.GetProcessById(childId);
-                ProcessUtils.NtSuspendProcess(process.Handle);
-            });
         }
     }
 }

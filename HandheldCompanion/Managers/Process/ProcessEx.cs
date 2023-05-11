@@ -1,23 +1,14 @@
 using ControllerCommon;
 using ControllerCommon.Platforms;
 using ControllerCommon.Utils;
-using HandheldCompanion.Managers;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
-using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using static HandheldCompanion.Managers.EnergyManager;
 
-namespace HandheldCompanion.Controls
+namespace HandheldCompanion.Managers
 {
-    /// <summary>
-    /// Logique d'interaction pour ProcessEx.xaml
-    /// </summary>
-    public partial class ProcessEx : UserControl, IDisposable
+    public partial class ProcessEx : IDisposable
     {
         public enum ProcessFilter
         {
@@ -31,10 +22,7 @@ namespace HandheldCompanion.Controls
         public Process Process;
         public ProcessThread MainThread;
 
-        public ConcurrentList<int> Children = new();
-
         public IntPtr MainWindowHandle;
-        private EfficiencyMode EfficiencyMode;
 
         public string Path;
 
@@ -49,11 +37,10 @@ namespace HandheldCompanion.Controls
             set
             {
                 _Title = value;
-                TitleTextBlock.Text = value;
             }
         }
 
-        public string _Executable;
+        private string _Executable;
         public string Executable
         {
             get
@@ -64,15 +51,11 @@ namespace HandheldCompanion.Controls
             set
             {
                 _Executable = value;
-                ExecutableTextBlock.Text = value;
             }
         }
 
         public ProcessFilter Filter;
         public PlatformType Platform { get; set; }
-
-        private ThreadState prevThreadState = ThreadState.Terminated;
-        private ThreadWaitReason prevThreadWaitReason = ThreadWaitReason.UserRequest;
 
         public event MainThreadChangedEventHandler MainThreadChanged;
         public delegate void MainThreadChangedEventHandler(ProcessEx process);
@@ -80,12 +63,8 @@ namespace HandheldCompanion.Controls
         public event TitleChangedEventHandler TitleChanged;
         public delegate void TitleChangedEventHandler(ProcessEx process);
 
-        public event ChildProcessCreatedEventHandler ChildProcessCreated;
-        public delegate void ChildProcessCreatedEventHandler(ProcessEx parent, int Id);
-
         public ProcessEx()
         {
-            InitializeComponent();
         }
 
         public ProcessEx(Process process, string path, string executable, ProcessFilter filter) : this()
@@ -98,13 +77,6 @@ namespace HandheldCompanion.Controls
 
             this.Filter = filter;
             this.Platform = PlatformManager.GetPlatform(Process);
-
-            if (!string.IsNullOrEmpty(path) && File.Exists(path))
-            {
-                var icon = Icon.ExtractAssociatedIcon(Path);
-                if (icon is not null)
-                    ProcessIcon.Source = icon.ToImageSource();
-            }
         }
 
         public int GetProcessId()
@@ -180,41 +152,8 @@ namespace HandheldCompanion.Controls
                     TitleChanged?.Invoke(this);
                 }
 
-                switch (EfficiencyMode)
-                {
-                    default:
-                    case EfficiencyMode.Default:
-                        QoSCheckBox.IsChecked = false;
-                        break;
-
-                    case EfficiencyMode.Eco:
-                        QoSCheckBox.IsChecked = true;
-                        break;
-                }
-
                 switch (MainThread.ThreadState)
                 {
-                    case ThreadState.Wait:
-                        {
-                            // monitor if the process main thread was suspended or resumed
-                            if (MainThread.WaitReason != prevThreadWaitReason)
-                            {
-                                prevThreadWaitReason = MainThread.WaitReason;
-
-                                switch (prevThreadWaitReason)
-                                {
-                                    case ThreadWaitReason.Suspended:
-                                        SuspendToggle.IsOn = true;
-                                        break;
-
-                                    default:
-                                        SuspendToggle.IsOn = false;
-                                        break;
-                                }
-                            }
-                        }
-                        break;
-
                     case ThreadState.Terminated:
                         {
                             // dispose from MainThread
@@ -223,60 +162,7 @@ namespace HandheldCompanion.Controls
                         }
                         break;
                 }
-
-                // update previous state
-                prevThreadState = MainThread.ThreadState;
             });
-        }
-
-        public bool IsSuspended()
-        {
-            return prevThreadWaitReason == ThreadWaitReason.Suspended;
-        }
-
-        public EfficiencyMode GetEfficiencyMode()
-        {
-            return EfficiencyMode;
-        }
-
-        public void RefreshChildProcesses()
-        {
-            // refresh all child processes
-            List<int> childs = ProcessUtils.GetChildIds(Process);
-
-            // remove exited children
-            foreach (int pid in childs)
-                Children.Remove(pid);
-
-            // raise event on new children
-            foreach (int pid in childs)
-            {
-                Children.Add(pid);
-                ChildProcessCreated?.Invoke(this, pid);
-            }
-        }
-
-        public void SetEfficiencyMode(EfficiencyMode mode)
-        {
-            EfficiencyMode = mode;
-        }
-
-        private void SuspendToggle_Toggled(object sender, RoutedEventArgs e)
-        {
-            switch (SuspendToggle.IsOn)
-            {
-                case true:
-                    {
-                        if (prevThreadWaitReason == ThreadWaitReason.Suspended)
-                            return;
-
-                        ProcessManager.SuspendProcess(this);
-                    }
-                    break;
-                case false:
-                    ProcessManager.ResumeProcess(this);
-                    break;
-            }
         }
 
         public void Dispose()
@@ -285,7 +171,6 @@ namespace HandheldCompanion.Controls
                 Process.Dispose();
             if (MainThread is not null)
                 MainThread.Dispose();
-            Children.Dispose();
 
             GC.SuppressFinalize(this); //now, the finalizer won't be called
         }

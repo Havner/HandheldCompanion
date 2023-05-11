@@ -177,7 +177,6 @@ namespace HandheldCompanion.Views
             PlatformManager.Start();
             LayoutManager.Start();
             ProcessManager.Start();
-            EnergyManager.Start();
 
             PowerManager.SystemStatusChanged += OnSystemStatusChanged;
             PowerManager.Start();
@@ -653,7 +652,6 @@ namespace HandheldCompanion.Views
             ProfileManager.Stop();
             LayoutManager.Stop();
             ProcessManager.Stop();
-            EnergyManager.Stop();
             PowerManager.Stop();
             ToastManager.Stop();
 
