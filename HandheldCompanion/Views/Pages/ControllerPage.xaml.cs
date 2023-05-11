@@ -77,9 +77,6 @@ namespace HandheldCompanion.Views.Pages
                     case "HIDuncloakonclose":
                         Toggle_Uncloak.IsOn = Convert.ToBoolean(value);
                         break;
-                    case "HIDstrength":
-                        SliderStrength.Value = Convert.ToDouble(value);
-                        break;
                     case "shortcutDesktopLayout":
                         Toggle_DesktopLayout.IsOn = Convert.ToBoolean(value);
                         break;
@@ -321,20 +318,6 @@ namespace HandheldCompanion.Views.Pages
                 return;
 
             SettingsManager.SetProperty("HIDuncloakonclose", Toggle_Uncloak.IsOn);
-        }
-
-        private void SliderStrength_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            double value = SliderStrength.Value;
-            if (double.IsNaN(value))
-                return;
-
-            SliderStrength.Value = value;
-
-            if (!IsLoaded)
-                return;
-
-            SettingsManager.SetProperty("HIDstrength", value);
         }
 
         private void Toggle_SDMuteController_Toggled(object sender, RoutedEventArgs e)

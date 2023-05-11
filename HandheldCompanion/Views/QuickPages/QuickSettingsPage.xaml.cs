@@ -1,4 +1,5 @@
 using HandheldCompanion.Managers;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -20,6 +21,8 @@ namespace HandheldCompanion.Views.QuickPages
 
             HotkeysManager.HotkeyCreated += HotkeysManager_HotkeyCreated;
             HotkeysManager.HotkeyUpdated += HotkeysManager_HotkeyUpdated;
+
+            SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
 
             SystemManager.VolumeNotification += SystemManager_VolumeNotification;
             SystemManager.BrightnessNotification += SystemManager_BrightnessNotification;
@@ -66,6 +69,20 @@ namespace HandheldCompanion.Views.QuickPages
                 QuickHotkeys.Children.Add(hotkey.GetPin());
         }
 
+        private void SettingsManager_SettingValueChanged(string name, object value)
+        {
+            // UI thread (async)
+            Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                switch (name)
+                {
+                    case "HIDstrength":
+                        SliderVibration.Value = Convert.ToDouble(value);
+                        break;
+                }
+            });
+        }
+
         private void SystemManager_BrightnessNotification(int brightness)
         {
             if (Monitor.TryEnter(brightnessLock))
@@ -93,6 +110,11 @@ namespace HandheldCompanion.Views.QuickPages
 
                 Monitor.Exit(volumeLock);
             }
+        }
+
+        private void SliderVibration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            SettingsManager.SetProperty("HIDstrength", SliderVibration.Value);
         }
 
         private void SliderBrightness_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
