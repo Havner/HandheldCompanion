@@ -40,8 +40,6 @@ namespace HandheldCompanion.Views.QuickPages
             ProfileManager.Deleted += ProfileDeleted;
             ProfileManager.Applied += ProfileApplied;
 
-            HotkeysManager.CommandExecuted += HotkeysManager_CommandExecuted;
-
             HotkeysManager.HotkeyCreated += TriggerCreated;
             InputsManager.TriggerUpdated += TriggerUpdated;
 
@@ -124,35 +122,6 @@ namespace HandheldCompanion.Views.QuickPages
             ProfileManager.UpdateOrCreateProfile(currentProfile, source);
         }
 
-        private void HotkeysManager_CommandExecuted(string listener)
-        {
-            // UI thread (async)
-            Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                switch (listener)
-                {
-                    case "increaseTDP":
-                        {
-                            if (currentProfile is null || currentProfile.Default || !currentProfile.TDPOverrideEnabled)
-                                return;
-
-                            TDPBoostSlider.Value++;
-                            TDPSustainedSlider.Value++;
-                        }
-                        break;
-                    case "decreaseTDP":
-                        {
-                            if (currentProfile is null || currentProfile.Default || !currentProfile.TDPOverrideEnabled)
-                                return;
-
-                            TDPSustainedSlider.Value--;
-                            TDPBoostSlider.Value--;
-                        }
-                        break;
-                }
-            });
-        }
-
         private void ProfileApplied(Profile profile)
         {
             ProfileUpdated(profile, ProfileUpdateSource.Background, true);
@@ -208,13 +177,6 @@ namespace HandheldCompanion.Views.QuickPages
                     cB_Input.SelectedIndex = (int)profile.MotionInput;
                     cB_Output.SelectedIndex = (int)profile.MotionOutput;
                     cB_UMC_MotionDefaultOffOn.SelectedIndex = (int)profile.MotionMode;
-
-                    // Sustained TDP settings (slow, stapm, long)
-                    double[] TDP = profile.TDPOverrideValues is not null ? profile.TDPOverrideValues : MainWindow.CurrentDevice.nTDP;
-                    TDPSustainedSlider.Value = TDP[(int)PowerType.Slow];
-                    TDPBoostSlider.Value = TDP[(int)PowerType.Fast];
-
-                    TDPToggle.IsOn = profile.TDPOverrideEnabled;
 
                     // Slider settings
                     SliderUMCAntiDeadzone.Value = profile.MotionAntiDeadzone;
@@ -377,80 +339,12 @@ namespace HandheldCompanion.Views.QuickPages
             currentProfile = new Profile(currentProcess.Path);
             currentProfile.Layout = LayoutTemplate.DefaultLayout.Layout.Clone() as Layout;
             currentProfile.LayoutTitle = LayoutTemplate.DesktopLayout.Name;
-            currentProfile.TDPOverrideValues = MainWindow.CurrentDevice.nTDP;
 
             // if an update is pending, execute it and stop timer
             if (UpdateTimer.Enabled)
                 UpdateTimer.Stop();
 
             SubmitProfile(ProfileUpdateSource.Creation);
-        }
-
-        private void TDPToggle_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (currentProfile is null)
-                return;
-
-            if (Monitor.TryEnter(updateLock))
-            {
-                currentProfile.TDPOverrideEnabled = (bool)TDPToggle.IsOn;
-                RequestUpdate();
-
-                Monitor.Exit(updateLock);
-            }
-        }
-
-        private void TDPSustainedSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (currentProfile is null)
-                return;
-
-            if (!TDPToggle.IsOn)
-                return;
-
-            if (!TDPSustainedSlider.IsInitialized || !TDPBoostSlider.IsInitialized)
-                return;
-
-            // Prevent sustained value being higher then boost
-            if (TDPSustainedSlider.Value > TDPBoostSlider.Value)
-            {
-                TDPBoostSlider.Value = TDPSustainedSlider.Value;
-            }
-
-            if (Monitor.TryEnter(updateLock))
-            {
-                currentProfile.TDPOverrideValues[0] = (int)TDPSustainedSlider.Value;
-                currentProfile.TDPOverrideValues[1] = (int)TDPSustainedSlider.Value;
-                RequestUpdate();
-
-                Monitor.Exit(updateLock);
-            }
-        }
-
-        private void TDPBoostSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (currentProfile is null)
-                return;
-
-            if (!TDPToggle.IsOn)
-                return;
-
-            if (!TDPSustainedSlider.IsInitialized || !TDPBoostSlider.IsInitialized)
-                return;
-
-            // Prevent boost value being lower then sustained
-            if (TDPBoostSlider.Value < TDPSustainedSlider.Value)
-            {
-                TDPSustainedSlider.Value = TDPBoostSlider.Value;
-            }
-
-            if (Monitor.TryEnter(updateLock))
-            {
-                currentProfile.TDPOverrideValues[2] = (int)TDPBoostSlider.Value;
-                RequestUpdate();
-
-                Monitor.Exit(updateLock);
-            }
         }
 
         private void SliderUMCAntiDeadzone_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

@@ -18,21 +18,14 @@ namespace HandheldCompanion.Views.QuickPages
     public partial class QuickPerformancePage : Page
     {
         private bool CanChangeTDP, CanChangeGPU;
-        private Profile currentProfile;
-
-        private double[] frequency_slider = new double[4] { 15, 20, 30, 60 };
 
         public QuickPerformancePage()
         {
             InitializeComponent();
 
             MainWindow.performanceManager.ProcessorStatusChanged += PowerManager_StatusChanged;
-            // MainWindow.powerManager.PowerLimitChanged += PowerManager_LimitChanged;
-            // MainWindow.powerManager.PowerValueChanged += PowerManager_ValueChanged;
-
-            ProfileManager.Updated += ProfileManager_Updated;
-            ProfileManager.Applied += ProfileManager_Applied;
-            ProfileManager.Discarded += ProfileManager_Discarded;
+            MainWindow.performanceManager.PowerLimitChanged += PowerManager_LimitChanged;
+            MainWindow.performanceManager.PowerValueChanged += PowerManager_ValueChanged;
 
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
 
@@ -76,7 +69,7 @@ namespace HandheldCompanion.Views.QuickPages
                 {
                     case "increaseTDP":
                         {
-                            if (!SettingsManager.GetBoolean("QuickToolsPerformanceTDPEnabled") || currentProfile.TDPOverrideEnabled)
+                            if (!SettingsManager.GetBoolean("QuickToolsPerformanceTDPEnabled"))
                                 return;
 
                             TDPBoostSlider.Value++;
@@ -85,7 +78,7 @@ namespace HandheldCompanion.Views.QuickPages
                         break;
                     case "decreaseTDP":
                         {
-                            if (!SettingsManager.GetBoolean("QuickToolsPerformanceTDPEnabled") || currentProfile.TDPOverrideEnabled)
+                            if (!SettingsManager.GetBoolean("QuickToolsPerformanceTDPEnabled"))
                                 return;
 
                             TDPSustainedSlider.Value--;
@@ -149,49 +142,12 @@ namespace HandheldCompanion.Views.QuickPages
             });
         }
 
-        private void ProfileManager_Updated(Profile profile, ProfileUpdateSource source, bool isCurrent)
-        {
-            if (!isCurrent)
-                return;
-
-            currentProfile = profile;
-
-            UpdateControls();
-        }
-
-        private void ProfileManager_Discarded(Profile profile, bool isCurrent, bool isUpdate)
-        {
-            if (!isCurrent)
-                return;
-
-            currentProfile = null;
-
-            UpdateControls();
-        }
-
-        private void ProfileManager_Applied(Profile profile)
-        {
-            currentProfile = profile;
-
-            UpdateControls();
-        }
-
         private void UpdateControls()
         {
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                if (currentProfile is not null)
-                {
-                    TDPToggle.IsEnabled = TDPSustainedSlider.IsEnabled = TDPBoostSlider.IsEnabled = CanChangeTDP && !currentProfile.TDPOverrideEnabled;
-                    TDPWarning.Visibility = currentProfile.TDPOverrideEnabled ? Visibility.Visible : Visibility.Collapsed;
-                }
-                else
-                {
-                    TDPToggle.IsEnabled = TDPSustainedSlider.IsEnabled = TDPBoostSlider.IsEnabled = CanChangeTDP;
-                    TDPWarning.Visibility = Visibility.Collapsed;
-                }
-
+                TDPToggle.IsEnabled = TDPSustainedSlider.IsEnabled = TDPBoostSlider.IsEnabled = CanChangeTDP;
                 GPUToggle.IsEnabled = CanChangeGPU;
                 GPUSlider.IsEnabled = CanChangeGPU;
             });

@@ -90,10 +90,6 @@ namespace ControllerCommon
         public float FlickstickDuration { get; set; } = 0.1f;
         public float FlickstickSensivity { get; set; } = 3.0f;
 
-        // power
-        public bool TDPOverrideEnabled { get; set; }
-        public double[] TDPOverrideValues { get; set; } = new double[3];
-
         public ProfileErrorCode ErrorCode = ProfileErrorCode.None;
 
         public Profile()

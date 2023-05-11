@@ -45,19 +45,6 @@ namespace ControllerCommon.Processor
                         CanChangeGPU = true;
                         break;
                 }
-
-                foreach (PowerType type in (PowerType[])Enum.GetValues(typeof(PowerType)))
-                {
-                    // write default limits
-                    m_Limits[type] = 0;
-                    m_PrevLimits[type] = 0;
-
-                    /*
-                    // write default values : not supported
-                    m_Values[type] = -1;
-                    m_PrevValues[type] = -1;
-                    */
-                }
             }
         }
 

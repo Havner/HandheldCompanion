@@ -94,9 +94,6 @@ namespace ControllerCommon.Processor
         {
             Name = GetProcessorDetails("Name");
             ProcessorID = GetProcessorDetails("processorID");
-
-            // write default miscs
-            m_Misc["gfx_clk"] = m_PrevMisc["gfx_clk"] = 0;
         }
 
         public virtual void Initialize()
@@ -104,20 +101,14 @@ namespace ControllerCommon.Processor
             StatusChanged?.Invoke(CanChangeTDP, CanChangeGPU);
             Initialized?.Invoke();
 
-            // deprecated, we're using HWiNFO to provide values and limits
-            /*
             if (CanChangeTDP)
                 updateTimer.Start();
-            */
         }
 
         public virtual void Stop()
         {
-            // deprecated, we're using HWiNFO to provide values and limits
-            /*
             if (CanChangeTDP)
                 updateTimer.Stop();
-            */
         }
 
         public virtual void SetTDPLimit(PowerType type, double limit, int result = 0)
@@ -143,8 +134,9 @@ namespace ControllerCommon.Processor
             // search for limit changes
             foreach (KeyValuePair<PowerType, int> pair in m_Limits)
             {
-                if (m_PrevLimits[pair.Key] == pair.Value)
-                    continue;
+                if (m_PrevLimits.TryGetValue(pair.Key, out var value))
+                    if (value == pair.Value)
+                        continue;
 
                 LimitChanged?.Invoke(pair.Key, pair.Value);
 
@@ -154,8 +146,9 @@ namespace ControllerCommon.Processor
             // search for value changes
             foreach (KeyValuePair<PowerType, float> pair in m_Values)
             {
-                if (m_PrevValues[pair.Key] == pair.Value)
-                    continue;
+                if (m_PrevValues.TryGetValue(pair.Key, out var value))
+                    if (value == pair.Value)
+                        continue;
 
                 ValueChanged?.Invoke(pair.Key, pair.Value);
 
@@ -165,8 +158,9 @@ namespace ControllerCommon.Processor
             // search for misc changes
             foreach (KeyValuePair<string, float> pair in m_Misc)
             {
-                if (m_PrevMisc[pair.Key] == pair.Value)
-                    continue;
+                if (m_PrevMisc.TryGetValue(pair.Key, out var value))
+                    if (value == pair.Value)
+                        continue;
 
                 MiscChanged?.Invoke(pair.Key, pair.Value);
 

@@ -265,7 +265,6 @@ namespace HandheldCompanion.Views.Pages
                     Profile profile = new Profile(path);
                     profile.Layout = LayoutTemplate.DefaultLayout.Layout.Clone() as Layout;
                     profile.LayoutTitle = LayoutTemplate.DefaultLayout.Name;
-                    profile.TDPOverrideValues = MainWindow.CurrentDevice.nTDP;
 
                     bool exists = false;
 
@@ -353,8 +352,6 @@ namespace HandheldCompanion.Views.Pages
 
                 // prevent user from renaming default profile
                 tB_ProfileName.IsEnabled = !currentProfile.Default;
-                // prevent user from setting power settings on default profile
-                PowerSettings.IsEnabled = !currentProfile.Default;
                 // disable global settings on default profile
                 GlobalSettings.IsEnabled = !currentProfile.Default;
                 // prevent user from disabling default profile
@@ -377,22 +374,8 @@ namespace HandheldCompanion.Views.Pages
                 cB_InvertHorizontal.IsChecked = currentProfile.MotionInvertHorizontal;
                 cB_InvertVertical.IsChecked = currentProfile.MotionInvertVertical;
 
-                // Sustained TDP settings (slow, stapm, long)
-                double[] TDP = currentProfile.TDPOverrideValues is not null ? currentProfile.TDPOverrideValues : MainWindow.CurrentDevice.nTDP;
-                TDPSustainedSlider.Value = TDP[(int)PowerType.Slow];
-                TDPBoostSlider.Value = TDP[(int)PowerType.Fast];
-
-                TDPToggle.IsOn = currentProfile.TDPOverrideEnabled;
-
                 // Layout settings
                 Toggle_ControllerLayout.IsOn = currentProfile.LayoutEnabled;
-
-                // define slider(s) min and max values based on device specifications
-                var TDPdown = MainWindow.CurrentDevice.cTDP[0];
-                TDPBoostSlider.Minimum = TDPSustainedSlider.Minimum = TDPdown;
-
-                var TDPup = MainWindow.CurrentDevice.cTDP[1];
-                TDPBoostSlider.Maximum = TDPSustainedSlider.Maximum = TDPup;
 
                 // UMC settings
                 Toggle_UniversalMotion.IsOn = currentProfile.MotionEnabled;
@@ -481,12 +464,6 @@ namespace HandheldCompanion.Views.Pages
             currentProfile.MotionAntiDeadzone = (float)tb_ProfileUMCAntiDeadzone.Value;
             currentProfile.MotionMode = (MotionMode)cB_UMC_MotionDefaultOffOn.SelectedIndex;
 
-            // Power settings
-            currentProfile.TDPOverrideValues[0] = (int)TDPSustainedSlider.Value;
-            currentProfile.TDPOverrideValues[1] = (int)TDPSustainedSlider.Value;
-            currentProfile.TDPOverrideValues[2] = (int)TDPBoostSlider.Value;
-            currentProfile.TDPOverrideEnabled = (bool)TDPToggle.IsOn;
-
             // Layout settings
             currentProfile.LayoutEnabled = (bool)Toggle_ControllerLayout.IsOn;
 
@@ -565,29 +542,6 @@ namespace HandheldCompanion.Views.Pages
         {
             if (cB_UMC_MotionDefaultOffOn.SelectedIndex == -1)
                 return;
-        }
-
-        private void TDPSustainedSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (!TDPSustainedSlider.IsInitialized || !TDPBoostSlider.IsInitialized)
-                return;
-
-            // set boost slider minimum value to sustained current value
-            TDPBoostSlider.Minimum = TDPSustainedSlider.Value;
-        }
-
-        private void TDPBoostSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (!TDPSustainedSlider.IsInitialized || !TDPBoostSlider.IsInitialized)
-                return;
-
-            // set sustained slider maximum value to boost current value
-            TDPSustainedSlider.Maximum = TDPBoostSlider.Value;
-        }
-
-        private void TDPToggle_Toggled(object sender, RoutedEventArgs e)
-        {
-            // do something
         }
 
         private void TriggerCreated(Hotkey hotkey)
