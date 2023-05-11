@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using Attributes = ControllerCommon.Managers.Hid.Attributes;
 using Capabilities = ControllerCommon.Managers.Hid.Capabilities;
 
@@ -375,24 +375,31 @@ namespace ControllerCommon.Managers
             return output;
         }
 
-        private async static void XUsbDevice_DeviceRemoved(DeviceEventArgs obj)
+        private static void XUsbDevice_DeviceRemoved(DeviceEventArgs obj)
         {
-            string SymLink = PathToInstanceId(obj.SymLink, obj.InterfaceGuid.ToString());
+            try
+            {
+                string SymLink = PathToInstanceId(obj.SymLink, obj.InterfaceGuid.ToString());
 
-            var deviceEx = FindDevice(SymLink, true);
-            if (deviceEx is null)
-                return;
+                var deviceEx = FindDevice(SymLink, true);
+                if (deviceEx is null)
+                    return;
 
-            // give system at least one second to initialize device
-            await Task.Delay(1000);
-            PnPDevices.TryRemove(deviceEx.SymLink, out var value);
+                // give system at least one second to initialize device
+                Thread.Sleep(1000);
+                PnPDevices.TryRemove(deviceEx.SymLink, out var value);
 
-            // RefreshHID();
-            LogManager.LogDebug("XUsbDevice removed: {0}", deviceEx.Name);
-            XUsbDeviceRemoved?.Invoke(deviceEx, obj);
+                // RefreshHID();
+                if (deviceEx.isGaming)
+                {
+                    LogManager.LogDebug("XUsbDevice removed: {0}", deviceEx.Name);
+                    XUsbDeviceRemoved?.Invoke(deviceEx, obj);
+                }
+            }
+            catch { }
         }
 
-        private async static void XUsbDevice_DeviceArrived(DeviceEventArgs obj)
+        private static void XUsbDevice_DeviceArrived(DeviceEventArgs obj)
         {
             try
             {
@@ -401,7 +408,7 @@ namespace ControllerCommon.Managers
                 if (IsInitialized)
                 {
                     // give system at least one second to initialize device
-                    await Task.Delay(1000);
+                    Thread.Sleep(1000);
                     RefreshHID();
                 }
 
@@ -417,7 +424,7 @@ namespace ControllerCommon.Managers
             catch { }
         }
 
-        private async static void HidDevice_DeviceRemoved(DeviceEventArgs obj)
+        private static void HidDevice_DeviceRemoved(DeviceEventArgs obj)
         {
             try
             {
@@ -428,33 +435,40 @@ namespace ControllerCommon.Managers
                     return;
 
                 // give system at least one second to initialize device (+500 ms to give XInput priority)
-                await Task.Delay(1500);
+                Thread.Sleep(1500);
                 PnPDevices.TryRemove(deviceEx.SymLink, out var value);
 
                 // RefreshHID();
-                LogManager.LogDebug("HidDevice removed: {0}", deviceEx.Name);
-                HidDeviceRemoved?.Invoke(deviceEx, obj);
+                if (deviceEx.isGaming && !deviceEx.isXInput)
+                {
+                    LogManager.LogDebug("HidDevice removed: {0}", deviceEx.Name);
+                    HidDeviceRemoved?.Invoke(deviceEx, obj);
+                }
             }
             catch { }
         }
 
-        private async static void HidDevice_DeviceArrived(DeviceEventArgs obj)
+        private static void HidDevice_DeviceArrived(DeviceEventArgs obj)
         {
-            string SymLink = PathToInstanceId(obj.SymLink, obj.InterfaceGuid.ToString());
-
-            if (IsInitialized)
+            try
             {
-                // give system at least one second to initialize device (+500 ms to give XInput priority)
-                await Task.Delay(1500);
-                RefreshHID();
-            }
+                string SymLink = PathToInstanceId(obj.SymLink, obj.InterfaceGuid.ToString());
 
-            PnPDetails deviceEx = FindDevice(SymLink);
-            if (deviceEx is not null && deviceEx.isGaming && !deviceEx.isXInput)
-            {
-                LogManager.LogDebug("HidDevice arrived: {0} (VID:{1}, PID:{2}) {3}", deviceEx.Name, deviceEx.GetVendorID(), deviceEx.GetProductID(), deviceEx.deviceInstanceId);
-                HidDeviceArrived?.Invoke(deviceEx, obj);
+                if (IsInitialized)
+                {
+                    // give system at least one second to initialize device (+500 ms to give XInput priority)
+                    Thread.Sleep(1500);
+                    RefreshHID();
+                }
+
+                PnPDetails deviceEx = FindDevice(SymLink);
+                if (deviceEx is not null && deviceEx.isGaming && !deviceEx.isXInput)
+                {
+                    LogManager.LogDebug("HidDevice arrived: {0} (VID:{1}, PID:{2}) {3}", deviceEx.Name, deviceEx.GetVendorID(), deviceEx.GetProductID(), deviceEx.deviceInstanceId);
+                    HidDeviceArrived?.Invoke(deviceEx, obj);
+                }
             }
+            catch { }
         }
 
         private static void UsbDevice_DeviceRemoved(DeviceEventArgs obj)
