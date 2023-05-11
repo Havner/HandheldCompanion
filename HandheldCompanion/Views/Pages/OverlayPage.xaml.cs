@@ -302,7 +302,7 @@ namespace HandheldCompanion.Views.Pages
             if (!IsLoaded)
                 return;
 
-            SettingsManager.SetProperty("OverlayControllerBackgroundColor", ColorPicker.SelectedColor);
+            SettingsManager.SetProperty("OverlayControllerBackgroundColor", Convert.ToString(ColorPicker.SelectedColor));
         }
 
         private void Toggle_AlwaysOnTop_Toggled(object sender, RoutedEventArgs e)

@@ -56,14 +56,6 @@ namespace HandheldCompanion.Managers
             if (prevValue.ToString() == value.ToString() && !force)
                 return;
 
-            // specific cases
-            switch (name)
-            {
-                case "OverlayControllerBackgroundColor":
-                    value = Convert.ToString(value);
-                    break;
-            }
-
             try
             {
                 if (!temporary)
