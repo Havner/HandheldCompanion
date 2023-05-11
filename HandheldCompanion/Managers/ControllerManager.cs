@@ -468,6 +468,12 @@ namespace HandheldCompanion.Managers
             // pass inputs to Overlay Model
             MainWindow.overlayModel.UpdateReport(controllerState);
 
+            // TODO: remove and implement mute keys
+            // cut the mapper with mute keys
+            if (controllerState.ButtonState[ButtonFlags.Special] == true ||
+                controllerState.ButtonState[ButtonFlags.OEM1] == true)
+                return;
+
             // pass inputs to Layout manager
             controllerState = LayoutManager.MapController(controllerState);
 
