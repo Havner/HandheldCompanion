@@ -25,8 +25,6 @@ namespace HandheldCompanion.Controllers
         private const short TrackPadInner = 21844;
 
         private NeptuneControllerInputState prevState;
-        private bool prevLizardMouseEnabled = false;
-        private bool prevLizardButtonsEnabled = false;
 
         public byte FeedbackLargeMotor;
         public byte FeedbackSmallMotor;
@@ -68,13 +66,6 @@ namespace HandheldCompanion.Controllers
             thread = new Thread(ThreadLoop);
             thread.IsBackground = true;
 
-            // bool LizardMouse = SettingsManager.GetBoolean("SteamDeckLizardMouse");
-            // bool LizardButtons = SettingsManager.GetBoolean("SteamDeckLizardButtons");
-
-            // get previous lizard state
-            prevLizardMouseEnabled = Controller.LizardMouseEnabled;
-            prevLizardButtonsEnabled = Controller.LizardButtonsEnabled;
-
             // disable lizard state
             SetLizardMouse(false);
             SetLizardButtons(false);
@@ -106,7 +97,8 @@ namespace HandheldCompanion.Controllers
                 if (GetHapticIntensity(FeedbackSmallMotor, MaxIntensity, out var rightIntensity))
                     lastRightHapticOn = Controller.SetHaptic2(HapticPad.Right, HapticStyle.Weak, rightIntensity);
 
-                Thread.Sleep(TimerManager.GetPeriod() * 2);
+                //Thread.Sleep(TimerManager.GetPeriod() * 2);
+                await Task.Delay(TimerManager.GetPeriod() * 2);
 
                 if (lastLeftHapticOn is not null)
                     await lastLeftHapticOn;
@@ -329,8 +321,8 @@ namespace HandheldCompanion.Controllers
             try
             {
                 // restore lizard state
-                SetLizardButtons(prevLizardButtonsEnabled);
-                SetLizardMouse(prevLizardMouseEnabled);
+                SetLizardButtons(true);
+                SetLizardMouse(true);
 
                 Controller.Close();
                 isConnected = false;
