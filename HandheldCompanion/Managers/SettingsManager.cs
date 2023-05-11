@@ -95,22 +95,6 @@ namespace HandheldCompanion.Managers
             // used to handle cases
             switch (name)
             {
-                case "ConfigurableTDPOverrideDown":
-                    {
-                        bool TDPoverride = GetBoolean("ConfigurableTDPOverride");
-
-                        double TDPvalue = Convert.ToDouble(Properties.Settings.Default["ConfigurableTDPOverrideDown"]);
-                        return TDPoverride ? Properties.Settings.Default["ConfigurableTDPOverrideDown"] : MainWindow.CurrentDevice.cTDP[0];
-                    }
-
-                case "ConfigurableTDPOverrideUp":
-                    {
-                        bool TDPoverride = GetBoolean("ConfigurableTDPOverride");
-
-                        double TDPvalue = Convert.ToDouble(Properties.Settings.Default["ConfigurableTDPOverrideUp"]);
-                        return TDPoverride ? Properties.Settings.Default["ConfigurableTDPOverrideUp"] : MainWindow.CurrentDevice.cTDP[1];
-                    }
-
                 case "QuickToolsPerformanceTDPSustainedValue":
                     {
                         bool TDPoverride = GetBoolean("QuickToolsPerformanceTDPEnabled");

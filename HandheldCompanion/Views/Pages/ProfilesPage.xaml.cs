@@ -45,7 +45,6 @@ namespace HandheldCompanion.Views.Pages
             ProfileManager.Applied += ProfileApplied;
 
             ProfileManager.Initialized += ProfileManagerLoaded;
-            SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
 
             HotkeysManager.HotkeyCreated += TriggerCreated;
             InputsManager.TriggerUpdated += TriggerUpdated;
@@ -120,23 +119,6 @@ namespace HandheldCompanion.Views.Pages
 
             // auto-sort
             cB_Profiles.Items.SortDescriptions.Add(new SortDescription("", ListSortDirection.Descending));
-        }
-
-        public void SettingsManager_SettingValueChanged(string name, object value)
-        {
-            // UI thread (async)
-            Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                switch (name)
-                {
-                    case "ConfigurableTDPOverrideDown":
-                        TDPBoostSlider.Minimum = TDPSustainedSlider.Minimum = (double)value;
-                        break;
-                    case "ConfigurableTDPOverrideUp":
-                        TDPBoostSlider.Maximum = TDPSustainedSlider.Maximum = (double)value;
-                        break;
-                }
-            });
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -406,10 +388,10 @@ namespace HandheldCompanion.Views.Pages
                 Toggle_ControllerLayout.IsOn = currentProfile.LayoutEnabled;
 
                 // define slider(s) min and max values based on device specifications
-                var TDPdown = SettingsManager.GetInt("ConfigurableTDPOverrideDown");
+                var TDPdown = MainWindow.CurrentDevice.cTDP[0];
                 TDPBoostSlider.Minimum = TDPSustainedSlider.Minimum = TDPdown;
 
-                var TDPup = SettingsManager.GetInt("ConfigurableTDPOverrideUp");
+                var TDPup = MainWindow.CurrentDevice.cTDP[1];
                 TDPBoostSlider.Maximum = TDPSustainedSlider.Maximum = TDPup;
 
                 // UMC settings

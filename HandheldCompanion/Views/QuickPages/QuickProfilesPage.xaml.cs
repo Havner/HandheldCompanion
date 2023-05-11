@@ -40,7 +40,6 @@ namespace HandheldCompanion.Views.QuickPages
             ProfileManager.Deleted += ProfileDeleted;
             ProfileManager.Applied += ProfileApplied;
 
-            SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
             HotkeysManager.CommandExecuted += HotkeysManager_CommandExecuted;
 
             HotkeysManager.HotkeyCreated += TriggerCreated;
@@ -149,25 +148,6 @@ namespace HandheldCompanion.Views.QuickPages
                             TDPSustainedSlider.Value--;
                             TDPBoostSlider.Value--;
                         }
-                        break;
-                }
-            });
-        }
-
-        public void SettingsManager_SettingValueChanged(string name, object value)
-        {
-            // UI thread (async)
-            Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                switch (name)
-                {
-                    case "ConfigurableTDPOverrideUp":
-                        TDPSustainedSlider.Maximum = Convert.ToInt32(value);
-                        TDPBoostSlider.Maximum = Convert.ToInt32(value);
-                        break;
-                    case "ConfigurableTDPOverrideDown":
-                        TDPSustainedSlider.Minimum = Convert.ToInt32(value);
-                        TDPBoostSlider.Minimum = Convert.ToInt32(value);
                         break;
                 }
             });

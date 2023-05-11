@@ -41,6 +41,12 @@ namespace HandheldCompanion.Views.QuickPages
             SystemManager.PrimaryScreenChanged += DesktopManager_PrimaryScreenChanged;
             SystemManager.DisplaySettingsChanged += DesktopManager_DisplaySettingsChanged;
 
+            TDPSustainedSlider.Minimum = MainWindow.CurrentDevice.cTDP[0];
+            TDPSustainedSlider.Maximum = MainWindow.CurrentDevice.cTDP[1];
+
+            TDPBoostSlider.Minimum = MainWindow.CurrentDevice.cTDP[0];
+            TDPBoostSlider.Maximum = MainWindow.CurrentDevice.cTDP[1];
+
             GPUSlider.Minimum = MainWindow.CurrentDevice.GfxClock[0];
             GPUSlider.Maximum = MainWindow.CurrentDevice.GfxClock[1];
 
@@ -129,14 +135,6 @@ namespace HandheldCompanion.Views.QuickPages
                             if (GPUSlider.Minimum <= Clock && GPUSlider.Maximum >= Clock)
                                 GPUSlider.Value = Clock;
                         }
-                        break;
-                    case "ConfigurableTDPOverrideUp":
-                        TDPSustainedSlider.Maximum = Convert.ToInt32(value);
-                        TDPBoostSlider.Maximum = Convert.ToInt32(value);
-                        break;
-                    case "ConfigurableTDPOverrideDown":
-                        TDPSustainedSlider.Minimum = Convert.ToInt32(value);
-                        TDPBoostSlider.Minimum = Convert.ToInt32(value);
                         break;
                     case "QuietModeToggled":
                         QuietModeToggle.IsOn = Convert.ToBoolean(value);
