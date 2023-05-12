@@ -60,9 +60,8 @@ namespace HandheldCompanion.Views
         public static TaskManager taskManager;
         public static PerformanceManager performanceManager;
 
-        private WindowState prevWindowState;
+        private WindowState visibleWindowState;
         private NotifyIcon notifyIcon;
-        private bool NotifyInTaskbar;
 
         public static string CurrentExe, CurrentPath, CurrentPathService;
         private bool appClosing;
@@ -112,7 +111,7 @@ namespace HandheldCompanion.Views
             {
                 Text = Title,
                 Icon = System.Drawing.Icon.ExtractAssociatedIcon(Assembly.GetExecutingAssembly().Location),
-                Visible = false,
+                Visible = true,
                 ContextMenuStrip = new()
             };
 
@@ -259,7 +258,7 @@ namespace HandheldCompanion.Views
                         WindowState = WindowState.Minimized;
                         break;
                     case WindowState.Minimized:
-                        WindowState = prevWindowState;
+                        WindowState = visibleWindowState;
                         break;
                 }
             });
@@ -425,8 +424,8 @@ namespace HandheldCompanion.Views
                 return;
 
             // home page has loaded, display main window
-            WindowState = SettingsManager.GetBoolean("StartMinimized") ? WindowState.Minimized : (WindowState)SettingsManager.GetInt("MainWindowState");
-            prevWindowState = (WindowState)SettingsManager.GetInt("MainWindowPrevState");
+            WindowState = SettingsManager.GetBoolean("StartMinimized") ? WindowState.Minimized : (WindowState)SettingsManager.GetInt("MainWindowVisibleState");
+            visibleWindowState = (WindowState)SettingsManager.GetInt("MainWindowVisibleState");
 
             IsReady = true;
         }
@@ -669,27 +668,19 @@ namespace HandheldCompanion.Views
 
         private void Window_Closing(object sender, CancelEventArgs e)
         {
-            // position and size settings
             switch (WindowState)
             {
                 case WindowState.Normal:
+                case WindowState.Maximized:
+                    // save normal position and size settings
                     SettingsManager.SetProperty("MainWindowLeft", Left);
                     SettingsManager.SetProperty("MainWindowTop", Top);
-                    SettingsManager.SetProperty("MainWindowWidth", ActualWidth);
-                    SettingsManager.SetProperty("MainWindowHeight", ActualHeight);
-                    break;
-                case WindowState.Maximized:
-                    SettingsManager.SetProperty("MainWindowLeft", 0);
-                    SettingsManager.SetProperty("MainWindowTop", 0);
-                    SettingsManager.SetProperty("MainWindowWidth", SystemParameters.MaximizedPrimaryScreenWidth);
-                    SettingsManager.SetProperty("MainWindowHeight", SystemParameters.MaximizedPrimaryScreenHeight);
-
+                    SettingsManager.SetProperty("MainWindowWidth", Width);
+                    SettingsManager.SetProperty("MainWindowHeight", Height);
                     break;
             }
 
-            SettingsManager.SetProperty("MainWindowState", (int)WindowState);
-            SettingsManager.SetProperty("MainWindowPrevState", (int)prevWindowState);
-
+            SettingsManager.SetProperty("MainWindowVisibleState", (int)visibleWindowState);
             SettingsManager.SetProperty("MainWindowIsPaneOpen", navView.IsPaneOpen);
 
             if (SettingsManager.GetBoolean("CloseMinimises") && !appClosing)
@@ -713,22 +704,14 @@ namespace HandheldCompanion.Views
             switch (WindowState)
             {
                 case WindowState.Minimized:
-                    notifyIcon.Visible = true;
                     ShowInTaskbar = false;
-
-                    if (!NotifyInTaskbar)
-                    {
-                        ToastManager.SendToast(Title, "is running in the background");
-                        NotifyInTaskbar = true;
-                    }
                     break;
+
                 case WindowState.Normal:
                 case WindowState.Maximized:
-                    notifyIcon.Visible = false;
                     ShowInTaskbar = true;
                     this.Activate();
-
-                    prevWindowState = WindowState;
+                    visibleWindowState = WindowState;
                     break;
             }
         }

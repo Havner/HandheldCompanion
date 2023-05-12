@@ -121,18 +121,6 @@ namespace HandheldCompanion.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("2")]
-        public int MainWindowState {
-            get {
-                return ((int)(this["MainWindowState"]));
-            }
-            set {
-                this["MainWindowState"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int MainWindowTheme {
             get {
@@ -446,12 +434,12 @@ namespace HandheldCompanion.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int MainWindowPrevState {
+        public int MainWindowVisibleState {
             get {
-                return ((int)(this["MainWindowPrevState"]));
+                return ((int)(this["MainWindowVisibleState"]));
             }
             set {
-                this["MainWindowPrevState"] = value;
+                this["MainWindowVisibleState"] = value;
             }
         }
         
