@@ -78,17 +78,6 @@ namespace ControllerCommon.Devices
             }
         }
 
-        public override void SetFanDuty(double percent)
-        {
-            if (ECDetails.AddressControl == 0)
-                return;
-
-            double duty = percent * (ECDetails.ValueMax - ECDetails.ValueMin) / 100 + ECDetails.ValueMin;
-            byte data = Convert.ToByte(duty);
-
-            ECRamDirectWrite(ECDetails.AddressControl, ECDetails, data);
-        }
-
         public override bool Open()
         {
             bool success = base.Open();

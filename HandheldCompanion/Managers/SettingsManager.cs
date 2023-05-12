@@ -104,13 +104,17 @@ namespace HandheldCompanion.Managers
                     uint GPUvalue = Convert.ToUInt32(Properties.Settings.Default["PerformanceGPUValue"]);
                     return GPUvalue != 0 ? GPUvalue : MainWindow.CurrentDevice.GPU[1];
 
-                // virtual setting
+                // virtual setting, only for hotkeys
                 case "HasBrightnessSupport":
                     return SystemManager.HasBrightnessSupport();
 
-                // virtual setting
+                // virtual setting, only for hotkeys
                 case "HasVolumeSupport":
                     return SystemManager.HasVolumeSupport();
+
+                // virtual setting, only for hotkeys
+                case "HasFanControlSupport":
+                    return SystemManager.HasFanControlSupport();
 
                 default:
                     {

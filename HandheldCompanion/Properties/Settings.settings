@@ -149,22 +149,16 @@
     <Setting Name="LayoutFilterOnDevice" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="QuietModeDuty" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">40</Value>
+    <Setting Name="FanControlValue" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">50</Value>
     </Setting>
-    <Setting Name="QuietModeToggled" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="QuietModeEnabled" Type="System.Boolean" Scope="User">
+    <Setting Name="FanControlEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="MainWindowIsPaneOpen" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="DesktopProfileOnStart" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="QuietModeDisclosure" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>

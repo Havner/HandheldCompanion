@@ -329,7 +329,7 @@ namespace HandheldCompanion.Managers
                             fProcess.Process.Kill();
                         }
                         break;
-                    case "QuietModeToggled":
+                    case "FanControlEnabled":
                         {
                             bool value = !SettingsManager.GetBoolean(listener);
                             SettingsManager.SetProperty(listener, value);

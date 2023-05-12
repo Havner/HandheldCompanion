@@ -613,37 +613,25 @@ namespace HandheldCompanion.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("40")]
-        public double QuietModeDuty {
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public uint FanControlValue {
             get {
-                return ((double)(this["QuietModeDuty"]));
+                return ((uint)(this["FanControlValue"]));
             }
             set {
-                this["QuietModeDuty"] = value;
+                this["FanControlValue"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool QuietModeToggled {
+        public bool FanControlEnabled {
             get {
-                return ((bool)(this["QuietModeToggled"]));
+                return ((bool)(this["FanControlEnabled"]));
             }
             set {
-                this["QuietModeToggled"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool QuietModeEnabled {
-            get {
-                return ((bool)(this["QuietModeEnabled"]));
-            }
-            set {
-                this["QuietModeEnabled"] = value;
+                this["FanControlEnabled"] = value;
             }
         }
         
@@ -668,18 +656,6 @@ namespace HandheldCompanion.Properties {
             }
             set {
                 this["DesktopProfileOnStart"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool QuietModeDisclosure {
-            get {
-                return ((bool)(this["QuietModeDisclosure"]));
-            }
-            set {
-                this["QuietModeDisclosure"] = value;
             }
         }
     }

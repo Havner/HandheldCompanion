@@ -1,9 +1,6 @@
-using ControllerCommon.Devices;
 using HandheldCompanion.Managers;
 using HandheldCompanion.Managers.Desktop;
-using ModernWpf.Controls;
 using System;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using Page = System.Windows.Controls.Page;
@@ -25,9 +22,6 @@ namespace HandheldCompanion.Views.QuickPages
 
             SystemManager.PrimaryScreenChanged += DesktopManager_PrimaryScreenChanged;
             SystemManager.DisplaySettingsChanged += DesktopManager_DisplaySettingsChanged;
-
-            // todo: remove me ?
-            SettingsManager.SetProperty("QuietModeEnabled", MainWindow.CurrentDevice.Capacities.HasFlag(DeviceCapacities.FanControl));
         }
 
         private void DesktopManager_PrimaryScreenChanged(DesktopScreen screen)
@@ -56,6 +50,8 @@ namespace HandheldCompanion.Views.QuickPages
 
                 GPUSlider.Minimum = MainWindow.CurrentDevice.GPU[0];
                 GPUSlider.Maximum = MainWindow.CurrentDevice.GPU[1];
+
+                FanControlToggle.IsEnabled = FanControlSlider.IsEnabled = SystemManager.HasFanControlSupport();
             });
         }
 
@@ -84,14 +80,11 @@ namespace HandheldCompanion.Views.QuickPages
                         GPUSlider.Value = Convert.ToUInt32(value);
                         break;
 
-                    case "QuietModeToggled":
-                        QuietModeToggle.IsOn = Convert.ToBoolean(value);
+                    case "FanControlEnabled":
+                        FanControlToggle.IsOn = Convert.ToBoolean(value);
                         break;
-                    case "QuietModeEnabled":
-                        QuietModeToggle.IsEnabled = Convert.ToBoolean(value);
-                        break;
-                    case "QuietModeDuty":
-                        QuietModeSlider.Value = Convert.ToDouble(value);
+                    case "FanControlValue":
+                        FanControlSlider.Value = Convert.ToUInt32(value);
                         break;
                 }
             });
@@ -188,49 +181,18 @@ namespace HandheldCompanion.Views.QuickPages
             SystemManager.SetResolution(resolution.width, resolution.height, frequency.frequency);
         }
 
-        private async void QuietModeToggle_Toggled(object sender, RoutedEventArgs e)
+        private void FanControlToggle_Toggled(object sender, RoutedEventArgs e)
         {
             if (!IsLoaded)
                 return;
-
-            bool Disclosure = SettingsManager.GetBoolean("QuietModeDisclosure");
-            if (QuietModeToggle.IsOn && !Disclosure)
-            {
-                // todo: localize me !
-                Task<ContentDialogResult> result = Dialog.ShowAsync(
-                    "Warning",
-                    "Altering fan duty cycle might cause instabilities and overheating. It might also trigger anti cheat systems and get you banned. Product warranties may not apply if you operate your device beyond its specifications. Use at your own risk.",
-                    ContentDialogButton.Primary, "Cancel", Properties.Resources.ProfilesPage_OK);
-
-                await result; // sync call
-
-                switch (result.Result)
-                {
-                    case ContentDialogResult.Primary:
-                        // save state
-                        SettingsManager.SetProperty("QuietModeDisclosure", true);
-                        break;
-                    default:
-                    case ContentDialogResult.None:
-                        // restore previous state
-                        QuietModeToggle.IsOn = false;
-                        return;
-                }
-            }
-
-            SettingsManager.SetProperty("QuietModeToggled", QuietModeToggle.IsOn);
+            SettingsManager.SetProperty("FanControlEnabled", FanControlToggle.IsOn);
         }
 
-        private void QuietModeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void FanControlSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            double value = QuietModeSlider.Value;
-            if (double.IsNaN(value))
-                return;
-
             if (!IsLoaded)
                 return;
-
-            SettingsManager.SetProperty("QuietModeDuty", value);
+            SettingsManager.SetProperty("FanControlValue", (uint)FanControlSlider.Value);
         }
     }
 }

@@ -152,12 +152,12 @@ namespace ControllerCommon.Devices
             inpOut.DlPortWritePortUchar(IO6C, enable ? (byte)0xCC : (byte)0xCD);
         }
 
-        public override void SetFanDuty(double percent)
+        public override void SetFanDuty(uint percent)
         {
             if (!IsOpen || !IsSupported)
                 return;
 
-            ushort rpm = (ushort)(MAX_FAN_RPM * percent / 100.0d);
+            uint rpm = MAX_FAN_RPM * percent / 100;
             if (rpm > MAX_FAN_RPM)
                 rpm = MAX_FAN_RPM;
 

@@ -45,7 +45,7 @@ namespace HandheldCompanion.Managers
             { 31, new InputsHotkey(InputsHotkeyType.HC,         "\uE961",   "shortcutDesktopLayout",            "Segoe Fluent Icons",   20, false,  true,   null,                   string.Empty,           true,   true) },
 
             // Device specific hotkeys
-            { 40, new InputsHotkey(InputsHotkeyType.Device,     "\uE9CA",   "QuietModeToggled",                 "Segoe Fluent Icons",   20, false,  true,   null,                   "QuietModeDisclosure",  false,  true) },
+            { 40, new InputsHotkey(InputsHotkeyType.Device,     "\uE9CA",   "FanControlEnabled",                 "Segoe Fluent Icons",   20, false,  true,   null,                   "HasFanControlSupport", false,  true) },
             { 41, new InputsHotkey(InputsHotkeyType.Device,     "\uE706",   "increaseBrightness",               "Segoe Fluent Icons",   20, true,   false,  null,                   "HasBrightnessSupport", false,  false) },
             { 42, new InputsHotkey(InputsHotkeyType.Device,     "\uEC8A",   "decreaseBrightness",               "Segoe Fluent Icons",   20, true,   false,  null,                   "HasBrightnessSupport", false,  false) },
             { 43, new InputsHotkey(InputsHotkeyType.Device,     "\uE995",   "increaseVolume",                   "Segoe Fluent Icons",   20, true,   false,  null,                   "HasVolumeSupport",     false,  false) },

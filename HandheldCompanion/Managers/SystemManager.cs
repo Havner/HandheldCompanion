@@ -157,13 +157,13 @@ namespace HandheldCompanion.Managers
         private static MMDeviceEnumerator DevEnum;
         private static MMDevice multimediaDevice;
         private static MMDeviceNotificationClient notificationClient;
-        private static bool VolumeSupport;
+        private static bool VolumeSupport = false;
 
         private static ManagementEventWatcher EventWatcher;
         private static ManagementScope Scope;
-        private static bool BrightnessSupport;
+        private static bool BrightnessSupport = false;
 
-        private static bool FanControlSupport;
+        private static bool FanControlSupport = false;
 
         private static Screen PrimaryScreen;
         public static bool IsInitialized;
@@ -245,47 +245,36 @@ namespace HandheldCompanion.Managers
             }
         }
 
+        public static bool HasFanControlSupport()
+        {
+            return FanControlSupport;
+        }
+
         private static void SettingsManager_SettingValueChanged(string name, object value)
         {
             switch (name)
             {
-                case "QuietModeEnabled":
-                    {
-                        bool enabled = Convert.ToBoolean(value);
-                        bool toggled = SettingsManager.GetBoolean("QuietModeToggled");
+                case "FanControlEnabled":
+                    if (!HasFanControlSupport())
+                        return;
 
-                        if (!enabled && toggled)
-                            SettingsManager.SetProperty("QuietModeToggled", false);
+                    if (Convert.ToBoolean(value))
+                    {
+                        MainWindow.CurrentDevice.SetFanControl(true);
+                        MainWindow.CurrentDevice.SetFanDuty(SettingsManager.GetUInt("FanControlValue"));
+                    }
+                    else if (SettingsManager.IsInitialized)
+                    {
+                        MainWindow.CurrentDevice.SetFanControl(false);
                     }
                     break;
-                case "QuietModeToggled":
-                    {
-                        bool toggled = Convert.ToBoolean(value);
 
-                        // do not send command to device on startup if toggle is off
-                        if (!SettingsManager.IsInitialized && !toggled)
-                            return;
+                case "FanControlValue":
+                    if (!HasFanControlSupport())
+                        return;
 
-                        MainWindow.CurrentDevice.SetFanControl(toggled);
-
-                        if (!toggled)
-                            return;
-
-                        double duty = SettingsManager.GetDouble("QuietModeDuty");
-                        MainWindow.CurrentDevice.SetFanDuty(duty);
-                    }
-                    break;
-                case "QuietModeDuty":
-                    {
-                        bool enabled = SettingsManager.GetBoolean("QuietModeEnabled");
-                        bool toggled = SettingsManager.GetBoolean("QuietModeToggled");
-
-                        if (!enabled || !toggled)
-                            return;
-
-                        double duty = Convert.ToDouble(value);
-                        MainWindow.CurrentDevice.SetFanDuty(duty);
-                    }
+                    if (SettingsManager.GetBoolean("FanControlEnabled"))
+                        MainWindow.CurrentDevice.SetFanDuty(Convert.ToUInt32(value));
                     break;
             }
         }

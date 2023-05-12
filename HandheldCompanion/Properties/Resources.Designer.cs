@@ -615,18 +615,18 @@ namespace HandheldCompanion.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Fan override.
         /// </summary>
-        public static string InputsHotkey_QuietModeToggled {
+        public static string InputsHotkey_FanControlEnabled {
             get {
-                return ResourceManager.GetString("InputsHotkey_QuietModeToggled", resourceCulture);
+                return ResourceManager.GetString("InputsHotkey_FanControlEnabled", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Set the fan duty cycle to user-defined value.
         /// </summary>
-        public static string InputsHotkey_QuietModeToggledDesc {
+        public static string InputsHotkey_FanControlEnabledDesc {
             get {
-                return ResourceManager.GetString("InputsHotkey_QuietModeToggledDesc", resourceCulture);
+                return ResourceManager.GetString("InputsHotkey_FanControlEnabledDesc", resourceCulture);
             }
         }
         

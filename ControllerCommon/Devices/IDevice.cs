@@ -332,12 +332,12 @@ namespace ControllerCommon.Devices
             return EnumUtils.GetDescriptionFromEnumValue(button, this.GetType().Name);
         }
 
-        public virtual void SetFanDuty(double percent)
+        public virtual void SetFanDuty(uint percent)
         {
             if (ECDetails.AddressDuty == 0)
                 return;
 
-            double duty = percent * (ECDetails.ValueMax - ECDetails.ValueMin) / 100 + ECDetails.ValueMin;
+            uint duty = (uint)(percent * (ECDetails.ValueMax - ECDetails.ValueMin) / 100 + ECDetails.ValueMin);
             byte data = Convert.ToByte(duty);
 
             ECRamDirectWrite(ECDetails.AddressDuty, ECDetails, data);

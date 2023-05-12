@@ -277,12 +277,12 @@
                 </DockPanel>
 
                 <ui:ToggleSwitch
-                    Name="QuietModeToggle"
+                    Name="FanControlToggle"
                     Grid.Column="1"
                     HorizontalAlignment="Right"
                     IsEnabled="False"
                     Style="{DynamicResource InvertedToggleSwitchStyle}"
-                    Toggled="QuietModeToggle_Toggled" />
+                    Toggled="FanControlToggle_Toggled" />
             </Grid>
         </Border>
 
@@ -291,7 +291,7 @@
             Padding="15,6,15,6"
             d:Visibility="Visible"
             CornerRadius="{DynamicResource ControlCornerRadius}"
-            Visibility="{Binding ElementName=QuietModeToggle, Path=IsOn, Converter={StaticResource BooleanToVisibilityConverter}}">
+            Visibility="{Binding ElementName=FanControlToggle, Path=IsOn, Converter={StaticResource BooleanToVisibilityConverter}}">
 
             <DockPanel
                 Grid.Column="1"
@@ -300,14 +300,14 @@
                 <TextBlock
                     Width="30"
                     VerticalAlignment="Center"
-                    Text="{Binding Value, ElementName=QuietModeSlider, Mode=OneWay}"
+                    Text="{Binding Value, ElementName=FanControlSlider, Mode=OneWay}"
                     TextAlignment="Center" />
                 <TextBlock
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     Text="%" />
                 <Slider
-                    x:Name="QuietModeSlider"
+                    x:Name="FanControlSlider"
                     Margin="8,0,0,0"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Center"
@@ -320,7 +320,8 @@
                     Style="{DynamicResource SliderStyle1}"
                     TickFrequency="5"
                     TickPlacement="BottomRight"
-                    ValueChanged="QuietModeSlider_ValueChanged" />
+                    ValueChanged="FanControlSlider_ValueChanged"
+                    IsEnabled="False" />
             </DockPanel>
         </Border>
 
