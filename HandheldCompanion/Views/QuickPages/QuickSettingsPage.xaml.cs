@@ -12,8 +12,8 @@ namespace HandheldCompanion.Views.QuickPages
     /// </summary>
     public partial class QuickSettingsPage : Page
     {
-        private object volumeLock = new();
-        private object brightnessLock = new();
+        private readonly object volumeLock = new();
+        private readonly object brightnessLock = new();
 
         public QuickSettingsPage()
         {
@@ -31,23 +31,21 @@ namespace HandheldCompanion.Views.QuickPages
 
         private void SystemManager_Initialized()
         {
-            // get current system brightness
-            switch (SystemManager.HasBrightnessSupport())
+            // UI thread (async)
+            Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                case true:
+                if (SystemManager.HasBrightnessSupport())
+                {
                     SliderBrightness.IsEnabled = true;
                     SliderBrightness.Value = SystemManager.GetBrightness();
-                    break;
-            }
+                }
 
-            // get current system volume
-            switch (SystemManager.HasVolumeSupport())
-            {
-                case true:
+                if (SystemManager.HasVolumeSupport())
+                {
                     SliderVolume.IsEnabled = true;
                     SliderVolume.Value = SystemManager.GetVolume();
-                    break;
-            }
+                }
+            });
         }
 
         private void HotkeysManager_HotkeyUpdated(Hotkey hotkey)
@@ -76,8 +74,8 @@ namespace HandheldCompanion.Views.QuickPages
             {
                 switch (name)
                 {
-                    case "HIDstrength":
-                        SliderVibration.Value = Convert.ToDouble(value);
+                    case "VibrationStrength":
+                        SliderVibration.Value = Convert.ToUInt32(value);
                         break;
                 }
             });
@@ -114,26 +112,29 @@ namespace HandheldCompanion.Views.QuickPages
 
         private void SliderVibration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            SettingsManager.SetProperty("HIDstrength", SliderVibration.Value);
+            if (!IsLoaded)
+                return;
+            SettingsManager.SetProperty("VibrationStrength", (uint)SliderVibration.Value);
         }
 
         private void SliderBrightness_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            if (!IsLoaded)
+                return;
             if (Monitor.TryEnter(brightnessLock))
             {
                 SystemManager.SetBrightness(SliderBrightness.Value);
-
                 Monitor.Exit(brightnessLock);
             }
         }
 
         private void SliderVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            if (!IsLoaded)
+                return;
             if (Monitor.TryEnter(volumeLock))
             {
-                // update volume
                 SystemManager.SetVolume(SliderVolume.Value);
-
                 Monitor.Exit(volumeLock);
             }
         }

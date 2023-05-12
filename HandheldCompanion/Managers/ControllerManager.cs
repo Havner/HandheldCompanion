@@ -121,9 +121,9 @@ namespace HandheldCompanion.Managers
             {
                 switch (name)
                 {
-                    case "HIDstrength":
-                        double HIDstrength = Convert.ToDouble(value);
-                        SetHIDStrength(HIDstrength);
+                    case "VibrationStrength":
+                        uint VibrationStrength = Convert.ToUInt32(value);
+                        SetHIDStrength(VibrationStrength);
                         break;
 
                     case "SteamDeckMuteController":
@@ -160,7 +160,7 @@ namespace HandheldCompanion.Managers
             }
         }
 
-        private static void SetHIDStrength(double value)
+        private static void SetHIDStrength(uint value)
         {
             IController target = GetTargetController();
             if (target is null)

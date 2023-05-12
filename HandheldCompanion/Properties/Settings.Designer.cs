@@ -517,13 +517,13 @@ namespace HandheldCompanion.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("100")]
-        public double HIDstrength {
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public uint VibrationStrength {
             get {
-                return ((double)(this["HIDstrength"]));
+                return ((uint)(this["VibrationStrength"]));
             }
             set {
-                this["HIDstrength"] = value;
+                this["VibrationStrength"] = value;
             }
         }
         

@@ -125,8 +125,8 @@
     <Setting Name="HIDuncloakonclose" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="HIDstrength" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">100</Value>
+    <Setting Name="VibrationStrength" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">50</Value>
     </Setting>
     <Setting Name="HIDInstancePath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />

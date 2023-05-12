@@ -244,9 +244,9 @@ namespace ControllerCommon.Controllers
             LogManager.LogDebug("Injecting {0} (IsKeyDown:{1}) (IsKeyUp:{2}) to {3}", string.Join(',', State.Buttons), IsKeyDown, IsKeyUp, ToString());
         }
 
-        public virtual void SetVibrationStrength(double value)
+        public virtual void SetVibrationStrength(uint value)
         {
-            VibrationStrength = value / 100;
+            VibrationStrength = value / 100.0d;
         }
 
         public virtual void SetVibration(byte LargeMotor, byte SmallMotor)

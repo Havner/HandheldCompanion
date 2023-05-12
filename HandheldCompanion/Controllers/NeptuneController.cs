@@ -347,7 +347,7 @@ namespace HandheldCompanion.Controllers
             return true;
         }
 
-        public override void SetVibrationStrength(double value)
+        public override void SetVibrationStrength(uint value)
         {
             base.SetVibrationStrength(value);
             this.Rumble();
