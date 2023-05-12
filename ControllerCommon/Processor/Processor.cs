@@ -1,25 +1,8 @@
 using ControllerCommon.Managers;
-using ControllerCommon.Processor.AMD;
-using ControllerCommon.Processor.Intel;
-using System;
-using System.Collections.Generic;
 using System.Management;
-using System.Threading;
-using System.Timers;
-using Timer = System.Timers.Timer;
 
 namespace ControllerCommon.Processor
 {
-    public enum PowerType
-    {
-        // long
-        Slow = 0,
-        Stapm = 1,
-        Fast = 2,
-        MsrSlow = 3,
-        MsrFast = 4,
-    }
-
     public class Processor
     {
         private static ManagementClass managClass = new ManagementClass("win32_processor");
@@ -29,37 +12,9 @@ namespace ControllerCommon.Processor
 
         protected string Name, ProcessorID;
 
-        protected bool CanChangeTDP, CanChangeGPU;
+        protected bool canChangeTDP = false, canChangeGPU = false;
         protected object IsBusy = new();
-        public bool IsInitialized;
-
-        protected Timer updateTimer = new Timer() { Interval = 3000, AutoReset = true };
-
-        protected Dictionary<PowerType, int> m_Limits = new();
-        protected Dictionary<PowerType, int> m_PrevLimits = new();
-
-        protected Dictionary<PowerType, float> m_Values = new();
-        protected Dictionary<PowerType, float> m_PrevValues = new();
-
-        protected Dictionary<string, float> m_Misc = new();
-        protected Dictionary<string, float> m_PrevMisc = new();
-
-        #region events
-        public event LimitChangedHandler LimitChanged;
-        public delegate void LimitChangedHandler(PowerType type, int limit);
-
-        public event ValueChangedHandler ValueChanged;
-        public delegate void ValueChangedHandler(PowerType type, float value);
-
-        public event GfxChangedHandler MiscChanged;
-        public delegate void GfxChangedHandler(string misc, float value);
-
-        public event StatusChangedHandler StatusChanged;
-        public delegate void StatusChangedHandler(bool CanChangeTDP, bool CanChangeGPU);
-
-        public event InitializedEventHandler Initialized;
-        public delegate void InitializedEventHandler();
-        #endregion
+        public bool IsInitialized = false;
 
         public static Processor GetCurrent()
         {
@@ -96,76 +51,24 @@ namespace ControllerCommon.Processor
             ProcessorID = GetProcessorDetails("processorID");
         }
 
-        public virtual void Initialize()
+        public bool CanChangeTDP()
         {
-            StatusChanged?.Invoke(CanChangeTDP, CanChangeGPU);
-            Initialized?.Invoke();
-
-            if (CanChangeTDP)
-                updateTimer.Start();
+            return canChangeTDP;
         }
 
-        public virtual void Stop()
+        public bool CanChangeGPU()
         {
-            if (CanChangeTDP)
-                updateTimer.Stop();
+            return canChangeGPU;
         }
 
-        public virtual void SetTDPLimit(PowerType type, double limit, int result = 0)
+        public virtual void SetTDPLimit(uint limit, int result = 0)
         {
-            LogManager.LogInformation("User requested {0} TDP limit: {1}, error code: {2}", type, limit, result);
+            LogManager.LogInformation("User requested TDP limit: {0}, error code: {1}", limit, result);
         }
 
-        public virtual void SetGPUClock(double clock, int result = 0)
+        public virtual void SetGPUClock(uint clock, int result = 0)
         {
-            /*
-             * #define ADJ_ERR_FAM_UNSUPPORTED      -1
-             * #define ADJ_ERR_SMU_TIMEOUT          -2
-             * #define ADJ_ERR_SMU_UNSUPPORTED      -3
-             * #define ADJ_ERR_SMU_REJECTED         -4
-             * #define ADJ_ERR_MEMORY_ACCESS        -5
-             */
-
             LogManager.LogInformation("User requested GPU clock: {0}, error code: {1}", clock, result);
-        }
-
-        protected virtual void UpdateTimer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            // search for limit changes
-            foreach (KeyValuePair<PowerType, int> pair in m_Limits)
-            {
-                if (m_PrevLimits.TryGetValue(pair.Key, out var value))
-                    if (value == pair.Value)
-                        continue;
-
-                LimitChanged?.Invoke(pair.Key, pair.Value);
-
-                m_PrevLimits[pair.Key] = pair.Value;
-            }
-
-            // search for value changes
-            foreach (KeyValuePair<PowerType, float> pair in m_Values)
-            {
-                if (m_PrevValues.TryGetValue(pair.Key, out var value))
-                    if (value == pair.Value)
-                        continue;
-
-                ValueChanged?.Invoke(pair.Key, pair.Value);
-
-                m_PrevValues[pair.Key] = pair.Value;
-            }
-
-            // search for misc changes
-            foreach (KeyValuePair<string, float> pair in m_Misc)
-            {
-                if (m_PrevMisc.TryGetValue(pair.Key, out var value))
-                    if (value == pair.Value)
-                        continue;
-
-                MiscChanged?.Invoke(pair.Key, pair.Value);
-
-                m_PrevMisc[pair.Key] = pair.Value;
-            }
         }
     }
 }

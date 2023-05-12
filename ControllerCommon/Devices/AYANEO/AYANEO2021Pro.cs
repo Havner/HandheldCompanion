@@ -13,9 +13,8 @@ namespace ControllerCommon.Devices
             this.ProductModel = "AYANEO2021";
 
             // https://www.amd.com/fr/products/apu/amd-ryzen-7-4800u
-            this.nTDP = new double[] { 15, 15, 20 };
-            this.cTDP = new double[] { 3, 25 };
-            this.GfxClock = new double[] { 100, 1750 };
+            this.TDP = new uint[] { 3, 20, 25 };
+            this.GPU = new uint[] { 100, 1750 };
 
             this.AngularVelocityAxisSwap = new()
             {

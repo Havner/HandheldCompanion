@@ -1,7 +1,8 @@
-using ControllerCommon;
+using ControllerCommon.Devices;
 using ControllerCommon.Managers;
 using ControllerCommon.Processor;
 using ControllerCommon.Utils;
+using HandheldCompanion.Views;
 using System;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -51,75 +52,113 @@ namespace HandheldCompanion.Managers
         private static extern uint PowerSetActiveOverlayScheme(Guid OverlaySchemeGuid);
         #endregion
 
-        #region events
-        public event LimitChangedHandler PowerLimitChanged;
-        public delegate void LimitChangedHandler(PowerType type, int limit);
-
-        public event ValueChangedHandler PowerValueChanged;
-        public delegate void ValueChangedHandler(PowerType type, float value);
-
-        public event StatusChangedHandler ProcessorStatusChanged;
-        public delegate void StatusChangedHandler(bool CanChangeTDP, bool CanChangeGPU);
-        #endregion
-
         private Processor processor;
         public static int MaxDegreeOfParallelism = 4;
 
         // timers
         private Timer powerWatchdog;
 
-        private Timer cpuWatchdog;
-        protected object cpuLock = new();
-        private bool cpuWatchdogPendingStop;
+        private uint tdpRequest;
+        private readonly Timer tdpWatchdog;
+        protected object tdpLock = new();
 
-        private Timer gfxWatchdog;
-        protected object gfxLock = new();
-        private bool gfxWatchdogPendingStop;
+        private uint gpuRequest;
+        private readonly Timer gpuWatchdog;
+        protected object gpuLock = new();
 
         private const short INTERVAL_DEFAULT = 2000;            // default interval between value scans
-        private const short INTERVAL_DEGRADED = 10000;          // degraded interval between value scans
-
-        // TDP limits
-        private double[] StoredTDP = new double[3];     // used to store TDP
-        private double[] CurrentTDP = new double[5];    // used to store current TDP
-
-        // GPU limits
-        private double StoredGfxClock;
-        private double CurrentGfxClock;
 
         // Power modes
         private Guid RequestedPowerMode;
 
         public PerformanceManager() : base()
         {
-            // initialize timer(s)
+            SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
+
+            HotkeysManager.CommandExecuted += HotkeysManager_CommandExecuted;
+
+            processor = Processor.GetCurrent();
+
             powerWatchdog = new Timer() { Interval = INTERVAL_DEFAULT, AutoReset = true, Enabled = false };
-            powerWatchdog.Elapsed += powerWatchdog_Elapsed;
+            powerWatchdog.Elapsed += PowerWatchdog_Elapsed;
 
-            cpuWatchdog = new Timer() { Interval = INTERVAL_DEFAULT, AutoReset = true, Enabled = false };
-            cpuWatchdog.Elapsed += cpuWatchdog_Elapsed;
+            tdpWatchdog = new Timer() { Interval = INTERVAL_DEFAULT, AutoReset = false, Enabled = false };
+            tdpWatchdog.Elapsed += TDPWatchdog_Elapsed;
 
-            gfxWatchdog = new Timer() { Interval = INTERVAL_DEFAULT, AutoReset = true, Enabled = false };
-            gfxWatchdog.Elapsed += gfxWatchdog_Elapsed;
-
-            // initialize settings
-            double TDPdown = SettingsManager.GetDouble("QuickToolsPerformanceTDPSustainedValue");
-            double TDPup = SettingsManager.GetDouble("QuickToolsPerformanceTDPBoostValue");
-            double GPU = SettingsManager.GetDouble("QuickToolsPerformanceGPUValue");
-
-            // request TDP(s)
-            RequestTDP(PowerType.Slow, TDPdown);
-            RequestTDP(PowerType.Stapm, TDPdown);
-            RequestTDP(PowerType.Fast, TDPup);
-
-            // request GPUclock
-            if (GPU != 0)
-                RequestGPUClock(GPU);
+            gpuWatchdog = new Timer() { Interval = INTERVAL_DEFAULT, AutoReset = false, Enabled = false };
+            gpuWatchdog.Elapsed += GPUWatchdog_Elapsed;
 
             MaxDegreeOfParallelism = Convert.ToInt32(Environment.ProcessorCount / 2);
         }
 
-        private void powerWatchdog_Elapsed(object? sender, ElapsedEventArgs e)
+        private void SettingsManager_SettingValueChanged(string name, object value)
+        {
+            switch (name)
+            {
+                case "PerformanceTDPEnabled":
+                    if (!CanChangeTDP())
+                        return;
+
+                    if (Convert.ToBoolean(value))
+                        RequestTDP(SettingsManager.GetUInt("PerformanceTDPValue"));
+                    else if (SettingsManager.IsInitialized)
+                        RequestTDP(MainWindow.CurrentDevice.TDP[1]);
+                    break;
+
+                case "PerformanceTDPValue":
+                    if (!CanChangeTDP())
+                        return;
+
+                    if (SettingsManager.GetBoolean("PerformanceTDPEnabled"))
+                        RequestTDP(Convert.ToUInt32(value));
+                    break;
+
+                case "PerformanceGPUEnabled":
+                    if (!CanChangeGPU())
+                        return;
+
+                    if (Convert.ToBoolean(value))
+                        RequestGPU(SettingsManager.GetUInt("PerformanceGPUValue"));
+                    else if (SettingsManager.IsInitialized)
+                        RequestGPU(MainWindow.CurrentDevice.GPU[1]);
+                    break;
+
+                case "PerformanceGPUValue":
+                    if (!CanChangeGPU())
+                        return;
+
+                    if (SettingsManager.GetBoolean("PerformanceGPUEnabled"))
+                        RequestGPU(Convert.ToUInt32(value));
+                    break;
+            }
+        }
+
+        private void HotkeysManager_CommandExecuted(string listener)
+        {
+            switch (listener)
+            {
+                case "increaseTDP":
+                case "decreaseTDP":
+                    {
+                        if (!SettingsManager.GetBoolean("PerformanceTDPEnabled"))
+                            return;
+
+                        uint currentTDP = SettingsManager.GetUInt("PerformanceTDPValue");
+                        uint newTDP;
+                        if (listener == "increaseTDP")
+                            newTDP = currentTDP + 1;
+                        else
+                            newTDP = currentTDP - 1;
+
+                        newTDP = Math.Clamp(newTDP, MainWindow.CurrentDevice.TDP[0], MainWindow.CurrentDevice.TDP[2]);
+                        if (newTDP != currentTDP)
+                            SettingsManager.SetProperty("PerformanceTDPValue", newTDP);
+                    }
+                    break;
+            }
+        }
+
+        private void PowerWatchdog_Elapsed(object? sender, ElapsedEventArgs e)
         {
             // Checking if active power shceme has changed
             if (PowerGetEffectiveOverlayScheme(out Guid activeScheme) == 0)
@@ -127,171 +166,74 @@ namespace HandheldCompanion.Managers
                     PowerSetActiveOverlayScheme(RequestedPowerMode);
         }
 
-        private void cpuWatchdog_Elapsed(object? sender, ElapsedEventArgs e)
+        public bool CanChangeTDP()
+        {
+            if (processor is null || !processor.IsInitialized)
+                return false;
+
+            return processor.CanChangeTDP();
+        }
+
+        public bool CanChangeGPU()
+        {
+            if (processor is null || !processor.IsInitialized)
+                return false;
+
+            return processor.CanChangeGPU();
+        }
+
+        private void TDPWatchdog_Elapsed(object? sender, ElapsedEventArgs e)
         {
             if (processor is null || !processor.IsInitialized)
                 return;
 
-            if (Monitor.TryEnter(cpuLock))
+            if (Monitor.TryEnter(tdpLock))
             {
-                bool TDPdone = false;
-                bool MSRdone = false;
-
-                // read current values and (re)apply requested TDP if needed
-                foreach (PowerType type in (PowerType[])Enum.GetValues(typeof(PowerType)))
-                {
-                    int idx = (int)type;
-
-                    // skip msr
-                    if (idx >= StoredTDP.Length)
-                        break;
-
-                    double TDP = StoredTDP[idx];
-
-                    if (processor.GetType() == typeof(AMDProcessor))
-                    {
-                        // AMD reduces TDP by 10% when OS power mode is set to Best power efficiency
-                        if (RequestedPowerMode == PowerMode.BetterBattery)
-                            TDP = (int)Math.Truncate(TDP * 0.9);
-                    }
-                    else if (processor.GetType() == typeof(IntelProcessor))
-                    {
-                        // Intel doesn't have stapm
-                        if (type == PowerType.Stapm)
-                            continue;
-                    }
-
-                    double ReadTDP = CurrentTDP[idx];
-
-                    // we're in degraded condition
-                    if (ReadTDP == 0 || ReadTDP < byte.MinValue || ReadTDP > byte.MaxValue)
-                        cpuWatchdog.Interval = INTERVAL_DEGRADED;
-                    else
-                        cpuWatchdog.Interval = INTERVAL_DEFAULT;
-
-                    // only request an update if current limit is different than stored
-                    if (ReadTDP != TDP)
-                        processor.SetTDPLimit(type, TDP);
-                    else
-                        TDPdone = true;
-                }
-
-                // processor specific
-                if (processor.GetType() == typeof(IntelProcessor))
-                {
-                    // not ready yet
-                    if (CurrentTDP[(int)PowerType.MsrSlow] == 0 || CurrentTDP[(int)PowerType.MsrFast] == 0)
-                    {
-                        Monitor.Exit(cpuLock);
-                        return;
-                    }
-
-                    int TDPslow = (int)StoredTDP[(int)PowerType.Slow];
-                    int TDPfast = (int)StoredTDP[(int)PowerType.Fast];
-
-                    // only request an update if current limit is different than stored
-                    if (CurrentTDP[(int)PowerType.MsrSlow] != TDPslow ||
-                        CurrentTDP[(int)PowerType.MsrFast] != TDPfast)
-                        ((IntelProcessor)processor).SetMSRLimit(TDPslow, TDPfast);
-                    else
-                        MSRdone = true;
-                }
-
-                // user requested to halt cpu watchdog
-                if (TDPdone && MSRdone && cpuWatchdogPendingStop)
-                    cpuWatchdog.Stop();
-
-                Monitor.Exit(cpuLock);
+                processor.SetTDPLimit(tdpRequest);
+                Monitor.Exit(tdpLock);
             }
         }
 
-        private void gfxWatchdog_Elapsed(object? sender, ElapsedEventArgs e)
+        private void GPUWatchdog_Elapsed(object? sender, ElapsedEventArgs e)
         {
             if (processor is null || !processor.IsInitialized)
                 return;
 
-            if (Monitor.TryEnter(gfxLock))
+            if (Monitor.TryEnter(gpuLock))
             {
-                bool GPUdone = false;
-
                 if (processor.GetType() == typeof(AMDProcessor))
-                {
-                    // not ready yet
-                    if (CurrentGfxClock == 0)
-                    {
-                        Monitor.Exit(gfxLock);
-                        return;
-                    }
-                }
+                    goto notsupported;
                 else if (processor.GetType() == typeof(IntelProcessor))
-                {
-                    // not ready yet
-                    if (CurrentGfxClock == 0)
-                    {
-                        Monitor.Exit(gfxLock);
-                        return;
-                    }
-                }
+                    goto notsupported;
 
-                // not ready yet
-                if (StoredGfxClock == 0)
-                {
-                    Monitor.Exit(gfxLock);
-                    return;
-                }
-
-                // only request an update if current gfx clock is different than stored
-                if (CurrentGfxClock != StoredGfxClock)
-                    processor.SetGPUClock(StoredGfxClock);
-                else
-                    GPUdone = true;
-
-                // user requested to halt gpu watchdog
-                if (GPUdone && gfxWatchdogPendingStop)
-                    gfxWatchdog.Stop();
-
-                Monitor.Exit(gfxLock);
+                processor.SetGPUClock(gpuRequest);
+            notsupported:
+                Monitor.Exit(gpuLock);
             }
         }
 
-        internal void StartGPUWatchdog()
-        {
-            gfxWatchdog.Start();
-        }
-
-        internal void StopGPUWatchdog()
-        {
-            gfxWatchdogPendingStop = true;
-        }
-
-        internal void StopTDPWatchdog()
-        {
-            cpuWatchdogPendingStop = true;
-        }
-
-        internal void StartTDPWatchdog()
-        {
-            cpuWatchdog.Start();
-        }
-
-        public void RequestTDP(PowerType type, double value)
-        {
-            int idx = (int)type;
-
-            // update value read by timer
-            StoredTDP[idx] = value;
-        }
-
-        public void RequestTDP(double[] values)
+        public void RequestTDP(uint value)
         {
             // update value read by timer
-            StoredTDP = values;
+            if (Monitor.TryEnter(tdpLock))
+            {
+                tdpRequest = Math.Clamp(value, MainWindow.CurrentDevice.TDP[0], MainWindow.CurrentDevice.TDP[2]);
+                tdpWatchdog.Stop();
+                tdpWatchdog.Start();
+                Monitor.Exit(tdpLock);
+            }
         }
 
-        public void RequestGPUClock(double value)
+        public void RequestGPU(uint value)
         {
             // update value read by timer
-            StoredGfxClock = value;
+            if (Monitor.TryEnter(gpuLock))
+            {
+                gpuRequest = Math.Clamp(value, MainWindow.CurrentDevice.GPU[0], MainWindow.CurrentDevice.GPU[1]);
+                gpuWatchdog.Stop();
+                gpuWatchdog.Start();
+                Monitor.Exit(gpuLock);
+            }
         }
 
         public void RequestPowerMode(int idx)
@@ -302,64 +244,17 @@ namespace HandheldCompanion.Managers
             PowerSetActiveOverlayScheme(RequestedPowerMode);
         }
 
-        private void Processor_StatusChanged(bool CanChangeTDP, bool CanChangeGPU)
-        {
-            ProcessorStatusChanged?.Invoke(CanChangeTDP, CanChangeGPU);
-        }
-
-        private void Processor_ValueChanged(PowerType type, float value)
-        {
-            PowerValueChanged?.Invoke(type, value);
-        }
-
-        private void Processor_LimitChanged(PowerType type, int limit)
-        {
-            int idx = (int)type;
-            CurrentTDP[idx] = limit;
-
-            // raise event
-            PowerLimitChanged?.Invoke(type, limit);
-        }
-
-        private void Processor_MiscChanged(string misc, float value)
-        {
-            switch (misc)
-            {
-                case "gfx_clk":
-                    {
-                        CurrentGfxClock = value;
-                    }
-                    break;
-            }
-        }
-
         public override void Start()
         {
             // initialize watchdog(s)
             powerWatchdog.Start();
 
-            // initialize processor
-            processor = Processor.GetCurrent();
+            // just in case
+            bool HypervisorEnforcedCodeIntegrityEnabled = RegistryUtils.GetBoolean(@"SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity", "Enabled");
+            bool VulnerableDriverBlocklistEnabled = RegistryUtils.GetBoolean(@"SYSTEM\CurrentControlSet\Control\CI\Config", "VulnerableDriverBlocklistEnabled");
 
-            // higher interval on Intel CPUs to avoid CPU overload
-            if (processor.GetType() == typeof(IntelProcessor))
-            {
-                // read OS specific values
-                bool HypervisorEnforcedCodeIntegrityEnabled = RegistryUtils.GetBoolean(@"SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity", "Enabled");
-                bool VulnerableDriverBlocklistEnabled = RegistryUtils.GetBoolean(@"SYSTEM\CurrentControlSet\Control\CI\Config", "VulnerableDriverBlocklistEnabled");
-
-                if (VulnerableDriverBlocklistEnabled || HypervisorEnforcedCodeIntegrityEnabled)
-                    LogManager.LogWarning("Core isolation settings are turned on. TDP read/write is disabled");
-            }
-
-            if (processor.IsInitialized)
-            {
-                processor.ValueChanged += Processor_ValueChanged;
-                processor.StatusChanged += Processor_StatusChanged;
-                processor.LimitChanged += Processor_LimitChanged;
-                processor.MiscChanged += Processor_MiscChanged;
-                processor.Initialize();
-            }
+            if (VulnerableDriverBlocklistEnabled || HypervisorEnforcedCodeIntegrityEnabled)
+                LogManager.LogWarning("Core isolation settings are turned on. TDP read/write is disabled");
 
             base.Start();
         }
@@ -369,11 +264,9 @@ namespace HandheldCompanion.Managers
             if (!IsInitialized)
                 return;
 
-            processor.Stop();
-
             powerWatchdog.Stop();
-            cpuWatchdog.Stop();
-            gfxWatchdog.Stop();
+            tdpWatchdog.Stop();
+            gpuWatchdog.Stop();
 
             base.Stop();
         }

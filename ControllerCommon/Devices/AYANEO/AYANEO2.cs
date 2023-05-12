@@ -14,9 +14,8 @@ namespace ControllerCommon.Devices
             this.ProductModel = "AYANEO2";
 
             // https://www.amd.com/en/products/apu/amd-ryzen-7-6800u
-            this.nTDP = new double[] { 15, 15, 20 };
-            this.cTDP = new double[] { 3, 33 };
-            this.GfxClock = new double[] { 100, 2200 };
+            this.TDP = new uint[] { 3, 20, 33 };
+            this.GPU = new uint[] { 100, 2200 };
 
             this.AccelerationAxis = new Vector3(1.0f, 1.0f, 1.0f);
             this.AngularVelocityAxisSwap = new()

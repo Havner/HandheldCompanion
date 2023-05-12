@@ -52,11 +52,10 @@ namespace ControllerCommon.Devices
             this.Capacities = DeviceCapacities.ControllerSensor | DeviceCapacities.Trackpads | DeviceCapacities.FanControl;
 
             // https://www.steamdeck.com/en/tech
-            this.nTDP = new double[] { 10, 10, 15 };
-            this.cTDP = new double[] { 4, 15 };
+            this.TDP = new uint[] { 3, 15, 15 };
 
             // https://www.techpowerup.com/gpu-specs/steam-deck-gpu.c3897
-            this.GfxClock = new double[] { 100, 1600 };
+            this.GPU = new uint[] { 100, 1600 };
 
             OEMChords.Add(new DeviceChord("...",
                 new(), new(),

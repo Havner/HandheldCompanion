@@ -92,36 +92,23 @@ namespace HandheldCompanion.Managers
 
         private static object GetProperty(string name, bool temporary = false)
         {
-            // used to handle cases
             switch (name)
             {
-                case "QuickToolsPerformanceTDPSustainedValue":
-                    {
-                        bool TDPoverride = GetBoolean("QuickToolsPerformanceTDPEnabled");
+                // variable default based on device
+                case "PerformanceTDPValue":
+                    uint TDPvalue = Convert.ToUInt32(Properties.Settings.Default["PerformanceTDPValue"]);
+                    return TDPvalue != 0 ? TDPvalue : MainWindow.CurrentDevice.TDP[1];
 
-                        double TDPvalue = Convert.ToDouble(Properties.Settings.Default["QuickToolsPerformanceTDPSustainedValue"]);
-                        return TDPvalue != 0 ? Properties.Settings.Default["QuickToolsPerformanceTDPSustainedValue"] : MainWindow.CurrentDevice.nTDP[(int)PowerType.Slow];
-                    }
+                // variable default based on device
+                case "PerformanceGPUValue":
+                    uint GPUvalue = Convert.ToUInt32(Properties.Settings.Default["PerformanceGPUValue"]);
+                    return GPUvalue != 0 ? GPUvalue : MainWindow.CurrentDevice.GPU[1];
 
-                case "QuickToolsPerformanceTDPBoostValue":
-                    {
-                        bool TDPoverride = GetBoolean("QuickToolsPerformanceTDPEnabled");
-
-                        double TDPvalue = Convert.ToDouble(Properties.Settings.Default["QuickToolsPerformanceTDPBoostValue"]);
-                        return TDPvalue != 0 ? Properties.Settings.Default["QuickToolsPerformanceTDPBoostValue"] : MainWindow.CurrentDevice.nTDP[(int)PowerType.Fast];
-                    }
-
-                case "QuickToolsPerformanceGPUValue":
-                    {
-                        bool GPUoverride = GetBoolean("QuickToolsPerformanceGPUEnabled");
-
-                        double GPUvalue = Convert.ToDouble(Properties.Settings.Default["QuickToolsPerformanceGPUValue"]);
-                        return GPUvalue;
-                    }
-
+                // virtual setting
                 case "HasBrightnessSupport":
                     return SystemManager.HasBrightnessSupport();
 
+                // virtual setting
                 case "HasVolumeSupport":
                     return SystemManager.HasVolumeSupport();
 
@@ -150,6 +137,11 @@ namespace HandheldCompanion.Managers
         public static int GetInt(string name, bool temporary = false)
         {
             return Convert.ToInt32(GetProperty(name, temporary));
+        }
+
+        public static uint GetUInt(string name, bool temporary = false)
+        {
+            return Convert.ToUInt32(GetProperty(name, temporary));
         }
 
         public static DateTime GetDateTime(string name, bool temporary = false)

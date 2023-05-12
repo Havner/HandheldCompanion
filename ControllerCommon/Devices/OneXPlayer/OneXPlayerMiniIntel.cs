@@ -7,9 +7,8 @@ namespace ControllerCommon.Devices
         public OneXPlayerMiniIntel() : base()
         {
             // https://ark.intel.com/content/www/us/en/ark/products/226254/intel-core-i71260p-processor-18m-cache-up-to-4-70-ghz.html
-            this.nTDP = new double[] { 28, 28, 64 };
-            this.cTDP = new double[] { 20, 64 };
-            this.GfxClock = new double[] { 100, 1400 };
+            this.TDP = new uint[] { 20, 64, 64 };
+            this.GPU = new uint[] { 100, 1400 };
 
             this.AngularVelocityAxis = new Vector3(1.0f, 1.0f, -1.0f);
             this.AngularVelocityAxisSwap = new()

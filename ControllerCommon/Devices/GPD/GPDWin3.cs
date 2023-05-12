@@ -12,9 +12,8 @@ namespace ControllerCommon.Devices
             this.ProductIllustration = "device_gpd3";
 
             // https://www.intel.com/content/www/us/en/products/sku/217187/intel-core-i71195g7-processor-12m-cache-up-to-5-00-ghz/specifications.html
-            this.nTDP = new double[] { 20, 20, 25 };
-            this.cTDP = new double[] { 7, 25 };
-            this.GfxClock = new double[] { 100, 1400 };
+            this.TDP = new uint[] { 7, 25, 25 };
+            this.GPU = new uint[] { 100, 1400 };
 
             // note, need to manually configured in GPD app
             OEMChords.Add(new DeviceChord("Bottom button left",

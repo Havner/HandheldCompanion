@@ -54,12 +54,10 @@ namespace ControllerCommon.Devices
         public ECDetails ECDetails;
         private static OpenLibSys openLibSys;
 
-        // device nominal TDP (slow, fast)
-        public double[] nTDP = { 15, 15, 20 };
-        // device configurable TDP (down, up)
-        public double[] cTDP = { 10, 25 };
-        // device GfxClock frequency limits
-        public double[] GfxClock = { 100, 1800 };
+        // device TDP max limits (min, nominal, max)
+        public uint[] TDP = { 10, 20, 25 };
+        // device GPU max frequency limits (min, nominal/max)
+        public uint[] GPU = { 100, 1800 };
 
         public Vector3 AngularVelocityAxis = new Vector3(1.0f, 1.0f, 1.0f);
         public SortedDictionary<char, char> AngularVelocityAxisSwap = new()

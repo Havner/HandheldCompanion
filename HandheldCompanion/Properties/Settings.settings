@@ -92,19 +92,16 @@
     <Setting Name="QuickToolsTop" Type="System.Double" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="QuickToolsPerformanceTDPSustainedValue" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="QuickToolsPerformanceTDPEnabled" Type="System.Boolean" Scope="User">
+    <Setting Name="PerformanceTDPEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="QuickToolsPerformanceGPUEnabled" Type="System.Boolean" Scope="User">
+    <Setting Name="PerformanceGPUEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="QuickToolsPowerModeValue" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">1</Value>
     </Setting>
-    <Setting Name="QuickToolsPerformanceTDPBoostValue" Type="System.Double" Scope="User">
+    <Setting Name="PerformanceTDPValue" Type="System.UInt32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="OverlayControllerOpacity" Type="System.Double" Scope="User">
@@ -122,8 +119,8 @@
     <Setting Name="FirstStart" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="QuickToolsPerformanceGPUValue" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">500</Value>
+    <Setting Name="PerformanceGPUValue" Type="System.UInt32" Scope="User">
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="OverlayControllerAlwaysOnTop" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
