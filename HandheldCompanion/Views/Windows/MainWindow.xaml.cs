@@ -142,7 +142,7 @@ namespace HandheldCompanion.Views
             HidHide.RegisterApplication(CurrentExe);
 
             // initialize title
-            this.Title += $" ({fileVersionInfo.FileVersion})";
+            this.Title += $" ({fileVersionInfo.FileMajorPart}.{fileVersionInfo.FileMinorPart})";
 
             // initialize device
             CurrentDevice = IDevice.GetDefault();

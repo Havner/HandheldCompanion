@@ -1,6 +1,6 @@
 using System.Reflection;
 
-// Les informations générales relatives à un assembly dépendent de 
+// Les informations générales relatives à un assembly dépendent de
 // l'ensemble d'attributs suivant. Pour modifier les informations
 // associées à un assembly.
 [assembly: AssemblyTitle("ControllerService")]
@@ -15,9 +15,9 @@ using System.Reflection;
 // Les informations de version pour un assembly se composent des quatre valeurs suivantes :
 //
 //      Version principale
-//      Version secondaire 
+//      Version secondaire
 //      Numéro de build
 //      Révision
 //
-[assembly: AssemblyVersion("0.15.1.1")]
-[assembly: AssemblyFileVersion("0.15.1.1")]
+[assembly: AssemblyVersion("0.16")]
+[assembly: AssemblyFileVersion("0.16")]

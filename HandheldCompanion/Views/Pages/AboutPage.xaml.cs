@@ -39,7 +39,7 @@ namespace HandheldCompanion.Views.Pages
                 LabelProductName.Text = MainWindow.CurrentDevice.ProductName;
                 HandheldGrid.Visibility = Visibility.Visible;
 
-                VersionValue.Text = MainWindow.fileVersionInfo.FileVersion;
+                VersionValue.Text = string.Format("{0}.{1}", MainWindow.fileVersionInfo.FileMajorPart, MainWindow.fileVersionInfo.FileMinorPart);
 
                 SensorInternal.Text = MainWindow.CurrentDevice.Capacities.HasFlag(ControllerCommon.Devices.DeviceCapacities.InternalSensor) ? MainWindow.CurrentDevice.InternalSensorName : string.Empty;
                 SensorExternal.Text = MainWindow.CurrentDevice.Capacities.HasFlag(ControllerCommon.Devices.DeviceCapacities.ExternalSensor) ? MainWindow.CurrentDevice.ExternalSensorName : string.Empty;
