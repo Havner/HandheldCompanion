@@ -4,7 +4,10 @@ using ControllerCommon.Utils;
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
+using System.IO;
 using System.Windows;
+using System.Windows.Media;
 
 namespace HandheldCompanion.Managers
 {
@@ -24,6 +27,7 @@ namespace HandheldCompanion.Managers
 
         public IntPtr MainWindowHandle;
 
+        public ImageSource imgSource;
         public string Path;
 
         private string _Title;
@@ -69,14 +73,21 @@ namespace HandheldCompanion.Managers
 
         public ProcessEx(Process process, string path, string executable, ProcessFilter filter) : this()
         {
-            this.Process = process;
-            this.Path = path;
+            Process = process;
+            Path = path;
 
-            this.Executable = executable;
-            this.Title = executable;    // temporary, will be overwritten by ProcessManager
+            Executable = executable;
+            Title = executable;    // temporary, will be overwritten by ProcessManager
 
-            this.Filter = filter;
-            this.Platform = PlatformManager.GetPlatform(Process);
+            Filter = filter;
+            Platform = PlatformManager.GetPlatform(Process);
+
+            if (File.Exists(Path))
+            {
+                var icon = Icon.ExtractAssociatedIcon(Path);
+                if (icon is not null)
+                    imgSource = icon.ToImageSource();
+            }
         }
 
         public int GetProcessId()

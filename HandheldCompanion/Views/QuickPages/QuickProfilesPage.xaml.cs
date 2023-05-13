@@ -203,8 +203,7 @@ namespace HandheldCompanion.Views.QuickPages
             {
                 if (processEx.MainWindowHandle != IntPtr.Zero)
                 {
-                    string MainWindowTitle = ProcessUtils.GetWindowTitle(processEx.MainWindowHandle);
-
+                    ProcessIcon.Source = currentProcess.imgSource;
                     ProcessName.Text = currentProcess.Executable;
                     ProcessPath.Text = currentProcess.Path;
                 }
@@ -237,6 +236,7 @@ namespace HandheldCompanion.Views.QuickPages
             {
                 if (currentProcess == processEx)
                 {
+                    ProcessIcon.Source = null;
                     ProcessName.Text = Properties.Resources.QuickProfilesPage_Waiting;
                     ProcessPath.Text = string.Empty;
 
