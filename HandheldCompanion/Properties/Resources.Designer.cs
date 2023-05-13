@@ -433,7 +433,7 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Decrease thermal power limit (TDP).
+        ///   Looks up a localized string similar to Decrease TDP.
         /// </summary>
         public static string InputsHotkey_decreaseTDP {
             get {
@@ -442,7 +442,7 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Decrease system or currently applied profile TDP by one watt.
+        ///   Looks up a localized string similar to Decrease thermal power limit by one watt.
         /// </summary>
         public static string InputsHotkey_decreaseTDPDesc {
             get {
@@ -469,6 +469,24 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Desktop layout.
+        /// </summary>
+        public static string InputsHotkey_DesktopLayoutEnabled {
+            get {
+                return ResourceManager.GetString("InputsHotkey_DesktopLayoutEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Toggle Desktop controller layout.
+        /// </summary>
+        public static string InputsHotkey_DesktopLayoutEnabledDesc {
+            get {
+                return ResourceManager.GetString("InputsHotkey_DesktopLayoutEnabledDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Press to define hotkey input.
         /// </summary>
         public static string InputsHotkey_fallbackInput {
@@ -483,6 +501,24 @@ namespace HandheldCompanion.Properties {
         public static string InputsHotkey_fallbackOutput {
             get {
                 return ResourceManager.GetString("InputsHotkey_fallbackOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fan override.
+        /// </summary>
+        public static string InputsHotkey_FanControlEnabled {
+            get {
+                return ResourceManager.GetString("InputsHotkey_FanControlEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set the fan duty cycle to user-defined value.
+        /// </summary>
+        public static string InputsHotkey_FanControlEnabledDesc {
+            get {
+                return ResourceManager.GetString("InputsHotkey_FanControlEnabledDesc", resourceCulture);
             }
         }
         
@@ -505,7 +541,7 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Increase thermal power limit (TDP).
+        ///   Looks up a localized string similar to Increase TDP.
         /// </summary>
         public static string InputsHotkey_increaseTDP {
             get {
@@ -514,7 +550,7 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Increase system or currently applied profile TDP by one watt.
+        ///   Looks up a localized string similar to Increase thermal power limit by one watt.
         /// </summary>
         public static string InputsHotkey_increaseTDPDesc {
             get {
@@ -595,56 +631,20 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Summon quick tools window.
+        ///   Looks up a localized string similar to Display Action Center.
         /// </summary>
-        public static string InputsHotkey_quickTools {
+        public static string InputsHotkey_shortcutActionCenter {
             get {
-                return ResourceManager.GetString("InputsHotkey_quickTools", resourceCulture);
+                return ResourceManager.GetString("InputsHotkey_shortcutActionCenter", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Change hotkey by pressing a button or a special key.
+        ///   Looks up a localized string similar to Display and hide Windows Action Center.
         /// </summary>
-        public static string InputsHotkey_quickToolsDesc {
+        public static string InputsHotkey_shortcutActionCenterDesc {
             get {
-                return ResourceManager.GetString("InputsHotkey_quickToolsDesc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Fan override.
-        /// </summary>
-        public static string InputsHotkey_FanControlEnabled {
-            get {
-                return ResourceManager.GetString("InputsHotkey_FanControlEnabled", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Set the fan duty cycle to user-defined value.
-        /// </summary>
-        public static string InputsHotkey_FanControlEnabledDesc {
-            get {
-                return ResourceManager.GetString("InputsHotkey_FanControlEnabledDesc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Display Action center.
-        /// </summary>
-        public static string InputsHotkey_shortcutControlCenter {
-            get {
-                return ResourceManager.GetString("InputsHotkey_shortcutControlCenter", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Display and hide Windows Action center.
-        /// </summary>
-        public static string InputsHotkey_shortcutControlCenterDesc {
-            get {
-                return ResourceManager.GetString("InputsHotkey_shortcutControlCenterDesc", resourceCulture);
+                return ResourceManager.GetString("InputsHotkey_shortcutActionCenterDesc", resourceCulture);
             }
         }
         
@@ -681,24 +681,6 @@ namespace HandheldCompanion.Properties {
         public static string InputsHotkey_shortcutDesktopDesc {
             get {
                 return ResourceManager.GetString("InputsHotkey_shortcutDesktopDesc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Desktop layout.
-        /// </summary>
-        public static string InputsHotkey_shortcutDesktopLayout {
-            get {
-                return ResourceManager.GetString("InputsHotkey_shortcutDesktopLayout", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Toggle Desktop controller layout.
-        /// </summary>
-        public static string InputsHotkey_shortcutDesktopLayoutDesc {
-            get {
-                return ResourceManager.GetString("InputsHotkey_shortcutDesktopLayoutDesc", resourceCulture);
             }
         }
         
@@ -795,18 +777,36 @@ namespace HandheldCompanion.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Display and hide main window.
         /// </summary>
-        public static string InputsHotkey_shortcutMainwindow {
+        public static string InputsHotkey_shortcutMainWindow {
             get {
-                return ResourceManager.GetString("InputsHotkey_shortcutMainwindow", resourceCulture);
+                return ResourceManager.GetString("InputsHotkey_shortcutMainWindow", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Change hotkey by pressing a button or a special key.
         /// </summary>
-        public static string InputsHotkey_shortcutMainwindowDesc {
+        public static string InputsHotkey_shortcutMainWindowDesc {
             get {
-                return ResourceManager.GetString("InputsHotkey_shortcutMainwindowDesc", resourceCulture);
+                return ResourceManager.GetString("InputsHotkey_shortcutMainWindowDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Summon quick tools window.
+        /// </summary>
+        public static string InputsHotkey_shortcutQuickTools {
+            get {
+                return ResourceManager.GetString("InputsHotkey_shortcutQuickTools", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change hotkey by pressing a button or a special key.
+        /// </summary>
+        public static string InputsHotkey_shortcutQuickToolsDesc {
+            get {
+                return ResourceManager.GetString("InputsHotkey_shortcutQuickToolsDesc", resourceCulture);
             }
         }
         
@@ -829,20 +829,20 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open Task view.
+        ///   Looks up a localized string similar to Open Task View.
         /// </summary>
-        public static string InputsHotkey_shortcutTaskview {
+        public static string InputsHotkey_shortcutTaskView {
             get {
-                return ResourceManager.GetString("InputsHotkey_shortcutTaskview", resourceCulture);
+                return ResourceManager.GetString("InputsHotkey_shortcutTaskView", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Press this key: Windows + Tab.
         /// </summary>
-        public static string InputsHotkey_shortcutTaskviewDesc {
+        public static string InputsHotkey_shortcutTaskViewDesc {
             get {
-                return ResourceManager.GetString("InputsHotkey_shortcutTaskviewDesc", resourceCulture);
+                return ResourceManager.GetString("InputsHotkey_shortcutTaskViewDesc", resourceCulture);
             }
         }
         

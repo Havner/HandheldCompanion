@@ -77,7 +77,7 @@ namespace HandheldCompanion.Views.Pages
                     case "HIDuncloakonclose":
                         Toggle_Uncloak.IsOn = Convert.ToBoolean(value);
                         break;
-                    case "shortcutDesktopLayout":
+                    case "DesktopLayoutEnabled":
                         Toggle_DesktopLayout.IsOn = Convert.ToBoolean(value);
                         break;
                     case "SteamDeckMuteController":
@@ -341,7 +341,7 @@ namespace HandheldCompanion.Views.Pages
                 return;
 
             // temporary settings
-            SettingsManager.SetProperty("shortcutDesktopLayout", Toggle_DesktopLayout.IsOn, false, true);
+            SettingsManager.SetProperty("DesktopLayoutEnabled", Toggle_DesktopLayout.IsOn, false, true);
         }
 
         private void Expander_Expanded(object sender, RoutedEventArgs e)

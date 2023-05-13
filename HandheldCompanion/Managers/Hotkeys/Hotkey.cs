@@ -13,6 +13,8 @@ using System.Windows.Media.Animation;
 using static HandheldCompanion.Managers.InputsHotkey;
 using static HandheldCompanion.Managers.InputsManager;
 using Application = System.Windows.Application;
+using FontFamily = System.Windows.Media.FontFamily;
+
 
 namespace HandheldCompanion.Managers
 {
@@ -24,6 +26,9 @@ namespace HandheldCompanion.Managers
         public InputsChord inputsChord = new();
 
         public string Name;
+
+        private static readonly FontFamily fontFamily = new("Segoe Fluent Icons");
+        private static readonly int fontSize = 20;
 
         private bool _isPinned;
         public bool IsPinned
@@ -163,8 +168,8 @@ namespace HandheldCompanion.Managers
         private void DrawGlyph()
         {
             // update glyphs
-            mainControl.HotkeyIcon.FontFamily = quickControl.QuickIcon.FontFamily = inputsHotkey.fontFamily;
-            mainControl.HotkeyIcon.FontSize = quickControl.QuickIcon.FontSize = inputsHotkey.fontSize;
+            mainControl.HotkeyIcon.FontFamily = quickControl.QuickIcon.FontFamily = fontFamily;
+            mainControl.HotkeyIcon.FontSize = quickControl.QuickIcon.FontSize = fontSize;
             mainControl.HotkeyIcon.Glyph = quickControl.QuickIcon.Glyph = inputsHotkey.Glyph;
         }
 

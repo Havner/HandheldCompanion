@@ -74,6 +74,8 @@ namespace HandheldCompanion.Managers
             ProfileManager.Discarded += ProfileManager_Discarded;
 
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
+
+            HotkeysManager.CommandExecuted += HotkeysManager_CommandExecuted;
         }
 
         public static void Start()
@@ -208,7 +210,7 @@ namespace HandheldCompanion.Managers
                 profileLayout.Layout = null;
 
             // only update current layout if we're not into desktop layout mode
-            if (!SettingsManager.GetBoolean("shortcutDesktopLayout", true))
+            if (!SettingsManager.GetBoolean("DesktopLayoutEnabled", true))
                 UpdateCurrentLayout(profileLayout.Layout);
         }
 
@@ -238,18 +240,30 @@ namespace HandheldCompanion.Managers
         {
             switch (name)
             {
-                case "shortcutDesktopLayout":
+                case "DesktopLayoutEnabled":
+                    switch (Convert.ToBoolean(value))
                     {
-                        bool toggle = Convert.ToBoolean(value);
-                        switch (toggle)
-                        {
-                            case true:
-                                UpdateCurrentLayout(desktopLayout.Layout);
-                                break;
-                            case false:
-                                UpdateCurrentLayout(profileLayout.Layout);
-                                break;
-                        }
+                        case true:
+                            UpdateCurrentLayout(desktopLayout.Layout);
+                            break;
+                        case false:
+                            UpdateCurrentLayout(profileLayout.Layout);
+                            break;
+                    }
+                    break;
+            }
+        }
+
+        private static void HotkeysManager_CommandExecuted(string listener)
+        {
+            switch (listener)
+            {
+                case "DesktopLayoutEnabled":
+                    {
+                        bool value = !SettingsManager.GetBoolean(listener, true);
+                        SettingsManager.SetProperty(listener, value, false, true);
+
+                        ToastManager.SendToast("Desktop layout", $"is now {(value ? "enabled" : "disabled")}");
                     }
                     break;
             }

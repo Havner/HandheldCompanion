@@ -22,7 +22,6 @@ using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using static ControllerCommon.Managers.PowerManager;
-using static HandheldCompanion.Managers.InputsHotkey;
 using Application = System.Windows.Application;
 using Page = System.Windows.Controls.Page;
 using ServiceControllerStatus = ControllerCommon.Managers.ServiceControllerStatus;
@@ -167,6 +166,8 @@ namespace HandheldCompanion.Views
 
             ProfileManager.Start();
             ControllerManager.Start();
+
+            HotkeysManager.CommandExecuted += HotkeysManager_CommandExecuted;
             HotkeysManager.Start();
 
             DeviceManager.UsbDeviceArrived += GenericDeviceUpdated;
@@ -235,7 +236,7 @@ namespace HandheldCompanion.Views
                         break;
 
                     bool DesktopLayout = Convert.ToBoolean(value);
-                    SettingsManager.SetProperty("shortcutDesktopLayout", DesktopLayout, false, true);
+                    SettingsManager.SetProperty("DesktopLayoutEnabled", DesktopLayout, false, true);
                     break;
             }
 
@@ -349,11 +350,14 @@ namespace HandheldCompanion.Views
             settingsPage.UpdateDevice(device);
         }
 
-        private void InputsManager_TriggerRaised(string listener, InputsChord input, InputsHotkeyType type, bool IsKeyDown, bool IsKeyUp)
+        private void HotkeysManager_CommandExecuted(string listener)
         {
             switch (listener)
             {
-                case "quickTools":
+                case "shortcutMainWindow":
+                    SwapWindowState();
+                    break;
+                case "shortcutQuickTools":
                     overlayquickTools.UpdateVisibility();
                     break;
                 case "overlayGamepad":
@@ -361,9 +365,6 @@ namespace HandheldCompanion.Views
                     break;
                 case "overlayTrackpads":
                     overlayTrackpad.UpdateVisibility();
-                    break;
-                case "shortcutMainwindow":
-                    SwapWindowState();
                     break;
             }
         }
@@ -631,8 +632,8 @@ namespace HandheldCompanion.Views
         {
             CurrentDevice.Close();
 
-            serviceManager.Stop();
-            performanceManager.Stop();
+            foreach (Manager manager in _managers)
+                manager.Stop();
 
             notifyIcon.Visible = false;
             notifyIcon.Dispose();
@@ -645,6 +646,7 @@ namespace HandheldCompanion.Views
                 PipeClient.Close();
 
             ControllerManager.Stop();
+            HotkeysManager.Stop();
             InputsManager.Stop();
             DeviceManager.Stop();
             PlatformManager.Stop();
@@ -653,6 +655,7 @@ namespace HandheldCompanion.Views
             ProcessManager.Stop();
             PowerManager.Stop();
             ToastManager.Stop();
+            SettingsManager.Stop();
 
             // closing page(s)
             controllerPage.Page_Closed();
@@ -789,7 +792,6 @@ namespace HandheldCompanion.Views
                         }
 
                         // restore inputs manager
-                        InputsManager.TriggerRaised += InputsManager_TriggerRaised;
                         InputsManager.Start();
 
                         // start timer manager
@@ -805,7 +807,6 @@ namespace HandheldCompanion.Views
                         PipeClient.ClearQueue();
 
                         // pause inputs manager
-                        InputsManager.TriggerRaised -= InputsManager_TriggerRaised;
                         InputsManager.Stop();
                     }
                     break;

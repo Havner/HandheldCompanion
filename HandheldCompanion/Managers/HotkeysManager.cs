@@ -2,7 +2,6 @@ using ControllerCommon.Controllers;
 using ControllerCommon.Managers;
 using ControllerCommon.Utils;
 using GregsStack.InputSimulatorStandard.Native;
-using HandheldCompanion.Controls;
 using HandheldCompanion.Simulators;
 using HandheldCompanion.Views;
 using ModernWpf.Controls;
@@ -267,6 +266,7 @@ namespace HandheldCompanion.Managers
 
             try
             {
+                // handle windows group hotkeys, the rest is within interested parties
                 switch (listener)
                 {
                     case "shortcutKeyboard":
@@ -305,7 +305,7 @@ namespace HandheldCompanion.Managers
                             }
                         }
                         break;
-                    case "shortcutTaskview":
+                    case "shortcutTaskView":
                         KeyboardSimulator.KeyPress(new VirtualKeyCode[] { VirtualKeyCode.LWIN, VirtualKeyCode.TAB });
                         break;
                     case "shortcutTaskManager":
@@ -313,39 +313,13 @@ namespace HandheldCompanion.Managers
                         break;
                     case "shortcutActionCenter":
                         {
-                            var uri = new Uri("ms-actioncenter");
-                            var success = Windows.System.Launcher.LaunchUriAsync(uri);
-                        }
-                        break;
-                    case "shortcutControlCenter":
-                        {
                             var uri = new Uri("ms-actioncenter:controlcenter/&suppressAnimations=false&showFooter=true&allowPageNavigation=true");
                             var success = Windows.System.Launcher.LaunchUriAsync(uri);
                         }
                         break;
                     case "shortcutKillApp":
                         if (fProcess is not null)
-                        {
                             fProcess.Process.Kill();
-                        }
-                        break;
-                    case "FanControlEnabled":
-                        {
-                            bool value = !SettingsManager.GetBoolean(listener);
-                            SettingsManager.SetProperty(listener, value);
-
-                            ToastManager.SendToast("Quiet mode", $"is now {(value ? "enabled" : "disabled")}");
-                        }
-                        break;
-
-                    // temporary settings
-                    case "shortcutDesktopLayout":
-                        {
-                            bool value = !SettingsManager.GetBoolean(listener, true);
-                            SettingsManager.SetProperty(listener, value, false, true);
-
-                            ToastManager.SendToast("Desktop layout", $"is now {(value ? "enabled" : "disabled")}");
-                        }
                         break;
 
                     default:

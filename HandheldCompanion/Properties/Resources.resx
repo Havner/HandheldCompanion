@@ -218,10 +218,10 @@
     <value>..\Resources\icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="InputsHotkey_decreaseTDP" xml:space="preserve">
-    <value>Decrease thermal power limit (TDP)</value>
+    <value>Decrease TDP</value>
   </data>
   <data name="InputsHotkey_decreaseTDPDesc" xml:space="preserve">
-    <value>Decrease system or currently applied profile TDP by one watt</value>
+    <value>Decrease thermal power limit by one watt</value>
   </data>
   <data name="InputsHotkey_fallbackInput" xml:space="preserve">
     <value>Press to define hotkey input</value>
@@ -230,10 +230,10 @@
     <value>Press to define keyboard output</value>
   </data>
   <data name="InputsHotkey_increaseTDP" xml:space="preserve">
-    <value>Increase thermal power limit (TDP)</value>
+    <value>Increase TDP</value>
   </data>
   <data name="InputsHotkey_increaseTDPDesc" xml:space="preserve">
-    <value>Increase system or currently applied profile TDP by one watt</value>
+    <value>Increase thermal power limit by one watt</value>
   </data>
   <data name="InputsHotkey_overlayGamepad" xml:space="preserve">
     <value>Display 3D controller</value>
@@ -247,10 +247,10 @@
   <data name="InputsHotkey_overlayTrackpadsDesc" xml:space="preserve">
     <value>Change hotkey by pressing a button or a special key</value>
   </data>
-  <data name="InputsHotkey_quickTools" xml:space="preserve">
+  <data name="InputsHotkey_shortcutQuickTools" xml:space="preserve">
     <value>Summon quick tools window</value>
   </data>
-  <data name="InputsHotkey_quickToolsDesc" xml:space="preserve">
+  <data name="InputsHotkey_shortcutQuickToolsDesc" xml:space="preserve">
     <value>Change hotkey by pressing a button or a special key</value>
   </data>
   <data name="InputsHotkey_shortcutCustom" xml:space="preserve">
@@ -295,10 +295,10 @@
   <data name="InputsHotkey_shortcutKillAppDesc" xml:space="preserve">
     <value>Change hotkey by pressing a button or a special key</value>
   </data>
-  <data name="InputsHotkey_shortcutMainwindow" xml:space="preserve">
+  <data name="InputsHotkey_shortcutMainWindow" xml:space="preserve">
     <value>Display and hide main window</value>
   </data>
-  <data name="InputsHotkey_shortcutMainwindowDesc" xml:space="preserve">
+  <data name="InputsHotkey_shortcutMainWindowDesc" xml:space="preserve">
     <value>Change hotkey by pressing a button or a special key</value>
   </data>
   <data name="InputsHotkey_shortcutTaskManager" xml:space="preserve">
@@ -307,10 +307,10 @@
   <data name="InputsHotkey_shortcutTaskManagerDesc" xml:space="preserve">
     <value>Press this key: Ctrl + Shift + Esc</value>
   </data>
-  <data name="InputsHotkey_shortcutTaskview" xml:space="preserve">
-    <value>Open Task view</value>
+  <data name="InputsHotkey_shortcutTaskView" xml:space="preserve">
+    <value>Open Task View</value>
   </data>
-  <data name="InputsHotkey_shortcutTaskviewDesc" xml:space="preserve">
+  <data name="InputsHotkey_shortcutTaskViewDesc" xml:space="preserve">
     <value>Press this key: Windows + Tab</value>
   </data>
   <data name="InputsHotkey_suspendResumeTask" xml:space="preserve">
@@ -1136,25 +1136,25 @@ with motion input enabled, use selected button(s) to disable motion.</value>
   <data name="ControllerPage_VibrateDeviceDesc" xml:space="preserve">
     <value>Vibrate physical controller when connected</value>
   </data>
-  <data name="InputsHotkey_shortcutDesktopLayout" xml:space="preserve">
+  <data name="InputsHotkey_DesktopLayoutEnabled" xml:space="preserve">
     <value>Desktop layout</value>
   </data>
-  <data name="InputsHotkey_shortcutDesktopLayoutDesc" xml:space="preserve">
+  <data name="InputsHotkey_DesktopLayoutEnabledDesc" xml:space="preserve">
     <value>Toggle Desktop controller layout</value>
   </data>
-  <data name="InputsHotkey_shortcutControlCenter" xml:space="preserve">
-    <value>Display Action center</value>
+  <data name="InputsHotkey_shortcutActionCenter" xml:space="preserve">
+    <value>Display Action Center</value>
   </data>
-  <data name="InputsHotkey_shortcutControlCenterDesc" xml:space="preserve">
-    <value>Display and hide Windows Action center</value>
+  <data name="InputsHotkey_shortcutActionCenterDesc" xml:space="preserve">
+    <value>Display and hide Windows Action Center</value>
   </data>
   <data name="ProfilesPage_ControllerLayout" xml:space="preserve">
     <value>Controller layout</value>
   </data>
-  <data name="InputsHotkey_QuietModeToggled" xml:space="preserve">
+  <data name="InputsHotkey_FanControlEnabled" xml:space="preserve">
     <value>Fan override</value>
   </data>
-  <data name="InputsHotkey_QuietModeToggledDesc" xml:space="preserve">
+  <data name="InputsHotkey_FanControlEnabledDesc" xml:space="preserve">
     <value>Set the fan duty cycle to user-defined value</value>
   </data>
   <data name="InputsHotkey_OnScreenDisplay" xml:space="preserve">

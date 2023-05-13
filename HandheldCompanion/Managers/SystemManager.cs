@@ -297,6 +297,7 @@ namespace HandheldCompanion.Managers
                         SystemManager.SetBrightness(brightness);
                     }
                     break;
+
                 case "increaseVolume":
                     {
                         int stepRoundDn = (int)Math.Floor(Math.Round(GetVolume() / 5.0d, 2));
@@ -309,6 +310,15 @@ namespace HandheldCompanion.Managers
                         int stepRoundUp = (int)Math.Ceiling(Math.Round(GetVolume() / 5.0d, 2));
                         int volume = stepRoundUp * 5 - 5;
                         SystemManager.SetVolume(volume);
+                    }
+                    break;
+
+                case "FanControlEnabled":
+                    {
+                        bool value = !SettingsManager.GetBoolean(listener);
+                        SettingsManager.SetProperty(listener, value);
+
+                        ToastManager.SendToast("Fan control override", $"is now {(value ? "enabled" : "disabled")}");
                     }
                     break;
             }

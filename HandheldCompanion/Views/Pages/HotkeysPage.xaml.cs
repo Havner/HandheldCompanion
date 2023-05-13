@@ -64,10 +64,6 @@ namespace HandheldCompanion.Views.Pages
             if (hotkey.inputsHotkey.hotkeyType == InputsHotkey.InputsHotkeyType.Embedded)
                 return;
 
-            Type DeviceType = hotkey.inputsHotkey.DeviceType;
-            if (DeviceType is not null && DeviceType != MainWindow.CurrentDevice.GetType())
-                return;
-
             // UI thread
             Application.Current.Dispatcher.Invoke(() =>
             {

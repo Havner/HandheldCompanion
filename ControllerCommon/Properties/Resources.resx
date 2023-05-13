@@ -324,8 +324,8 @@
   <data name="PlayerSpaceDesc" xml:space="preserve">
     <value>This input will operate as a joystick optimized for controlling a first or third person camera</value>
   </data>
-  <data name="Enum.InputsHotkeyType.Handheld" xml:space="preserve">
-    <value>Handheld Companion</value>
+  <data name="Enum.InputsHotkeyType.Mute" xml:space="preserve">
+    <value>Mute Keys</value>
   </data>
   <data name="Enum.SteamDeck.ButtonFlags.OEM1" xml:space="preserve">
     <value>Options</value>

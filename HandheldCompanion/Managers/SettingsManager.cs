@@ -94,37 +94,31 @@ namespace HandheldCompanion.Managers
         {
             switch (name)
             {
-                // variable default based on device
+                // variable defaults based on device
                 case "PerformanceTDPValue":
-                    uint TDPvalue = Convert.ToUInt32(Properties.Settings.Default["PerformanceTDPValue"]);
+                    uint TDPvalue = Convert.ToUInt32(Properties.Settings.Default[name]);
                     return TDPvalue != 0 ? TDPvalue : MainWindow.CurrentDevice.TDP[1];
-
-                // variable default based on device
                 case "PerformanceGPUValue":
-                    uint GPUvalue = Convert.ToUInt32(Properties.Settings.Default["PerformanceGPUValue"]);
+                    uint GPUvalue = Convert.ToUInt32(Properties.Settings.Default[name]);
                     return GPUvalue != 0 ? GPUvalue : MainWindow.CurrentDevice.GPU[1];
 
-                // virtual setting, only for hotkeys
+                // virtual settings, only for hotkeys
                 case "HasBrightnessSupport":
                     return SystemManager.HasBrightnessSupport();
-
-                // virtual setting, only for hotkeys
                 case "HasVolumeSupport":
                     return SystemManager.HasVolumeSupport();
-
-                // virtual setting, only for hotkeys
                 case "HasFanControlSupport":
                     return SystemManager.HasFanControlSupport();
+                case "HasTDPSupport":
+                    return MainWindow.performanceManager.CanChangeTDP();
 
                 default:
-                    {
-                        if (temporary && Settings.ContainsKey(name))
-                            return Settings[name];
-                        else if (PropertyExists(name))
-                            return Properties.Settings.Default[name];
+                    if (temporary && Settings.ContainsKey(name))
+                        return Settings[name];
+                    else if (PropertyExists(name))
+                        return Properties.Settings.Default[name];
 
-                        return false;
-                    }
+                    return false;
             }
         }
 

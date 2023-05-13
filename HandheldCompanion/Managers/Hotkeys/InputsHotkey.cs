@@ -1,7 +1,5 @@
-using ControllerCommon.Devices;
 using System;
 using System.Collections.Generic;
-using FontFamily = System.Windows.Media.FontFamily;
 
 namespace HandheldCompanion.Managers
 {
@@ -10,89 +8,78 @@ namespace HandheldCompanion.Managers
         [Flags]
         public enum InputsHotkeyType : ushort
         {
-            Overlay = 0,
-            Quicktools = 1,
+            Mute = 0,
+            HC = 1,
             Windows = 2,
-            HC = 3,
-            Device = 4,
-            Custom = 5,
-            Embedded = 6,
+            Device = 3,
+            Custom = 4,
+            Embedded = 5,
         }
 
         public static SortedDictionary<ushort, InputsHotkey> InputsHotkeys = new()
         {
-            // Overlay hotkeys
-            { 01, new InputsHotkey(InputsHotkeyType.Overlay,    "\uEDE3",   "overlayGamepad",                   "Segoe Fluent Icons",   20, false,  true,   null,                   string.Empty,           false,  false) },
-            { 02, new InputsHotkey(InputsHotkeyType.Overlay,    "\uEDA4",   "overlayTrackpads",                 "Segoe Fluent Icons",   20, false,  true,   null,                   string.Empty,           false,  false) },
-
-            // Quicktools hotkeys
-            { 10, new InputsHotkey(InputsHotkeyType.Quicktools, "\uEC7A",   "quickTools",                       "Segoe Fluent Icons",   20, false,  true,   null,                   string.Empty,           false,  false) },
-            { 11, new InputsHotkey(InputsHotkeyType.Quicktools, "\u2795",   "increaseTDP",                      "Segoe UI Symbol",      20, true,   false,  null,                   string.Empty,           false,  false) },
-            { 12, new InputsHotkey(InputsHotkeyType.Quicktools, "\u2796",   "decreaseTDP",                      "Segoe UI Symbol",      20, true,   false,  null,                   string.Empty,           false,  false) },
+            // Handheld Companion hotkeys
+            { 10, new InputsHotkey(InputsHotkeyType.HC,       "\uE7FC", "overlayGamepad",                false, true,  string.Empty,           false, true ) },
+            { 11, new InputsHotkey(InputsHotkeyType.HC,       "\uEDA4", "overlayTrackpads",              false, true,  string.Empty,           false, false) },
+            { 12, new InputsHotkey(InputsHotkeyType.HC,       "\uE7C4", "shortcutMainWindow",            false, true,  string.Empty,           false, true ) },
+            { 13, new InputsHotkey(InputsHotkeyType.HC,       "\uEC7A", "shortcutQuickTools",            false, true,  string.Empty,           false, false) },
+            { 14, new InputsHotkey(InputsHotkeyType.HC,       "\uE961", "DesktopLayoutEnabled",          false, true,  string.Empty,           true,  true ) },
 
             // Microsoft Windows hotkeys
-            { 20, new InputsHotkey(InputsHotkeyType.Windows,    "\uE765",   "shortcutKeyboard",                 "Segoe Fluent Icons",   20, false,  true,   null,                   string.Empty,           true,   false) },
-            { 21, new InputsHotkey(InputsHotkeyType.Windows,    "\uE138",   "shortcutDesktop",                  "Segoe UI Symbol",      20, false,  true,   null,                   string.Empty,           true,   false) },
-            { 22, new InputsHotkey(InputsHotkeyType.Windows,    "ESC",      "shortcutESC",                      "Segoe UI",             12, false,  true,   null,                   string.Empty,           false,  false) },
-            { 23, new InputsHotkey(InputsHotkeyType.Windows,    "\uEE49",   "shortcutExpand",                   "Segoe Fluent Icons",   20, false,  true,   null,                   string.Empty,           false,  false) },
-            { 24, new InputsHotkey(InputsHotkeyType.Windows,    "\uE7C4",   "shortcutTaskview",                 "Segoe MDL2 Assets",    20, false,  true,   null,                   string.Empty,           false,  false) },
-            { 25, new InputsHotkey(InputsHotkeyType.Windows,    "\uE71D",   "shortcutTaskManager",              "Segoe Fluent Icons",   20, false,  true,   null,                   string.Empty,           false,  false) },
-            { 26, new InputsHotkey(InputsHotkeyType.Windows,    "\uE8BB",   "shortcutKillApp",                  "Segoe Fluent Icons",   20, false,  true,   null,                   string.Empty,           false,  false) },
-            { 27, new InputsHotkey(InputsHotkeyType.Windows,    "\uE7E7",   "shortcutControlCenter",            "Segoe Fluent Icons",   20, false,  true,   null,                   string.Empty,           true,   false) },
-
-            // Handheld Companion hotkeys
-            { 30, new InputsHotkey(InputsHotkeyType.HC,         "\uE7C4",   "shortcutMainwindow",               "Segoe Fluent Icons",   20, false,  true,   null,                   string.Empty,           true,   false) },
-            { 31, new InputsHotkey(InputsHotkeyType.HC,         "\uE961",   "shortcutDesktopLayout",            "Segoe Fluent Icons",   20, false,  true,   null,                   string.Empty,           true,   true) },
+            { 20, new InputsHotkey(InputsHotkeyType.Windows,  "\uE765", "shortcutKeyboard",              false, true,  string.Empty,           false, true ) },
+            { 21, new InputsHotkey(InputsHotkeyType.Windows,  "\uE7FB", "shortcutDesktop",               false, true,  string.Empty,           false, true ) },
+            { 22, new InputsHotkey(InputsHotkeyType.Windows,  "\uEA4F", "shortcutESC",                   false, true,  string.Empty,           false, false) },
+            { 23, new InputsHotkey(InputsHotkeyType.Windows,  "\uEE49", "shortcutExpand",                false, true,  string.Empty,           false, false) },
+            { 24, new InputsHotkey(InputsHotkeyType.Windows,  "\uEB91", "shortcutTaskView",              false, true,  string.Empty,           false, false) },
+            { 25, new InputsHotkey(InputsHotkeyType.Windows,  "\uE71D", "shortcutTaskManager",           false, true,  string.Empty,           false, false) },
+            { 26, new InputsHotkey(InputsHotkeyType.Windows,  "\uE8A0", "shortcutActionCenter",          false, true,  string.Empty,           false, true ) },
+            { 27, new InputsHotkey(InputsHotkeyType.Windows,  "\uEBE8", "shortcutKillApp",               false, true,  string.Empty,           false, false) },
 
             // Device specific hotkeys
-            { 40, new InputsHotkey(InputsHotkeyType.Device,     "\uE9CA",   "FanControlEnabled",                 "Segoe Fluent Icons",   20, false,  true,   null,                   "HasFanControlSupport", false,  true) },
-            { 41, new InputsHotkey(InputsHotkeyType.Device,     "\uE706",   "increaseBrightness",               "Segoe Fluent Icons",   20, true,   false,  null,                   "HasBrightnessSupport", false,  false) },
-            { 42, new InputsHotkey(InputsHotkeyType.Device,     "\uEC8A",   "decreaseBrightness",               "Segoe Fluent Icons",   20, true,   false,  null,                   "HasBrightnessSupport", false,  false) },
-            { 43, new InputsHotkey(InputsHotkeyType.Device,     "\uE995",   "increaseVolume",                   "Segoe Fluent Icons",   20, true,   false,  null,                   "HasVolumeSupport",     false,  false) },
-            { 44, new InputsHotkey(InputsHotkeyType.Device,     "\uE993",   "decreaseVolume",                   "Segoe Fluent Icons",   20, true,   false,  null,                   "HasVolumeSupport",     false,  false) },
+            { 30, new InputsHotkey(InputsHotkeyType.Device,   "\uE706", "increaseBrightness",            true,  false, "HasBrightnessSupport", false, false) },
+            { 31, new InputsHotkey(InputsHotkeyType.Device,   "\uEC8A", "decreaseBrightness",            true,  false, "HasBrightnessSupport", false, false) },
+            { 32, new InputsHotkey(InputsHotkeyType.Device,   "\uE995", "increaseVolume",                true,  false, "HasVolumeSupport",     false, false) },
+            { 33, new InputsHotkey(InputsHotkeyType.Device,   "\uE993", "decreaseVolume",                true,  false, "HasVolumeSupport",     false, false) },
+            { 34, new InputsHotkey(InputsHotkeyType.Device,   "\uEC4A", "increaseTDP",                   true,  false, "HasTDPSupport",        false, false) },
+            { 35, new InputsHotkey(InputsHotkeyType.Device,   "\uEC48", "decreaseTDP",                   true,  false, "HasTDPSupport",        false, false) },
+            { 36, new InputsHotkey(InputsHotkeyType.Device,   "\uE9CA", "FanControlEnabled",             false, true,  "HasFanControlSupport", true,  false) },
 
             // User customizable hotkeys
-            { 50, new InputsHotkey(InputsHotkeyType.Custom,     "\u2780",   "shortcutCustom0",                  "Segoe UI Symbol",      20, false,  true,   null,                   string.Empty,           false,  false) },
-            { 51, new InputsHotkey(InputsHotkeyType.Custom,     "\u2781",   "shortcutCustom1",                  "Segoe UI Symbol",      20, false,  true,   null,                   string.Empty,           false,  false) },
-            { 52, new InputsHotkey(InputsHotkeyType.Custom,     "\u2782",   "shortcutCustom2",                  "Segoe UI Symbol",      20, false,  true,   null,                   string.Empty,           false,  false) },
-            { 53, new InputsHotkey(InputsHotkeyType.Custom,     "\u2783",   "shortcutCustom3",                  "Segoe UI Symbol",      20, false,  true,   null,                   string.Empty,           false,  false) },
-            { 54, new InputsHotkey(InputsHotkeyType.Custom,     "\u2784",   "shortcutCustom4",                  "Segoe UI Symbol",      20, false,  true,   null,                   string.Empty,           false,  false) },
-            { 55, new InputsHotkey(InputsHotkeyType.Custom,     "\u2785",   "shortcutCustom5",                  "Segoe UI Symbol",      20, false,  true,   null,                   string.Empty,           false,  false) },
-            { 56, new InputsHotkey(InputsHotkeyType.Custom,     "\u2786",   "shortcutCustom6",                  "Segoe UI Symbol",      20, false,  true,   null,                   string.Empty,           false,  false) },
-            { 57, new InputsHotkey(InputsHotkeyType.Custom,     "\u2787",   "shortcutCustom7",                  "Segoe UI Symbol",      20, false,  true,   null,                   string.Empty,           false,  false) },
-            { 58, new InputsHotkey(InputsHotkeyType.Custom,     "\u2788",   "shortcutCustom8",                  "Segoe UI Symbol",      20, false,  true,   null,                   string.Empty,           false,  false) },
-            { 59, new InputsHotkey(InputsHotkeyType.Custom,     "\u2789",   "shortcutCustom9",                  "Segoe UI Symbol",      20, false,  true,   null,                   string.Empty,           false,  false) },
+            { 40, new InputsHotkey(InputsHotkeyType.Custom,   "\uF146", "shortcutCustom0",               false, true,  string.Empty,           false, false) },
+            { 41, new InputsHotkey(InputsHotkeyType.Custom,   "\uF147", "shortcutCustom1",               false, true,  string.Empty,           false, false) },
+            { 42, new InputsHotkey(InputsHotkeyType.Custom,   "\uF148", "shortcutCustom2",               false, true,  string.Empty,           false, false) },
+            { 43, new InputsHotkey(InputsHotkeyType.Custom,   "\uF149", "shortcutCustom3",               false, true,  string.Empty,           false, false) },
+            { 44, new InputsHotkey(InputsHotkeyType.Custom,   "\uF14A", "shortcutCustom4",               false, true,  string.Empty,           false, false) },
+            { 45, new InputsHotkey(InputsHotkeyType.Custom,   "\uF14B", "shortcutCustom5",               false, true,  string.Empty,           false, false) },
+            { 46, new InputsHotkey(InputsHotkeyType.Custom,   "\uF14C", "shortcutCustom6",               false, true,  string.Empty,           false, false) },
+            { 47, new InputsHotkey(InputsHotkeyType.Custom,   "\uF14D", "shortcutCustom7",               false, true,  string.Empty,           false, false) },
+            { 48, new InputsHotkey(InputsHotkeyType.Custom,   "\uF14E", "shortcutCustom8",               false, true,  string.Empty,           false, false) },
+            { 49, new InputsHotkey(InputsHotkeyType.Custom,   "\uF14F", "shortcutCustom9",               false, true,  string.Empty,           false, false) },
 
             // Special, UI hotkeys
-            { 60, new InputsHotkey(InputsHotkeyType.Embedded,   "\uEDE3",   "shortcutProfilesPage@",            "Segoe Fluent Icons",   20, true,   true,   null,                   string.Empty,           false,  false) },
-            { 61, new InputsHotkey(InputsHotkeyType.Embedded,   "\uEDE3",   "shortcutProfilesPage@@",           "Segoe Fluent Icons",   20, true,   true,   null,                   string.Empty,           false,  false) },
-            { 62, new InputsHotkey(InputsHotkeyType.Embedded,   "\uEDE3",   "shortcutProfilesSettingsMode0",    "Segoe Fluent Icons",   20, true,   true,   null,                   string.Empty,           false,  false) },
+            { 60, new InputsHotkey(InputsHotkeyType.Embedded, "\uEDE3", "shortcutProfilesPage@",         true,  true,  string.Empty,           false, false) },
+            { 61, new InputsHotkey(InputsHotkeyType.Embedded, "\uEDE3", "shortcutProfilesPage@@",        true,  true,  string.Empty,           false, false) },
+            { 62, new InputsHotkey(InputsHotkeyType.Embedded, "\uEDE3", "shortcutProfilesSettingsMode0", true,  true,  string.Empty,           false, false) },
         };
 
         public string Glyph { get; set; }
         public string Listener { get; set; }
         public string Description { get; set; }
-        public FontFamily fontFamily { get; set; }
-        public double fontSize { get; set; }
         public InputsHotkeyType hotkeyType { get; set; }
         public bool OnKeyDown { get; set; }
         public bool OnKeyUp { get; set; }
-        public Type DeviceType { get; set; }
         public string Settings { get; set; }
         public bool DefaultPinned { get; set; }
         public bool IsToggle { get; set; }
 
-        public InputsHotkey(InputsHotkeyType hotkeyType, string glyph, string listener, string fontFamily, double fontSize, bool onKeyDown, bool onKeyUp, Type deviceType = null, string settings = "", bool defaultPinned = false, bool isToggle = false)
+        public InputsHotkey(InputsHotkeyType hotkeyType, string glyph, string listener, bool onKeyDown, bool onKeyUp, string settings, bool isToggle, bool defaultPinned)
         {
             this.hotkeyType = hotkeyType;
             this.Glyph = glyph;
             this.Listener = listener;
-            this.fontFamily = new FontFamily(fontFamily);
-            this.fontSize = fontSize;
             this.OnKeyDown = onKeyDown;
             this.OnKeyUp = onKeyUp;
 
-            this.DeviceType = deviceType;
             this.Settings = settings;
             this.DefaultPinned = defaultPinned;
             this.IsToggle = isToggle;
