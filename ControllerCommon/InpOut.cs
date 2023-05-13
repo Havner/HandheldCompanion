@@ -68,7 +68,7 @@ namespace ControllerCommon
             libraryHandle = IntPtr.Zero;
         }
 
-        public byte[]? ReadMemory(IntPtr baseAddress, uint size)
+        public byte[] ReadMemory(IntPtr baseAddress, uint size)
         {
             IntPtr pdwLinAddr = MapPhysToLin(baseAddress, size, out IntPtr pPhysicalMemoryHandle);
             if (pdwLinAddr != IntPtr.Zero)

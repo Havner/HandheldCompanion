@@ -87,6 +87,11 @@ namespace ControllerCommon.Inputs
             return false;
         }
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         public static bool EqualsWithValues(SortedDictionary<AxisFlags, short> obj1, SortedDictionary<AxisFlags, short> obj2)
         {
             bool result = false;

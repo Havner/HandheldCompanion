@@ -536,7 +536,7 @@ namespace ControllerService
             return Task.CompletedTask;
         }
 
-        private async void OnSystemStatusChanged(SystemStatus status, SystemStatus prevStatus)
+        private void OnSystemStatusChanged(SystemStatus status, SystemStatus prevStatus)
         {
             if (status == prevStatus)
                 return;

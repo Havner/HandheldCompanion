@@ -115,6 +115,11 @@ namespace neptune_hidapi.net
             return obj is NeptuneControllerButtonState state &&
                    _buttonState.EqualsWithValues(state._buttonState);
         }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
     public class NeptuneControllerAxesState
     {

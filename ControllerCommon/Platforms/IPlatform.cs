@@ -33,7 +33,7 @@ namespace ControllerCommon.Platforms
         protected Timer PlatformWatchdog;
         protected object updateLock = new();
 
-        protected Process? Process
+        protected Process Process
         {
             get
             {
@@ -166,7 +166,7 @@ namespace ControllerCommon.Platforms
                 // Steam was installed, but got removed
                 return false;
             }
-            catch (IOException e)
+            catch (IOException)
             {
                 LogManager.LogError("Couldn't locate {0} configuration file", this.PlatformType);
                 return false;
@@ -188,7 +188,7 @@ namespace ControllerCommon.Platforms
                 File.Copy(origPath, configPath, true);
                 return true;
             }
-            catch (FileNotFoundException e)
+            catch (FileNotFoundException)
             {
                 // File was not found (which is valid as it might be before first start of the application)
                 LogManager.LogError("Couldn't locate {0} configuration file", this.PlatformType);
@@ -207,7 +207,7 @@ namespace ControllerCommon.Platforms
             {
                 return false;
             }
-            catch (IOException e)
+            catch (IOException)
             {
                 LogManager.LogError("Failed to overwrite {0} configuration file", this.PlatformType);
                 return false;
@@ -248,7 +248,7 @@ namespace ControllerCommon.Platforms
                 // Steam was installed, but got removed
                 return false;
             }
-            catch (IOException e)
+            catch (IOException)
             {
                 LogManager.LogError("Failed to overwrite {0} configuration file", this.PlatformType);
                 return false;

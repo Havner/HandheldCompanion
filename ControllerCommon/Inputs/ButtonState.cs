@@ -88,6 +88,11 @@ namespace ControllerCommon.Inputs
             return false;
         }
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         public object Clone()
         {
             return new ButtonState(State);

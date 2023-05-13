@@ -10,7 +10,6 @@ namespace ControllerCommon.Actions
     {
         public AxisLayoutFlags Axis { get; set; }
         private Vector2 Vector;
-        private Vector2 prevVector;
 
         // Axis to axis
         public bool AxisInverted { get; set; } = false;
@@ -24,7 +23,6 @@ namespace ControllerCommon.Actions
         {
             this.ActionType = ActionType.Joystick;
             this.Vector = new();
-            this.prevVector = new();
         }
 
         public AxisActions(AxisLayoutFlags axis) : this()

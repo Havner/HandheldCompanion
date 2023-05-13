@@ -137,7 +137,7 @@ namespace neptune_hidapi.net
                     await _hidDevice.RequestFeatureReportAsync(data);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }
