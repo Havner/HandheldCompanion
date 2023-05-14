@@ -576,26 +576,24 @@ namespace HandheldCompanion.Views.Pages
 
         private void ControllerSettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            // prepare layout template
-            // todo: localize me
-            LayoutTemplate layoutTemplate = new LayoutTemplate(currentProfile.LayoutTitle, "Your modified layout for this executable.", Environment.UserName, false, true)
+            // prepare layout editor
+            LayoutTemplate layoutTemplate = new(currentProfile.Layout)
             {
-                Layout = currentProfile.Layout.Clone() as Layout,
+                Name = currentProfile.LayoutTitle,
+                Description = "Your modified layout for this executable.",
+                Author = Environment.UserName,
                 Executable = currentProfile.Executable,
                 Product = currentProfile.Name,
             };
-            layoutTemplate.Layout.Updated += Layout_Updated;
+            layoutTemplate.Updated += Template_Updated;
 
-            // update layout page with layout template
             MainWindow.layoutPage.UpdateLayout(layoutTemplate);
-
-            // navigate
             MainWindow.NavView_Navigate(MainWindow.layoutPage);
         }
 
-        private void Layout_Updated(Layout layout)
+        private void Template_Updated(LayoutTemplate layoutTemplate)
         {
-            currentProfile.Layout = layout;
+            currentProfile.LayoutTitle = layoutTemplate.Name;
         }
     }
 }

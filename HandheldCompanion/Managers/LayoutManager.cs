@@ -18,12 +18,10 @@ namespace HandheldCompanion.Managers
 {
     static class LayoutManager
     {
-        public static LayoutTemplate profileLayout = new();
-        public static LayoutTemplate desktopLayout = LayoutTemplate.DesktopLayout;
-
         public static List<LayoutTemplate> Templates = new()
         {
             LayoutTemplate.DefaultLayout,
+            LayoutTemplate.DesktopLayout,
             LayoutTemplate.NintendoLayout,
             LayoutTemplate.KeyboardLayout,
             LayoutTemplate.GamepadMouseLayout,
@@ -32,6 +30,9 @@ namespace HandheldCompanion.Managers
 
         private static bool updateLock;
         private static Layout currentLayout;
+        private static Layout profileLayout;
+        private static Layout desktopLayout;
+        private static readonly string desktopLayoutFile = "desktop";
 
         public static FileSystemWatcher layoutWatcher { get; set; }
 
@@ -80,21 +81,21 @@ namespace HandheldCompanion.Managers
 
         public static void Start()
         {
-            // generate template(s)
-            if (!LayoutTemplateExist(desktopLayout))
-                SerializeLayoutTemplate(desktopLayout);
-
-            // process community layouts
-            List<string> fileEntries = new();
-            fileEntries.AddRange(Directory.GetFiles(LayoutsPath, "*.json", SearchOption.AllDirectories));
-            fileEntries.AddRange(Directory.GetFiles(TemplatesPath, "*.json", SearchOption.AllDirectories));
-
+            // process community templates
+            string[] fileEntries = Directory.GetFiles(TemplatesPath, "*.json", SearchOption.AllDirectories);
             foreach (string fileName in fileEntries)
                 ProcessLayoutTemplate(fileName);
 
-            // process template layouts
             foreach (LayoutTemplate layoutTemplate in Templates)
                 Updated?.Invoke(layoutTemplate);
+
+            desktopLayout = ProcessLayout(desktopLayoutFile);
+            if (desktopLayout is null)
+            {
+                desktopLayout = LayoutTemplate.DesktopLayout.Layout.Clone() as Layout;
+                DesktopLayout_Updated(desktopLayout);
+            }
+            desktopLayout.Updated += DesktopLayout_Updated;
 
             layoutWatcher.Created += LayoutWatcher_Created;
 
@@ -119,10 +120,33 @@ namespace HandheldCompanion.Managers
             ProcessLayoutTemplate(e.FullPath);
         }
 
-        private static bool LayoutTemplateExist(LayoutTemplate layoutTemplate)
+        private static Layout? ProcessLayout(string fileName)
         {
-            string fileName = Path.Combine(TemplatesPath, $"{layoutTemplate.Name}.json");
-            return File.Exists(fileName);
+            // UI thread (synchronous)
+            // We need to wait for each controller to initialize and take (or not) its slot in the array
+            return Application.Current.Dispatcher.Invoke(() =>
+            {
+                Layout layout = null;
+
+                try
+                {
+                    string outputraw = File.ReadAllText(fileName);
+                    layout = JsonConvert.DeserializeObject<Layout>(outputraw, new JsonSerializerSettings
+                    {
+                        TypeNameHandling = TypeNameHandling.All
+                    });
+                }
+                catch (Exception ex)
+                {
+                    LogManager.LogError("Could not parse Layout {0}. {1}", fileName, ex.Message);
+                }
+
+                // failed to parse
+                if (layout is null)
+                    LogManager.LogError("Could not parse Layout {0}", fileName);
+
+                return layout;
+            });
         }
 
         private static void ProcessLayoutTemplate(string fileName)
@@ -131,7 +155,6 @@ namespace HandheldCompanion.Managers
             // We need to wait for each controller to initialize and take (or not) its slot in the array
             Application.Current.Dispatcher.Invoke(() =>
             {
-                // initialize value
                 LayoutTemplate layoutTemplate = null;
 
                 try
@@ -154,69 +177,71 @@ namespace HandheldCompanion.Managers
                     return;
                 }
 
-                // create/update templates
-                switch (layoutTemplate.Name)
-                {
-                    case "Desktop":
-                        // if we need to make this function async, then we need to check below if we're in desktop mode
-                        // if yes, update currentLayout with desktopLayout
-                        desktopLayout = layoutTemplate;
-                        desktopLayout.Updated += LayoutTemplate_Updated;
-                        break;
-
-                    default:
-                        // todo: implement deduplication
-                        Templates.Add(layoutTemplate);
-                        break;
-                }
-
+                // todo: implement deduplication
+                Templates.Add(layoutTemplate);
                 Updated?.Invoke(layoutTemplate);
             });
         }
 
-        private static void LayoutTemplate_Updated(LayoutTemplate layoutTemplate)
+        private static void DesktopLayout_Updated(Layout layout)
         {
-            SerializeLayoutTemplate(layoutTemplate);
+            SerializeLayout(layout, desktopLayoutFile);
         }
 
         private static void ProfileManager_Applied(Profile profile)
         {
-            UpdateCurrentLayout(profile);
+            SetProfileLayout(profile);
         }
 
         private static void ProfileManager_Updated(Profile profile, ProfileUpdateSource source, bool isCurrent)
         {
             // ignore profile update if not current or not running
             if (isCurrent && (profile.ErrorCode.HasFlag(ProfileErrorCode.Running & ProfileErrorCode.Default)))
-                UpdateCurrentLayout(profile);
+                SetProfileLayout(profile);
         }
 
         private static void ProfileManager_Discarded(Profile profile, bool isCurrent, bool isUpdate)
         {
             // ignore discard signal if part of a profile switch
             if (!isUpdate)
-                UpdateCurrentLayout();
+                SetProfileLayout();
         }
 
-        private static void UpdateCurrentLayout(Profile profile = null)
+        private static void SetProfileLayout(Profile profile = null)
         {
             Profile defaultProfile = ProfileManager.GetDefault();
 
             if (profile is not null && profile.LayoutEnabled && profile.Enabled)
-                profileLayout.Layout = profile.Layout.Clone() as Layout;
+                profileLayout = profile.Layout.Clone() as Layout;
             else if (defaultProfile is not null && defaultProfile.LayoutEnabled && defaultProfile.Enabled)
-                profileLayout.Layout = defaultProfile.Layout.Clone() as Layout;
+                profileLayout = defaultProfile.Layout.Clone() as Layout;
             else
-                profileLayout.Layout = null;
+                profileLayout = null;
 
             // only update current layout if we're not into desktop layout mode
             if (!SettingsManager.GetBoolean("DesktopLayoutEnabled", true))
-                UpdateCurrentLayout(profileLayout.Layout);
+                SetActiveLayout(profileLayout);
         }
 
         public static Layout GetCurrent()
         {
             return currentLayout;
+        }
+
+        public static Layout GetDesktop()
+        {
+            return desktopLayout;
+        }
+
+        public static void SerializeLayout(Layout layout, string fileName)
+        {
+            string jsonString = JsonConvert.SerializeObject(layout, Formatting.Indented, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.All
+            });
+
+            fileName = Path.Combine(LayoutsPath, $"{fileName}.json");
+            File.WriteAllText(fileName, jsonString);
         }
 
         public static void SerializeLayoutTemplate(LayoutTemplate layoutTemplate)
@@ -226,13 +251,7 @@ namespace HandheldCompanion.Managers
                 TypeNameHandling = TypeNameHandling.All
             });
 
-            string fileName = string.Empty;
-
-            if (layoutTemplate.IsTemplate)
-                fileName = Path.Combine(TemplatesPath, $"{layoutTemplate.Name}.json");
-            else
-                fileName = Path.Combine(LayoutsPath, $"{layoutTemplate.Name}_{layoutTemplate.Author}.json");
-
+            string fileName = Path.Combine(TemplatesPath, $"{layoutTemplate.Name}_{layoutTemplate.Author}.json");
             File.WriteAllText(fileName, jsonString);
         }
 
@@ -244,10 +263,10 @@ namespace HandheldCompanion.Managers
                     switch (Convert.ToBoolean(value))
                     {
                         case true:
-                            UpdateCurrentLayout(desktopLayout.Layout);
+                            SetActiveLayout(desktopLayout);
                             break;
                         case false:
-                            UpdateCurrentLayout(profileLayout.Layout);
+                            SetActiveLayout(profileLayout);
                             break;
                     }
                     break;
@@ -269,7 +288,7 @@ namespace HandheldCompanion.Managers
             }
         }
 
-        private static async void UpdateCurrentLayout(Layout layout)
+        private static async void SetActiveLayout(Layout layout)
         {
             while (updateLock)
                 await Task.Delay(5);
@@ -279,6 +298,7 @@ namespace HandheldCompanion.Managers
 
         public static ControllerState MapController(ControllerState controllerState)
         {
+            // when no profile active and default is disabled, do 1:1 controller mapping
             if (currentLayout is null)
                 return controllerState;
 
