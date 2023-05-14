@@ -14,7 +14,7 @@
     MinWidth="700"
     MinHeight="500"
     ui:ThemeManager.IsThemeAware="True"
-    ui:WindowHelper.SystemBackdropType="Mica"
+    ui:WindowHelper.SystemBackdropType="None"
     ui:WindowHelper.UseModernWindowStyle="True"
     Closed="Window_Closed"
     Closing="Window_Closing"
