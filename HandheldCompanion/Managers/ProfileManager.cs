@@ -52,8 +52,6 @@ namespace HandheldCompanion.Managers
             ProcessManager.ForegroundChanged += ProcessManager_ForegroundChanged;
             ProcessManager.ProcessStarted += ProcessManager_ProcessStarted;
             ProcessManager.ProcessStopped += ProcessManager_ProcessStopped;
-
-            ControllerManager.ControllerSelected += ControllerManager_ControllerSelected;
         }
 
         public static void Start()
@@ -431,9 +429,6 @@ namespace HandheldCompanion.Managers
             if (profile.Default)
                 return;
 
-            // update wrapper
-            UpdateProfileWrapper(profile);
-
             // update cloaking
             UpdateProfileCloaking(profile);
         }
@@ -457,38 +452,6 @@ namespace HandheldCompanion.Managers
                     HidHide.UnregisterApplication(profile.Path);
                     break;
             }
-        }
-
-        public static void UpdateProfileWrapper(Profile profile)
-        {
-            switch (profile.ErrorCode)
-            {
-                case ProfileErrorCode.MissingPermission:
-                case ProfileErrorCode.MissingPath:
-                case ProfileErrorCode.Running:
-                case ProfileErrorCode.Default:
-                    return;
-            }
-
-            switch (profile.XInputPlus)
-            {
-                case true:
-                    XInputPlus.RegisterApplication(profile);
-                    break;
-                case false:
-                    XInputPlus.UnregisterApplication(profile);
-                    break;
-            }
-        }
-
-        private static void ControllerManager_ControllerSelected(IController Controller)
-        {
-            // only XInput controllers use XInputPlus
-            if (Controller.GetType() != typeof(XInputController))
-                return;
-
-            foreach (Profile profile in profiles.Values)
-                UpdateProfileWrapper(profile);
         }
     }
 }

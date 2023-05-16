@@ -364,7 +364,6 @@ namespace HandheldCompanion.Views.Pages
 
                 // Global settings
                 cB_Whitelist.IsChecked = currentProfile.Whitelisted;
-                cB_Wrapper.IsChecked = currentProfile.XInputPlus;
 
                 // Motion control settings
                 tb_ProfileGyroValue.Value = currentProfile.GyrometerMultiplier;
@@ -395,7 +394,6 @@ namespace HandheldCompanion.Views.Pages
                     case ProfileErrorCode.None:
                         WarningBorder.Visibility = Visibility.Collapsed;
                         cB_Whitelist.IsEnabled = true;
-                        cB_Wrapper.IsEnabled = true;
                         break;
 
                     case ProfileErrorCode.Running:
@@ -406,7 +404,6 @@ namespace HandheldCompanion.Views.Pages
                         WarningBorder.Visibility = Visibility.Visible;
                         WarningContent.Text = EnumUtils.GetDescriptionFromEnumValue(currentProfile.ErrorCode);
                         cB_Whitelist.IsEnabled = false;     // you can't whitelist an application without path
-                        cB_Wrapper.IsEnabled = false;       // you can't deploy wrapper on an application without path
                         break;
                 }
             });
@@ -447,7 +444,6 @@ namespace HandheldCompanion.Views.Pages
 
             // Global settings
             currentProfile.Whitelisted = (bool)cB_Whitelist.IsChecked;
-            currentProfile.XInputPlus = (bool)cB_Wrapper.IsChecked;
 
             // Motion control settings
             currentProfile.GyrometerMultiplier = (float)tb_ProfileGyroValue.Value;

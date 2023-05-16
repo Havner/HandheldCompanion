@@ -286,18 +286,6 @@
                                     Checked="cB_Whitelist_Checked"
                                     Content="{x:Static resx:Resources.ProfilesPage_Whitelist}"
                                     Unchecked="cB_Whitelist_Checked" />
-
-                                <!--  Separator  -->
-                                <Separator
-                                    Margin="-46,0,-16,0"
-                                    BorderBrush="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
-                                    BorderThickness="0,1,0,0" />
-
-                                <CheckBox
-                                    Name="cB_Wrapper"
-                                    Checked="cB_Wrapper_Checked"
-                                    Content="{x:Static resx:Resources.ProfilesPage_Wrapper}"
-                                    Unchecked="cB_Wrapper_Checked" />
                             </ui:SimpleStackPanel>
                         </Expander.Content>
                     </Expander>
