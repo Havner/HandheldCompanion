@@ -272,10 +272,7 @@ namespace HandheldCompanion.Managers
                     case "shortcutKeyboard":
                         new Thread(() =>
                         {
-                            var uiHostNoLaunch = new ProcessUtils.UIHostNoLaunch();
-                            var tipInvocation = (ProcessUtils.ITipInvocation)uiHostNoLaunch;
-                            tipInvocation.Toggle(ProcessUtils.GetDesktopWindow());
-                            Marshal.ReleaseComObject(uiHostNoLaunch);
+                            ProcessUtils.ShowOnScreenKeyboard();
                         }).Start();
                         break;
                     case "shortcutDesktop":

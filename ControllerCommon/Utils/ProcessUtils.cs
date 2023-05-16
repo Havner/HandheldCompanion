@@ -3,10 +3,7 @@ using Microsoft.WindowsAPICodePack.Shell.PropertySystem;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Management;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -36,20 +33,14 @@ namespace ControllerCommon.Utils
         #endregion
 
         #region imports
-        [DllImport("kernel32.dll")]
-        public static extern bool GetBinaryType(string lpApplicationName, out BinaryType lpBinaryType);
-
-        [DllImport("Kernel32.dll")]
-        static extern uint QueryFullProcessImageName(IntPtr hProcess, uint flags, StringBuilder text, out uint size);
-
         [DllImport("user32.dll")]
-        static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
+        private static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
 
-        public delegate bool WindowEnumProc(IntPtr hwnd, IntPtr lparam);
+        private delegate bool WindowEnumProc(IntPtr hwnd, IntPtr lparam);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool EnumChildWindows(IntPtr hwnd, WindowEnumProc callback, IntPtr lParam);
+        private static extern bool EnumChildWindows(IntPtr hwnd, WindowEnumProc callback, IntPtr lParam);
 
         [DllImport("User32.dll")]
         public static extern bool SetForegroundWindow(IntPtr handle);
@@ -59,14 +50,13 @@ namespace ControllerCommon.Utils
 
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
+        private static extern bool GetWindowPlacement(IntPtr hWnd, ref WINDOWPLACEMENT lpwndpl);
 
         [DllImport("User32.dll")]
         public static extern bool IsIconic(IntPtr handle);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool CloseHandle(
-        IntPtr hObject);
+        private static extern bool CloseHandle(IntPtr hObject);
 
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern IntPtr OpenProcess(
@@ -84,25 +74,19 @@ namespace ControllerCommon.Utils
         private const int QueryLimitedInformation = 0x00001000;
 
         [ComImport, Guid("4ce576fa-83dc-4F88-951c-9d0782b4e376")]
-        public class UIHostNoLaunch
+        private class UIHostNoLaunch
         {
         }
 
         [ComImport, Guid("37c994e7-432b-4834-a2f7-dce1f13b834b")]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        public interface ITipInvocation
+        private interface ITipInvocation
         {
             void Toggle(IntPtr hwnd);
         }
 
         [DllImport("user32.dll", SetLastError = false)]
-        public static extern IntPtr GetDesktopWindow();
-
-        [DllImport("ntdll.dll", EntryPoint = "NtSuspendProcess", SetLastError = true, ExactSpelling = false)]
-        public static extern UIntPtr NtSuspendProcess(IntPtr processHandle);
-
-        [DllImport("ntdll.dll", EntryPoint = "NtResumeProcess", SetLastError = true, ExactSpelling = false)]
-        public static extern UIntPtr NtResumeProcess(IntPtr processHandle);
+        private static extern IntPtr GetDesktopWindow();
         #endregion
 
         [Serializable]
@@ -208,24 +192,6 @@ namespace ControllerCommon.Utils
             return AppProperties;
         }
 
-        public static string GetPathToApp(Process process)
-        {
-            try
-            {
-                return process.MainModule.FileName;
-            }
-            catch
-            {
-                string query = $"SELECT ExecutablePath, ProcessID FROM Win32_Process WHERE ProcessID = {process.Id}";
-                ManagementObjectSearcher searcher = new(query);
-
-                foreach (ManagementObject item in searcher.Get())
-                    return Convert.ToString(item["ExecutablePath"]);
-            }
-
-            return string.Empty;
-        }
-
         public static string GetPathToApp(int pid)
         {
             var size = 1024;
@@ -238,30 +204,20 @@ namespace ControllerCommon.Utils
             return sb.ToString();
         }
 
-        public static List<Process> GetChildProcesses(Process process)
-        {
-            return new ManagementObjectSearcher($"select processid from win32_process Where parentprocessid=={process.Id}")
-                .Get()
-                .Cast<ManagementObject>()
-                .Select(mo => Process.GetProcessById(Convert.ToInt32(mo["ProcessID"])))
-                .ToList();
-        }
-
-        public static List<int> GetChildIds(Process process)
-        {
-            return new ManagementObjectSearcher($"select processid from win32_process Where parentprocessid={process.Id}")
-                .Get()
-                .Cast<ManagementObject>()
-                .Select(mo => Convert.ToInt32(mo["ProcessID"]))
-                .ToList();
-        }
-
         public static WINDOWPLACEMENT GetPlacement(IntPtr hwnd)
         {
             WINDOWPLACEMENT placement = new WINDOWPLACEMENT();
             placement.length = Marshal.SizeOf(placement);
             GetWindowPlacement(hwnd, ref placement);
             return placement;
+        }
+
+        public static void ShowOnScreenKeyboard()
+        {
+            var uiHostNoLaunch = new UIHostNoLaunch();
+            var tipInvocation = (ITipInvocation)uiHostNoLaunch;
+            tipInvocation.Toggle(GetDesktopWindow());
+            Marshal.ReleaseComObject(uiHostNoLaunch);
         }
     }
 
