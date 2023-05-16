@@ -424,34 +424,6 @@ namespace HandheldCompanion.Managers
             // inform service
             if (isCurrent)
                 ApplyProfile(profile);
-
-            // do not update wrapper and cloaking from default profile
-            if (profile.Default)
-                return;
-
-            // update cloaking
-            UpdateProfileCloaking(profile);
-        }
-
-        public static void UpdateProfileCloaking(Profile profile)
-        {
-            switch (profile.ErrorCode)
-            {
-                case ProfileErrorCode.MissingExecutable:
-                case ProfileErrorCode.MissingPath:
-                case ProfileErrorCode.Default:
-                    return;
-            }
-
-            switch (profile.Whitelisted)
-            {
-                case true:
-                    HidHide.RegisterApplication(profile.Path);
-                    break;
-                case false:
-                    HidHide.UnregisterApplication(profile.Path);
-                    break;
-            }
         }
     }
 }

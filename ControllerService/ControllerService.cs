@@ -54,9 +54,6 @@ namespace ControllerService
         public static Profile currentProfile = new();
         public static PlatformType currentPlatform;
 
-        public static event UpdatedEventHandler ForegroundUpdated;
-        public delegate void UpdatedEventHandler();
-
         public ControllerService(IHostApplicationLifetime lifetime)
         {
             CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
@@ -378,7 +375,6 @@ namespace ControllerService
 
             // update current profile
             currentProfile = profile;
-            ForegroundUpdated?.Invoke();
 
             LogManager.LogInformation("Profile {0} applied", profile.Name);
         }
@@ -391,7 +387,6 @@ namespace ControllerService
 
             // update current platform
             currentPlatform = platform;
-            ForegroundUpdated?.Invoke();
 
             LogManager.LogInformation("Platform {0} detected", platform);
         }

@@ -352,8 +352,6 @@ namespace HandheldCompanion.Views.Pages
 
                 // prevent user from renaming default profile
                 tB_ProfileName.IsEnabled = !currentProfile.Default;
-                // disable global settings on default profile
-                GlobalSettings.IsEnabled = !currentProfile.Default;
                 // prevent user from disabling default profile
                 Toggle_EnableProfile.IsEnabled = !currentProfile.Default;
 
@@ -361,9 +359,6 @@ namespace HandheldCompanion.Views.Pages
                 tB_ProfileName.Text = currentProfile.Name;
                 tB_ProfilePath.Text = currentProfile.Path;
                 Toggle_EnableProfile.IsOn = currentProfile.Enabled;
-
-                // Global settings
-                cB_Whitelist.IsChecked = currentProfile.Whitelisted;
 
                 // Motion control settings
                 tb_ProfileGyroValue.Value = currentProfile.GyrometerMultiplier;
@@ -393,7 +388,6 @@ namespace HandheldCompanion.Views.Pages
                     default:
                     case ProfileErrorCode.None:
                         WarningBorder.Visibility = Visibility.Collapsed;
-                        cB_Whitelist.IsEnabled = true;
                         break;
 
                     case ProfileErrorCode.Running:
@@ -403,7 +397,6 @@ namespace HandheldCompanion.Views.Pages
                     case ProfileErrorCode.Default:
                         WarningBorder.Visibility = Visibility.Visible;
                         WarningContent.Text = EnumUtils.GetDescriptionFromEnumValue(currentProfile.ErrorCode);
-                        cB_Whitelist.IsEnabled = false;     // you can't whitelist an application without path
                         break;
                 }
             });
@@ -442,9 +435,6 @@ namespace HandheldCompanion.Views.Pages
             currentProfile.Path = tB_ProfilePath.Text;
             currentProfile.Enabled = (bool)Toggle_EnableProfile.IsOn;
 
-            // Global settings
-            currentProfile.Whitelisted = (bool)cB_Whitelist.IsChecked;
-
             // Motion control settings
             currentProfile.GyrometerMultiplier = (float)tb_ProfileGyroValue.Value;
             currentProfile.AccelerometerMultiplier = (float)tb_ProfileAcceleroValue.Value;
@@ -466,12 +456,6 @@ namespace HandheldCompanion.Views.Pages
             ProfileManager.UpdateOrCreateProfile(currentProfile, ProfileUpdateSource.ProfilesPage);
         }
 
-        private void cB_Whitelist_Checked(object sender, RoutedEventArgs e)
-        {
-            // todo : move me to WPF
-            UniversalSettings.IsEnabled = (bool)!cB_Whitelist.IsChecked;
-        }
-
         private void cB_Overlay_Checked(object sender, RoutedEventArgs e)
         {
             // do something
@@ -490,14 +474,6 @@ namespace HandheldCompanion.Views.Pages
         private void cB_ExclusiveHook_Checked(object sender, RoutedEventArgs e)
         {
             // do something
-        }
-
-        private void Toggle_UniversalMotion_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (currentProfile is null)
-                return;
-
-            cB_Whitelist.IsEnabled = !(bool)Toggle_UniversalMotion.IsOn && !currentProfile.Default;
         }
 
         private void Expander_Expanded(object sender, RoutedEventArgs e)

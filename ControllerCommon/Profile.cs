@@ -55,8 +55,6 @@ namespace ControllerCommon
         public bool LayoutEnabled { get; set; } = false;
         public Layout Layout { get; set; } = new();
 
-        public bool Whitelisted { get; set; }                       // if true, can see through the HidHide cloak
-
         public float GyrometerMultiplier { get; set; } = 1.0f;      // gyroscope multiplicator (remove me)
         public float AccelerometerMultiplier { get; set; } = 1.0f;  // accelerometer multiplicator (remove me)
 

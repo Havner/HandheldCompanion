@@ -29,26 +29,11 @@ namespace ControllerService.Targets
         public delegate void DisconnectedEventHandler(ViGEmTarget target);
 
         public bool IsConnected = false;
-        protected bool IsSilenced = false;
 
         protected ViGEmTarget()
         {
             // initialize flick stick
             flickStick = new FlickStick();
-
-            ControllerService.ForegroundUpdated += ForegroundUpdated;
-        }
-
-        private void ForegroundUpdated()
-        {
-            if (ControllerService.currentProfile.Whitelisted)
-                IsSilenced = true;
-            else
-                IsSilenced = false;
-        }
-
-        protected void FeedbackReceived(object sender, EventArgs e)
-        {
         }
 
         public override string ToString()

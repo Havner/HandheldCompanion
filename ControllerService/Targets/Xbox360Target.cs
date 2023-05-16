@@ -71,9 +71,6 @@ namespace ControllerService.Targets
             if (!IsConnected)
                 return;
 
-            if (IsSilenced)
-                return;
-
             base.UpdateReport(ticks);
 
             virtualController.SetAxisValue(Xbox360Axis.LeftThumbX, (short)LeftThumb.X);

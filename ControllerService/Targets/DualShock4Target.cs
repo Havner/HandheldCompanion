@@ -161,10 +161,7 @@ namespace ControllerService.Targets
                     tempSpecial |= DualShock4SpecialButton.Touchpad.Value;
 
                 outDS4Report.bSpecial = (byte)(tempSpecial | (0 << 2));
-            }
 
-            if (!IsSilenced)
-            {
                 outDS4Report.wButtons = tempButtons;
                 outDS4Report.wButtons |= tempDPad.Value;
 
@@ -175,10 +172,7 @@ namespace ControllerService.Targets
                 outDS4Report.bThumbLY = (byte)(byte.MaxValue - InputUtils.NormalizeXboxInput(LeftThumb.Y));
                 outDS4Report.bThumbRX = InputUtils.NormalizeXboxInput(RightThumb.X);
                 outDS4Report.bThumbRY = (byte)(byte.MaxValue - InputUtils.NormalizeXboxInput(RightThumb.Y));
-            }
 
-            unchecked
-            {
                 outDS4Report.bTouchPacketsN = 0x01;
                 outDS4Report.sCurrentTouch.bPacketCounter = DS4Touch.TouchPacketCounter;
                 outDS4Report.sCurrentTouch.bIsUpTrackingNum1 = (byte)DS4Touch.LeftPadTouch.RawTrackingNum;

@@ -254,42 +254,6 @@
                 <ui:SimpleStackPanel Spacing="6">
                     <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="{x:Static resx:Resources.ProfilesPage_ProfileSettings}" />
 
-                    <!--  Global settings  -->
-                    <Expander
-                        Name="GlobalSettings"
-                        HorizontalAlignment="Stretch"
-                        Expanded="Expander_Expanded"
-                        IsEnabled="false">
-                        <Expander.Header>
-                            <DockPanel Margin="0,12,12,12">
-                                <ui:FontIcon
-                                    Height="40"
-                                    HorizontalAlignment="Center"
-                                    FontFamily="{DynamicResource SymbolThemeFontFamily}"
-                                    Glyph="&#xE713;" />
-
-                                <ui:SimpleStackPanel Margin="12,0,0,0" VerticalAlignment="Center">
-                                    <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Static resx:Resources.ProfilesPage_GlobalSettings}" />
-                                    <TextBlock
-                                        Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
-                                        Style="{StaticResource CaptionTextBlockStyle}"
-                                        Text="{x:Static resx:Resources.ProfilesPage_GlobalSettingsDesc}"
-                                        TextWrapping="Wrap" />
-                                </ui:SimpleStackPanel>
-                            </DockPanel>
-                        </Expander.Header>
-
-                        <Expander.Content>
-                            <ui:SimpleStackPanel Margin="30,0,0,0" Spacing="12">
-                                <CheckBox
-                                    Name="cB_Whitelist"
-                                    Checked="cB_Whitelist_Checked"
-                                    Content="{x:Static resx:Resources.ProfilesPage_Whitelist}"
-                                    Unchecked="cB_Whitelist_Checked" />
-                            </ui:SimpleStackPanel>
-                        </Expander.Content>
-                    </Expander>
-
                     <!--  Motion control settings  -->
                     <Expander
                         Name="MotionSettings"
@@ -516,8 +480,7 @@
                                         Name="Toggle_UniversalMotion"
                                         Grid.Column="1"
                                         HorizontalAlignment="Right"
-                                        Style="{DynamicResource InvertedToggleSwitchStyle}"
-                                        Toggled="Toggle_UniversalMotion_Toggled" />
+                                        Style="{DynamicResource InvertedToggleSwitchStyle}" />
                                 </Grid>
 
                                 <!--  Separator  -->
