@@ -39,37 +39,5 @@ namespace HandheldCompanion.Platforms
                 IsInstalled = File.Exists(ExecutablePath);
             }
         }
-
-        public override bool Start()
-        {
-            if (!IsInstalled)
-                return false;
-
-            if (IsRunning())
-                return false;
-
-            var process = Process.Start(new ProcessStartInfo()
-            {
-                FileName = ExecutablePath,
-                WindowStyle = ProcessWindowStyle.Hidden,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            });
-
-            return process is not null;
-        }
-
-        public override bool Stop()
-        {
-            if (!IsInstalled)
-                return false;
-
-            if (!IsRunning())
-                return false;
-
-            Kill();
-
-            return true;
-        }
     }
 }

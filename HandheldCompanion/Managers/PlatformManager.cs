@@ -45,18 +45,6 @@ namespace HandheldCompanion.Managers
                 // restore controller files
                 foreach (var config in SteamPlatform.ControllerFiles)
                     Steam.ResetFile(config.Key);
-
-                Steam.Dispose();
-            }
-
-            if (GOGGalaxy.IsInstalled)
-            {
-                GOGGalaxy.Dispose();
-            }
-
-            if (UbisoftConnect.IsInstalled)
-            {
-                UbisoftConnect.Dispose();
             }
 
             IsInitialized = false;

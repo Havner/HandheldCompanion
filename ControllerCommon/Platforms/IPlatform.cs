@@ -18,7 +18,7 @@ namespace ControllerCommon.Platforms
         GOG = 4,
     }
 
-    public abstract class IPlatform : IDisposable
+    public abstract class IPlatform
     {
         protected string Name;
         protected string ExecutableName;
@@ -26,12 +26,6 @@ namespace ControllerCommon.Platforms
         protected string InstallPath;
         protected string SettingsPath;
         protected string ExecutablePath;
-
-        protected bool KeepAlive;
-        protected bool IsStarting;
-
-        protected Timer PlatformWatchdog;
-        protected object updateLock = new();
 
         protected Process Process
         {
@@ -121,33 +115,6 @@ namespace ControllerCommon.Platforms
         public virtual bool IsRunning()
         {
             return Process is not null;
-        }
-
-        public virtual bool Start()
-        {
-            return false;
-        }
-
-        public virtual bool Stop()
-        {
-            return false;
-        }
-
-        public bool Kill()
-        {
-            var process = Process;
-            if (process is null)
-                return true;
-
-            try
-            {
-                using (process) { process.Kill(); }
-                return true;
-            }
-            catch (Win32Exception)
-            {
-                return false;
-            }
         }
 
         public bool IsFileOverwritten(string FilePath, byte[] content)
@@ -253,12 +220,6 @@ namespace ControllerCommon.Platforms
                 LogManager.LogError("Failed to overwrite {0} configuration file", this.PlatformType);
                 return false;
             }
-        }
-
-        public virtual void Dispose()
-        {
-            if (PlatformWatchdog is not null)
-                PlatformWatchdog.Dispose();
         }
     }
 }

@@ -153,45 +153,5 @@ namespace HandheldCompanion.Platforms
             var id = String.Format("{0:x}/{1:x}", vendorId, productId);
             return controllers.Contains(id);
         }
-
-        public override bool Start()
-        {
-            if (!IsInstalled)
-                return false;
-
-            if (IsRunning())
-                return false;
-
-            var process = Process.Start(new ProcessStartInfo()
-            {
-                FileName = ExecutablePath,
-                // ArgumentList = { "-gamepadui" },
-                WindowStyle = ProcessWindowStyle.Hidden,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            });
-
-            return process is not null;
-        }
-
-        public override bool Stop()
-        {
-            if (!IsInstalled)
-                return false;
-
-            if (!IsRunning())
-                return false;
-
-            var process = Process.Start(new ProcessStartInfo()
-            {
-                FileName = ExecutablePath,
-                ArgumentList = { "-shutdown" },
-                WindowStyle = ProcessWindowStyle.Hidden,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            });
-
-            return process is not null;
-        }
     }
 }
