@@ -41,13 +41,11 @@ namespace HandheldCompanion.Managers
 
         private static bool IsInitialized;
 
-        #region events
         public static event InitializedEventHandler Initialized;
         public delegate void InitializedEventHandler();
 
         public static event UpdatedEventHandler Updated;
         public delegate void UpdatedEventHandler(LayoutTemplate layoutTemplate);
-        #endregion
 
         static LayoutManager()
         {
@@ -70,12 +68,11 @@ namespace HandheldCompanion.Managers
                 NotifyFilter = NotifyFilters.FileName | NotifyFilters.Size
             };
 
+            // LayoutManager cares only about the currently applied profile.
+            // Applied is also sent when the current profile is updated or deleted.
             ProfileManager.Applied += ProfileManager_Applied;
-            ProfileManager.Updated += ProfileManager_Updated;
-            ProfileManager.Discarded += ProfileManager_Discarded;
 
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
-
             HotkeysManager.CommandExecuted += HotkeysManager_CommandExecuted;
         }
 
@@ -189,33 +186,15 @@ namespace HandheldCompanion.Managers
             SerializeLayout(layout, desktopLayoutFile);
         }
 
-        private static void ProfileManager_Applied(Profile profile)
-        {
-            SetProfileLayout(profile);
-        }
-
-        private static void ProfileManager_Updated(Profile profile, ProfileUpdateSource source, bool isCurrent)
-        {
-            // ignore profile update if not current or not running
-            if (isCurrent && (profile.ErrorCode.HasFlag(ProfileErrorCode.Running & ProfileErrorCode.Default)))
-                SetProfileLayout(profile);
-        }
-
-        private static void ProfileManager_Discarded(Profile profile, bool isCurrent, bool isUpdate)
-        {
-            // ignore discard signal if part of a profile switch
-            if (!isUpdate)
-                SetProfileLayout();
-        }
-
-        private static void SetProfileLayout(Profile profile = null)
+        private static void ProfileManager_Applied(Profile profile, ProfileUpdateSource source)
         {
             Profile defaultProfile = ProfileManager.GetDefault();
 
-            if (profile is not null && profile.Enabled)
+            if (profile.Enabled)
                 profileLayout = profile.Layout.Clone() as Layout;
-            else if (defaultProfile is not null && defaultProfile.Enabled)
+            else if (defaultProfile.Enabled)
                 profileLayout = defaultProfile.Layout.Clone() as Layout;
+            // shouldn't happen, defaultProfile is always enabled
             else
                 profileLayout = null;
 
@@ -261,15 +240,10 @@ namespace HandheldCompanion.Managers
             switch (name)
             {
                 case "DesktopLayoutEnabled":
-                    switch (Convert.ToBoolean(value))
-                    {
-                        case true:
-                            SetActiveLayout(desktopLayout);
-                            break;
-                        case false:
-                            SetActiveLayout(profileLayout);
-                            break;
-                    }
+                    if (Convert.ToBoolean(value))
+                        SetActiveLayout(desktopLayout);
+                    else
+                        SetActiveLayout(profileLayout);
                     break;
             }
         }

@@ -60,9 +60,10 @@
                                     Name="cB_Profiles"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Center"
-                                    SelectionChanged="cB_Profiles_SelectionChanged" />
+                                    SelectionChanged="Profiles_SelectionChanged" />
+
                                 <!--  Create new profile  -->
-                                <Button Click="b_CreateProfile_Click" Style="{DynamicResource AccentButtonStyle}">
+                                <Button Click="CreateProfile_Click" Style="{DynamicResource AccentButtonStyle}">
                                     <ui:SimpleStackPanel
                                         HorizontalAlignment="Center"
                                         Orientation="Horizontal"
@@ -115,7 +116,6 @@
 
                 <ui:SimpleStackPanel
                     Name="ProfileDetails"
-                    IsEnabled="False"
                     Spacing="6">
                     <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="{x:Static resx:Resources.ProfilesPage_ProfileDetails}" />
 
@@ -151,8 +151,7 @@
                                         Name="tB_ProfileName"
                                         Grid.Column="1"
                                         HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Center"
-                                        Background="{DynamicResource SystemControlBackgroundBaseLowBrush}" />
+                                        VerticalAlignment="Center" />
                                 </DockPanel>
                             </Grid>
 
@@ -183,7 +182,8 @@
                                         HorizontalAlignment="Stretch"
                                         VerticalAlignment="Center"
                                         BorderThickness="1"
-                                        IsReadOnly="True" />
+                                        IsReadOnly="True"
+                                        Background="{DynamicResource SystemControlBackgroundBaseLowBrush}" />
                                 </DockPanel>
                             </Grid>
 
@@ -195,13 +195,13 @@
                                 <ui:AppBarButton
                                     Name="b_DeleteProfile"
                                     Width="Auto"
-                                    Click="b_DeleteProfile_Click"
+                                    Click="DeleteProfile_Click"
                                     Icon="Delete"
                                     Label="{x:Static resx:Resources.ProfilesPage_DeleteProfile}" />
                                 <ui:AppBarButton
-                                    Name="b_ApplyProfile"
+                                    Name="b_UpdateProfile"
                                     Width="Auto"
-                                    Click="b_ApplyProfile_Click"
+                                    Click="UpdateProfile_Click"
                                     Foreground="{DynamicResource AccentButtonBackground}"
                                     Icon="Save"
                                     Label="{x:Static resx:Resources.ProfilesPage_UpdateProfile}"
@@ -258,8 +258,7 @@
                     <Expander
                         Name="MotionSettings"
                         HorizontalAlignment="Stretch"
-                        Expanded="Expander_Expanded"
-                        IsEnabled="false">
+                        Expanded="Expander_Expanded">
                         <Expander.Header>
                             <DockPanel Margin="0,12,12,12">
                                 <ui:FontIcon
@@ -435,8 +434,7 @@
                     <Expander
                         Name="UniversalSettings"
                         HorizontalAlignment="Stretch"
-                        Expanded="Expander_Expanded"
-                        IsEnabled="false">
+                        Expanded="Expander_Expanded">
                         <Expander.Header>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -515,7 +513,7 @@
                                         VerticalAlignment="Center"
                                         MaxColumns="2"
                                         SelectedIndex="0"
-                                        SelectionChanged="cB_Input_SelectionChanged" />
+                                        SelectionChanged="Input_SelectionChanged" />
                                 </Grid>
 
                                 <!--  Separator  -->
@@ -633,7 +631,7 @@
                                             Grid.Column="1"
                                             HorizontalAlignment="Right"
                                             MaxColumns="1"
-                                            SelectionChanged="cB_UMC_MotionDefaultOffOn_SelectionChanged">
+                                            SelectionChanged="UMC_MotionDefaultOffOn_SelectionChanged">
                                             <RadioButton Content="{x:Static resx:Resources.ProfilesPage_UMCMotionOff}" />
                                             <RadioButton Content="{x:Static resx:Resources.ProfilesPage_UMCMotionOn}" />
                                         </ui:RadioButtons>
@@ -649,7 +647,7 @@
                                 <Grid IsEnabled="{Binding ElementName=Toggle_UniversalMotion, Path=IsOn}">
                                     <Button
                                         HorizontalAlignment="Stretch"
-                                        Click="b_AdditionalSettings_Click"
+                                        Click="AdditionalSettings_Click"
                                         Content="{x:Static resx:Resources.ProfilesPage_AdditionalSettings}" />
                                 </Grid>
                             </ui:SimpleStackPanel>

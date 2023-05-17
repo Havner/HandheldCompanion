@@ -1,15 +1,10 @@
 using ControllerCommon.Managers;
-using ControllerCommon.Pipes;
-using ControllerCommon.Platforms;
 using ControllerCommon.Utils;
-using HandheldCompanion.Controls;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Management;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,53 +21,47 @@ namespace HandheldCompanion.Managers
     {
         #region imports
         [DllImport("user32.dll", SetLastError = true)]
-        internal static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax, IntPtr hmodWinEventProc, WinEventProc lpfnWinEventProc, int idProcess, int idThread, uint dwflags);
+        private static extern IntPtr SetWinEventHook(uint eventMin, uint eventMax, IntPtr hmodWinEventProc, WinEventProc lpfnWinEventProc, int idProcess, int idThread, uint dwflags);
         [DllImport("user32.dll")]
-        internal static extern int UnhookWinEvent(IntPtr hWinEventHook);
-        internal delegate void WinEventProc(IntPtr hWinEventHook, uint iEvent, IntPtr hWnd, int idObject, int idChild, int dwEventThread, int dwmsEventTime);
+        private static extern int UnhookWinEvent(IntPtr hWinEventHook);
+        private delegate void WinEventProc(IntPtr hWinEventHook, uint iEvent, IntPtr hWnd, int idObject, int idChild, int dwEventThread, int dwmsEventTime);
 
-        const uint WINEVENT_OUTOFCONTEXT = 0;
-        const uint EVENT_SYSTEM_FOREGROUND = 0x0003; // The foreground window has changed
-        const uint EVENT_SYSTEM_MINIMIZESTART = 0x0016; // A window object is about to be minimized.This event is sent by the system, never by servers
-        const uint EVENT_SYSTEM_MINIMIZEEND = 0x0017; // A window object is about to be restored.This event is sent by the system, never by servers
-        const uint EVENT_OBJECT_CREATE = 0x8000; // An object has been created
-        const uint EVENT_OBJECT_DESTROY = 0x8001; // An object has been destroyed
+        private const uint WINEVENT_OUTOFCONTEXT = 0;
+        private const uint EVENT_SYSTEM_FOREGROUND = 0x0003; // The foreground window has changed
+        private const uint EVENT_SYSTEM_MINIMIZESTART = 0x0016; // A window object is about to be minimized.This event is sent by the system, never by servers
+        private const uint EVENT_SYSTEM_MINIMIZEEND = 0x0017; // A window object is about to be restored.This event is sent by the system, never by servers
+        private const uint EVENT_OBJECT_CREATE = 0x8000; // An object has been created
+        private const uint EVENT_OBJECT_DESTROY = 0x8001; // An object has been destroyed
 
         private static IntPtr HookForeground;
         private static IntPtr HookMinimize;
         private static WinEventProc WinEventWindows;
 
-        public delegate bool WindowEnumCallback(IntPtr hwnd, int lparam);
+        private delegate bool WindowEnumCallback(IntPtr hwnd, int lparam);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool EnumWindows(WindowEnumCallback lpEnumFunc, int lParam);
+        private static extern bool EnumWindows(WindowEnumCallback lpEnumFunc, int lParam);
 
         [DllImport("user32.dll")]
-        public static extern bool IsWindowVisible(int h);
+        private static extern bool IsWindowVisible(int h);
         #endregion
-
-        #region events
-        public static event ForegroundChangedEventHandler ForegroundChanged;
-        public delegate void ForegroundChangedEventHandler(ProcessEx processEx, ProcessEx backgroundEx);
-
-        public static event ProcessStartedEventHandler ProcessStarted;
-        public delegate void ProcessStartedEventHandler(ProcessEx processEx, bool OnStartup);
-
-        public static event ProcessStoppedEventHandler ProcessStopped;
-        public delegate void ProcessStoppedEventHandler(ProcessEx processEx);
 
         public static event InitializedEventHandler Initialized;
         public delegate void InitializedEventHandler();
-        #endregion
+        public static event ForegroundChangedEventHandler ForegroundChanged;
+        public delegate void ForegroundChangedEventHandler(ProcessEx processEx);
+        public static event ProcessStartedEventHandler ProcessStarted;
+        public delegate void ProcessStartedEventHandler(ProcessEx processEx, bool OnStartup);
+        public static event ProcessStoppedEventHandler ProcessStopped;
+        public delegate void ProcessStoppedEventHandler(ProcessEx processEx);
 
         // process vars
         private static Timer MonitorTimer;
 
         private static ConcurrentDictionary<int, ProcessEx> Processes = new();
 
-        private static ProcessEx currentProcess;
-        private static ProcessEx previousProcess;
+        private static ProcessEx? foregroundProcess;
 
         private static object updateLock = new();
         private static bool IsInitialized;
@@ -132,25 +121,9 @@ namespace HandheldCompanion.Managers
             LogManager.LogInformation("{0} has stopped", "ProcessManager");
         }
 
-        public static ProcessEx GetForegroundProcess()
+        public static ProcessEx? GetForegroundProcess()
         {
-            return currentProcess;
-        }
-
-        public static ProcessEx GetProcess(int processId)
-        {
-            Processes.TryGetValue(processId, out var process);
-            return process;
-        }
-
-        public static List<ProcessEx> GetProcesses()
-        {
-            return Processes.Values.ToList();
-        }
-
-        public static List<ProcessEx> GetProcesses(string executable)
-        {
-            return Processes.Values.Where(a => a.Executable.Equals(executable, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            return foregroundProcess;
         }
 
         private static void OnWindowOpened(object sender, AutomationEventArgs automationEventArgs)
@@ -212,9 +185,6 @@ namespace HandheldCompanion.Managers
                 // pull process from running processes
                 ProcessEx process = Processes[processId];
 
-                // save previous process (can be null)
-                previousProcess = currentProcess;
-
                 switch (iEvent)
                 {
                     case EVENT_SYSTEM_FOREGROUND:
@@ -233,47 +203,36 @@ namespace HandheldCompanion.Managers
                             }
 
                             // update foreground process
-                            currentProcess = process;
+                            foregroundProcess = process;
 
                             // update main window handle
-                            currentProcess.MainWindowHandle = hWnd;
+                            foregroundProcess.MainWindowHandle = hWnd;
 
-                            LogManager.LogDebug("{0} executable {1} now has the foreground", currentProcess.Platform, currentProcess.Executable);
+                            LogManager.LogDebug("{0} executable {1} now has the foreground", foregroundProcess.Platform, foregroundProcess.Executable);
                         }
                         break;
 
                     case EVENT_SYSTEM_MINIMIZESTART:
                         {
                             // ignore if not foreground window
-                            if (currentProcess is null || currentProcess.MainWindowHandle != hWnd)
+                            if (foregroundProcess is null || foregroundProcess.MainWindowHandle != hWnd)
                                 return;
 
-                            // update foreground process
-                            currentProcess = new()
-                            {
-                                Path = string.Empty,
-                                Executable = string.Empty,
-                                Platform = PlatformType.Windows,
-                                Filter = ProcessFilter.Ignored
-                            };
+                            LogManager.LogDebug("{0} executable {1} was minimized or destroyed", foregroundProcess.Platform, foregroundProcess.Executable);
 
-                            LogManager.LogDebug("{0} executable {1} was minimized or destroyed", previousProcess.Platform, previousProcess.Executable);
+                            foregroundProcess = null;
                         }
                         break;
                 }
 
-                // inform service
-                PipeClient.SendMessage(new PipeClientProcess { executable = currentProcess.Executable, platform = currentProcess.Platform });
-
                 // raise event
-                ForegroundChanged?.Invoke(currentProcess, previousProcess);
+                ForegroundChanged?.Invoke(foregroundProcess);
             }
             catch
             {
                 // process has too high elevation
                 return;
             }
-
         }
 
         private static void MonitorHelper(object? sender, EventArgs e)
@@ -292,14 +251,17 @@ namespace HandheldCompanion.Managers
         private static void ProcessHalted(object? sender, EventArgs e)
         {
             int processId = ((Process)sender).Id;
-            ProcessHalted(processId);
-        }
 
-        private static void ProcessHalted(int processId)
-        {
             if (Processes.ContainsKey(processId))
             {
                 ProcessEx processEx = Processes[processId];
+
+                // stopped process can't have foreground
+                if (foregroundProcess == processEx)
+                {
+                    foregroundProcess = null;
+                    ForegroundChanged?.Invoke(foregroundProcess);
+                }
 
                 Processes.TryRemove(new KeyValuePair<int, ProcessEx>(processId, processEx));
 

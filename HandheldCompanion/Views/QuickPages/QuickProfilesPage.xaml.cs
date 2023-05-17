@@ -1,12 +1,12 @@
 using ControllerCommon;
 using ControllerCommon.Inputs;
-using ControllerCommon.Processor;
 using ControllerCommon.Utils;
 using HandheldCompanion.Controls;
 using HandheldCompanion.Managers;
 using ModernWpf.Controls;
 using System;
 using System.Threading;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using Layout = ControllerCommon.Layout;
@@ -20,8 +20,8 @@ namespace HandheldCompanion.Views.QuickPages
     /// </summary>
     public partial class QuickProfilesPage : Page
     {
-        private ProcessEx currentProcess;
-        private Profile currentProfile;
+        private ProcessEx? currentProcess;
+        private Profile? currentProfile;
         private Hotkey ProfilesPageHotkey = new(61);
 
         private const int UpdateInterval = 500;
@@ -33,23 +33,22 @@ namespace HandheldCompanion.Views.QuickPages
         {
             InitializeComponent();
 
+            // Those are the only events QuickProfiles needs to work.
+            // What is the current process and what is the current profile.
+            // Applied is also sent when the current profile is updated or deleted.
             ProcessManager.ForegroundChanged += ProcessManager_ForegroundChanged;
-            ProcessManager.ProcessStopped += ProcessManager_ProcessStopped;
+            ProfileManager.Applied += ProfileManager_Applied;
 
-            ProfileManager.Updated += ProfileUpdated;
-            ProfileManager.Deleted += ProfileDeleted;
-            ProfileManager.Applied += ProfileApplied;
-
-            HotkeysManager.HotkeyCreated += TriggerCreated;
-            InputsManager.TriggerUpdated += TriggerUpdated;
+            HotkeysManager.HotkeyCreated += HotkeysManager_HotkeyCreated;
+            InputsManager.TriggerUpdated += InputsManager_TriggerUpdated;
 
             foreach (MotionInput mode in (MotionInput[])Enum.GetValues(typeof(MotionInput)))
             {
                 // create panel
-                SimpleStackPanel panel = new SimpleStackPanel() { Spacing = 6, Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
+                SimpleStackPanel panel = new() { Spacing = 6, Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
 
                 // create icon
-                FontIcon icon = new FontIcon() { Glyph = "" };
+                FontIcon icon = new() { Glyph = "" };
 
                 switch (mode)
                 {
@@ -73,7 +72,7 @@ namespace HandheldCompanion.Views.QuickPages
 
                 // create textblock
                 string description = EnumUtils.GetDescriptionFromEnumValue(mode);
-                TextBlock text = new TextBlock() { Text = description };
+                TextBlock text = new() { Text = description };
                 panel.Children.Add(text);
 
                 cB_Input.Items.Add(panel);
@@ -82,10 +81,10 @@ namespace HandheldCompanion.Views.QuickPages
             foreach (MotionOutput mode in (MotionOutput[])Enum.GetValues(typeof(MotionOutput)))
             {
                 // create panel
-                SimpleStackPanel panel = new SimpleStackPanel() { Spacing = 6, Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
+                SimpleStackPanel panel = new() { Spacing = 6, Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
 
                 // create icon
-                FontIcon icon = new FontIcon() { Glyph = "" };
+                FontIcon icon = new() { Glyph = "" };
 
                 switch (mode)
                 {
@@ -103,147 +102,126 @@ namespace HandheldCompanion.Views.QuickPages
 
                 // create textblock
                 string description = EnumUtils.GetDescriptionFromEnumValue(mode);
-                TextBlock text = new TextBlock() { Text = description };
+                TextBlock text = new() { Text = description };
                 panel.Children.Add(text);
 
                 cB_Output.Items.Add(panel);
             }
 
-            UpdateTimer = new Timer(UpdateInterval);
+            UpdateTimer = new(UpdateInterval);
             UpdateTimer.AutoReset = false;
-            UpdateTimer.Elapsed += (sender, e) => SubmitProfile();
+            UpdateTimer.Elapsed += UpdateTimer_Elapsed;
         }
 
-        public void SubmitProfile(ProfileUpdateSource source = ProfileUpdateSource.QuickProfilesPage)
+        private void UpdateTimer_Elapsed(object? sender, ElapsedEventArgs e)
         {
             if (currentProfile is null)
                 return;
 
-            ProfileManager.UpdateOrCreateProfile(currentProfile, source);
+            ProfileManager.UpdateOrCreateProfile(currentProfile, ProfileUpdateSource.QuickProfilesPage);
         }
 
-        private void ProfileApplied(Profile profile)
+        // the visibility of this button depends on both, process and profile
+        private Visibility GetCreateProfileVisibility()
         {
-            ProfileUpdated(profile, ProfileUpdateSource.Background, true);
+            Visibility vis;
+            if (currentProcess is null)
+                vis = Visibility.Collapsed;
+            else if (currentProfile is null)
+                vis = Visibility.Visible;
+            else
+                vis = Visibility.Collapsed;
+            return vis;
         }
 
-        private void ProfileDeleted(Profile profile)
+        private void UpdateProfileContent()
         {
-            if (currentProfile is null)
-                return;
-
-            bool isCurrent = profile.Path.Equals(currentProfile.Path, StringComparison.InvariantCultureIgnoreCase);
-            if (isCurrent)
-                ProcessManager_ForegroundChanged(currentProcess, null);
-
-            currentProfile = null;
-        }
-
-        private void ProfileUpdated(Profile profile, ProfileUpdateSource source, bool isCurrent)
-        {
-            if (!isCurrent || profile.Default)
-                return;
-
-            if (Monitor.TryEnter(updateLock))
-            {
-                switch (source)
-                {
-                    // self update, unlock and exit
-                    case ProfileUpdateSource.QuickProfilesPage:
-                        Monitor.Exit(updateLock);
-                        return;
-                }
-
-                // if an update is pending, execute it and stop timer
-                if (UpdateTimer.Enabled)
-                {
-                    UpdateTimer.Stop();
-                    SubmitProfile();
-                }
-
-                // update current profile
-                currentProfile = profile.Clone() as Profile;
-
-                // UI thread (async)
-                Application.Current.Dispatcher.BeginInvoke(() =>
-                {
-                    // manage visibility here too...
-                    b_CreateProfile.Visibility = Visibility.Collapsed;
-                    GridProfile.Visibility = Visibility.Visible;
-
-                    ProfileToggle.IsEnabled = !profile.Default;
-                    ProfileToggle.IsOn = profile.Enabled;
-                    UMCToggle.IsOn = profile.MotionEnabled;
-                    cB_Input.SelectedIndex = (int)profile.MotionInput;
-                    cB_Output.SelectedIndex = (int)profile.MotionOutput;
-                    cB_UMC_MotionDefaultOffOn.SelectedIndex = (int)profile.MotionMode;
-
-                    // Slider settings
-                    SliderUMCAntiDeadzone.Value = profile.MotionAntiDeadzone;
-                    SliderSensitivityX.Value = profile.MotionSensivityX;
-                    SliderSensitivityY.Value = profile.MotionSensivityY;
-
-                    // todo: improve me ?
-                    ProfilesPageHotkey.inputsChord.State = profile.MotionTrigger.Clone() as ButtonState;
-                    ProfilesPageHotkey.DrawInput();
-                });
-
-                // release lock
-                Monitor.Exit(updateLock);
-            }
-        }
-
-        private void ProcessManager_ForegroundChanged(ProcessEx processEx, ProcessEx backgroundEx)
-        {
-            // update current process
-            currentProcess = processEx;
-
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                if (processEx.MainWindowHandle != IntPtr.Zero)
+                if (currentProfile is null)
                 {
-                    ProcessIcon.Source = currentProcess.imgSource;
-                    ProcessName.Text = currentProcess.Executable;
-                    ProcessPath.Text = currentProcess.Path;
-                }
-                else
-                {
-                    ProcessManager_ProcessStopped(processEx);
-                }
-
-                // disable create button if process is bypassed
-                b_CreateProfile.IsEnabled = processEx.Filter == ProcessEx.ProcessFilter.Allowed;
-
-                Profile profile = ProfileManager.GetProfileFromPath(currentProcess.Path);
-                if (profile is null || profile.Default)
-                {
-                    b_CreateProfile.Visibility = Visibility.Visible;
+                    b_CreateProfile.Visibility = GetCreateProfileVisibility();
                     GridProfile.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
                     b_CreateProfile.Visibility = Visibility.Collapsed;
                     GridProfile.Visibility = Visibility.Visible;
+
+                    ProfileToggle.IsOn = currentProfile.Enabled;
+                    UMCToggle.IsOn = currentProfile.MotionEnabled;
+                    cB_Input.SelectedIndex = (int)currentProfile.MotionInput;
+                    cB_Output.SelectedIndex = (int)currentProfile.MotionOutput;
+                    cB_UMC_MotionDefaultOffOn.SelectedIndex = (int)currentProfile.MotionMode;
+
+                    // Slider settings
+                    SliderUMCAntiDeadzone.Value = currentProfile.MotionAntiDeadzone;
+                    SliderSensitivityX.Value = currentProfile.MotionSensivityX;
+                    SliderSensitivityY.Value = currentProfile.MotionSensivityY;
+
+                    // todo: improve me ?
+                    ProfilesPageHotkey.inputsChord.State = currentProfile.MotionTrigger.Clone() as ButtonState;
+                    ProfilesPageHotkey.DrawInput();
                 }
             });
         }
 
-        private void ProcessManager_ProcessStopped(ProcessEx processEx)
+        private void UpdateProcessContent()
         {
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                if (currentProcess == processEx)
+                if (currentProcess is not null)
+                {
+                    ProcessIcon.Source = currentProcess.imgSource;
+                    ProcessName.Text = currentProcess.Executable;
+                    ProcessPath.Text = currentProcess.Path;
+
+                    // disable create button if process is bypassed
+                    b_CreateProfile.IsEnabled = currentProcess.Filter == ProcessEx.ProcessFilter.Allowed;
+                    b_CreateProfile.Visibility = GetCreateProfileVisibility();
+                }
+                else
                 {
                     ProcessIcon.Source = null;
                     ProcessName.Text = Properties.Resources.QuickProfilesPage_Waiting;
                     ProcessPath.Text = string.Empty;
 
                     b_CreateProfile.Visibility = Visibility.Collapsed;
-                    GridProfile.Visibility = Visibility.Collapsed;
                 }
             });
+        }
+
+        private void ProfileManager_Applied(Profile profile, ProfileUpdateSource source)
+        {
+            if (source == ProfileUpdateSource.QuickProfilesPage)
+                return;
+
+            if (Monitor.TryEnter(updateLock))
+            {
+                // if an update is pending, execute it and stop timer
+                if (UpdateTimer.Enabled)
+                {
+                    UpdateTimer.Stop();
+                    ProfileManager.UpdateOrCreateProfile(currentProfile, ProfileUpdateSource.QuickProfilesPage);
+                }
+
+                // don't store or display the default profile
+                if (!profile.Default)
+                    currentProfile = profile.Clone() as Profile;
+                else
+                    currentProfile = null;
+                UpdateProfileContent();
+
+                Monitor.Exit(updateLock);
+            }
+        }
+
+        private void ProcessManager_ForegroundChanged(ProcessEx process)
+        {
+            currentProcess = process;
+            UpdateProcessContent();
         }
 
         private void RequestUpdate()
@@ -280,7 +258,7 @@ namespace HandheldCompanion.Views.QuickPages
             }
         }
 
-        private void cB_Input_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Input_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cB_Input.SelectedIndex == -1)
                 return;
@@ -316,7 +294,7 @@ namespace HandheldCompanion.Views.QuickPages
             }
         }
 
-        private void cB_Output_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Output_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (currentProfile is null)
                 return;
@@ -330,21 +308,22 @@ namespace HandheldCompanion.Views.QuickPages
             }
         }
 
-        private void b_CreateProfile_Click(object sender, RoutedEventArgs e)
+        private void CreateProfile_Click(object sender, RoutedEventArgs e)
         {
             if (currentProcess is null)
                 return;
 
-            // create profile
-            currentProfile = new Profile(currentProcess.Path);
-            currentProfile.Layout = LayoutTemplate.DefaultLayout.Layout.Clone() as Layout;
-            currentProfile.LayoutTitle = LayoutTemplate.DesktopLayout.Name;
-
-            // if an update is pending, execute it and stop timer
             if (UpdateTimer.Enabled)
                 UpdateTimer.Stop();
 
-            SubmitProfile(ProfileUpdateSource.Creation);
+            // create profile
+            currentProfile = new(currentProcess.Path)
+            {
+                Layout = LayoutTemplate.DefaultLayout.Layout.Clone() as Layout,
+                LayoutTitle = LayoutTemplate.DesktopLayout.Name
+            };
+
+            ProfileManager.UpdateOrCreateProfile(currentProfile, ProfileUpdateSource.Creation);
         }
 
         private void SliderUMCAntiDeadzone_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -389,7 +368,7 @@ namespace HandheldCompanion.Views.QuickPages
             }
         }
 
-        private void TriggerCreated(Hotkey hotkey)
+        private void HotkeysManager_HotkeyCreated(Hotkey hotkey)
         {
             switch (hotkey.inputsHotkey.Listener)
             {
@@ -408,7 +387,7 @@ namespace HandheldCompanion.Views.QuickPages
             }
         }
 
-        private void TriggerUpdated(string listener, InputsChord inputs, InputsManager.ListenerType type)
+        private void InputsManager_TriggerUpdated(string listener, InputsChord inputs, InputsManager.ListenerType type)
         {
             if (currentProfile is null)
                 return;
@@ -424,7 +403,7 @@ namespace HandheldCompanion.Views.QuickPages
             }
         }
 
-        private void cB_UMC_MotionDefaultOffOn_SelectionChanged(object sender, RoutedEventArgs e)
+        private void UMC_MotionDefaultOffOn_SelectionChanged(object sender, RoutedEventArgs e)
         {
             if (cB_UMC_MotionDefaultOffOn.SelectedIndex == -1 || currentProfile is null)
                 return;

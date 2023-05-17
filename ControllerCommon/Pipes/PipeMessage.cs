@@ -90,18 +90,6 @@ namespace ControllerCommon.Pipes
     }
 
     [Serializable]
-    public partial class PipeClientProcess : PipeMessage
-    {
-        public string executable;
-        public PlatformType platform;
-
-        public PipeClientProcess()
-        {
-            code = PipeCode.CLIENT_PROCESS;
-        }
-    }
-
-    [Serializable]
     public partial class PipeClientSettings : PipeMessage
     {
         public Dictionary<string, object> settings = new();

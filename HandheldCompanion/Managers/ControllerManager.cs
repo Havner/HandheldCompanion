@@ -81,7 +81,7 @@ namespace HandheldCompanion.Managers
             LogManager.LogInformation("{0} has started", "ControllerManager");
         }
 
-        private static void ProcessManager_ForegroundChanged(ProcessEx processEx, ProcessEx backgroundEx)
+        private static void ProcessManager_ForegroundChanged(ProcessEx processEx)
         {
             foregroundProcess = processEx;
         }

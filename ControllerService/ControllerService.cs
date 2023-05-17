@@ -52,7 +52,6 @@ namespace ControllerService
 
         // profile vars
         public static Profile currentProfile = new();
-        public static PlatformType currentPlatform;
 
         public ControllerService(IHostApplicationLifetime lifetime)
         {
@@ -262,13 +261,6 @@ namespace ControllerService
                     }
                     break;
 
-                case PipeCode.CLIENT_PROCESS:
-                    {
-                        PipeClientProcess process = (PipeClientProcess)message;
-                        UpdateProcess(process.executable, process.platform);
-                    }
-                    break;
-
                 case PipeCode.CLIENT_CURSOR:
                     {
                         PipeClientCursor cursor = (PipeClientCursor)message;
@@ -377,18 +369,6 @@ namespace ControllerService
             currentProfile = profile;
 
             LogManager.LogInformation("Profile {0} applied", profile.Name);
-        }
-
-        internal void UpdateProcess(string executable, PlatformType platform)
-        {
-            // skip if current platform
-            if (platform == currentPlatform)
-                return;
-
-            // update current platform
-            currentPlatform = platform;
-
-            LogManager.LogInformation("Platform {0} detected", platform);
         }
 
         public void UpdateSettings(Dictionary<string, object> args)

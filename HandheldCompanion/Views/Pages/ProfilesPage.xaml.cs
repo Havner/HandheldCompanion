@@ -1,7 +1,6 @@
 using ControllerCommon;
 using ControllerCommon.Inputs;
 using ControllerCommon.Managers;
-using ControllerCommon.Processor;
 using ControllerCommon.Utils;
 using HandheldCompanion.Controls;
 using HandheldCompanion.Managers;
@@ -28,8 +27,8 @@ namespace HandheldCompanion.Views.Pages
         public static Profile selectedProfile;
         private Hotkey ProfilesPageHotkey = new(60);
 
-        private SettingsMode0 page0 = new SettingsMode0("SettingsMode0");
-        private SettingsMode1 page1 = new SettingsMode1("SettingsMode1");
+        private SettingsMode0 page0 = new("SettingsMode0");
+        private SettingsMode1 page1 = new("SettingsMode1");
 
         public ProfilesPage()
         {
@@ -40,23 +39,22 @@ namespace HandheldCompanion.Views.Pages
         {
             this.Tag = Tag;
 
-            ProfileManager.Deleted += ProfileDeleted;
-            ProfileManager.Updated += ProfileUpdated;
-            ProfileManager.Applied += ProfileApplied;
+            // ProfilesPage doesn't care what is the currently applied profile.
+            ProfileManager.Initialized += ProfileManager_Initialized;
+            ProfileManager.Updated += ProfileManager_Updated;
+            ProfileManager.Deleted += ProfileManager_Deleted;
 
-            ProfileManager.Initialized += ProfileManagerLoaded;
-
-            HotkeysManager.HotkeyCreated += TriggerCreated;
-            InputsManager.TriggerUpdated += TriggerUpdated;
+            HotkeysManager.HotkeyCreated += HotkeysManager_HotkeyCreated;
+            InputsManager.TriggerUpdated += InputsManager_TriggerUpdated;
 
             // draw input modes
             foreach (MotionInput mode in (MotionInput[])Enum.GetValues(typeof(MotionInput)))
             {
                 // create panel
-                SimpleStackPanel panel = new SimpleStackPanel() { Spacing = 6, Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
+                SimpleStackPanel panel = new() { Spacing = 6, Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
 
                 // create icon
-                FontIcon icon = new FontIcon() { Glyph = "" };
+                FontIcon icon = new() { Glyph = "" };
 
                 switch (mode)
                 {
@@ -80,7 +78,7 @@ namespace HandheldCompanion.Views.Pages
 
                 // create textblock
                 string description = EnumUtils.GetDescriptionFromEnumValue(mode);
-                TextBlock text = new TextBlock() { Text = description };
+                TextBlock text = new() { Text = description };
                 panel.Children.Add(text);
 
                 cB_Input.Items.Add(panel);
@@ -90,10 +88,10 @@ namespace HandheldCompanion.Views.Pages
             foreach (MotionOutput mode in (MotionOutput[])Enum.GetValues(typeof(MotionOutput)))
             {
                 // create panel
-                SimpleStackPanel panel = new SimpleStackPanel() { Spacing = 6, Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
+                SimpleStackPanel panel = new() { Spacing = 6, Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
 
                 // create icon
-                FontIcon icon = new FontIcon() { Glyph = "" };
+                FontIcon icon = new() { Glyph = "" };
 
                 switch (mode)
                 {
@@ -111,7 +109,7 @@ namespace HandheldCompanion.Views.Pages
 
                 // create textblock
                 string description = EnumUtils.GetDescriptionFromEnumValue(mode);
-                TextBlock text = new TextBlock() { Text = description };
+                TextBlock text = new() { Text = description };
                 panel.Children.Add(text);
 
                 cB_Output.Items.Add(panel);
@@ -129,16 +127,16 @@ namespace HandheldCompanion.Views.Pages
         {
         }
 
-        #region UI
-        private void ProfileApplied(Profile profile)
+        private void ProfileManager_Initialized()
         {
-            if (profile.Default)
-                return;
-
-            ProfileUpdated(profile, ProfileUpdateSource.Background, true);
+            // UI thread (async)
+            Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                cB_Profiles.SelectedItem = ProfileManager.GetDefault();
+            });
         }
 
-        public void ProfileUpdated(Profile profile, ProfileUpdateSource source, bool isCurrent)
+        public void ProfileManager_Updated(Profile profile, ProfileUpdateSource source)
         {
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>
@@ -146,8 +144,7 @@ namespace HandheldCompanion.Views.Pages
                 int idx = -1;
                 foreach (Profile pr in cB_Profiles.Items)
                 {
-                    bool isCurrent = pr.Path.Equals(profile.Path, StringComparison.InvariantCultureIgnoreCase);
-                    if (isCurrent)
+                    if (pr.Path.Equals(profile.Path, StringComparison.InvariantCultureIgnoreCase))
                     {
                         idx = cB_Profiles.Items.IndexOf(pr);
                         break;
@@ -160,24 +157,11 @@ namespace HandheldCompanion.Views.Pages
                     cB_Profiles.Items.Add(profile);
 
                 cB_Profiles.Items.Refresh();
-
                 cB_Profiles.SelectedItem = profile;
             });
-
-            switch (source)
-            {
-                case ProfileUpdateSource.Background:
-                case ProfileUpdateSource.Creation:
-                case ProfileUpdateSource.Serializer:
-                    return;
-            }
-
-            _ = Dialog.ShowAsync($"{Properties.Resources.ProfilesPage_ProfileUpdated1}",
-                             $"{profile.Name} {Properties.Resources.ProfilesPage_ProfileUpdated2}",
-                             ContentDialogButton.Primary, null, $"{Properties.Resources.ProfilesPage_OK}");
         }
 
-        public void ProfileDeleted(Profile profile)
+        public void ProfileManager_Deleted(Profile profile, ProfileUpdateSource source)
         {
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>
@@ -192,23 +176,15 @@ namespace HandheldCompanion.Views.Pages
                         break;
                     }
                 }
+                if (idx == cB_Profiles.SelectedIndex)
+                    cB_Profiles.SelectedItem = ProfileManager.GetDefault();
                 cB_Profiles.Items.RemoveAt(idx);
             });
         }
 
-        private void ProfileManagerLoaded()
+        private async void CreateProfile_Click(object sender, RoutedEventArgs e)
         {
-            // UI thread (async)
-            Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                cB_Profiles.SelectedItem = ProfileManager.GetDefault();
-            });
-        }
-        #endregion
-
-        private async void b_CreateProfile_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
+            OpenFileDialog openFileDialog = new();
             if (openFileDialog.ShowDialog() == true)
             {
                 try
@@ -227,7 +203,7 @@ namespace HandheldCompanion.Views.Pages
                         case ".xml":
                             try
                             {
-                                XmlDocument doc = new XmlDocument();
+                                XmlDocument doc = new();
                                 doc.Load(path);
 
                                 XmlNodeList Applications = doc.GetElementsByTagName("Applications");
@@ -262,7 +238,7 @@ namespace HandheldCompanion.Views.Pages
                             break;
                     }
 
-                    Profile profile = new Profile(path);
+                    Profile profile = new(path);
                     profile.Layout = LayoutTemplate.DefaultLayout.Layout.Clone() as Layout;
                     profile.LayoutTitle = LayoutTemplate.DefaultLayout.Name;
 
@@ -272,8 +248,8 @@ namespace HandheldCompanion.Views.Pages
                     if (ProfileManager.Contains(path))
                     {
                         Task<ContentDialogResult> result = Dialog.ShowAsync(
-                            String.Format(Properties.Resources.ProfilesPage_AreYouSureOverwrite1, profile.Name),
-                            String.Format(Properties.Resources.ProfilesPage_AreYouSureOverwrite2, profile.Name),
+                            string.Format(Properties.Resources.ProfilesPage_AreYouSureOverwrite1, profile.Name),
+                            string.Format(Properties.Resources.ProfilesPage_AreYouSureOverwrite2, profile.Name),
                             ContentDialogButton.Primary,
                             $"{Properties.Resources.ProfilesPage_Cancel}",
                             $"{Properties.Resources.ProfilesPage_Yes}");
@@ -301,7 +277,7 @@ namespace HandheldCompanion.Views.Pages
             }
         }
 
-        private void b_AdditionalSettings_Click(object sender, RoutedEventArgs e)
+        private void AdditionalSettings_Click(object sender, RoutedEventArgs e)
         {
             if (selectedProfile is null)
                 return;
@@ -321,7 +297,7 @@ namespace HandheldCompanion.Views.Pages
             }
         }
 
-        private void cB_Profiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Profiles_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cB_Profiles.SelectedItem is null)
                 return;
@@ -342,14 +318,8 @@ namespace HandheldCompanion.Views.Pages
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                // enable all expanders
-                ProfileDetails.IsEnabled = true;
-                MotionSettings.IsEnabled = true;
-                UniversalSettings.IsEnabled = true;
-
-                // disable button if is default profile or application is running
-                b_DeleteProfile.IsEnabled = !selectedProfile.ErrorCode.HasFlag(ProfileErrorCode.Default & ProfileErrorCode.Running);
-
+                // disable delete button if is default profile
+                b_DeleteProfile.IsEnabled = !selectedProfile.Default;
                 // prevent user from renaming default profile
                 tB_ProfileName.IsEnabled = !selectedProfile.Default;
                 // prevent user from disabling default profile
@@ -387,7 +357,6 @@ namespace HandheldCompanion.Views.Pages
                         WarningBorder.Visibility = Visibility.Collapsed;
                         break;
 
-                    case ProfileErrorCode.Running:
                     case ProfileErrorCode.MissingExecutable:
                     case ProfileErrorCode.MissingPath:
                     case ProfileErrorCode.MissingPermission:
@@ -399,7 +368,7 @@ namespace HandheldCompanion.Views.Pages
             });
         }
 
-        private async void b_DeleteProfile_Click(object sender, RoutedEventArgs e)
+        private async void DeleteProfile_Click(object sender, RoutedEventArgs e)
         {
             if (selectedProfile is null)
                 return;
@@ -414,15 +383,14 @@ namespace HandheldCompanion.Views.Pages
             switch (result.Result)
             {
                 case ContentDialogResult.Primary:
-                    ProfileManager.DeleteProfile(selectedProfile);
-                    cB_Profiles.SelectedIndex = 0;
+                    ProfileManager.DeleteProfile(selectedProfile, ProfileUpdateSource.ProfilesPage);
                     break;
                 default:
                     break;
             }
         }
 
-        private void b_ApplyProfile_Click(object sender, RoutedEventArgs e)
+        private void UpdateProfile_Click(object sender, RoutedEventArgs e)
         {
             if (selectedProfile is null)
                 return;
@@ -430,44 +398,28 @@ namespace HandheldCompanion.Views.Pages
             // Profile
             selectedProfile.Name = tB_ProfileName.Text;
             selectedProfile.Path = tB_ProfilePath.Text;
-            selectedProfile.Enabled = (bool)Toggle_EnableProfile.IsOn;
+            selectedProfile.Enabled = Toggle_EnableProfile.IsOn;
 
             // Motion control settings
             selectedProfile.GyrometerMultiplier = (float)tb_ProfileGyroValue.Value;
             selectedProfile.AccelerometerMultiplier = (float)tb_ProfileAcceleroValue.Value;
 
             selectedProfile.SteeringAxis = cB_GyroSteering.SelectedIndex;
-            selectedProfile.MotionInvertVertical = (bool)cB_InvertVertical.IsChecked;
-            selectedProfile.MotionInvertHorizontal = (bool)cB_InvertHorizontal.IsChecked;
+            selectedProfile.MotionInvertVertical = cB_InvertVertical.IsChecked == true;
+            selectedProfile.MotionInvertHorizontal = cB_InvertHorizontal.IsChecked == true;
 
             // UMC settings
-            selectedProfile.MotionEnabled = (bool)Toggle_UniversalMotion.IsOn;
+            selectedProfile.MotionEnabled = Toggle_UniversalMotion.IsOn;
             selectedProfile.MotionInput = (MotionInput)cB_Input.SelectedIndex;
             selectedProfile.MotionOutput = (MotionOutput)cB_Output.SelectedIndex;
             selectedProfile.MotionAntiDeadzone = (float)tb_ProfileUMCAntiDeadzone.Value;
             selectedProfile.MotionMode = (MotionMode)cB_UMC_MotionDefaultOffOn.SelectedIndex;
 
             ProfileManager.UpdateOrCreateProfile(selectedProfile, ProfileUpdateSource.ProfilesPage);
-        }
 
-        private void cB_Overlay_Checked(object sender, RoutedEventArgs e)
-        {
-            // do something
-        }
-
-        private void cB_Wrapper_Checked(object sender, RoutedEventArgs e)
-        {
-            // do something
-        }
-
-        private void cB_EnableHook_Checked(object sender, RoutedEventArgs e)
-        {
-            // do something
-        }
-
-        private void cB_ExclusiveHook_Checked(object sender, RoutedEventArgs e)
-        {
-            // do something
+            _ = Dialog.ShowAsync($"{Properties.Resources.ProfilesPage_ProfileUpdated1}",
+                    $"{selectedProfile.Name} {Properties.Resources.ProfilesPage_ProfileUpdated2}",
+                    ContentDialogButton.Primary, null, $"{Properties.Resources.ProfilesPage_OK}");
         }
 
         private void Expander_Expanded(object sender, RoutedEventArgs e)
@@ -480,7 +432,7 @@ namespace HandheldCompanion.Views.Pages
             // do something
         }
 
-        private void cB_Input_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void Input_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cB_Input.SelectedIndex == -1)
                 return;
@@ -504,13 +456,13 @@ namespace HandheldCompanion.Views.Pages
             Text_InputHint.Text = Profile.InputDescription[input];
         }
 
-        private void cB_UMC_MotionDefaultOffOn_SelectionChanged(object sender, RoutedEventArgs e)
+        private void UMC_MotionDefaultOffOn_SelectionChanged(object sender, RoutedEventArgs e)
         {
             if (cB_UMC_MotionDefaultOffOn.SelectedIndex == -1)
                 return;
         }
 
-        private void TriggerCreated(Hotkey hotkey)
+        private void HotkeysManager_HotkeyCreated(Hotkey hotkey)
         {
             switch (hotkey.inputsHotkey.Listener)
             {
@@ -529,7 +481,7 @@ namespace HandheldCompanion.Views.Pages
             }
         }
 
-        private void TriggerUpdated(string listener, InputsChord inputs, InputsManager.ListenerType type)
+        private void InputsManager_TriggerUpdated(string listener, InputsChord inputs, InputsManager.ListenerType type)
         {
             switch (listener)
             {

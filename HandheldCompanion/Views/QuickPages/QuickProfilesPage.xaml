@@ -57,7 +57,7 @@
             Name="b_CreateProfile"
             Margin="12,2,15,2"
             HorizontalAlignment="Stretch"
-            Click="b_CreateProfile_Click"
+            Click="CreateProfile_Click"
             Content="{x:Static resx:Resources.QuickProfilesPage_Create}"
             Style="{DynamicResource AccentButtonStyle}"
             Visibility="Collapsed" />
@@ -94,7 +94,6 @@
                             Name="ProfileToggle"
                             Grid.Column="1"
                             HorizontalAlignment="Right"
-                            IsEnabled="False"
                             Style="{DynamicResource InvertedToggleSwitchStyle}"
                             Toggled="ProfileToggle_Toggled" />
                     </Grid>
@@ -199,7 +198,7 @@
                             VerticalAlignment="Center"
                             MaxColumns="2"
                             SelectedIndex="0"
-                            SelectionChanged="cB_Input_SelectionChanged" />
+                            SelectionChanged="Input_SelectionChanged" />
 
                         <!--  Separator  -->
                         <Separator
@@ -235,7 +234,7 @@
                             VerticalAlignment="Center"
                             MaxColumns="2"
                             SelectedIndex="0"
-                            SelectionChanged="cB_Output_SelectionChanged" />
+                            SelectionChanged="Output_SelectionChanged" />
 
                         <!--  Separator  -->
                         <Separator
@@ -269,7 +268,7 @@
                             Margin="6,0,0,0"
                             HorizontalAlignment="Left"
                             MaxColumns="2"
-                            SelectionChanged="cB_UMC_MotionDefaultOffOn_SelectionChanged">
+                            SelectionChanged="UMC_MotionDefaultOffOn_SelectionChanged">
                             <RadioButton Content="{x:Static resx:Resources.ProfilesPage_UMCMotionOff}" />
                             <RadioButton Content="{x:Static resx:Resources.ProfilesPage_UMCMotionOn}" />
                         </ui:RadioButtons>

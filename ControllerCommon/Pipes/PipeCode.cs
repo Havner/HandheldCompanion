@@ -30,23 +30,21 @@ namespace ControllerCommon.Pipes
         CLIENT_CONSOLE = 12,                // Sent from client to client to pass parameters
                                             // args: string[] parameters
 
-        CLIENT_PROCESS = 13,                // Sent to server each time a new process is in the foreground.
-
-        SERVER_SENSOR = 14,                 // Sent to client to share sensor values
+        SERVER_SENSOR = 13,                 // Sent to client to share sensor values
                                             // args: ...
 
-        CLIENT_NAVIGATED = 15,              // Sent to server to share current navigated page
+        CLIENT_NAVIGATED = 14,              // Sent to server to share current navigated page
                                             // args: ...
 
-        CLIENT_OVERLAY = 16,                // Sent to server to share current overlay status
+        CLIENT_OVERLAY = 15,                // Sent to server to share current overlay status
                                             // args: ...
 
-        SERVER_VIBRATION = 17,              // Sent to client to notify a vibration feedback arrived
+        SERVER_VIBRATION = 16,              // Sent to client to notify a vibration feedback arrived
                                             // args: ...
 
-        CLIENT_MOVEMENTS = 18,              // Sent to server to inform on controller/device movements
+        CLIENT_MOVEMENTS = 17,              // Sent to server to inform on controller/device movements
 
-        CLIENT_CLEARINDEX = 19,             // Sent to server to clear all hidden controllers
+        CLIENT_CLEARINDEX = 18,             // Sent to server to clear all hidden controllers
                                             // args: ...
     }
 }
