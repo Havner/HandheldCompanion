@@ -63,7 +63,7 @@ namespace HandheldCompanion.Managers
             // monitor layout files
             layoutWatcher = new FileSystemWatcher()
             {
-                Path = LayoutsPath,
+                Path = TemplatesPath,
                 EnableRaisingEvents = true,
                 IncludeSubdirectories = true,
                 Filter = "*.json",
