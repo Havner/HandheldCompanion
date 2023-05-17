@@ -429,6 +429,9 @@ namespace HandheldCompanion.Managers
                 case "searchhost.exe":
                 case "explorer.exe":
                 case "hwinfo64.exe":
+                case "searchapp.exe":
+                case "logioverlay.exe":
+                case "gog galaxy notifications renderer.exe":
                     return ProcessFilter.Desktop;
 
                 default:
