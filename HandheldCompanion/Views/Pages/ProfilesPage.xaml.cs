@@ -368,9 +368,6 @@ namespace HandheldCompanion.Views.Pages
                 cB_InvertHorizontal.IsChecked = selectedProfile.MotionInvertHorizontal;
                 cB_InvertVertical.IsChecked = selectedProfile.MotionInvertVertical;
 
-                // Layout settings
-                Toggle_ControllerLayout.IsOn = selectedProfile.LayoutEnabled;
-
                 // UMC settings
                 Toggle_UniversalMotion.IsOn = selectedProfile.MotionEnabled;
                 cB_Input.SelectedIndex = (int)selectedProfile.MotionInput;
@@ -449,9 +446,6 @@ namespace HandheldCompanion.Views.Pages
             selectedProfile.MotionOutput = (MotionOutput)cB_Output.SelectedIndex;
             selectedProfile.MotionAntiDeadzone = (float)tb_ProfileUMCAntiDeadzone.Value;
             selectedProfile.MotionMode = (MotionMode)cB_UMC_MotionDefaultOffOn.SelectedIndex;
-
-            // Layout settings
-            selectedProfile.LayoutEnabled = (bool)Toggle_ControllerLayout.IsOn;
 
             ProfileManager.UpdateOrCreateProfile(selectedProfile, ProfileUpdateSource.ProfilesPage);
         }

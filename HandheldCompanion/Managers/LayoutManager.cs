@@ -212,9 +212,9 @@ namespace HandheldCompanion.Managers
         {
             Profile defaultProfile = ProfileManager.GetDefault();
 
-            if (profile is not null && profile.LayoutEnabled && profile.Enabled)
+            if (profile is not null && profile.Enabled)
                 profileLayout = profile.Layout.Clone() as Layout;
-            else if (defaultProfile is not null && defaultProfile.LayoutEnabled && defaultProfile.Enabled)
+            else if (defaultProfile is not null && defaultProfile.Enabled)
                 profileLayout = defaultProfile.Layout.Clone() as Layout;
             else
                 profileLayout = null;

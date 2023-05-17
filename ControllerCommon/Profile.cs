@@ -52,7 +52,6 @@ namespace ControllerCommon
         public Version Version { get; set; } = new();
 
         public string LayoutTitle { get; set; } = string.Empty;
-        public bool LayoutEnabled { get; set; } = false;
         public Layout Layout { get; set; } = new();
 
         public float GyrometerMultiplier { get; set; } = 1.0f;      // gyroscope multiplicator (remove me)

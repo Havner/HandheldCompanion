@@ -683,18 +683,6 @@
                                         TextWrapping="Wrap" />
                                 </ui:SimpleStackPanel>
                             </DockPanel>
-
-                            <ui:ToggleSwitch
-                                Name="Toggle_ControllerLayout"
-                                Margin="0,0,32,0"
-                                HorizontalAlignment="Right"
-                                Style="{DynamicResource InvertedToggleSwitchStyle}" />
-                            <ui:FontIcon
-                                Margin="0,0,7,0"
-                                HorizontalAlignment="Right"
-                                FontFamily="{DynamicResource SymbolThemeFontFamily}"
-                                FontSize="12"
-                                Glyph="&#xE974;" />
                         </Grid>
                     </Button>
                 </ui:SimpleStackPanel>
