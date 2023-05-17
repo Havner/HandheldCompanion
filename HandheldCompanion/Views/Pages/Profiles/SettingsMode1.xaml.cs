@@ -38,11 +38,11 @@ namespace HandheldCompanion.Views.Pages.Profiles
 
         public void SetProfile()
         {
-            SliderDeadzoneAngle.Value = ProfilesPage.currentProfile.SteeringDeadzone;
-            SliderPower.Value = ProfilesPage.currentProfile.SteeringPower;
-            SliderSteeringAngle.Value = ProfilesPage.currentProfile.SteeringMaxAngle;
+            SliderDeadzoneAngle.Value = ProfilesPage.selectedProfile.SteeringDeadzone;
+            SliderPower.Value = ProfilesPage.selectedProfile.SteeringPower;
+            SliderSteeringAngle.Value = ProfilesPage.selectedProfile.SteeringMaxAngle;
 
-            lvLineSeriesValues.Values = GeneratePoints(ProfilesPage.currentProfile.SteeringPower);
+            lvLineSeriesValues.Values = GeneratePoints(ProfilesPage.selectedProfile.SteeringPower);
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -82,27 +82,27 @@ namespace HandheldCompanion.Views.Pages.Profiles
 
         private void SliderSteeringAngle_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (ProfilesPage.currentProfile is null)
+            if (ProfilesPage.selectedProfile is null)
                 return;
 
-            ProfilesPage.currentProfile.SteeringMaxAngle = (float)SliderSteeringAngle.Value;
+            ProfilesPage.selectedProfile.SteeringMaxAngle = (float)SliderSteeringAngle.Value;
         }
 
         private void SliderPower_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (ProfilesPage.currentProfile is null)
+            if (ProfilesPage.selectedProfile is null)
                 return;
 
-            ProfilesPage.currentProfile.SteeringPower = (float)SliderPower.Value;
+            ProfilesPage.selectedProfile.SteeringPower = (float)SliderPower.Value;
             lvLineSeriesValues.Values = GeneratePoints(SliderPower.Value);
         }
 
         private void SliderDeadzoneAngle_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (ProfilesPage.currentProfile is null)
+            if (ProfilesPage.selectedProfile is null)
                 return;
 
-            ProfilesPage.currentProfile.SteeringDeadzone = (float)SliderDeadzoneAngle.Value;
+            ProfilesPage.selectedProfile.SteeringDeadzone = (float)SliderDeadzoneAngle.Value;
         }
 
         private ChartValues<ObservablePoint> GeneratePoints(double Power)

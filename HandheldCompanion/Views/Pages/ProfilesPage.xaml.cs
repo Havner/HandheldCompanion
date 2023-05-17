@@ -25,7 +25,7 @@ namespace HandheldCompanion.Views.Pages
     /// </summary>
     public partial class ProfilesPage : Page
     {
-        public static Profile currentProfile;
+        public static Profile selectedProfile;
         private Hotkey ProfilesPageHotkey = new(60);
 
         private SettingsMode0 page0 = new SettingsMode0("SettingsMode0");
@@ -303,7 +303,7 @@ namespace HandheldCompanion.Views.Pages
 
         private void b_AdditionalSettings_Click(object sender, RoutedEventArgs e)
         {
-            if (currentProfile is null)
+            if (selectedProfile is null)
                 return;
 
             switch ((MotionInput)cB_Input.SelectedIndex)
@@ -328,7 +328,7 @@ namespace HandheldCompanion.Views.Pages
 
             // update current profile
             Profile profile = (Profile)cB_Profiles.SelectedItem;
-            currentProfile = profile.Clone() as Profile;
+            selectedProfile = profile.Clone() as Profile;
 
             // todo: find a way to avoid a useless circle of drawing when profile was update from ProfilesPage
             DrawProfile();
@@ -336,7 +336,7 @@ namespace HandheldCompanion.Views.Pages
 
         private void DrawProfile()
         {
-            if (currentProfile is null)
+            if (selectedProfile is null)
                 return;
 
             // UI thread (async)
@@ -348,42 +348,42 @@ namespace HandheldCompanion.Views.Pages
                 UniversalSettings.IsEnabled = true;
 
                 // disable button if is default profile or application is running
-                b_DeleteProfile.IsEnabled = !currentProfile.ErrorCode.HasFlag(ProfileErrorCode.Default & ProfileErrorCode.Running);
+                b_DeleteProfile.IsEnabled = !selectedProfile.ErrorCode.HasFlag(ProfileErrorCode.Default & ProfileErrorCode.Running);
 
                 // prevent user from renaming default profile
-                tB_ProfileName.IsEnabled = !currentProfile.Default;
+                tB_ProfileName.IsEnabled = !selectedProfile.Default;
                 // prevent user from disabling default profile
-                Toggle_EnableProfile.IsEnabled = !currentProfile.Default;
+                Toggle_EnableProfile.IsEnabled = !selectedProfile.Default;
 
                 // Profile info
-                tB_ProfileName.Text = currentProfile.Name;
-                tB_ProfilePath.Text = currentProfile.Path;
-                Toggle_EnableProfile.IsOn = currentProfile.Enabled;
+                tB_ProfileName.Text = selectedProfile.Name;
+                tB_ProfilePath.Text = selectedProfile.Path;
+                Toggle_EnableProfile.IsOn = selectedProfile.Enabled;
 
                 // Motion control settings
-                tb_ProfileGyroValue.Value = currentProfile.GyrometerMultiplier;
-                tb_ProfileAcceleroValue.Value = currentProfile.AccelerometerMultiplier;
+                tb_ProfileGyroValue.Value = selectedProfile.GyrometerMultiplier;
+                tb_ProfileAcceleroValue.Value = selectedProfile.AccelerometerMultiplier;
 
-                cB_GyroSteering.SelectedIndex = currentProfile.SteeringAxis;
-                cB_InvertHorizontal.IsChecked = currentProfile.MotionInvertHorizontal;
-                cB_InvertVertical.IsChecked = currentProfile.MotionInvertVertical;
+                cB_GyroSteering.SelectedIndex = selectedProfile.SteeringAxis;
+                cB_InvertHorizontal.IsChecked = selectedProfile.MotionInvertHorizontal;
+                cB_InvertVertical.IsChecked = selectedProfile.MotionInvertVertical;
 
                 // Layout settings
-                Toggle_ControllerLayout.IsOn = currentProfile.LayoutEnabled;
+                Toggle_ControllerLayout.IsOn = selectedProfile.LayoutEnabled;
 
                 // UMC settings
-                Toggle_UniversalMotion.IsOn = currentProfile.MotionEnabled;
-                cB_Input.SelectedIndex = (int)currentProfile.MotionInput;
-                cB_Output.SelectedIndex = (int)currentProfile.MotionOutput;
-                tb_ProfileUMCAntiDeadzone.Value = currentProfile.MotionAntiDeadzone;
-                cB_UMC_MotionDefaultOffOn.SelectedIndex = (int)currentProfile.MotionMode;
+                Toggle_UniversalMotion.IsOn = selectedProfile.MotionEnabled;
+                cB_Input.SelectedIndex = (int)selectedProfile.MotionInput;
+                cB_Output.SelectedIndex = (int)selectedProfile.MotionOutput;
+                tb_ProfileUMCAntiDeadzone.Value = selectedProfile.MotionAntiDeadzone;
+                cB_UMC_MotionDefaultOffOn.SelectedIndex = (int)selectedProfile.MotionMode;
 
                 // todo: improve me ?
-                ProfilesPageHotkey.inputsChord.State = currentProfile.MotionTrigger.Clone() as ButtonState;
+                ProfilesPageHotkey.inputsChord.State = selectedProfile.MotionTrigger.Clone() as ButtonState;
                 ProfilesPageHotkey.DrawInput();
 
                 // display warnings
-                switch (currentProfile.ErrorCode)
+                switch (selectedProfile.ErrorCode)
                 {
                     default:
                     case ProfileErrorCode.None:
@@ -396,7 +396,7 @@ namespace HandheldCompanion.Views.Pages
                     case ProfileErrorCode.MissingPermission:
                     case ProfileErrorCode.Default:
                         WarningBorder.Visibility = Visibility.Visible;
-                        WarningContent.Text = EnumUtils.GetDescriptionFromEnumValue(currentProfile.ErrorCode);
+                        WarningContent.Text = EnumUtils.GetDescriptionFromEnumValue(selectedProfile.ErrorCode);
                         break;
                 }
             });
@@ -404,10 +404,10 @@ namespace HandheldCompanion.Views.Pages
 
         private async void b_DeleteProfile_Click(object sender, RoutedEventArgs e)
         {
-            if (currentProfile is null)
+            if (selectedProfile is null)
                 return;
 
-            Task<ContentDialogResult> result = Dialog.ShowAsync($"{Properties.Resources.ProfilesPage_AreYouSureDelete1} \"{currentProfile.Name}\"?",
+            Task<ContentDialogResult> result = Dialog.ShowAsync($"{Properties.Resources.ProfilesPage_AreYouSureDelete1} \"{selectedProfile.Name}\"?",
                                                                 $"{Properties.Resources.ProfilesPage_AreYouSureDelete2}",
                                                                 ContentDialogButton.Primary,
                                                                 $"{Properties.Resources.ProfilesPage_Cancel}",
@@ -417,7 +417,7 @@ namespace HandheldCompanion.Views.Pages
             switch (result.Result)
             {
                 case ContentDialogResult.Primary:
-                    ProfileManager.DeleteProfile(currentProfile);
+                    ProfileManager.DeleteProfile(selectedProfile);
                     cB_Profiles.SelectedIndex = 0;
                     break;
                 default:
@@ -427,33 +427,33 @@ namespace HandheldCompanion.Views.Pages
 
         private void b_ApplyProfile_Click(object sender, RoutedEventArgs e)
         {
-            if (currentProfile is null)
+            if (selectedProfile is null)
                 return;
 
             // Profile
-            currentProfile.Name = tB_ProfileName.Text;
-            currentProfile.Path = tB_ProfilePath.Text;
-            currentProfile.Enabled = (bool)Toggle_EnableProfile.IsOn;
+            selectedProfile.Name = tB_ProfileName.Text;
+            selectedProfile.Path = tB_ProfilePath.Text;
+            selectedProfile.Enabled = (bool)Toggle_EnableProfile.IsOn;
 
             // Motion control settings
-            currentProfile.GyrometerMultiplier = (float)tb_ProfileGyroValue.Value;
-            currentProfile.AccelerometerMultiplier = (float)tb_ProfileAcceleroValue.Value;
+            selectedProfile.GyrometerMultiplier = (float)tb_ProfileGyroValue.Value;
+            selectedProfile.AccelerometerMultiplier = (float)tb_ProfileAcceleroValue.Value;
 
-            currentProfile.SteeringAxis = cB_GyroSteering.SelectedIndex;
-            currentProfile.MotionInvertVertical = (bool)cB_InvertVertical.IsChecked;
-            currentProfile.MotionInvertHorizontal = (bool)cB_InvertHorizontal.IsChecked;
+            selectedProfile.SteeringAxis = cB_GyroSteering.SelectedIndex;
+            selectedProfile.MotionInvertVertical = (bool)cB_InvertVertical.IsChecked;
+            selectedProfile.MotionInvertHorizontal = (bool)cB_InvertHorizontal.IsChecked;
 
             // UMC settings
-            currentProfile.MotionEnabled = (bool)Toggle_UniversalMotion.IsOn;
-            currentProfile.MotionInput = (MotionInput)cB_Input.SelectedIndex;
-            currentProfile.MotionOutput = (MotionOutput)cB_Output.SelectedIndex;
-            currentProfile.MotionAntiDeadzone = (float)tb_ProfileUMCAntiDeadzone.Value;
-            currentProfile.MotionMode = (MotionMode)cB_UMC_MotionDefaultOffOn.SelectedIndex;
+            selectedProfile.MotionEnabled = (bool)Toggle_UniversalMotion.IsOn;
+            selectedProfile.MotionInput = (MotionInput)cB_Input.SelectedIndex;
+            selectedProfile.MotionOutput = (MotionOutput)cB_Output.SelectedIndex;
+            selectedProfile.MotionAntiDeadzone = (float)tb_ProfileUMCAntiDeadzone.Value;
+            selectedProfile.MotionMode = (MotionMode)cB_UMC_MotionDefaultOffOn.SelectedIndex;
 
             // Layout settings
-            currentProfile.LayoutEnabled = (bool)Toggle_ControllerLayout.IsOn;
+            selectedProfile.LayoutEnabled = (bool)Toggle_ControllerLayout.IsOn;
 
-            ProfileManager.UpdateOrCreateProfile(currentProfile, ProfileUpdateSource.ProfilesPage);
+            ProfileManager.UpdateOrCreateProfile(selectedProfile, ProfileUpdateSource.ProfilesPage);
         }
 
         private void cB_Overlay_Checked(object sender, RoutedEventArgs e)
@@ -541,7 +541,7 @@ namespace HandheldCompanion.Views.Pages
             {
                 case "shortcutProfilesPage@":
                 case "shortcutProfilesPage@@":
-                    currentProfile.MotionTrigger = inputs.State.Clone() as ButtonState;
+                    selectedProfile.MotionTrigger = inputs.State.Clone() as ButtonState;
                     break;
             }
         }
@@ -549,13 +549,13 @@ namespace HandheldCompanion.Views.Pages
         private void ControllerSettingsButton_Click(object sender, RoutedEventArgs e)
         {
             // prepare layout editor
-            LayoutTemplate layoutTemplate = new(currentProfile.Layout)
+            LayoutTemplate layoutTemplate = new(selectedProfile.Layout)
             {
-                Name = currentProfile.LayoutTitle,
+                Name = selectedProfile.LayoutTitle,
                 Description = "Your modified layout for this executable.",
                 Author = Environment.UserName,
-                Executable = currentProfile.Executable,
-                Product = currentProfile.Name,
+                Executable = selectedProfile.Executable,
+                Product = selectedProfile.Name,
             };
             layoutTemplate.Updated += Template_Updated;
 
@@ -565,7 +565,7 @@ namespace HandheldCompanion.Views.Pages
 
         private void Template_Updated(LayoutTemplate layoutTemplate)
         {
-            currentProfile.LayoutTitle = layoutTemplate.Name;
+            selectedProfile.LayoutTitle = layoutTemplate.Name;
         }
     }
 }
