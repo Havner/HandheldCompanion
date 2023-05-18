@@ -290,13 +290,6 @@ namespace HandheldCompanion.Managers
                         jObject.Remove("MotionSensivityArray");
                         outputraw = jObject.ToString();
                         break;
-                    case "0.15.1.0":
-                    case "0.15.1.1":
-                        jObject = JObject.Parse(outputraw);
-                        jObject.Remove("TDPOverrideEnabled");
-                        jObject.Remove("TDPOverrideValues");
-                        outputraw = jObject.ToString();
-                        break;
                 }
 
                 profile = JsonConvert.DeserializeObject<Profile>(outputraw, new JsonSerializerSettings
