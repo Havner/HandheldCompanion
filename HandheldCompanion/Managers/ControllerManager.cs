@@ -108,8 +108,7 @@ namespace HandheldCompanion.Managers
 
             // unplug on close
             IController target = GetTargetController();
-            if (target is not null)
-                target.Unplug();
+            target?.Unplug();
 
             LogManager.LogInformation("{0} has stopped", "ControllerManager");
         }
@@ -163,10 +162,7 @@ namespace HandheldCompanion.Managers
         private static void SetHIDStrength(uint value)
         {
             IController target = GetTargetController();
-            if (target is null)
-                return;
-
-            target.SetVibrationStrength(value);
+            target?.SetVibrationStrength(value);
         }
 
         private static void HidDeviceArrived(PnPDetails details, DeviceEventArgs obj)
@@ -440,7 +436,7 @@ namespace HandheldCompanion.Managers
 
         public static IController GetTargetController()
         {
-            return targetController is not null ? targetController : GetEmulatedController();
+            return targetController;
         }
 
         public static bool HasController()
