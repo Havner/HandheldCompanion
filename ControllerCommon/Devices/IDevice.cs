@@ -37,6 +37,9 @@ namespace ControllerCommon.Devices
         // device GPU max frequency limits (min, nominal/max)
         public uint[] GPU = { 100, 1800 };
 
+        // mininum delay before trying to emulate a virtual controller on system resume (milliseconds)
+        public short ResumeDelay = 6000;
+
         public Vector3 AngularVelocityAxis = new Vector3(1.0f, 1.0f, 1.0f);
         public SortedDictionary<char, char> AngularVelocityAxisSwap = new()
         {

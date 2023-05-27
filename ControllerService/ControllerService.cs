@@ -27,7 +27,7 @@ namespace ControllerService
         private DSUServer DSUServer;
 
         // devices vars
-        public static IDevice handheldDevice;
+        public static IDevice CurrentDevice;
 
         public static string CurrentPath, CurrentPathDep;
         public static string CurrentTag;
@@ -81,7 +81,7 @@ namespace ControllerService
             PipeServer.ClientMessage += OnClientMessage;
 
             // initialize device
-            handheldDevice = IDevice.GetDefault();
+            CurrentDevice = IDevice.GetDefault();
 
             // initialize DSUClient
             DSUServer = new DSUServer(DSUip, DSUport);
@@ -424,7 +424,7 @@ namespace ControllerService
                         if (prevStatus == SystemStatus.SystemPending)
                         {
                             // resume from sleep
-                            Thread.Sleep(6000);
+                            Thread.Sleep(CurrentDevice.ResumeDelay);
                         }
 
                         // check if service/system was suspended previously

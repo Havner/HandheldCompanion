@@ -227,6 +227,9 @@ namespace ControllerService.Targets
 
         public override void Dispose()
         {
+            if (virtualController is not null)
+                virtualController.Disconnect();
+
             base.Dispose();
         }
     }
