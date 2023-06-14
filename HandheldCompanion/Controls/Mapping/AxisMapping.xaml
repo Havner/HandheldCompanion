@@ -163,7 +163,7 @@
                                         Minimum="0"
                                         ScrollViewer.PanningMode="HorizontalOnly"
                                         Style="{DynamicResource SliderStyle1}"
-                                        TickFrequency="5"
+                                        TickFrequency="1"
                                         ValueChanged="Axis_InnerDeadzone_Slider_ValueChanged" />
                                 </ui:SimpleStackPanel>
                             </Grid>
@@ -199,7 +199,7 @@
                                         Minimum="0"
                                         ScrollViewer.PanningMode="HorizontalOnly"
                                         Style="{DynamicResource SliderStyle1}"
-                                        TickFrequency="5"
+                                        TickFrequency="1"
                                         ValueChanged="Axis_OuterDeadzone_Slider_ValueChanged" />
                                 </ui:SimpleStackPanel>
                             </Grid>
@@ -234,7 +234,7 @@
                                         Minimum="0"
                                         ScrollViewer.PanningMode="HorizontalOnly"
                                         Style="{DynamicResource SliderStyle1}"
-                                        TickFrequency="5"
+                                        TickFrequency="1"
                                         ValueChanged="Axis_AntiDeadZone_Slider_ValueChanged" />
                                 </ui:SimpleStackPanel>
                             </Grid>

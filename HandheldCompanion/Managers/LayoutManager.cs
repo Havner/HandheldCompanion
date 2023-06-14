@@ -362,19 +362,6 @@ namespace HandheldCompanion.Managers
                         }
                         break;
 
-                    case ActionType.Mouse:
-                        {
-                            MouseActions mAction = action as MouseActions;
-
-                            // This buttonState check won't work here if UpdateInputs is event based, might need a rework in the future
-                            bool touched = false;
-                            if (ControllerState.AxisTouchButtons.TryGetValue(InLayout.flags, out ButtonFlags touchButton))
-                                touched = controllerState.ButtonState[touchButton];
-
-                            mAction.Execute(InLayout, touched);
-                        }
-                        break;
-
                     case ActionType.Trigger:
                         {
                             TriggerActions tAction = action as TriggerActions;
@@ -385,6 +372,19 @@ namespace HandheldCompanion.Managers
                             AxisFlags OutAxisY = OutLayout.GetAxisFlags('Y');
 
                             outputState.AxisState[OutAxisY] = (short)tAction.GetValue();
+                        }
+                        break;
+
+                    case ActionType.Mouse:
+                        {
+                            MouseActions mAction = action as MouseActions;
+
+                            // This buttonState check won't work here if UpdateInputs is event based, might need a rework in the future
+                            bool touched = false;
+                            if (ControllerState.AxisTouchButtons.TryGetValue(InLayout.flags, out ButtonFlags touchButton))
+                                touched = controllerState.ButtonState[touchButton];
+
+                            mAction.Execute(InLayout, touched);
                         }
                         break;
                 }

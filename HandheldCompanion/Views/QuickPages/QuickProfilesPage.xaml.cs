@@ -333,7 +333,7 @@ namespace HandheldCompanion.Views.QuickPages
 
             if (Monitor.TryEnter(updateLock))
             {
-                currentProfile.MotionAntiDeadzone = (float)SliderUMCAntiDeadzone.Value;
+                currentProfile.MotionAntiDeadzone = (int)SliderUMCAntiDeadzone.Value;
                 RequestUpdate();
 
                 Monitor.Exit(updateLock);

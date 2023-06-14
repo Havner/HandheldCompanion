@@ -412,7 +412,7 @@ namespace HandheldCompanion.Views.Pages
             selectedProfile.MotionEnabled = Toggle_UniversalMotion.IsOn;
             selectedProfile.MotionInput = (MotionInput)cB_Input.SelectedIndex;
             selectedProfile.MotionOutput = (MotionOutput)cB_Output.SelectedIndex;
-            selectedProfile.MotionAntiDeadzone = (float)tb_ProfileUMCAntiDeadzone.Value;
+            selectedProfile.MotionAntiDeadzone = (int)tb_ProfileUMCAntiDeadzone.Value;
             selectedProfile.MotionMode = (MotionMode)cB_UMC_MotionDefaultOffOn.SelectedIndex;
 
             ProfileManager.UpdateOrCreateProfile(selectedProfile, ProfileUpdateSource.ProfilesPage);

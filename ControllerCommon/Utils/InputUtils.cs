@@ -131,17 +131,17 @@ namespace ControllerCommon.Utils
         // Use cases foreseen:
         // - Game has deadzone, but no way to configure or change it
         // - User does not want to change general emulator deadzone setting but want's it removed for specific game and use UMC Steering
-        public static Vector2 ApplyAntiDeadzone(Vector2 ThumbValue, float DeadzonePercentage)
+        public static Vector2 ApplyAntiDeadzone(Vector2 ThumbValue, int DeadzonePercentage)
         {
             // Return if thumbstick or anti deadzone is not used
-            if (DeadzonePercentage.Equals(0.0f) || ThumbValue == Vector2.Zero)
+            if (DeadzonePercentage == 0 || ThumbValue == Vector2.Zero)
                 return ThumbValue;
 
             // Convert short value input to -1 to 1
             Vector2 StickInput = new Vector2(ThumbValue.X, ThumbValue.Y) / short.MaxValue;
 
             // Convert 0-100% to 0 to 1
-            float Deadzone = DeadzonePercentage / 100;
+            float Deadzone = DeadzonePercentage / 100.0f;
 
             // Map vector to new range by determining the multiplier
             float Multiplier = ((1 - Deadzone) * StickInput.Length() + Deadzone) / StickInput.Length();
@@ -150,14 +150,14 @@ namespace ControllerCommon.Utils
             return StickInput * Multiplier * short.MaxValue;
         }
 
-        public static float ApplyAntiDeadzone(float ThumbValue, float DeadzonePercentage)
+        public static float ApplyAntiDeadzone(float ThumbValue, int DeadzonePercentage)
         {
             float StickInput = ThumbValue / short.MaxValue;
 
-            if (DeadzonePercentage.Equals(0.0f) || StickInput <= DeadzonePercentage)
+            if (DeadzonePercentage == 0 || StickInput <= DeadzonePercentage)
                 return ThumbValue;
 
-            float Deadzone = DeadzonePercentage / 100 * Math.Sign(ThumbValue);
+            float Deadzone = DeadzonePercentage / 100.0f * Math.Sign(ThumbValue);
             return (StickInput + Deadzone) * short.MaxValue;
         }
 
