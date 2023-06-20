@@ -354,8 +354,10 @@ namespace HandheldCompanion.Managers
                             AxisFlags OutAxisX = OutLayout.GetAxisFlags('X');
                             AxisFlags OutAxisY = OutLayout.GetAxisFlags('Y');
 
-                            outputState.AxisState[OutAxisX] = (short)(Math.Clamp(aAction.GetValue().X, short.MinValue, short.MaxValue));
-                            outputState.AxisState[OutAxisY] = (short)(Math.Clamp(aAction.GetValue().Y, short.MinValue, short.MaxValue));
+                            outputState.AxisState[OutAxisX] =
+                                (short)Math.Clamp(outputState.AxisState[OutAxisX] + aAction.GetValue().X, short.MinValue, short.MaxValue);
+                            outputState.AxisState[OutAxisY] =
+                                (short)Math.Clamp(outputState.AxisState[OutAxisY] + aAction.GetValue().Y, short.MinValue, short.MaxValue);
                         }
                         break;
 
