@@ -1,24 +1,24 @@
 using ControllerCommon.Managers;
 using ControllerCommon.Platforms;
 using ControllerCommon.Utils;
+using HandheldCompanion.Managers;
 using HandheldCompanion.Properties;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace HandheldCompanion.Platforms
 {
     public class SteamPlatform : IPlatform
     {
-        private static readonly Regex ControllerBlacklistRegex = new Regex("^(\\s*\"controller_blacklist\"\\s*\")([^\"]*)(\"\\s*)$");
+        private string RunningName;
+
         public static readonly Dictionary<string, byte[]> ControllerFiles = new()
         {
-                { @"controller_base\desktop_neptune.vdf", Resources.empty_neptune },
                 { @"controller_base\chord_neptune.vdf", Resources.chord_neptune },
-                { @"controller_base\templates\controller_neptune_steamcontroller.vdf", Resources.empty_neptune },
+                { @"controller_base\chord_neptune_external.vdf", Resources.chord_neptune },
         };
 
         public SteamPlatform()
@@ -27,6 +27,9 @@ namespace HandheldCompanion.Platforms
 
             Name = "Steam";
             ExecutableName = "steam.exe";
+
+            // this is for detecting steam start/stop, for some reason steam.exe often doesn't work
+            RunningName = "steamwebhelper.exe";
 
             // store specific modules
             Modules = new List<string>()
@@ -52,106 +55,56 @@ namespace HandheldCompanion.Platforms
             }
         }
 
-        public HashSet<string>? GetControllerBlacklist()
+        public void Start()
         {
-            try
-            {
-                if (!File.Exists(SettingsPath))
-                    return null;
+            ProcessManager.ProcessStarted += ProcessManager_ProcessStarted;
+            ProcessManager.ProcessStopped += ProcessManager_ProcessStopped;
+        }
 
-                foreach (var line in File.ReadLines(SettingsPath).Reverse())
+        public void Stop()
+        {
+            ProcessManager.ProcessStarted -= ProcessManager_ProcessStarted;
+            ProcessManager.ProcessStopped -= ProcessManager_ProcessStopped;
+
+            // restore files even if Steam is still running
+            RestoreFiles();
+        }
+
+        private void ReplaceFiles()
+        {
+            // overwrite controller files
+            foreach (var config in ControllerFiles)
+                OverwriteFile(config.Key, config.Value, true);
+        }
+
+        private void RestoreFiles()
+        {
+            // restore controller files
+            foreach (var config in ControllerFiles)
+                ResetFile(config.Key);
+        }
+
+        private void ProcessManager_ProcessStarted(ProcessEx processEx, bool OnStartup)
+        {
+            if (!OnStartup && processEx.Executable == RunningName)
+            {
+                // UI thread (async)
+                Application.Current.Dispatcher.BeginInvoke(async () =>
                 {
-                    var match = ControllerBlacklistRegex.Match(line);
-                    if (!match.Success)
-                        continue;
-
-                    // matches `"controller_blacklist" "<value>"`
-                    var value = match.Groups[2].Captures[0].Value;
-                    return value.Split(',', StringSplitOptions.RemoveEmptyEntries).ToHashSet();
-                }
-
-                return new HashSet<String>();
-            }
-            catch (DirectoryNotFoundException)
-            {
-                // Steam was installed, but got removed
-                return null;
-            }
-            catch (IOException e)
-            {
-                LogManager.LogError("Failed to retrieve {0} controller blacklist. Error: {1}", this.PlatformType, e);
-                return null;
+                    LogManager.LogDebug("Steam started, replacing files in 3 seconds");
+                    await Task.Delay(3000);
+                    ReplaceFiles();
+                });
             }
         }
 
-        public bool UpdateControllerBlacklist(ushort vendorId, ushort productId, bool add)
+        private void ProcessManager_ProcessStopped(ProcessEx processEx)
         {
-            if (IsRunning())
-                return false;
-
-            if (!File.Exists(SettingsPath))
-                return false;
-
-            try
+            if (processEx.Executable == RunningName)
             {
-                var lines = File.ReadLines(SettingsPath).ToList();
-                var id = String.Format("{0:x}/{1:x}", vendorId, productId);
-
-                for (int i = 0; i < lines.Count; i++)
-                {
-                    if (lines[i] == "}")
-                    {
-                        if (add)
-                        {
-                            // append controller_blacklist
-                            lines.Insert(i, String.Format("\t\"controller_blacklist\"\t\t\"{0}\"", id));
-                            break;
-                        }
-                    }
-
-                    var match = ControllerBlacklistRegex.Match(lines[i]);
-                    if (!match.Success)
-                        continue;
-
-                    var value = match.Groups[2].Captures[0].Value;
-                    var controllers = value.Split(',', StringSplitOptions.RemoveEmptyEntries).ToHashSet();
-
-                    if (add)
-                        controllers.Add(id);
-                    else
-                        controllers.Remove(id);
-
-                    lines[i] = String.Format("{0}{1}{2}",
-                        match.Groups[1].Captures[0].Value,
-                        String.Join(',', controllers),
-                        match.Groups[3].Captures[0].Value
-                    );
-                    break;
-                }
-
-                File.WriteAllLines(SettingsPath, lines);
-                return true;
+                LogManager.LogDebug("Steam stopped, restoring files");
+                RestoreFiles();
             }
-            catch (DirectoryNotFoundException)
-            {
-                // Steam was installed, but got removed
-                return false;
-            }
-            catch (IOException e)
-            {
-                LogManager.LogError("Failed to update {0} controller blacklist. Error: {1}", this.PlatformType, e);
-                return false;
-            }
-        }
-
-        public bool? IsControllerBlacklisted(ushort vendorId, ushort productId)
-        {
-            var controllers = GetControllerBlacklist();
-            if (controllers is null)
-                return null;
-
-            var id = String.Format("{0:x}/{1:x}", vendorId, productId);
-            return controllers.Contains(id);
         }
     }
 }

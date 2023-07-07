@@ -18,9 +18,7 @@ namespace HandheldCompanion.Managers
         {
             if (Steam.IsInstalled)
             {
-                // overwrite controller files
-                foreach (var config in SteamPlatform.ControllerFiles)
-                    Steam.OverwriteFile(config.Key, config.Value, true);
+                Steam.Start();
             }
 
             if (GOGGalaxy.IsInstalled)
@@ -42,9 +40,7 @@ namespace HandheldCompanion.Managers
         {
             if (Steam.IsInstalled)
             {
-                // restore controller files
-                foreach (var config in SteamPlatform.ControllerFiles)
-                    Steam.ResetFile(config.Key);
+                Steam.Stop();
             }
 
             IsInitialized = false;
