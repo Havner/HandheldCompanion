@@ -121,18 +121,6 @@ namespace HandheldCompanion.Views.Windows
                     {
                         switch (MainWindow.CurrentDevice.ProductModel)
                         {
-                            case "AYANEO2021":
-                                newModel = new ModelAYANEO2021();
-                                break;
-                            case "AYANEONext":
-                                newModel = new ModelAYANEONext();
-                                break;
-                            case "AYANEOAir":
-                                newModel = new ModelAYANEOAir();
-                                break;
-                            case "ONEXPLAYERMini":
-                                newModel = new ModelOneXPlayerMini();
-                                break;
                             case "SteamDeck":
                                 newModel = new ModelSteamDeck();
                                 break;
@@ -147,14 +135,19 @@ namespace HandheldCompanion.Views.Windows
                     {
                         switch (HIDmode)
                         {
-                            default:
                             case HIDmode.DualShock4Controller:
                                 newModel = new ModelDS4();
                                 break;
+                            default:
                             case HIDmode.Xbox360Controller:
                                 newModel = new ModelXBOX360();
                                 break;
                         }
+                    }
+                    break;
+                case OverlayModelMode.Xbox360:
+                    {
+                        newModel = new ModelXBOX360();
                     }
                     break;
                 case OverlayModelMode.XboxOne:
@@ -162,34 +155,19 @@ namespace HandheldCompanion.Views.Windows
                         newModel = new ModelXBOXOne();
                     }
                     break;
-                case OverlayModelMode.ZDOPlus:
+                case OverlayModelMode.DualSense4:
                     {
-                        newModel = new ModelZDOPlus();
+                        newModel = new ModelDS4();
                     }
                     break;
-                case OverlayModelMode.EightBitDoLite2:
-                    {
-                        newModel = new Model8BitDoLite2();
-                    }
-                    break;
-                case OverlayModelMode.MachenikeHG510:
-                    {
-                        newModel = new ModelMachenikeHG510();
-                    }
-                    break;
-                case OverlayModelMode.Toy:
-                    {
-                        newModel = new ModelToyController();
-                    }
-                    break;
-                case OverlayModelMode.N64:
-                    {
-                        newModel = new ModelN64();
-                    }
-                    break;
-                case OverlayModelMode.DualSense:
+                case OverlayModelMode.DualSense5:
                     {
                         newModel = new ModelDualSense();
+                    }
+                    break;
+                case OverlayModelMode.SteamDeck:
+                    {
+                        newModel = new ModelSteamDeck();
                     }
                     break;
             }

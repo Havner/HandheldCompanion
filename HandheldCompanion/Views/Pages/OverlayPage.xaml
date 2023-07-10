@@ -61,15 +61,13 @@
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Center"
                             SelectionChanged="OverlayModel_SelectionChanged">
-                            <ComboBoxItem Content="{x:Static resx:Resources.OverlayPage_OEMController}" />
-                            <ComboBoxItem Content="{x:Static resx:Resources.OverlayPage_EmulatedController}" />
-                            <ComboBoxItem Content="{x:Static resx:Resources.OverlayPage_XboxOneController}" />
-                            <ComboBoxItem Content="{x:Static resx:Resources.OverlayPage_ZDOPlusController}" />
-                            <ComboBoxItem Content="{x:Static resx:Resources.OverlayPage_8BitDoLite2Controller}" />
-                            <ComboBoxItem Content="{x:Static resx:Resources.OverlayPage_MachenikeHG510Controller}" />
-                            <ComboBoxItem Content="{x:Static resx:Resources.OverlayPage_ToyController}" />
-                            <ComboBoxItem Content="{x:Static resx:Resources.OverlayPage_N64Controller}" />
-                            <ComboBoxItem Content="{x:Static resx:Resources.OverlayPage_DualSenseController}" />
+                            <ComboBoxItem Content="OEM Controller" />
+                            <ComboBoxItem Content="Emulated Controller" />
+                            <ComboBoxItem Content="Xbox 360" />
+                            <ComboBoxItem Content="Xbox One" />
+                            <ComboBoxItem Content="Dual Sense 4" />
+                            <ComboBoxItem Content="Dual Sense 5" />
+                            <ComboBoxItem Content="Steam Deck" />
                         </ComboBox>
                     </Grid>
                 </Border>

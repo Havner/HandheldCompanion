@@ -982,15 +982,6 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 8BitDo Lite 2.
-        /// </summary>
-        public static string OverlayPage_8BitDoLite2Controller {
-            get {
-                return ResourceManager.GetString("OverlayPage_8BitDoLite2Controller", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Alignment.
         /// </summary>
         public static string OverlayPage_Alignment {
@@ -1108,24 +1099,6 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Playstation DualSense.
-        /// </summary>
-        public static string OverlayPage_DualSenseController {
-            get {
-                return ResourceManager.GetString("OverlayPage_DualSenseController", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Emulated controller.
-        /// </summary>
-        public static string OverlayPage_EmulatedController {
-            get {
-                return ResourceManager.GetString("OverlayPage_EmulatedController", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Face camera.
         /// </summary>
         public static string OverlayPage_FaceCamera {
@@ -1149,15 +1122,6 @@ namespace HandheldCompanion.Properties {
         public static string OverlayPage_Listening {
             get {
                 return ResourceManager.GetString("OverlayPage_Listening", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to MACHENIKE HG510.
-        /// </summary>
-        public static string OverlayPage_MachenikeHG510Controller {
-            get {
-                return ResourceManager.GetString("OverlayPage_MachenikeHG510Controller", resourceCulture);
             }
         }
         
@@ -1194,24 +1158,6 @@ namespace HandheldCompanion.Properties {
         public static string OverlayPage_MotionActivatedDesc {
             get {
                 return ResourceManager.GetString("OverlayPage_MotionActivatedDesc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to N64.
-        /// </summary>
-        public static string OverlayPage_N64Controller {
-            get {
-                return ResourceManager.GetString("OverlayPage_N64Controller", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to OEM controller.
-        /// </summary>
-        public static string OverlayPage_OEMController {
-            get {
-                return ResourceManager.GetString("OverlayPage_OEMController", resourceCulture);
             }
         }
         
@@ -1383,24 +1329,6 @@ namespace HandheldCompanion.Properties {
         public static string OverlayPage_TrackpadsOptions {
             get {
                 return ResourceManager.GetString("OverlayPage_TrackpadsOptions", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Xbox One.
-        /// </summary>
-        public static string OverlayPage_XboxOneController {
-            get {
-                return ResourceManager.GetString("OverlayPage_XboxOneController", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to ZD O+.
-        /// </summary>
-        public static string OverlayPage_ZDOPlusController {
-            get {
-                return ResourceManager.GetString("OverlayPage_ZDOPlusController", resourceCulture);
             }
         }
         

@@ -39,13 +39,11 @@ namespace ControllerCommon.Utils
     {
         OEM = 0,
         Virtual = 1,
-        XboxOne = 2,
-        ZDOPlus = 3,
-        EightBitDoLite2 = 4,
-        MachenikeHG510 = 5,
-        Toy = 6,
-        N64 = 7,
-        DualSense = 8,
+        Xbox360 = 2,
+        XboxOne = 3,
+        DualSense4 = 4,
+        DualSense5 = 5,
+        SteamDeck = 6,
     }
 
     public static class InputUtils

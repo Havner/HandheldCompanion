@@ -355,9 +355,6 @@
   <data name="MainWindow_Settings" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="OverlayPage_8BitDoLite2Controller" xml:space="preserve">
-    <value>8BitDo Lite 2</value>
-  </data>
   <data name="OverlayPage_Alignment" xml:space="preserve">
     <value>Alignment</value>
   </data>
@@ -397,12 +394,6 @@
   <data name="OverlayPage_ControllerOptions" xml:space="preserve">
     <value>Controller options</value>
   </data>
-  <data name="OverlayPage_DualSenseController" xml:space="preserve">
-    <value>Playstation DualSense</value>
-  </data>
-  <data name="OverlayPage_EmulatedController" xml:space="preserve">
-    <value>Emulated controller</value>
-  </data>
   <data name="OverlayPage_FaceCamera" xml:space="preserve">
     <value>Face camera</value>
   </data>
@@ -411,9 +402,6 @@
   </data>
   <data name="OverlayPage_Listening" xml:space="preserve">
     <value>Listening...</value>
-  </data>
-  <data name="OverlayPage_MachenikeHG510Controller" xml:space="preserve">
-    <value>MACHENIKE HG510</value>
   </data>
   <data name="OverlayPage_MainTrigger" xml:space="preserve">
     <value>Main trigger</value>
@@ -426,12 +414,6 @@
   </data>
   <data name="OverlayPage_MotionActivatedDesc" xml:space="preserve">
     <value>Model will move in accordance with user movements based on sensor information</value>
-  </data>
-  <data name="OverlayPage_N64Controller" xml:space="preserve">
-    <value>N64</value>
-  </data>
-  <data name="OverlayPage_OEMController" xml:space="preserve">
-    <value>OEM controller</value>
   </data>
   <data name="OverlayPage_Opacity" xml:space="preserve">
     <value>Opacity</value>
@@ -489,12 +471,6 @@
   </data>
   <data name="OverlayPage_TrackpadsOptions" xml:space="preserve">
     <value>Trackpads options</value>
-  </data>
-  <data name="OverlayPage_XboxOneController" xml:space="preserve">
-    <value>Xbox One</value>
-  </data>
-  <data name="OverlayPage_ZDOPlusController" xml:space="preserve">
-    <value>ZD O+</value>
   </data>
   <data name="Overlay_Overlay" xml:space="preserve">
     <value>Overlay</value>
