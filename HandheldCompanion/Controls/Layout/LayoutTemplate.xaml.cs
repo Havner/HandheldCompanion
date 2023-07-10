@@ -124,22 +124,11 @@ namespace HandheldCompanion.Controls
                     }
                     break;
 
-                case "Gamepad (Nintendo)":
-                    {
-                        this.Layout.ButtonLayout[ButtonFlags.B1] = new ButtonActions() { Button = ButtonFlags.B2 };
-                        this.Layout.ButtonLayout[ButtonFlags.B2] = new ButtonActions() { Button = ButtonFlags.B1 };
-                        this.Layout.ButtonLayout[ButtonFlags.B3] = new ButtonActions() { Button = ButtonFlags.B4 };
-                        this.Layout.ButtonLayout[ButtonFlags.B4] = new ButtonActions() { Button = ButtonFlags.B3 };
-                    }
-                    break;
-
                 case "Keyboard (WASD) and Mouse":
                     {
                         this.Layout.AxisLayout = new()
                         {
-                            { AxisLayoutFlags.LeftStick, new EmptyActions() },
                             { AxisLayoutFlags.RightStick, new MouseActions() { MouseType = MouseActionsType.Move, Sensivity = 25.0f } },
-                            { AxisLayoutFlags.LeftPad, new EmptyActions() },
                             { AxisLayoutFlags.RightPad, new MouseActions() { MouseType = MouseActionsType.Move, Sensivity = 25.0f } },
                         };
 
@@ -150,11 +139,11 @@ namespace HandheldCompanion.Controls
                             { ButtonFlags.B3, new KeyboardActions() { Key = VirtualKeyCode.VK_R } },
                             { ButtonFlags.B4, new KeyboardActions() { Key = VirtualKeyCode.VK_F } },
 
-                            { ButtonFlags.L1, new MouseActions() { MouseType = MouseActionsType.ScrollDown, Sensivity = 25.0f } },
-                            { ButtonFlags.R1, new MouseActions() { MouseType = MouseActionsType.ScrollUp, Sensivity = 25.0f } },
+                            { ButtonFlags.L1, new MouseActions() { MouseType = MouseActionsType.ScrollUp, Sensivity = 25.0f } },
+                            { ButtonFlags.R1, new MouseActions() { MouseType = MouseActionsType.ScrollDown, Sensivity = 25.0f } },
 
-                            { ButtonFlags.Back, new KeyboardActions() { Key = VirtualKeyCode.TAB } },
-                            { ButtonFlags.Start, new KeyboardActions() { Key = VirtualKeyCode.ESCAPE } },
+                            { ButtonFlags.Back, new KeyboardActions() { Key = VirtualKeyCode.ESCAPE } },
+                            { ButtonFlags.Start, new KeyboardActions() { Key = VirtualKeyCode.TAB } },
 
                             { ButtonFlags.DPadUp, new KeyboardActions() { Key = VirtualKeyCode.VK_1 } },
                             { ButtonFlags.DPadDown, new KeyboardActions() { Key = VirtualKeyCode.VK_3 } },
@@ -172,25 +161,8 @@ namespace HandheldCompanion.Controls
                             { ButtonFlags.LeftStickClick, new KeyboardActions() { Key = VirtualKeyCode.LSHIFT } },
                             { ButtonFlags.RightStickClick, new MouseActions() { MouseType = MouseActionsType.LeftButton } },
 
-                            { ButtonFlags.LeftPadClickUp, new KeyboardActions() { Key = VirtualKeyCode.VK_1 } },
-                            { ButtonFlags.LeftPadClickDown, new KeyboardActions() { Key = VirtualKeyCode.VK_3 } },
-                            { ButtonFlags.LeftPadClickLeft, new KeyboardActions() { Key = VirtualKeyCode.VK_4 } },
-                            { ButtonFlags.LeftPadClickRight, new KeyboardActions() { Key = VirtualKeyCode.VK_2 } },
-
                             { ButtonFlags.RightPadClick, new MouseActions() { MouseType = MouseActionsType.LeftButton } },
                         };
-                    }
-                    break;
-
-                case "Gamepad with Mouse Trackpad":
-                    {
-                        this.Layout.AxisLayout[AxisLayoutFlags.RightPad] = new MouseActions() { MouseType = MouseActionsType.Move };
-                    }
-                    break;
-
-                case "Gamepad with Joystick Trackpad":
-                    {
-                        this.Layout.AxisLayout[AxisLayoutFlags.RightPad] = new AxisActions() { Axis = AxisLayoutFlags.RightThumb };
                     }
                     break;
             }
@@ -208,10 +180,7 @@ namespace HandheldCompanion.Controls
         }
 
         public static readonly LayoutTemplate DesktopLayout = new("Desktop", "Layout for Desktop Browsing", "HandheldCompanion", true);
-        public static readonly LayoutTemplate DefaultLayout = new("Gamepad (XBOX)", "This template is for games that already have built-in gamepad support. Intended for dual stick games such as twin-stick shooters, side-scrollers, etc.", "HandheldCompanion", true);
-        public static readonly LayoutTemplate NintendoLayout = new("Gamepad (Nintendo)", "This template is for games that already have built-in gamepad support. Intended for games that are designed with a Nintendo gamepad in mind.", "HandheldCompanion", true);
+        public static readonly LayoutTemplate DefaultLayout = new("Gamepad", "This template is for games that already have built-in gamepad support. Intended for dual stick games such as twin-stick shooters, side-scrollers, etc.", "HandheldCompanion", true);
         public static readonly LayoutTemplate KeyboardLayout = new("Keyboard (WASD) and Mouse", "This template works great for the games that were designed with a keyboard and mouse in mind, without gamepad support. The controller will drive the game's keyboard based events with buttons, but will make assumptions about which buttons move you around (WASD for movement, space for jump, etc.). The right pad will emulate the movement of a mouse.", "HandheldCompanion", true);
-        public static readonly LayoutTemplate GamepadMouseLayout = new("Gamepad with Mouse Trackpad", "This template is for games that already have built-in gamepad support. The right trackpad will be bound to mouse emulation which may not work in all games.", "HandheldCompanion", true, typeof(NeptuneController));
-        public static readonly LayoutTemplate GamepadJoystickLayout = new("Gamepad with Joystick Trackpad", "This template is for games that already have built-in gamepad support and have a third person controlled camera. FPS or Third Person Adventure games, etc.", "HandheldCompanion", true, typeof(NeptuneController));
     }
 }

@@ -22,7 +22,6 @@ namespace HandheldCompanion.Managers
         {
             LayoutTemplate.DefaultLayout,
             LayoutTemplate.DesktopLayout,
-            LayoutTemplate.NintendoLayout,
             LayoutTemplate.KeyboardLayout,
         };
 

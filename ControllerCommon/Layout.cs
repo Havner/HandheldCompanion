@@ -31,12 +31,6 @@ namespace ControllerCommon
                 ButtonLayout[button] = new ButtonActions() { Button = button };
             }
 
-            ButtonLayout[ButtonFlags.OEM1] = new ButtonActions() { Button = ButtonFlags.Special };
-            ButtonLayout[ButtonFlags.LeftPadClickUp] = new ButtonActions() { Button = ButtonFlags.DPadUp };
-            ButtonLayout[ButtonFlags.LeftPadClickDown] = new ButtonActions() { Button = ButtonFlags.DPadDown };
-            ButtonLayout[ButtonFlags.LeftPadClickLeft] = new ButtonActions() { Button = ButtonFlags.DPadLeft };
-            ButtonLayout[ButtonFlags.LeftPadClickRight] = new ButtonActions() { Button = ButtonFlags.DPadRight };
-
             // generic axis mapping
             foreach (AxisLayoutFlags axis in Enum.GetValues(typeof(AxisLayoutFlags)))
             {

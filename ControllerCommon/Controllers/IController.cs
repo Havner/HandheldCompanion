@@ -43,12 +43,17 @@ namespace ControllerCommon.Controllers
             ButtonFlags.DPadUp, ButtonFlags.DPadDown, ButtonFlags.DPadLeft, ButtonFlags.DPadRight,
             ButtonFlags.Start, ButtonFlags.Back, ButtonFlags.Special,
             ButtonFlags.L1, ButtonFlags.R1,
-            ButtonFlags.LeftThumb, ButtonFlags.RightThumb,
+            ButtonFlags.LeftStickClick, ButtonFlags.RightStickClick,
+            // DS4
+            ButtonFlags.LeftPadTouch, ButtonFlags.RightPadTouch,
+            ButtonFlags.LeftPadClick, ButtonFlags.RightPadClick,
         };
         public static readonly List<AxisLayoutFlags> TargetAxis = new()
         {
-            AxisLayoutFlags.LeftThumb, AxisLayoutFlags.RightThumb,
+            AxisLayoutFlags.LeftStick, AxisLayoutFlags.RightStick,
             AxisLayoutFlags.L2, AxisLayoutFlags.R2,
+            // DS4
+            AxisLayoutFlags.LeftPad, AxisLayoutFlags.RightPad,
         };
 
         // Buttons and axes all controllers have that we can map.
