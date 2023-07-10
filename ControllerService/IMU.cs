@@ -17,11 +17,9 @@ namespace ControllerService
     {
         public static SortedDictionary<XInputSensorFlags, Vector3> Acceleration = new();
         public static SortedDictionary<XInputSensorFlags, Vector3> AngularVelocity = new();
-        public static Vector3 IMU_Angle = new();
 
         public static IMUGyrometer Gyrometer;
         public static IMUAccelerometer Accelerometer;
-        public static IMUInclinometer Inclinometer;
 
         public static SensorFusion sensorFusion;
         public static MadgwickAHRS madgwickAHRS;
@@ -60,7 +58,6 @@ namespace ControllerService
 
             Gyrometer = new IMUGyrometer(sensorFamily, UpdateInterval);
             Accelerometer = new IMUAccelerometer(sensorFamily, UpdateInterval);
-            Inclinometer = new IMUInclinometer(sensorFamily, UpdateInterval);
         }
 
         public static void Start()
@@ -80,7 +77,6 @@ namespace ControllerService
             // halt sensors
             Gyrometer?.StopListening();
             Accelerometer?.StopListening();
-            Inclinometer?.StopListening();
 
             stopwatch.Stop();
 
@@ -102,14 +98,12 @@ namespace ControllerService
         {
             Gyrometer.UpdateSensor();
             Accelerometer.UpdateSensor();
-            Inclinometer.UpdateSensor();
         }
 
         public static void UpdateMovements(ControllerMovements movements)
         {
             Gyrometer.ReadingChanged(movements.GyroRoll, movements.GyroPitch, movements.GyroYaw);
             Accelerometer.ReadingChanged(movements.GyroAccelX, movements.GyroAccelY, movements.GyroAccelZ);
-            Inclinometer.ReadingChanged(movements.GyroAccelX, movements.GyroAccelY, movements.GyroAccelZ);
         }
 
         private static void Tick(long ticks)
@@ -159,16 +153,13 @@ namespace ControllerService
                     }
                 }
 
-                IMU_Angle = Inclinometer.GetCurrentReading();
-
                 // update sensorFusion
-                switch (ControllerService.currentProfile.MotionInput)
+                if (ControllerService.currentProfile.MotionInput == MotionInput.PlayerSpace ||
+                    ControllerService.currentProfile.MotionInput == MotionInput.AutoRollYawSwap ||
+                    ControllerService.currentProfile.MotionInput == MotionInput.JoystickSteering ||
+                    ControllerService.CurrentTag == "SettingsMode1")
                 {
-                    case MotionInput.PlayerSpace:
-                    case MotionInput.AutoRollYawSwap:
-                    case MotionInput.JoystickSteering:
-                        sensorFusion.UpdateReport(TotalMilliseconds, DeltaSeconds, AngularVelocity[XInputSensorFlags.Centered], Acceleration[XInputSensorFlags.Default]);
-                        break;
+                    sensorFusion.UpdateReport(TotalMilliseconds, DeltaSeconds, AngularVelocity[XInputSensorFlags.Centered], Acceleration[XInputSensorFlags.Default]);
                 }
 
                 switch (ControllerService.CurrentTag)
@@ -178,7 +169,7 @@ namespace ControllerService
                         break;
 
                     case "SettingsMode1":
-                        PipeServer.SendMessage(new PipeSensor(IMU_Angle, SensorType.Inclinometer));
+                        PipeServer.SendMessage(new PipeSensor(sensorFusion.DeviceAngle, SensorType.Inclinometer));
                         break;
                 }
 

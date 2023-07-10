@@ -229,6 +229,12 @@ namespace ControllerCommon.Pipes
             this.type = type;
         }
 
+        public PipeSensor(Vector2 reading, SensorType type) : this(type)
+        {
+            this.x = reading.X;
+            this.y = reading.Y;
+        }
+
         public PipeSensor(Vector3 reading, SensorType type) : this(type)
         {
             this.x = reading.X;
