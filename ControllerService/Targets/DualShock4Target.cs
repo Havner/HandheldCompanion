@@ -123,9 +123,9 @@ namespace ControllerService.Targets
                 if (Inputs.ButtonState[ButtonFlags.Back])
                     tempButtons |= DualShock4Button.Share.Value;
 
-                if (Inputs.ButtonState[ButtonFlags.RightThumb])
+                if (Inputs.ButtonState[ButtonFlags.RightStickClick])
                     tempButtons |= DualShock4Button.ThumbRight.Value;
-                if (Inputs.ButtonState[ButtonFlags.LeftThumb])
+                if (Inputs.ButtonState[ButtonFlags.LeftStickClick])
                     tempButtons |= DualShock4Button.ThumbLeft.Value;
 
                 if (Inputs.ButtonState[ButtonFlags.L1])
@@ -168,10 +168,10 @@ namespace ControllerService.Targets
                 outDS4Report.bTriggerL = (byte)Inputs.AxisState[AxisFlags.L2];
                 outDS4Report.bTriggerR = (byte)Inputs.AxisState[AxisFlags.R2];
 
-                outDS4Report.bThumbLX = InputUtils.NormalizeXboxInput(LeftThumb.X);
-                outDS4Report.bThumbLY = (byte)(byte.MaxValue - InputUtils.NormalizeXboxInput(LeftThumb.Y));
-                outDS4Report.bThumbRX = InputUtils.NormalizeXboxInput(RightThumb.X);
-                outDS4Report.bThumbRY = (byte)(byte.MaxValue - InputUtils.NormalizeXboxInput(RightThumb.Y));
+                outDS4Report.bThumbLX = InputUtils.NormalizeXboxInput(LeftStick.X);
+                outDS4Report.bThumbLY = (byte)(byte.MaxValue - InputUtils.NormalizeXboxInput(LeftStick.Y));
+                outDS4Report.bThumbRX = InputUtils.NormalizeXboxInput(RightStick.X);
+                outDS4Report.bThumbRY = (byte)(byte.MaxValue - InputUtils.NormalizeXboxInput(RightStick.Y));
 
                 outDS4Report.bTouchPacketsN = 0x01;
                 outDS4Report.sCurrentTouch.bPacketCounter = DS4Touch.TouchPacketCounter;

@@ -17,8 +17,8 @@ namespace ControllerCommon.Controllers
         [JsonIgnore]
         public static readonly SortedDictionary<AxisLayoutFlags, ButtonFlags> AxisTouchButtons = new()
         {
-            { AxisLayoutFlags.RightThumb, ButtonFlags.RightThumbTouch },
-            { AxisLayoutFlags.LeftThumb, ButtonFlags.LeftThumbTouch },
+            { AxisLayoutFlags.RightStick, ButtonFlags.RightStickTouch },
+            { AxisLayoutFlags.LeftStick, ButtonFlags.LeftStickTouch },
             { AxisLayoutFlags.RightPad, ButtonFlags.RightPadTouch },
             { AxisLayoutFlags.LeftPad, ButtonFlags.LeftPadTouch },
         };

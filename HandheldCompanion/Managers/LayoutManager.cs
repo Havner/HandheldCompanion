@@ -24,8 +24,6 @@ namespace HandheldCompanion.Managers
             LayoutTemplate.DesktopLayout,
             LayoutTemplate.NintendoLayout,
             LayoutTemplate.KeyboardLayout,
-            LayoutTemplate.GamepadMouseLayout,
-            LayoutTemplate.GamepadJoystickLayout,
         };
 
         private static bool updateLock;

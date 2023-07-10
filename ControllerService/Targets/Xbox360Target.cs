@@ -73,10 +73,10 @@ namespace ControllerService.Targets
 
             base.UpdateReport(ticks);
 
-            virtualController.SetAxisValue(Xbox360Axis.LeftThumbX, (short)LeftThumb.X);
-            virtualController.SetAxisValue(Xbox360Axis.LeftThumbY, (short)LeftThumb.Y);
-            virtualController.SetAxisValue(Xbox360Axis.RightThumbX, (short)RightThumb.X);
-            virtualController.SetAxisValue(Xbox360Axis.RightThumbY, (short)RightThumb.Y);
+            virtualController.SetAxisValue(Xbox360Axis.LeftThumbX, (short)LeftStick.X);
+            virtualController.SetAxisValue(Xbox360Axis.LeftThumbY, (short)LeftStick.Y);
+            virtualController.SetAxisValue(Xbox360Axis.RightThumbX, (short)RightStick.X);
+            virtualController.SetAxisValue(Xbox360Axis.RightThumbY, (short)RightStick.Y);
 
             virtualController.SetSliderValue(Xbox360Slider.LeftTrigger, (byte)Inputs.AxisState[AxisFlags.L2]);
             virtualController.SetSliderValue(Xbox360Slider.RightTrigger, (byte)Inputs.AxisState[AxisFlags.R2]);
@@ -97,8 +97,8 @@ namespace ControllerService.Targets
             virtualController.SetButtonState(Xbox360Button.LeftShoulder, Inputs.ButtonState[ButtonFlags.L1]);
             virtualController.SetButtonState(Xbox360Button.RightShoulder, Inputs.ButtonState[ButtonFlags.R1]);
 
-            virtualController.SetButtonState(Xbox360Button.LeftThumb, Inputs.ButtonState[ButtonFlags.LeftThumb]);
-            virtualController.SetButtonState(Xbox360Button.RightThumb, Inputs.ButtonState[ButtonFlags.RightThumb]);
+            virtualController.SetButtonState(Xbox360Button.LeftThumb, Inputs.ButtonState[ButtonFlags.LeftStickClick]);
+            virtualController.SetButtonState(Xbox360Button.RightThumb, Inputs.ButtonState[ButtonFlags.RightStickClick]);
 
             virtualController.SetButtonState(Xbox360Button.Guide, Inputs.ButtonState[ButtonFlags.Special]);
 

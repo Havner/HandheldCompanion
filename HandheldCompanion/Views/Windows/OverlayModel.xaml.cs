@@ -345,11 +345,11 @@ namespace HandheldCompanion.Views.Windows
 
                 // JoystickLeftRing
                 model = CurrentModel.LeftThumbRing.Children[0] as GeometryModel3D;
-                if (Inputs.AxisState[AxisFlags.LeftThumbX] != 0.0f || Inputs.AxisState[AxisFlags.LeftThumbY] != 0.0f)
+                if (Inputs.AxisState[AxisFlags.LeftStickX] != 0.0f || Inputs.AxisState[AxisFlags.LeftStickY] != 0.0f)
                 {
                     // Adjust color
-                    GradientFactor = Math.Max(Math.Abs(1 * Inputs.AxisState[AxisFlags.LeftThumbX] / (float)short.MaxValue),
-                                              Math.Abs(1 * Inputs.AxisState[AxisFlags.LeftThumbY] / (float)short.MaxValue));
+                    GradientFactor = Math.Max(Math.Abs(1 * Inputs.AxisState[AxisFlags.LeftStickX] / (float)short.MaxValue),
+                                              Math.Abs(1 * Inputs.AxisState[AxisFlags.LeftStickY] / (float)short.MaxValue));
 
                     model.Material = GradientHighlight(CurrentModel.DefaultMaterials[CurrentModel.LeftThumbRing],
                                                        CurrentModel.HighlightMaterials[CurrentModel.LeftThumbRing],
@@ -357,8 +357,8 @@ namespace HandheldCompanion.Views.Windows
 
                     // Define and compute
                     Transform3DGroup Transform3DGroupJoystickLeft = new Transform3DGroup();
-                    float x = CurrentModel.JoystickMaxAngleDeg * Inputs.AxisState[AxisFlags.LeftThumbX] / (float)short.MaxValue;
-                    float y = -1 * CurrentModel.JoystickMaxAngleDeg * Inputs.AxisState[AxisFlags.LeftThumbY] / (float)short.MaxValue;
+                    float x = CurrentModel.JoystickMaxAngleDeg * Inputs.AxisState[AxisFlags.LeftStickX] / (float)short.MaxValue;
+                    float y = -1 * CurrentModel.JoystickMaxAngleDeg * Inputs.AxisState[AxisFlags.LeftStickY] / (float)short.MaxValue;
 
                     // Rotation X
                     var ax3d = new AxisAngleRotation3D(new Vector3D(0, 0, 1), x);
@@ -405,11 +405,11 @@ namespace HandheldCompanion.Views.Windows
 
                 // JoystickRightRing
                 model = CurrentModel.RightThumbRing.Children[0] as GeometryModel3D;
-                if (Inputs.AxisState[AxisFlags.RightThumbX] != 0.0f || Inputs.AxisState[AxisFlags.RightThumbY] != 0.0f)
+                if (Inputs.AxisState[AxisFlags.RightStickX] != 0.0f || Inputs.AxisState[AxisFlags.RightStickY] != 0.0f)
                 {
                     // Adjust color
-                    GradientFactor = Math.Max(Math.Abs(1 * Inputs.AxisState[AxisFlags.RightThumbX] / (float)short.MaxValue),
-                                              Math.Abs(1 * Inputs.AxisState[AxisFlags.RightThumbY] / (float)short.MaxValue));
+                    GradientFactor = Math.Max(Math.Abs(1 * Inputs.AxisState[AxisFlags.RightStickX] / (float)short.MaxValue),
+                                              Math.Abs(1 * Inputs.AxisState[AxisFlags.RightStickY] / (float)short.MaxValue));
 
                     model.Material = GradientHighlight(CurrentModel.DefaultMaterials[CurrentModel.RightThumbRing],
                                                        CurrentModel.HighlightMaterials[CurrentModel.RightThumbRing],
@@ -417,8 +417,8 @@ namespace HandheldCompanion.Views.Windows
 
                     // Define and compute
                     Transform3DGroup Transform3DGroupJoystickRight = new Transform3DGroup();
-                    float x = CurrentModel.JoystickMaxAngleDeg * Inputs.AxisState[AxisFlags.RightThumbX] / (float)short.MaxValue;
-                    float y = -1 * CurrentModel.JoystickMaxAngleDeg * Inputs.AxisState[AxisFlags.RightThumbY] / (float)short.MaxValue;
+                    float x = CurrentModel.JoystickMaxAngleDeg * Inputs.AxisState[AxisFlags.RightStickX] / (float)short.MaxValue;
+                    float y = -1 * CurrentModel.JoystickMaxAngleDeg * Inputs.AxisState[AxisFlags.RightStickY] / (float)short.MaxValue;
 
                     // Rotation X
                     var ax3d = new AxisAngleRotation3D(new Vector3D(0, 0, 1), x);

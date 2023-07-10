@@ -18,8 +18,8 @@ namespace ControllerService.Targets
 
         protected IVirtualGamepad virtualController;
 
-        protected Vector2 LeftThumb;
-        protected Vector2 RightThumb;
+        protected Vector2 LeftStick;
+        protected Vector2 RightStick;
 
         public event ConnectedEventHandler Connected;
         public delegate void ConnectedEventHandler(ViGEmTarget target);
@@ -60,8 +60,8 @@ namespace ControllerService.Targets
         public virtual unsafe void UpdateReport(long ticks)
         {
             // get sticks values
-            LeftThumb = new Vector2(Inputs.AxisState[AxisFlags.LeftThumbX], Inputs.AxisState[AxisFlags.LeftThumbY]);
-            RightThumb = new Vector2(Inputs.AxisState[AxisFlags.RightThumbX], Inputs.AxisState[AxisFlags.RightThumbY]);
+            LeftStick = new Vector2(Inputs.AxisState[AxisFlags.LeftStickX], Inputs.AxisState[AxisFlags.LeftStickY]);
+            RightStick = new Vector2(Inputs.AxisState[AxisFlags.RightStickX], Inputs.AxisState[AxisFlags.RightStickY]);
 
             if (ControllerService.currentProfile.MotionEnabled && Inputs.MotionTriggered)
             {
@@ -112,14 +112,14 @@ namespace ControllerService.Targets
                             {
                                 default:
                                 case MotionOutput.RightStick:
-                                    RightThumb.X = (short)(Math.Clamp(RightThumb.X + GamepadThumb.X, short.MinValue, short.MaxValue));
-                                    RightThumb.Y = (short)(Math.Clamp(RightThumb.Y + GamepadThumb.Y, short.MinValue, short.MaxValue));
+                                    RightStick.X = (short)(Math.Clamp(RightStick.X + GamepadThumb.X, short.MinValue, short.MaxValue));
+                                    RightStick.Y = (short)(Math.Clamp(RightStick.Y + GamepadThumb.Y, short.MinValue, short.MaxValue));
 
                                     break;
 
                                 case MotionOutput.LeftStick:
-                                    LeftThumb.X = (short)(Math.Clamp(LeftThumb.X + GamepadThumb.X, short.MinValue, short.MaxValue));
-                                    LeftThumb.Y = (short)(Math.Clamp(LeftThumb.Y + GamepadThumb.Y, short.MinValue, short.MaxValue));
+                                    LeftStick.X = (short)(Math.Clamp(LeftStick.X + GamepadThumb.X, short.MinValue, short.MaxValue));
+                                    LeftStick.Y = (short)(Math.Clamp(LeftStick.Y + GamepadThumb.Y, short.MinValue, short.MaxValue));
 
                                     break;
                             }
@@ -138,10 +138,10 @@ namespace ControllerService.Targets
                             {
                                 default:
                                 case MotionOutput.RightStick:
-                                    RightThumb.X = (short)GamepadThumbX;
+                                    RightStick.X = (short)GamepadThumbX;
                                     break;
                                 case MotionOutput.LeftStick:
-                                    LeftThumb.X = (short)GamepadThumbX;
+                                    LeftStick.X = (short)GamepadThumbX;
                                     break;
                             }
                         }

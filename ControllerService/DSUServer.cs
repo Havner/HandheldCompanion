@@ -540,8 +540,8 @@ namespace ControllerService
                 if (Inputs.ButtonState[ButtonFlags.DPadUp]) outputData[outIdx] |= 0x10;
 
                 if (Inputs.ButtonState[ButtonFlags.Start]) outputData[outIdx] |= 0x08;
-                if (Inputs.ButtonState[ButtonFlags.RightThumb]) outputData[outIdx] |= 0x04;
-                if (Inputs.ButtonState[ButtonFlags.LeftThumb]) outputData[outIdx] |= 0x02;
+                if (Inputs.ButtonState[ButtonFlags.RightStickClick]) outputData[outIdx] |= 0x04;
+                if (Inputs.ButtonState[ButtonFlags.LeftStickClick]) outputData[outIdx] |= 0x02;
                 if (Inputs.ButtonState[ButtonFlags.Back]) outputData[outIdx] |= 0x01;
 
                 outputData[++outIdx] = 0;
@@ -560,13 +560,13 @@ namespace ControllerService
                 outputData[++outIdx] = Convert.ToByte(Inputs.ButtonState[ButtonFlags.LeftPadClick] || Inputs.ButtonState[ButtonFlags.RightPadClick]); // (hidReport.TouchButton) ? (byte)1 : 
 
                 //Left stick
-                outputData[++outIdx] = InputUtils.NormalizeXboxInput(Inputs.AxisState[AxisFlags.LeftThumbX]);
-                outputData[++outIdx] = InputUtils.NormalizeXboxInput(Inputs.AxisState[AxisFlags.LeftThumbY]);
+                outputData[++outIdx] = InputUtils.NormalizeXboxInput(Inputs.AxisState[AxisFlags.LeftStickX]);
+                outputData[++outIdx] = InputUtils.NormalizeXboxInput(Inputs.AxisState[AxisFlags.LeftStickY]);
                 outputData[outIdx] = (byte)(byte.MaxValue - outputData[outIdx]); //invert Y by convention
 
                 //Right stick
-                outputData[++outIdx] = InputUtils.NormalizeXboxInput(Inputs.AxisState[AxisFlags.RightThumbX]);
-                outputData[++outIdx] = InputUtils.NormalizeXboxInput(Inputs.AxisState[AxisFlags.RightThumbY]);
+                outputData[++outIdx] = InputUtils.NormalizeXboxInput(Inputs.AxisState[AxisFlags.RightStickX]);
+                outputData[++outIdx] = InputUtils.NormalizeXboxInput(Inputs.AxisState[AxisFlags.RightStickY]);
                 outputData[outIdx] = (byte)(byte.MaxValue - outputData[outIdx]); //invert Y by convention
 
                 outputData[++outIdx] = Inputs.ButtonState[ButtonFlags.DPadLeft] ? (byte)0xFF : (byte)0x00;

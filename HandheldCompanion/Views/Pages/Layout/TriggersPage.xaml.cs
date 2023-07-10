@@ -13,9 +13,9 @@ namespace HandheldCompanion.Views.Pages
     /// </summary>
     public partial class TriggersPage : ILayoutPage
     {
-        public static List<ButtonFlags> LeftTrigger = new() { ButtonFlags.L2, ButtonFlags.L3 };
+        public static List<ButtonFlags> LeftTrigger = new() { ButtonFlags.L2Soft, ButtonFlags.L2Full };
         public static List<AxisLayoutFlags> LeftTriggerAxis = new() { AxisLayoutFlags.L2 };
-        public static List<ButtonFlags> RightTrigger = new() { ButtonFlags.R2, ButtonFlags.R3 };
+        public static List<ButtonFlags> RightTrigger = new() { ButtonFlags.R2Soft, ButtonFlags.R2Full };
         public static List<AxisLayoutFlags> RightTriggerAxis = new() { AxisLayoutFlags.R2 };
 
         public TriggersPage()

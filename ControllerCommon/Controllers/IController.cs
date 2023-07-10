@@ -60,16 +60,16 @@ namespace ControllerCommon.Controllers
             ButtonFlags.DPadUp, ButtonFlags.DPadDown, ButtonFlags.DPadLeft, ButtonFlags.DPadRight,
             ButtonFlags.Start, ButtonFlags.Back, ButtonFlags.Special,
             ButtonFlags.L1, ButtonFlags.R1,
-            ButtonFlags.LeftThumb, ButtonFlags.RightThumb,
+            ButtonFlags.LeftStickClick, ButtonFlags.RightStickClick,
             // additional buttons calculated from the above
-            ButtonFlags.L2, ButtonFlags.R2, ButtonFlags.L3, ButtonFlags.R3,
-            ButtonFlags.LeftThumbUp, ButtonFlags.LeftThumbDown, ButtonFlags.LeftThumbLeft, ButtonFlags.LeftThumbRight,
-            ButtonFlags.RightThumbUp, ButtonFlags.RightThumbDown, ButtonFlags.RightThumbLeft, ButtonFlags.RightThumbRight,
+            ButtonFlags.L2Soft, ButtonFlags.R2Soft, ButtonFlags.L2Full, ButtonFlags.R2Full,
+            ButtonFlags.LeftStickUp, ButtonFlags.LeftStickDown, ButtonFlags.LeftStickLeft, ButtonFlags.LeftStickRight,
+            ButtonFlags.RightStickUp, ButtonFlags.RightStickDown, ButtonFlags.RightStickLeft, ButtonFlags.RightStickRight,
         };
         protected List<AxisLayoutFlags> SourceAxis = new()
         {
             // same as target, we assume all controllers have those axes
-            AxisLayoutFlags.LeftThumb, AxisLayoutFlags.RightThumb,
+            AxisLayoutFlags.LeftStick, AxisLayoutFlags.RightStick,
             AxisLayoutFlags.L2, AxisLayoutFlags.R2,
         };
 
@@ -341,25 +341,25 @@ namespace ControllerCommon.Controllers
                     return "\u219E"; // Button X
                 case ButtonFlags.DPadRight:
                     return "\u21A0"; // Button Y
-                case ButtonFlags.LeftThumb:
+                case ButtonFlags.LeftStickClick:
                     return "\u21BA";
-                case ButtonFlags.RightThumb:
+                case ButtonFlags.RightStickClick:
                     return "\u21BB";
-                case ButtonFlags.LeftThumbUp:
+                case ButtonFlags.LeftStickUp:
                     return "\u21BE";
-                case ButtonFlags.LeftThumbDown:
+                case ButtonFlags.LeftStickDown:
                     return "\u21C2";
-                case ButtonFlags.LeftThumbLeft:
+                case ButtonFlags.LeftStickLeft:
                     return "\u21BC";
-                case ButtonFlags.LeftThumbRight:
+                case ButtonFlags.LeftStickRight:
                     return "\u21C0";
-                case ButtonFlags.RightThumbUp:
+                case ButtonFlags.RightStickUp:
                     return "\u21BF";
-                case ButtonFlags.RightThumbDown:
+                case ButtonFlags.RightStickDown:
                     return "\u21C3";
-                case ButtonFlags.RightThumbLeft:
+                case ButtonFlags.RightStickLeft:
                     return "\u21BD";
-                case ButtonFlags.RightThumbRight:
+                case ButtonFlags.RightStickRight:
                     return "\u21C1";
                 case ButtonFlags.OEM1:
                     return "\u2780";
@@ -393,13 +393,13 @@ namespace ControllerCommon.Controllers
         {
             switch (axis)
             {
-                case AxisFlags.LeftThumbX:
+                case AxisFlags.LeftStickX:
                     return "\u21C4";
-                case AxisFlags.LeftThumbY:
+                case AxisFlags.LeftStickY:
                     return "\u21C5";
-                case AxisFlags.RightThumbX:
+                case AxisFlags.RightStickX:
                     return "\u21C6";
-                case AxisFlags.RightThumbY:
+                case AxisFlags.RightStickY:
                     return "\u21F5";
             }
             return defaultGlyph;
@@ -409,9 +409,9 @@ namespace ControllerCommon.Controllers
         {
             switch (axis)
             {
-                case AxisLayoutFlags.LeftThumb:
+                case AxisLayoutFlags.LeftStick:
                     return "\u21CB";
-                case AxisLayoutFlags.RightThumb:
+                case AxisLayoutFlags.RightStick:
                     return "\u21CC";
             }
             return defaultGlyph;

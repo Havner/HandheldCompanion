@@ -91,8 +91,8 @@ namespace HandheldCompanion.Controls
                     {
                         this.Layout.AxisLayout = new()
                         {
-                            { AxisLayoutFlags.LeftThumb, new MouseActions() { MouseType = MouseActionsType.Scroll, Sensivity = 25.0f } },
-                            { AxisLayoutFlags.RightThumb, new MouseActions() { MouseType = MouseActionsType.Move, Sensivity = 25.0f } },
+                            { AxisLayoutFlags.LeftStick, new MouseActions() { MouseType = MouseActionsType.Scroll, Sensivity = 25.0f } },
+                            { AxisLayoutFlags.RightStick, new MouseActions() { MouseType = MouseActionsType.Move, Sensivity = 25.0f } },
                             { AxisLayoutFlags.LeftPad, new MouseActions() { MouseType = MouseActionsType.Scroll, Sensivity = 25.0f } },
                             { AxisLayoutFlags.RightPad, new MouseActions() { MouseType = MouseActionsType.Move, Sensivity = 25.0f } },
                         };
@@ -115,8 +115,8 @@ namespace HandheldCompanion.Controls
                             { ButtonFlags.DPadLeft, new KeyboardActions() { Key = VirtualKeyCode.LEFT } },
                             { ButtonFlags.DPadRight, new KeyboardActions() { Key = VirtualKeyCode.RIGHT } },
 
-                            { ButtonFlags.L2, new MouseActions() { MouseType = MouseActionsType.RightButton } },
-                            { ButtonFlags.R2, new MouseActions() { MouseType = MouseActionsType.LeftButton } },
+                            { ButtonFlags.L2Soft, new MouseActions() { MouseType = MouseActionsType.RightButton } },
+                            { ButtonFlags.R2Soft, new MouseActions() { MouseType = MouseActionsType.LeftButton } },
 
                             { ButtonFlags.LeftPadClick, new MouseActions() { MouseType = MouseActionsType.RightButton } },
                             { ButtonFlags.RightPadClick, new MouseActions() { MouseType = MouseActionsType.LeftButton } },
@@ -137,8 +137,8 @@ namespace HandheldCompanion.Controls
                     {
                         this.Layout.AxisLayout = new()
                         {
-                            { AxisLayoutFlags.LeftThumb, new EmptyActions() },
-                            { AxisLayoutFlags.RightThumb, new MouseActions() { MouseType = MouseActionsType.Move, Sensivity = 25.0f } },
+                            { AxisLayoutFlags.LeftStick, new EmptyActions() },
+                            { AxisLayoutFlags.RightStick, new MouseActions() { MouseType = MouseActionsType.Move, Sensivity = 25.0f } },
                             { AxisLayoutFlags.LeftPad, new EmptyActions() },
                             { AxisLayoutFlags.RightPad, new MouseActions() { MouseType = MouseActionsType.Move, Sensivity = 25.0f } },
                         };
@@ -161,16 +161,16 @@ namespace HandheldCompanion.Controls
                             { ButtonFlags.DPadLeft, new KeyboardActions() { Key = VirtualKeyCode.VK_4 } },
                             { ButtonFlags.DPadRight, new KeyboardActions() { Key = VirtualKeyCode.VK_2 } },
 
-                            { ButtonFlags.L2, new MouseActions() { MouseType = MouseActionsType.RightButton } },
-                            { ButtonFlags.R2, new MouseActions() { MouseType = MouseActionsType.LeftButton } },
+                            { ButtonFlags.L2Soft, new MouseActions() { MouseType = MouseActionsType.RightButton } },
+                            { ButtonFlags.R2Soft, new MouseActions() { MouseType = MouseActionsType.LeftButton } },
 
-                            { ButtonFlags.LeftThumbUp, new KeyboardActions() { Key = VirtualKeyCode.VK_W } },
-                            { ButtonFlags.LeftThumbDown, new KeyboardActions() { Key = VirtualKeyCode.VK_S } },
-                            { ButtonFlags.LeftThumbLeft, new KeyboardActions() { Key = VirtualKeyCode.VK_A } },
-                            { ButtonFlags.LeftThumbRight, new KeyboardActions() { Key = VirtualKeyCode.VK_D } },
+                            { ButtonFlags.LeftStickUp, new KeyboardActions() { Key = VirtualKeyCode.VK_W } },
+                            { ButtonFlags.LeftStickDown, new KeyboardActions() { Key = VirtualKeyCode.VK_S } },
+                            { ButtonFlags.LeftStickLeft, new KeyboardActions() { Key = VirtualKeyCode.VK_A } },
+                            { ButtonFlags.LeftStickRight, new KeyboardActions() { Key = VirtualKeyCode.VK_D } },
 
-                            { ButtonFlags.LeftThumb, new KeyboardActions() { Key = VirtualKeyCode.LSHIFT } },
-                            { ButtonFlags.RightThumb, new MouseActions() { MouseType = MouseActionsType.LeftButton } },
+                            { ButtonFlags.LeftStickClick, new KeyboardActions() { Key = VirtualKeyCode.LSHIFT } },
+                            { ButtonFlags.RightStickClick, new MouseActions() { MouseType = MouseActionsType.LeftButton } },
 
                             { ButtonFlags.LeftPadClickUp, new KeyboardActions() { Key = VirtualKeyCode.VK_1 } },
                             { ButtonFlags.LeftPadClickDown, new KeyboardActions() { Key = VirtualKeyCode.VK_3 } },

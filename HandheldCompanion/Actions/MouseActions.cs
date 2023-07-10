@@ -158,8 +158,8 @@ namespace HandheldCompanion.Actions
             switch (layout.flags)
             {
                 default:
-                case AxisLayoutFlags.LeftThumb:
-                case AxisLayoutFlags.RightThumb:
+                case AxisLayoutFlags.LeftStick:
+                case AxisLayoutFlags.RightStick:
                     {
                         // convert to <0.0-1.0> values
                         deltaVector = layout.vector / short.MaxValue;

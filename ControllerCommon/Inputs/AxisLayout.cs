@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Numerics;
 
 namespace ControllerCommon.Inputs
@@ -8,8 +9,8 @@ namespace ControllerCommon.Inputs
     public struct AxisLayout
     {
         public static AxisLayout None = new AxisLayout(AxisLayoutFlags.None);
-        public static AxisLayout LeftThumb = new AxisLayout(AxisLayoutFlags.LeftThumb, AxisFlags.LeftThumbX, AxisFlags.LeftThumbY);
-        public static AxisLayout RightThumb = new AxisLayout(AxisLayoutFlags.RightThumb, AxisFlags.RightThumbX, AxisFlags.RightThumbY);
+        public static AxisLayout LeftThumb = new AxisLayout(AxisLayoutFlags.LeftStick, AxisFlags.LeftStickX, AxisFlags.LeftStickY);
+        public static AxisLayout RightThumb = new AxisLayout(AxisLayoutFlags.RightStick, AxisFlags.RightStickX, AxisFlags.RightStickY);
         public static AxisLayout L2 = new AxisLayout(AxisLayoutFlags.L2, AxisFlags.L2);
         public static AxisLayout R2 = new AxisLayout(AxisLayoutFlags.R2, AxisFlags.R2);
         public static AxisLayout LeftPad = new AxisLayout(AxisLayoutFlags.LeftPad, AxisFlags.LeftPadX, AxisFlags.LeftPadY);
@@ -18,8 +19,8 @@ namespace ControllerCommon.Inputs
         public static SortedDictionary<AxisLayoutFlags, AxisLayout> Layouts = new()
         {
             { AxisLayoutFlags.None, None },
-            { AxisLayoutFlags.LeftThumb, LeftThumb },
-            { AxisLayoutFlags.RightThumb, RightThumb },
+            { AxisLayoutFlags.LeftStick, LeftThumb },
+            { AxisLayoutFlags.RightStick, RightThumb },
             { AxisLayoutFlags.L2, L2 },
             { AxisLayoutFlags.R2, R2 },
             { AxisLayoutFlags.LeftPad, LeftPad },
@@ -58,11 +59,19 @@ namespace ControllerCommon.Inputs
     public enum AxisLayoutFlags : byte
     {
         None = 0,
-        LeftThumb = 1,
-        RightThumb = 2,
+
+        [Description("Left Stick")]
+        LeftStick = 1,
+        [Description("Right Stick")]
+        RightStick = 2,
+
         L2 = 3,
         R2 = 4,
+
+        // Steam Deck, DS4
+        [Description("Left Pad")]
         LeftPad = 5,
+        [Description("Right Pad")]
         RightPad = 6,
     }
 }
