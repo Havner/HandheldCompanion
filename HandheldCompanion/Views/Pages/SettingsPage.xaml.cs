@@ -1,21 +1,11 @@
-using ControllerCommon.Devices;
 using ControllerCommon.Utils;
 using HandheldCompanion.Managers;
 using ModernWpf;
-using ModernWpf.Controls;
-using ModernWpf.Controls.Primitives;
-using Nefarius.Utilities.DeviceManagement.PnP;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.ServiceProcess;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using static ControllerCommon.Utils.DeviceUtils;
 using Page = System.Windows.Controls.Page;
 using ServiceControllerStatus = ControllerCommon.Managers.ServiceControllerStatus;
 
@@ -44,9 +34,6 @@ namespace HandheldCompanion.Views.Pages
                 cB_StartupType.Items.Add(radio);
             }
 
-            // call function
-            UpdateDevice();
-
             // initialize manager(s)
             MainWindow.serviceManager.Updated += OnServiceUpdate;
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
@@ -67,33 +54,6 @@ namespace HandheldCompanion.Views.Pages
                     case "MainWindowTheme":
                         cB_Theme.SelectedIndex = Convert.ToInt32(value);
                         cB_Theme_SelectionChanged(this, null); // bug: SelectionChanged not triggered when control isn't loaded
-                        break;
-                    case "SensorSelection":
-                        {
-                            int idx = Convert.ToInt32(value);
-
-                            // default value
-                            if (idx == -1)
-                            {
-                                if (MainWindow.CurrentDevice.Capacities.HasFlag(DeviceCapacities.ControllerSensor))
-                                    SettingsManager.SetProperty("SensorSelection", cB_SensorSelection.Items.IndexOf(SensorController));
-                                else if (MainWindow.CurrentDevice.Capacities.HasFlag(DeviceCapacities.InternalSensor))
-                                    SettingsManager.SetProperty("SensorSelection", cB_SensorSelection.Items.IndexOf(SensorInternal));
-                                else if (MainWindow.CurrentDevice.Capacities.HasFlag(DeviceCapacities.ExternalSensor))
-                                    SettingsManager.SetProperty("SensorSelection", cB_SensorSelection.Items.IndexOf(SensorExternal));
-                                else
-                                    SettingsManager.SetProperty("SensorSelection", cB_SensorSelection.Items.IndexOf(SensorNone));
-
-                                return;
-                            }
-                            else
-                            {
-                                cB_SensorSelection.SelectedIndex = idx;
-                            }
-
-                            cB_SensorSelection.SelectedIndex = idx;
-                            cB_SensorSelection_SelectionChanged(this, null); // bug: SelectionChanged not triggered when control isn't loaded
-                        }
                         break;
                     case "RunAtStartup":
                         Toggle_AutoStart.IsOn = Convert.ToBoolean(value);
@@ -116,28 +76,11 @@ namespace HandheldCompanion.Views.Pages
                     case "HaltServiceWithCompanion":
                         Toggle_ServiceShutdown.IsOn = Convert.ToBoolean(value);
                         break;
-                    case "SensorPlacementUpsideDown":
-                        Toggle_SensorPlacementUpsideDown.IsOn = Convert.ToBoolean(value);
-                        break;
-                    case "SensorPlacement":
-                        UpdateUI_SensorPlacement(Convert.ToInt32(value));
-                        break;
                     case "ServiceStartMode":
                         cB_StartupType.SelectedIndex = Convert.ToInt32(value);
                         cB_StartupType_SelectionChanged(this, null); // bug: SelectionChanged not triggered when control isn't loaded
                         break;
                 }
-            });
-        }
-
-        public void UpdateDevice(PnPDevice device = null)
-        {
-            // UI thread (async)
-            Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                SensorInternal.IsEnabled = MainWindow.CurrentDevice.Capacities.HasFlag(DeviceCapacities.InternalSensor);
-                SensorExternal.IsEnabled = MainWindow.CurrentDevice.Capacities.HasFlag(DeviceCapacities.ExternalSensor);
-                SensorController.IsEnabled = MainWindow.CurrentDevice.Capacities.HasFlag(DeviceCapacities.ControllerSensor);
             });
         }
 
@@ -250,50 +193,6 @@ namespace HandheldCompanion.Views.Pages
                 return;
 
             SettingsManager.SetProperty("MainWindowTheme", cB_Theme.SelectedIndex);
-        }
-
-        private void cB_SensorSelection_SelectionChanged(object? sender, SelectionChangedEventArgs? e)
-        {
-            if (cB_SensorSelection.SelectedIndex == -1)
-                return;
-
-            // update dependencies
-            Toggle_SensorPlacementUpsideDown.IsEnabled = cB_SensorSelection.SelectedIndex == (int)SensorFamily.SerialUSBIMU ? true : false;
-            Grid_SensorPlacementVisualisation.IsEnabled = cB_SensorSelection.SelectedIndex == (int)SensorFamily.SerialUSBIMU ? true : false;
-
-            if (IsLoaded)
-                SettingsManager.SetProperty("SensorSelection", cB_SensorSelection.SelectedIndex);
-        }
-
-        private void SensorPlacement_Click(object sender, System.Windows.RoutedEventArgs? e)
-        {
-            int Tag = int.Parse((string)((Button)sender).Tag);
-
-            UpdateUI_SensorPlacement(Tag);
-
-            if (IsLoaded)
-                SettingsManager.SetProperty("SensorPlacement", Tag);
-        }
-
-        private void UpdateUI_SensorPlacement(int? SensorPlacement)
-        {
-            foreach (SimpleStackPanel panel in Grid_SensorPlacementVisualisation.Children)
-            {
-                foreach (Button button in panel.Children)
-                {
-                    if (int.Parse((string)button.Tag) == SensorPlacement)
-                        button.Background = (Brush)Application.Current.Resources["SystemControlForegroundAccentBrush"];
-                    else
-                        button.Background = (Brush)Application.Current.Resources["SystemControlHighlightAltBaseLowBrush"];
-                }
-            }
-        }
-        private void Toggle_SensorPlacementUpsideDown_Toggled(object? sender, System.Windows.RoutedEventArgs? e)
-        {
-            bool isUpsideDown = Toggle_SensorPlacementUpsideDown.IsOn;
-
-            if (IsLoaded)
-                SettingsManager.SetProperty("SensorPlacementUpsideDown", isUpsideDown);
         }
 
         #region serviceManager

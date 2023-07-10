@@ -613,24 +613,6 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Display virtual trackpads.
-        /// </summary>
-        public static string InputsHotkey_overlayTrackpads {
-            get {
-                return ResourceManager.GetString("InputsHotkey_overlayTrackpads", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Change hotkey by pressing a button or a special key.
-        /// </summary>
-        public static string InputsHotkey_overlayTrackpadsDesc {
-            get {
-                return ResourceManager.GetString("InputsHotkey_overlayTrackpadsDesc", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Display Action Center.
         /// </summary>
         public static string InputsHotkey_shortcutActionCenter {

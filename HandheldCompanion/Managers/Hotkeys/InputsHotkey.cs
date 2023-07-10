@@ -20,7 +20,6 @@ namespace HandheldCompanion.Managers
         {
             // Handheld Companion hotkeys
             { 10, new InputsHotkey(InputsHotkeyType.HC,       "\uE7FC", "overlayGamepad",                false, true,  string.Empty,           false, true ) },
-            { 11, new InputsHotkey(InputsHotkeyType.HC,       "\uEDA4", "overlayTrackpads",              false, true,  string.Empty,           false, false) },
             { 12, new InputsHotkey(InputsHotkeyType.HC,       "\uE7C4", "shortcutMainWindow",            false, true,  string.Empty,           false, true ) },
             { 13, new InputsHotkey(InputsHotkeyType.HC,       "\uEC7A", "shortcutQuickTools",            false, true,  string.Empty,           false, false) },
             { 14, new InputsHotkey(InputsHotkeyType.HC,       "\uE961", "DesktopLayoutEnabled",          false, true,  string.Empty,           true,  true ) },

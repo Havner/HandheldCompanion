@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Timers;
 using static ControllerCommon.Utils.CommonUtils;
-using static ControllerCommon.Utils.DeviceUtils;
 
 namespace ControllerService.Sensors
 {
@@ -14,17 +13,7 @@ namespace ControllerService.Sensors
         Default = 0,
         RawValue = 1,
         Centered = 2,
-        WithRatio = 4,
         CenteredRaw = RawValue | Centered,
-        CenteredRatio = RawValue | WithRatio,
-    }
-
-    [Flags]
-    public enum XInputSensorStatus
-    {
-        Missing = 0,
-        Ready = 1,
-        Busy = 2
     }
 
     public abstract class IMUSensor : IDisposable
@@ -35,10 +24,6 @@ namespace ControllerService.Sensors
         protected static SensorSpec sensorSpec;
 
         protected Timer centerTimer;
-        protected int updateInterval;
-        protected SensorFamily sensorFamily;
-
-        public object sensor;
         public OneEuroFilter3D filter = new();
 
         protected bool disposed;
@@ -72,10 +57,7 @@ namespace ControllerService.Sensors
             this.centerTimer.Start();
         }
 
-        public virtual void StartListening()
-        { }
-
-        public virtual void StopListening()
+        public virtual void Stop()
         {
             if (centerTimer is null)
                 return;
@@ -85,40 +67,21 @@ namespace ControllerService.Sensors
             this.centerTimer = null;
         }
 
-        public override string ToString()
-        {
-            return this.GetType().Name;
-        }
-
-        protected virtual Vector3 GetCurrentReading(bool center = false, bool ratio = false)
+        protected virtual Vector3 GetCurrentReading(bool center = false)
         {
             return center ? this.reading_fixed : this.reading;
         }
 
-        public Vector3 GetCurrentReadingRaw(bool center = false, bool ratio = false)
+        public Vector3 GetCurrentReadingRaw(bool center = false)
         {
             return center ? this.reading_fixed : this.reading;
         }
 
         public virtual void Dispose()
         {
-            // Dispose of unmanaged resources.
-            Dispose(true);
+            Stop();
             // Suppress finalization.
             GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    StopListening();
-                }
-            }
-            //dispose unmanaged resources
-            disposed = true;
         }
     }
 }

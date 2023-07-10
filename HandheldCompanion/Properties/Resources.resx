@@ -241,12 +241,6 @@
   <data name="InputsHotkey_overlayGamepadDesc" xml:space="preserve">
     <value>Change 3D hotkey by pressing a button or a special key</value>
   </data>
-  <data name="InputsHotkey_overlayTrackpads" xml:space="preserve">
-    <value>Display virtual trackpads</value>
-  </data>
-  <data name="InputsHotkey_overlayTrackpadsDesc" xml:space="preserve">
-    <value>Change hotkey by pressing a button or a special key</value>
-  </data>
   <data name="InputsHotkey_shortcutQuickTools" xml:space="preserve">
     <value>Summon quick tools window</value>
   </data>

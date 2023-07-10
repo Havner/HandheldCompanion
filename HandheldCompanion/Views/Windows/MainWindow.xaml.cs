@@ -50,7 +50,6 @@ namespace HandheldCompanion.Views
 
         // overlay(s) vars
         public static OverlayModel overlayModel;
-        public static OverlayTrackpad overlayTrackpad;
         public static OverlayQuickTools overlayquickTools;
 
         // manager(s) vars
@@ -146,7 +145,6 @@ namespace HandheldCompanion.Views
 
             // initialize device
             CurrentDevice = IDevice.GetDefault();
-            CurrentDevice.PullSensors();
             CurrentDevice.Open();
 
             // load manager(s)
@@ -303,7 +301,6 @@ namespace HandheldCompanion.Views
         {
             // initialize overlay
             overlayModel = new OverlayModel();
-            overlayTrackpad = new OverlayTrackpad();
             overlayquickTools = new OverlayQuickTools();
         }
 
@@ -344,10 +341,7 @@ namespace HandheldCompanion.Views
 
         private void GenericDeviceUpdated(PnPDevice device, DeviceEventArgs obj)
         {
-            CurrentDevice.PullSensors();
-
             aboutPage.UpdateDevice(device);
-            settingsPage.UpdateDevice(device);
         }
 
         private void HotkeysManager_CommandExecuted(string listener)
@@ -362,9 +356,6 @@ namespace HandheldCompanion.Views
                     break;
                 case "overlayGamepad":
                     overlayModel.UpdateVisibility();
-                    break;
-                case "overlayTrackpads":
-                    overlayTrackpad.UpdateVisibility();
                     break;
             }
         }
@@ -639,7 +630,6 @@ namespace HandheldCompanion.Views
             notifyIcon.Dispose();
 
             overlayModel.Close();
-            overlayTrackpad.Close();
             overlayquickTools.Close(true);
 
             if (PipeClient.IsConnected)

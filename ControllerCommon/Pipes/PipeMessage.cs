@@ -122,21 +122,6 @@ namespace ControllerCommon.Pipes
     }
 
     [Serializable]
-    public partial class PipeClientCursor : PipeMessage
-    {
-        public CursorAction action;
-        public double x;
-        public double y;
-        public CursorButton button;
-        public int flags;
-
-        public PipeClientCursor()
-        {
-            code = PipeCode.CLIENT_CURSOR;
-        }
-    }
-
-    [Serializable]
     public partial class PipeClientInputs : PipeMessage
     {
         public ControllerState Inputs;

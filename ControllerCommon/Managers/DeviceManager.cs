@@ -1,5 +1,4 @@
 using ControllerCommon.Managers.Hid;
-using ControllerCommon.Sensors;
 using ControllerCommon.Utils;
 using Nefarius.Utilities.DeviceManagement.PnP;
 using PInvoke;
@@ -478,9 +477,6 @@ namespace ControllerCommon.Managers
                 string symLink = CommonUtils.Between(obj.SymLink, "#", "#") + "&";
                 string VendorID = CommonUtils.Between(symLink, "VID_", "&");
                 string ProductID = CommonUtils.Between(symLink, "PID_", "&");
-
-                if (SerialUSBIMU.vendors.ContainsKey(new KeyValuePair<string, string>(VendorID, ProductID)))
-                    UsbDeviceRemoved?.Invoke(null, obj);
             }
             catch { }
         }
@@ -492,9 +488,6 @@ namespace ControllerCommon.Managers
                 string symLink = CommonUtils.Between(obj.SymLink, "#", "#") + "&";
                 string VendorID = CommonUtils.Between(symLink, "VID_", "&");
                 string ProductID = CommonUtils.Between(symLink, "PID_", "&");
-
-                if (SerialUSBIMU.vendors.ContainsKey(new KeyValuePair<string, string>(VendorID, ProductID)))
-                    UsbDeviceArrived?.Invoke(null, obj);
             }
             catch { }
         }

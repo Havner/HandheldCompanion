@@ -6,14 +6,6 @@ namespace ControllerCommon.Utils
 {
     public class DeviceUtils
     {
-        public enum SensorFamily
-        {
-            None = 0,
-            Windows = 1,
-            SerialUSBIMU = 2,
-            Controller = 3
-        }
-
         public static USBDeviceInfo GetUSBDevice(string DeviceId)
         {
             try

@@ -1,12 +1,9 @@
 using ControllerCommon;
 using ControllerCommon.Managers;
 using ControllerCommon.Pipes;
-using ControllerCommon.Platforms;
-using ControllerCommon.Sensors;
 using ControllerCommon.Utils;
 using ControllerService.Targets;
 using Microsoft.Extensions.Hosting;
-using Nefarius.Utilities.DeviceManagement.PnP;
 using Nefarius.ViGEm.Client;
 using System;
 using System.Collections.Generic;
@@ -17,7 +14,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using static ControllerCommon.Managers.PowerManager;
-using static ControllerCommon.Utils.DeviceUtils;
 using IDevice = ControllerCommon.Devices.IDevice;
 
 namespace ControllerService
@@ -45,11 +41,6 @@ namespace ControllerService
         private HIDmode HIDmode = HIDmode.NoController;
         private HIDstatus HIDstatus = HIDstatus.Disconnected;
 
-        // sensor vars
-        private static SensorFamily SensorSelection;
-        private static int SensorPlacement;
-        private static bool SensorPlacementUpsideDown;
-
         // profile vars
         public static Profile currentProfile = new();
 
@@ -73,10 +64,6 @@ namespace ControllerService
             DSUip = configuration.AppSettings.Settings["DSUip"].Value;
             DSUport = int.Parse(configuration.AppSettings.Settings["DSUport"].Value);
 
-            SensorSelection = Enum.Parse<SensorFamily>(configuration.AppSettings.Settings["SensorSelection"].Value);
-            SensorPlacement = int.Parse(configuration.AppSettings.Settings["SensorPlacement"].Value);
-            SensorPlacementUpsideDown = bool.Parse(configuration.AppSettings.Settings["SensorPlacementUpsideDown"].Value);
-
             // verifying ViGEm is installed
             try
             {
@@ -93,12 +80,6 @@ namespace ControllerService
             PipeServer.Disconnected += OnClientDisconnected;
             PipeServer.ClientMessage += OnClientMessage;
 
-            // initialize manager(s)
-            DeviceManager.UsbDeviceArrived += GenericDeviceArrived;
-            DeviceManager.UsbDeviceRemoved += GenericDeviceRemoved;
-            DeviceManager.Start();
-            GenericDeviceArrived(null, null);
-
             // initialize device
             handheldDevice = IDevice.GetDefault();
 
@@ -106,40 +87,6 @@ namespace ControllerService
             DSUServer = new DSUServer(DSUip, DSUport);
             DSUServer.Started += OnDSUStarted;
             DSUServer.Stopped += OnDSUStopped;
-        }
-
-        private SerialUSBIMU sensor;
-        private void GenericDeviceArrived(PnPDevice device, DeviceEventArgs obj)
-        {
-            switch (SensorSelection)
-            {
-                case SensorFamily.SerialUSBIMU:
-                    {
-                        sensor = SerialUSBIMU.GetDefault();
-
-                        if (sensor is null)
-                            break;
-
-                        sensor.Open();
-                        sensor.SetSensorPlacement((SerialPlacement)SensorPlacement, SensorPlacementUpsideDown);
-                    }
-                    break;
-            }
-        }
-
-        private void GenericDeviceRemoved(PnPDevice device, DeviceEventArgs obj)
-        {
-            switch (SensorSelection)
-            {
-                case SensorFamily.SerialUSBIMU:
-                    {
-                        if (sensor is null)
-                            break;
-
-                        sensor.Close();
-                    }
-                    break;
-            }
         }
 
         private void SetControllerMode(HIDmode mode)
@@ -261,25 +208,6 @@ namespace ControllerService
                     }
                     break;
 
-                case PipeCode.CLIENT_CURSOR:
-                    {
-                        PipeClientCursor cursor = (PipeClientCursor)message;
-
-                        switch (cursor.action)
-                        {
-                            case CursorAction.CursorUp:
-                                DS4Touch.OnMouseUp(cursor.x, cursor.y, cursor.button, cursor.flags);
-                                break;
-                            case CursorAction.CursorDown:
-                                DS4Touch.OnMouseDown(cursor.x, cursor.y, cursor.button, cursor.flags);
-                                break;
-                            case CursorAction.CursorMove:
-                                DS4Touch.OnMouseMove(cursor.x, cursor.y, cursor.button, cursor.flags);
-                                break;
-                        }
-                    }
-                    break;
-
                 case PipeCode.CLIENT_SETTINGS:
                     {
                         PipeClientSettings settings = (PipeClientSettings)message;
@@ -349,8 +277,6 @@ namespace ControllerService
 
         private void OnClientDisconnected()
         {
-            DS4Touch.OnMouseUp(0, 0, CursorButton.TouchLeft);
-            DS4Touch.OnMouseUp(0, 0, CursorButton.TouchRight);
         }
 
         private void OnClientConnected()
@@ -435,34 +361,6 @@ namespace ControllerService
                         DSUServer.port = value;
                     }
                     break;
-                case "SensorPlacement":
-                    {
-                        int value = Convert.ToInt32(property);
-                        SensorPlacement = value;
-                        sensor?.SetSensorPlacement((SerialPlacement)SensorPlacement, SensorPlacementUpsideDown);
-                    }
-                    break;
-                case "SensorPlacementUpsideDown":
-                    {
-                        bool value = Convert.ToBoolean(property);
-                        SensorPlacementUpsideDown = value;
-                        sensor?.SetSensorPlacement((SerialPlacement)SensorPlacement, SensorPlacementUpsideDown);
-                    }
-                    break;
-                case "SensorSelection":
-                    {
-                        SensorFamily value = Enum.Parse<SensorFamily>(property);
-
-                        if (SensorSelection == value)
-                            return;
-
-                        SensorSelection = value;
-
-                        IMU.Stop();
-                        IMU.SetSensorFamily(SensorSelection);
-                        IMU.Start();
-                    }
-                    break;
             }
         }
 
@@ -470,6 +368,9 @@ namespace ControllerService
         {
             // start master timer
             TimerManager.Start();
+
+            // start listening from controller
+            IMU.Start();
 
             // start DSUClient
             if (DSUEnabled)
@@ -520,18 +421,10 @@ namespace ControllerService
             {
                 case SystemStatus.SystemReady:
                     {
-                        switch (prevStatus)
+                        if (prevStatus == SystemStatus.SystemPending)
                         {
-                            case SystemStatus.SystemBooting:
-                                // cold boot
-                                IMU.SetSensorFamily(SensorSelection);
-                                IMU.Start();
-                                break;
-                            case SystemStatus.SystemPending:
-                                // resume from sleep
-                                Thread.Sleep(6000);
-                                IMU.Restart(true);
-                                break;
+                            // resume from sleep
+                            Thread.Sleep(6000);
                         }
 
                         // check if service/system was suspended previously
@@ -563,9 +456,6 @@ namespace ControllerService
 
                         // clear pipes
                         PipeServer.ClearQueue();
-
-                        // stop sensors
-                        IMU.Stop();
 
                         // reset vigem
                         ResetViGEm();

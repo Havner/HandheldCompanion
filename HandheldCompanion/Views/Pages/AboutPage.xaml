@@ -80,57 +80,6 @@
                 </Grid>
             </Border>
 
-            <!--  Sensor specifications  -->
-            <Expander
-                HorizontalAlignment="Stretch"
-                Expanded="Expander_Expanded"
-                IsExpanded="True">
-                <Expander.Header>
-                    <DockPanel Margin="0,12,12,12">
-                        <ui:FontIcon
-                            Height="40"
-                            HorizontalAlignment="Center"
-                            FontFamily="{DynamicResource SymbolThemeFontFamily}"
-                            Glyph="&#xE950;" />
-
-                        <ui:SimpleStackPanel Margin="12,0,0,0" VerticalAlignment="Center">
-                            <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Static resx:Resources.AboutPage_SensorSpecification}" />
-                        </ui:SimpleStackPanel>
-                    </DockPanel>
-                </Expander.Header>
-
-                <Expander.Content>
-                    <Grid FlowDirection="LeftToRight">
-                        <ui:SimpleStackPanel Margin="30,0,0,0" Spacing="12">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="120" />
-                                    <ColumnDefinition Width="5*" MinWidth="200" />
-                                </Grid.ColumnDefinitions>
-
-                                <ui:SimpleStackPanel Spacing="12">
-                                    <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Static resx:Resources.AboutPage_SensorInternal}" />
-                                    <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Static resx:Resources.AboutPage_SensorExternal}" />
-                                </ui:SimpleStackPanel>
-
-                                <ui:SimpleStackPanel Grid.Column="1" Spacing="12">
-                                    <TextBlock
-                                        Name="SensorInternal"
-                                        Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
-                                        Style="{StaticResource BodyTextBlockStyle}"
-                                        Text="{x:Static resx:Resources.AboutPage_NotApplicable}" />
-                                    <TextBlock
-                                        Name="SensorExternal"
-                                        Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
-                                        Style="{StaticResource BodyTextBlockStyle}"
-                                        Text="{x:Static resx:Resources.AboutPage_NotApplicable}" />
-                                </ui:SimpleStackPanel>
-                            </Grid>
-                        </ui:SimpleStackPanel>
-                    </Grid>
-                </Expander.Content>
-            </Expander>
-
             <!--  Service  -->
             <Expander
                 HorizontalAlignment="Stretch"

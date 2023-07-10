@@ -12,7 +12,7 @@ namespace HandheldCompanion.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.5.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.6.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -193,42 +193,6 @@ namespace HandheldCompanion.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1")]
-        public int OverlayTrackpadsAlignment {
-            get {
-                return ((int)(this["OverlayTrackpadsAlignment"]));
-            }
-            set {
-                this["OverlayTrackpadsAlignment"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.25")]
-        public double OverlayTrackpadsOpacity {
-            get {
-                return ((double)(this["OverlayTrackpadsOpacity"]));
-            }
-            set {
-                this["OverlayTrackpadsOpacity"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("250")]
-        public double OverlayTrackpadsSize {
-            get {
-                return ((double)(this["OverlayTrackpadsSize"]));
-            }
-            set {
-                this["OverlayTrackpadsSize"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public double OverlayControllerRestingPitch {
             get {
@@ -260,42 +224,6 @@ namespace HandheldCompanion.Properties {
             }
             set {
                 this["OverlayControllerRestingRoll"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool SensorPlacementUpsideDown {
-            get {
-                return ((bool)(this["SensorPlacementUpsideDown"]));
-            }
-            set {
-                this["SensorPlacementUpsideDown"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
-        public int SensorSelection {
-            get {
-                return ((int)(this["SensorSelection"]));
-            }
-            set {
-                this["SensorSelection"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int SensorPlacement {
-            get {
-                return ((int)(this["SensorPlacement"]));
-            }
-            set {
-                this["SensorPlacement"] = value;
             }
         }
         

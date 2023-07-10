@@ -46,20 +46,11 @@ namespace HandheldCompanion.Views.Pages
                     case "OverlayRenderAntialiasing":
                         Toggle_RenderAA.IsOn = Convert.ToBoolean(value);
                         break;
-                    case "OverlayTrackpadsSize":
-                        SliderTrackpadsSize.Value = Convert.ToDouble(value);
-                        break;
                     case "OverlayFaceCamera":
                         Toggle_FaceCamera.IsOn = Convert.ToBoolean(value);
                         break;
                     case "OverlayControllerRestingPitch":
                         Slider_RestingPitch.Value = Convert.ToDouble(value);
-                        break;
-                    case "OverlayTrackpadsAlignment":
-                        UpdateUI_TrackpadsPosition(Convert.ToInt32(value));
-                        break;
-                    case "OverlayTrackpadsOpacity":
-                        SliderTrackpadsOpacity.Value = Convert.ToDouble(value);
                         break;
                     case "OverlayControllerOpacity":
                         SliderControllerOpacity.Value = Convert.ToDouble(value);
@@ -88,30 +79,6 @@ namespace HandheldCompanion.Views.Pages
 
         public void Page_Closed()
         {
-        }
-
-        private void UpdateUI_TrackpadsPosition(int trackpadsAlignment)
-        {
-            foreach (Button button in OverlayTrackpadsAlignment.Children)
-            {
-                if (int.Parse((string)button.Tag) == trackpadsAlignment)
-                    button.Style = Application.Current.FindResource("AccentButtonStyle") as Style;
-                else
-                    button.Style = Application.Current.FindResource("DefaultButtonStyle") as Style;
-            }
-
-            switch (trackpadsAlignment)
-            {
-                case 0:
-                    MainWindow.overlayTrackpad.VerticalAlignment = VerticalAlignment.Top;
-                    break;
-                case 1:
-                    MainWindow.overlayTrackpad.VerticalAlignment = VerticalAlignment.Center;
-                    break;
-                case 2:
-                    MainWindow.overlayTrackpad.VerticalAlignment = VerticalAlignment.Bottom;
-                    break;
-            }
         }
 
         private void UpdateUI_ControllerPosition(int controllerAlignment)
@@ -175,19 +142,6 @@ namespace HandheldCompanion.Views.Pages
             SettingsManager.SetProperty("OverlayControllerSize", SliderControllerSize.Value);
         }
 
-        private void SliderTrackpadsSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            MainWindow.overlayTrackpad.LeftTrackpad.Width = SliderTrackpadsSize.Value;
-            MainWindow.overlayTrackpad.RightTrackpad.Width = SliderTrackpadsSize.Value;
-            MainWindow.overlayTrackpad.Height = SliderTrackpadsSize.Value;
-            MainWindow.overlayTrackpad.HorizontalAlignment = HorizontalAlignment.Stretch;
-
-            if (!IsLoaded)
-                return;
-
-            SettingsManager.SetProperty("OverlayTrackpadsSize", SliderTrackpadsSize.Value);
-        }
-
         private void OverlayModel_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // update overlay
@@ -208,28 +162,6 @@ namespace HandheldCompanion.Views.Pages
                 return;
 
             SettingsManager.SetProperty("OverlayControllerAlignment", Tag);
-        }
-
-        private void TrackpadsAlignment_Click(object sender, RoutedEventArgs e)
-        {
-            int Tag = int.Parse((string)((Button)sender).Tag);
-            UpdateUI_TrackpadsPosition(Tag);
-
-            if (!IsLoaded)
-                return;
-
-            SettingsManager.SetProperty("OverlayTrackpadsAlignment", Tag);
-        }
-
-        private void SliderTrackpadsOpacity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            MainWindow.overlayTrackpad.LeftTrackpad.Opacity = SliderTrackpadsOpacity.Value;
-            MainWindow.overlayTrackpad.RightTrackpad.Opacity = SliderTrackpadsOpacity.Value;
-
-            if (!IsLoaded)
-                return;
-
-            SettingsManager.SetProperty("OverlayTrackpadsOpacity", SliderTrackpadsOpacity.Value);
         }
 
         private void Expander_Expanded(object sender, RoutedEventArgs e)

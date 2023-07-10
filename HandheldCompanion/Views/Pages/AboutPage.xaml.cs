@@ -41,9 +41,6 @@ namespace HandheldCompanion.Views.Pages
 
                 VersionValue.Text = string.Format("{0}.{1}", MainWindow.fileVersionInfo.FileMajorPart, MainWindow.fileVersionInfo.FileMinorPart);
 
-                SensorInternal.Text = MainWindow.CurrentDevice.Capacities.HasFlag(ControllerCommon.Devices.DeviceCapacities.InternalSensor) ? MainWindow.CurrentDevice.InternalSensorName : string.Empty;
-                SensorExternal.Text = MainWindow.CurrentDevice.Capacities.HasFlag(ControllerCommon.Devices.DeviceCapacities.ExternalSensor) ? MainWindow.CurrentDevice.ExternalSensorName : string.Empty;
-
                 if (MainWindow.CurrentDevice.GetType() == typeof(DefaultDevice))
                 {
                     WarningBorder.Visibility = Visibility.Visible;

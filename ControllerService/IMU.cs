@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Numerics;
 using System.Threading;
-using static ControllerCommon.Utils.DeviceUtils;
 
 namespace ControllerService
 {
@@ -43,21 +42,15 @@ namespace ControllerService
 
         static IMU()
         {
+            Gyrometer = new IMUGyrometer();
+            Accelerometer = new IMUAccelerometer();
+
             // initialize sensorfusion and madgwick
             sensorFusion = new SensorFusion();
             madgwickAHRS = new MadgwickAHRS(0.01f, 0.1f);
 
             // initialize stopwatch
             stopwatch = new Stopwatch();
-        }
-
-        public static void SetSensorFamily(SensorFamily sensorFamily)
-        {
-            // initialize sensors
-            var UpdateInterval = TimerManager.GetPeriod();
-
-            Gyrometer = new IMUGyrometer(sensorFamily, UpdateInterval);
-            Accelerometer = new IMUAccelerometer(sensorFamily, UpdateInterval);
         }
 
         public static void Start()
@@ -75,29 +68,12 @@ namespace ControllerService
             TimerManager.Tick -= Tick;
 
             // halt sensors
-            Gyrometer?.StopListening();
-            Accelerometer?.StopListening();
+            Gyrometer?.Stop();
+            Accelerometer?.Stop();
 
             stopwatch.Stop();
 
             IsInitialized = false;
-        }
-
-        public static void Restart(bool update)
-        {
-            Stop();
-
-            // force update sensors
-            if (update)
-                Update();
-
-            Start();
-        }
-
-        public static void Update()
-        {
-            Gyrometer.UpdateSensor();
-            Accelerometer.UpdateSensor();
         }
 
         public static void UpdateMovements(ControllerMovements movements)
@@ -134,16 +110,6 @@ namespace ControllerService
                         case XInputSensorFlags.Centered:
                             AngularVelocity[flags] = Gyrometer.GetCurrentReading(true);
                             Acceleration[flags] = Accelerometer.GetCurrentReading(true);
-                            break;
-
-                        case XInputSensorFlags.WithRatio:
-                            AngularVelocity[flags] = Gyrometer.GetCurrentReading(false, true);
-                            Acceleration[flags] = Accelerometer.GetCurrentReading(false, false);
-                            break;
-
-                        case XInputSensorFlags.CenteredRatio:
-                            AngularVelocity[flags] = Gyrometer.GetCurrentReading(true, true);
-                            Acceleration[flags] = Accelerometer.GetCurrentReading(true, false);
                             break;
 
                         case XInputSensorFlags.CenteredRaw:

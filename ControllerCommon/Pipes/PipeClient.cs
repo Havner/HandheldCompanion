@@ -92,7 +92,7 @@ namespace ControllerCommon.Pipes
                 if (!IsConnected)
                 {
                     Type nodeType = message.GetType();
-                    if (nodeType == typeof(PipeClientCursor))
+                    if (nodeType == typeof(PipeClientMovements))
                         return;
                     else if (nodeType == typeof(PipeClientInputs))
                         return;

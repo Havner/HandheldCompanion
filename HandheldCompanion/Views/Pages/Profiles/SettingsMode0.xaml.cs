@@ -41,9 +41,6 @@ namespace HandheldCompanion.Views.Pages.Profiles
             SliderSensitivityX.Value = ProfilesPage.selectedProfile.MotionSensivityX;
             SliderSensitivityY.Value = ProfilesPage.selectedProfile.MotionSensivityY;
             tb_ProfileAimingDownSightsMultiplier.Value = ProfilesPage.selectedProfile.AimingSightsMultiplier;
-            Toggle_FlickStick.IsOn = ProfilesPage.selectedProfile.FlickstickEnabled;
-            tb_ProfileFlickDuration.Value = ProfilesPage.selectedProfile.FlickstickDuration * 1000;
-            tb_ProfileStickSensitivity.Value = ProfilesPage.selectedProfile.FlickstickSensivity;
 
             // todo: improve me ?
             ProfilesPageHotkey.inputsChord.State = ProfilesPage.selectedProfile.AimingSightsTrigger.Clone() as ButtonState;
@@ -223,30 +220,6 @@ namespace HandheldCompanion.Views.Pages.Profiles
                 return;
 
             ProfilesPage.selectedProfile.AimingSightsMultiplier = (float)tb_ProfileAimingDownSightsMultiplier.Value;
-        }
-
-        private void Toggle_FlickStick_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (ProfilesPage.selectedProfile is null)
-                return;
-
-            ProfilesPage.selectedProfile.FlickstickEnabled = (bool)Toggle_FlickStick.IsOn;
-        }
-
-        private void SliderFlickDuration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (ProfilesPage.selectedProfile is null)
-                return;
-
-            ProfilesPage.selectedProfile.FlickstickDuration = (float)tb_ProfileFlickDuration.Value / 1000;
-        }
-
-        private void SliderStickSensivity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (ProfilesPage.selectedProfile is null)
-                return;
-
-            ProfilesPage.selectedProfile.FlickstickSensivity = (float)tb_ProfileStickSensitivity.Value;
         }
 
         private void TriggerCreated(Hotkey hotkey)

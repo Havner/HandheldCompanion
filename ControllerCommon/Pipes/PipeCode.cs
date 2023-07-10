@@ -11,9 +11,6 @@ namespace ControllerCommon.Pipes
         SERVER_TOAST = 2,                   // Sent to client to display toast notification.
                                             // args: title, message
 
-        CLIENT_CURSOR = 3,                  // Sent to server when mouse click is up
-                                            // args: cursor x, cursor Y
-
         SERVER_SETTINGS = 6,                // Sent to client during initialization
                                             // args: ...
 
@@ -26,9 +23,6 @@ namespace ControllerCommon.Pipes
         CLIENT_CONTROLLER_CONNECT = 9,      // Sent to server to share current controller details
 
         CLIENT_CONTROLLER_DISCONNECT = 11,  // Sent to server to warn current controller was disconnected
-
-        CLIENT_CONSOLE = 12,                // Sent from client to client to pass parameters
-                                            // args: string[] parameters
 
         SERVER_SENSOR = 13,                 // Sent to client to share sensor values
                                             // args: ...
@@ -43,8 +37,5 @@ namespace ControllerCommon.Pipes
                                             // args: ...
 
         CLIENT_MOVEMENTS = 17,              // Sent to server to inform on controller/device movements
-
-        CLIENT_CLEARINDEX = 18,             // Sent to server to clear all hidden controllers
-                                            // args: ...
     }
 }

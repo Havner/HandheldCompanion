@@ -12,7 +12,6 @@ namespace ControllerService.Targets
 {
     public abstract class ViGEmTarget : IDisposable
     {
-        public FlickStick flickStick;
         protected ControllerState Inputs = new();
 
         public HIDmode HID = HIDmode.NoController;
@@ -32,8 +31,6 @@ namespace ControllerService.Targets
 
         protected ViGEmTarget()
         {
-            // initialize flick stick
-            flickStick = new FlickStick();
         }
 
         public override string ToString()
@@ -115,28 +112,9 @@ namespace ControllerService.Targets
                             {
                                 default:
                                 case MotionOutput.RightStick:
+                                    RightThumb.X = (short)(Math.Clamp(RightThumb.X + GamepadThumb.X, short.MinValue, short.MaxValue));
+                                    RightThumb.Y = (short)(Math.Clamp(RightThumb.Y + GamepadThumb.Y, short.MinValue, short.MaxValue));
 
-                                    if (ControllerService.currentProfile.FlickstickEnabled)
-                                    {
-                                        // Flick Stick:
-                                        // - Detect flicking
-                                        // - Filter stick input
-                                        // - Determine and compute either flick or stick output
-                                        float FlickStickX = flickStick.Handle(RightThumb,
-                                                                              ControllerService.currentProfile.FlickstickDuration,
-                                                                              ControllerService.currentProfile.FlickstickSensivity,
-                                                                              IMU.TotalMilliseconds);
-
-                                        // X input combines motion controls plus flick stick result
-                                        // Y input only from motion controls
-                                        RightThumb.X = (short)(Math.Clamp(GamepadThumb.X - FlickStickX, short.MinValue, short.MaxValue));
-                                        RightThumb.Y = (short)(Math.Clamp(GamepadThumb.Y, short.MinValue, short.MaxValue));
-                                    }
-                                    else
-                                    {
-                                        RightThumb.X = (short)(Math.Clamp(RightThumb.X + GamepadThumb.X, short.MinValue, short.MaxValue));
-                                        RightThumb.Y = (short)(Math.Clamp(RightThumb.Y + GamepadThumb.Y, short.MinValue, short.MaxValue));
-                                    }
                                     break;
 
                                 case MotionOutput.LeftStick:
