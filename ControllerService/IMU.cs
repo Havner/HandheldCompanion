@@ -24,7 +24,6 @@ namespace ControllerService
         public static MadgwickAHRS madgwickAHRS;
 
         public static Stopwatch stopwatch;
-        public static long CurrentMicroseconds;
 
         public static double TotalMilliseconds;
         public static double UpdateTimePreviousMilliseconds;
@@ -67,10 +66,6 @@ namespace ControllerService
         {
             TimerManager.Tick -= Tick;
 
-            // halt sensors
-            Gyrometer?.Stop();
-            Accelerometer?.Stop();
-
             stopwatch.Stop();
 
             IsInitialized = false;
@@ -87,7 +82,6 @@ namespace ControllerService
             if (Monitor.TryEnter(updateLock))
             {
                 // update timestamp
-                CurrentMicroseconds = stopwatch.ElapsedMilliseconds * 1000L;
                 TotalMilliseconds = stopwatch.Elapsed.TotalMilliseconds;
                 DeltaSeconds = (TotalMilliseconds - UpdateTimePreviousMilliseconds) / 1000L;
                 UpdateTimePreviousMilliseconds = TotalMilliseconds;
@@ -95,28 +89,8 @@ namespace ControllerService
                 // update reading(s)
                 foreach (XInputSensorFlags flags in (XInputSensorFlags[])Enum.GetValues(typeof(XInputSensorFlags)))
                 {
-                    switch (flags)
-                    {
-                        case XInputSensorFlags.Default:
-                            AngularVelocity[flags] = Gyrometer.GetCurrentReading();
-                            Acceleration[flags] = Accelerometer.GetCurrentReading();
-                            break;
-
-                        case XInputSensorFlags.RawValue:
-                            AngularVelocity[flags] = Gyrometer.GetCurrentReadingRaw();
-                            Acceleration[flags] = Accelerometer.GetCurrentReadingRaw();
-                            break;
-
-                        case XInputSensorFlags.Centered:
-                            AngularVelocity[flags] = Gyrometer.GetCurrentReading(true);
-                            Acceleration[flags] = Accelerometer.GetCurrentReading(true);
-                            break;
-
-                        case XInputSensorFlags.CenteredRaw:
-                            AngularVelocity[flags] = Gyrometer.GetCurrentReadingRaw(true);
-                            Acceleration[flags] = Accelerometer.GetCurrentReadingRaw(true);
-                            break;
-                    }
+                    AngularVelocity[flags] = Gyrometer.GetCurrentReading(flags);
+                    Acceleration[flags] = Accelerometer.GetCurrentReading(flags);
                 }
 
                 // update sensorFusion
@@ -125,13 +99,13 @@ namespace ControllerService
                     ControllerService.currentProfile.MotionInput == MotionInput.JoystickSteering ||
                     ControllerService.CurrentTag == "SettingsMode1")
                 {
-                    sensorFusion.UpdateReport(TotalMilliseconds, DeltaSeconds, AngularVelocity[XInputSensorFlags.Centered], Acceleration[XInputSensorFlags.Default]);
+                    sensorFusion.UpdateReport(TotalMilliseconds, DeltaSeconds, AngularVelocity[XInputSensorFlags.Default], Acceleration[XInputSensorFlags.Default]);
                 }
 
                 switch (ControllerService.CurrentTag)
                 {
                     case "SettingsMode0":
-                        PipeServer.SendMessage(new PipeSensor(AngularVelocity[XInputSensorFlags.Centered], SensorType.Girometer));
+                        PipeServer.SendMessage(new PipeSensor(AngularVelocity[XInputSensorFlags.Default], SensorType.Girometer));
                         break;
 
                     case "SettingsMode1":
@@ -143,10 +117,11 @@ namespace ControllerService
                 {
                     case 0: // Visible
                         var AngularVelocityRad = new Vector3();
-                        AngularVelocityRad.X = -InputUtils.deg2rad(AngularVelocity[XInputSensorFlags.CenteredRaw].X);
-                        AngularVelocityRad.Y = -InputUtils.deg2rad(AngularVelocity[XInputSensorFlags.CenteredRaw].Y);
-                        AngularVelocityRad.Z = -InputUtils.deg2rad(AngularVelocity[XInputSensorFlags.CenteredRaw].Z);
-                        madgwickAHRS.UpdateReport(AngularVelocityRad.X, AngularVelocityRad.Y, AngularVelocityRad.Z, -Acceleration[XInputSensorFlags.RawValue].X, Acceleration[XInputSensorFlags.RawValue].Y, Acceleration[XInputSensorFlags.RawValue].Z, DeltaSeconds);
+                        AngularVelocityRad.X = -InputUtils.deg2rad(AngularVelocity[XInputSensorFlags.RawValue].X);
+                        AngularVelocityRad.Y = -InputUtils.deg2rad(AngularVelocity[XInputSensorFlags.RawValue].Y);
+                        AngularVelocityRad.Z = -InputUtils.deg2rad(AngularVelocity[XInputSensorFlags.RawValue].Z);
+                        madgwickAHRS.UpdateReport(AngularVelocityRad.X, AngularVelocityRad.Y, AngularVelocityRad.Z,
+                            -Acceleration[XInputSensorFlags.RawValue].X, Acceleration[XInputSensorFlags.RawValue].Y, Acceleration[XInputSensorFlags.RawValue].Z, DeltaSeconds);
 
                         PipeServer.SendMessage(new PipeSensor(madgwickAHRS.GetEuler(), madgwickAHRS.GetQuaternion(), SensorType.Quaternion));
                         break;

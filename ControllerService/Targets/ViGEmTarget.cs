@@ -79,11 +79,11 @@ namespace ControllerService.Targets
                                     Angular = new Vector2((float)IMU.sensorFusion.CameraYawDelta, (float)IMU.sensorFusion.CameraPitchDelta);
                                     break;
                                 case MotionInput.AutoRollYawSwap:
-                                    Angular = InputUtils.AutoRollYawSwap(IMU.sensorFusion.GravityVectorSimple, IMU.AngularVelocity[XInputSensorFlags.Centered]);
+                                    Angular = InputUtils.AutoRollYawSwap(IMU.sensorFusion.GravityVectorSimple, IMU.AngularVelocity[XInputSensorFlags.Default]);
                                     break;
                                 default:
                                 case MotionInput.JoystickCamera:
-                                    Angular = new Vector2(-IMU.AngularVelocity[XInputSensorFlags.Centered].Z, IMU.AngularVelocity[XInputSensorFlags.Centered].X);
+                                    Angular = new Vector2(-IMU.AngularVelocity[XInputSensorFlags.Default].Z, IMU.AngularVelocity[XInputSensorFlags.Default].X);
                                     break;
                             }
 

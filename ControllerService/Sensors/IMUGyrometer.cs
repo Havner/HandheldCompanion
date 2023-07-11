@@ -19,21 +19,24 @@ namespace ControllerService.Sensors
 
         public void ReadingChanged(float GyroRoll, float GyroPitch, float GyroYaw)
         {
-            this.reading.X = this.reading_fixed.X = GyroRoll;
-            this.reading.Y = this.reading_fixed.Y = GyroPitch;
-            this.reading.Z = this.reading_fixed.Z = GyroYaw;
-
-            base.ReadingChanged();
+            this.reading.X = GyroRoll;
+            this.reading.Y = GyroPitch;
+            this.reading.Z = GyroYaw;
         }
 
-        public new Vector3 GetCurrentReading(bool center = false)
+        public new Vector3 GetCurrentReading(XInputSensorFlags flags)
         {
-            Vector3 reading = new Vector3()
+            Vector3 reading;
+
+            switch (flags)
             {
-                X = center ? this.reading_fixed.X : this.reading.X,
-                Y = center ? this.reading_fixed.Y : this.reading.Y,
-                Z = center ? this.reading_fixed.Z : this.reading.Z
-            };
+                case XInputSensorFlags.RawValue:
+                    return this.reading;
+                default:
+                case XInputSensorFlags.Default:
+                    reading = this.reading;
+                    break;
+            }
 
             reading *= ControllerService.currentProfile.GyrometerMultiplier;
 

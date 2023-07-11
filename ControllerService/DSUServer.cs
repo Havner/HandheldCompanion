@@ -625,7 +625,7 @@ namespace ControllerService
                 }
 
                 //gyroscope
-                if (IMU.AngularVelocity.TryGetValue(XInputSensorFlags.Centered, out Vector3 AngularVector) && AngularVector != Vector3.Zero)
+                if (IMU.AngularVelocity.TryGetValue(XInputSensorFlags.Default, out Vector3 AngularVector) && AngularVector != Vector3.Zero)
                 {
                     // angVelPitch
                     Array.Copy(BitConverter.GetBytes(AngularVector.X), 0, outputData, outIdx, 4);
