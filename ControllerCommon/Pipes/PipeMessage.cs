@@ -1,5 +1,5 @@
 using ControllerCommon.Controllers;
-using ControllerCommon.Platforms;
+using ControllerCommon.Managers;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -82,8 +82,9 @@ namespace ControllerCommon.Pipes
                     TypeNameHandling = TypeNameHandling.All
                 });
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                LogManager.LogInformation("Failed to deserialize profile: {0}", e.Message);
                 return new Profile();
             }
         }
