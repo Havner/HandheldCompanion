@@ -70,6 +70,7 @@ namespace HandheldCompanion.Views
 
         public static string InstallPath;
         public static string SettingsPath;
+        public static string CurrentPageName;
 
         public MainWindow(FileVersionInfo _fileVersionInfo, Assembly CurrentAssembly)
         {
@@ -164,6 +165,7 @@ namespace HandheldCompanion.Views
 
             ProfileManager.Start();
             ControllerManager.Start();
+            MotionManager.Start();
 
             HotkeysManager.CommandExecuted += HotkeysManager_CommandExecuted;
             HotkeysManager.Start();
@@ -635,6 +637,7 @@ namespace HandheldCompanion.Views
             if (PipeClient.IsConnected)
                 PipeClient.Close();
 
+            MotionManager.Stop();
             ControllerManager.Stop();
             HotkeysManager.Stop();
             InputsManager.Stop();
@@ -745,13 +748,14 @@ namespace HandheldCompanion.Views
 
             if (ContentFrame.SourcePageType is not null)
             {
-                var preNavPageType = ContentFrame.CurrentSourcePageType;
-                var preNavPageName = preNavPageType.Name;
-                PipeClient.SendMessage(new PipeNavigation((string)preNavPageName));
+                CurrentPageName = ContentFrame.CurrentSourcePageType.Name;
+                //var preNavPageType = ContentFrame.CurrentSourcePageType;
+                //var preNavPageName = preNavPageType.Name;
+                //PipeClient.SendMessage(new PipeNavigation((string)preNavPageName));
 
                 var NavViewItem = navView.MenuItems
                     .OfType<NavigationViewItem>()
-                    .Where(n => n.Tag.Equals(preNavPageName)).FirstOrDefault();
+                    .Where(n => n.Tag.Equals(CurrentPageName)).FirstOrDefault();
 
                 if (!(NavViewItem is null))
                     navView.SelectedItem = NavViewItem;

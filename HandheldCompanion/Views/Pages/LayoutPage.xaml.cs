@@ -50,8 +50,8 @@ namespace HandheldCompanion.Views.Pages
             this.Tag = Tag;
 
             // manage layout pages visibility
-            navTrackpads.Visibility = MainWindow.CurrentDevice.Capacities.HasFlag(DeviceCapacities.Trackpads) ? Visibility.Visible : Visibility.Collapsed;
-            navGyro.Visibility = MainWindow.CurrentDevice.Capacities.HasFlag(DeviceCapacities.ControllerSensor) ? Visibility.Visible : Visibility.Collapsed;
+            navTrackpads.Visibility = MainWindow.CurrentDevice.HasTrackpads() ? Visibility.Visible : Visibility.Collapsed;
+            navGyro.Visibility = MainWindow.CurrentDevice.HasMotionSensor() ? Visibility.Visible : Visibility.Collapsed;
 
             // create controller related pages
             this._pages = new()
@@ -83,7 +83,7 @@ namespace HandheldCompanion.Views.Pages
                 AxisMapping.Deleted += (sender) => AxisMapping_Deleted((AxisLayoutFlags)sender);
             }
 
-            foreach (AxisMapping axisMapping in joysticksPage.MappingAxis.Values.Union(trackpadsPage.MappingAxis.Values))
+            foreach (AxisMapping axisMapping in joysticksPage.MappingAxis.Values.Union(trackpadsPage.MappingAxis.Values).Union(gyroPage.MappingAxis.Values))
             {
                 axisMapping.Updated += (sender, action) => AxisMapping_Updated((AxisLayoutFlags)sender, action);
                 axisMapping.Deleted += (sender) => AxisMapping_Deleted((AxisLayoutFlags)sender);

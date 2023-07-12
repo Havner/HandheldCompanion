@@ -20,22 +20,7 @@ namespace ControllerCommon.Pipes
         CLIENT_SETTINGS = 8,                // Sent to server to update settings
                                             // args: ...
 
-        CLIENT_CONTROLLER_CONNECT = 9,      // Sent to server to share current controller details
-
-        CLIENT_CONTROLLER_DISCONNECT = 11,  // Sent to server to warn current controller was disconnected
-
-        SERVER_SENSOR = 13,                 // Sent to client to share sensor values
-                                            // args: ...
-
-        CLIENT_NAVIGATED = 14,              // Sent to server to share current navigated page
-                                            // args: ...
-
-        CLIENT_OVERLAY = 15,                // Sent to server to share current overlay status
-                                            // args: ...
-
         SERVER_VIBRATION = 16,              // Sent to client to notify a vibration feedback arrived
                                             // args: ...
-
-        CLIENT_MOVEMENTS = 17,              // Sent to server to inform on controller/device movements
     }
 }

@@ -68,8 +68,7 @@
             <ui:NavigationViewItem
                 Name="navTrackpads"
                 Content="Trackpads"
-                Tag="TrackpadsPage"
-                Visibility="Collapsed">
+                Tag="TrackpadsPage">
                 <ui:NavigationViewItem.Icon>
                     <ui:FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xEFA5;" />
                 </ui:NavigationViewItem.Icon>
@@ -78,9 +77,7 @@
             <ui:NavigationViewItem
                 Name="navGyro"
                 Content="Gyro"
-                IsEnabled="False"
-                Tag="GyroPage"
-                Visibility="Collapsed">
+                Tag="GyroPage">
                 <ui:NavigationViewItem.Icon>
                     <ui:FontIcon FontFamily="{StaticResource SymbolThemeFontFamily}" Glyph="&#xE777;" />
                 </ui:NavigationViewItem.Icon>

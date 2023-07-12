@@ -57,8 +57,7 @@ namespace HandheldCompanion.Managers
 
             // Special, UI hotkeys
             { 60, new InputsHotkey(InputsHotkeyType.Embedded, "\uEDE3", "shortcutProfilesPage@",         true,  true,  string.Empty,           false, false) },
-            { 61, new InputsHotkey(InputsHotkeyType.Embedded, "\uEDE3", "shortcutProfilesPage@@",        true,  true,  string.Empty,           false, false) },
-            { 62, new InputsHotkey(InputsHotkeyType.Embedded, "\uEDE3", "shortcutProfilesSettingsMode0", true,  true,  string.Empty,           false, false) },
+            { 61, new InputsHotkey(InputsHotkeyType.Embedded, "\uEDE3", "shortcutProfilesSettingsMode0", true,  true,  string.Empty,           false, false) },
         };
 
         public string Glyph { get; set; }

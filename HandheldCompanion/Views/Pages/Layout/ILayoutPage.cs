@@ -15,6 +15,7 @@ namespace HandheldCompanion.Views.Pages
         public Dictionary<AxisLayoutFlags, AxisMapping> MappingAxis = new();
         public Dictionary<AxisLayoutFlags, TriggerMapping> MappingTriggers = new();
 
+        // TODO: create common variant from the above 3 dicts
         public virtual void UpdateController(IController controller)
         {
         }

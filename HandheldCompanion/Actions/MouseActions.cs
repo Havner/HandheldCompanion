@@ -157,9 +157,10 @@ namespace HandheldCompanion.Actions
 
             switch (layout.flags)
             {
-                default:
                 case AxisLayoutFlags.LeftStick:
                 case AxisLayoutFlags.RightStick:
+                case AxisLayoutFlags.Gyroscope:
+                default:
                     {
                         // convert to <0.0-1.0> values
                         deltaVector = layout.vector / short.MaxValue;

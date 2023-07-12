@@ -46,8 +46,8 @@ namespace HandheldCompanion.Controllers
             Details = details;
             Details.isHooked = true;
 
-            Capacities |= ControllerCapacities.Gyroscope;
-            Capacities |= ControllerCapacities.Accelerometer;
+            Capabilities |= ControllerCapabilities.MotionSensor;
+            Capabilities |= ControllerCapabilities.Trackpads;
 
             try
             {
@@ -85,6 +85,7 @@ namespace HandheldCompanion.Controllers
 
             SourceAxis.Add(AxisLayoutFlags.LeftPad);
             SourceAxis.Add(AxisLayoutFlags.RightPad);
+            SourceAxis.Add(AxisLayoutFlags.Gyroscope);
         }
 
         private async void ThreadLoop(object? obj)
@@ -238,26 +239,20 @@ namespace HandheldCompanion.Controllers
                     Inputs.ButtonState[ButtonFlags.RightPadClickLeft] = true;
             }
 
+            // TODO: why Z/Y swapped?
+            Inputs.GyroState.AccelerometerX = -(float)input.State.AxesState[NeptuneControllerAxis.GyroAccelX] / short.MaxValue * 2.0f;
+            Inputs.GyroState.AccelerometerY = -(float)input.State.AxesState[NeptuneControllerAxis.GyroAccelZ] / short.MaxValue * 2.0f;
+            Inputs.GyroState.AccelerometerZ = -(float)input.State.AxesState[NeptuneControllerAxis.GyroAccelY] / short.MaxValue * 2.0f;
+
+            // TODO: why Roll/Pitch swapped?
+            Inputs.GyroState.GyroscopeX =  (float)input.State.AxesState[NeptuneControllerAxis.GyroPitch] / short.MaxValue * 2000.0f;  // Roll
+            Inputs.GyroState.GyroscopeY = -(float)input.State.AxesState[NeptuneControllerAxis.GyroRoll] / short.MaxValue * 2000.0f;   // Pitch
+            Inputs.GyroState.GyroscopeZ = -(float)input.State.AxesState[NeptuneControllerAxis.GyroYaw] / short.MaxValue * 2000.0f;    // Yaw
+
             // update states
             prevState = input.State;
 
             base.UpdateInputs(ticks);
-        }
-
-        public override void UpdateMovements(long ticks)
-        {
-            if (input is null)
-                return;
-
-            Movements.GyroAccelZ = -(float)input.State.AxesState[NeptuneControllerAxis.GyroAccelY] / short.MaxValue * 2.0f;
-            Movements.GyroAccelY = -(float)input.State.AxesState[NeptuneControllerAxis.GyroAccelZ] / short.MaxValue * 2.0f;
-            Movements.GyroAccelX = -(float)input.State.AxesState[NeptuneControllerAxis.GyroAccelX] / short.MaxValue * 2.0f;
-
-            Movements.GyroPitch = -(float)input.State.AxesState[NeptuneControllerAxis.GyroRoll] / short.MaxValue * 2000.0f;
-            Movements.GyroRoll = (float)input.State.AxesState[NeptuneControllerAxis.GyroPitch] / short.MaxValue * 2000.0f;
-            Movements.GyroYaw = -(float)input.State.AxesState[NeptuneControllerAxis.GyroYaw] / short.MaxValue * 2000.0f;
-
-            base.UpdateMovements(ticks);
         }
 
         public override bool IsConnected()
@@ -295,7 +290,6 @@ namespace HandheldCompanion.Controllers
         public override void Plug()
         {
             TimerManager.Tick += UpdateInputs;
-            TimerManager.Tick += UpdateMovements;
 
             thread.Start();
 
@@ -327,7 +321,6 @@ namespace HandheldCompanion.Controllers
             }
 
             TimerManager.Tick -= UpdateInputs;
-            TimerManager.Tick -= UpdateMovements;
 
             // kill rumble thread
             ThreadRunning = false;
@@ -483,6 +476,8 @@ namespace HandheldCompanion.Controllers
                     return "\u2264";
                 case AxisLayoutFlags.RightPad:
                     return "\u2265";
+                case AxisLayoutFlags.Gyroscope:
+                    return "\u2B94";
             }
 
             return base.GetGlyph(axis);

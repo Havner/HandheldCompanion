@@ -674,7 +674,7 @@
     <value>Motion control settings</value>
   </data>
   <data name="ProfilesPage_MotionControlSettingsDesc" xml:space="preserve">
-    <value>Change the global motion control settings</value>
+    <value>Change the motion control settings</value>
   </data>
   <data name="ProfilesPage_OK" xml:space="preserve">
     <value>OK</value>

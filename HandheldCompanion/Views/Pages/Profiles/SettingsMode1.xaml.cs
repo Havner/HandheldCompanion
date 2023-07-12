@@ -1,7 +1,8 @@
-using ControllerCommon.Pipes;
+using HandheldCompanion.Managers;
 using LiveCharts;
 using LiveCharts.Defaults;
 using System;
+using System.Numerics;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -24,7 +25,7 @@ namespace HandheldCompanion.Views.Pages.Profiles
         {
             this.Tag = Tag;
 
-            PipeClient.ServerMessage += OnServerMessage;
+            MotionManager.SettingsMode1Update += MotionManager_SettingsMode1Update;
 
             SteeringLinearityPoints = new();
             for (int i = 0; i < SteeringArraySize; i++)
@@ -51,24 +52,11 @@ namespace HandheldCompanion.Views.Pages.Profiles
 
         public void Page_Closed()
         {
-            PipeClient.ServerMessage -= OnServerMessage;
         }
 
-        private void OnServerMessage(PipeMessage message)
+        private void MotionManager_SettingsMode1Update(Vector2 deviceAngle)
         {
-            switch (message.code)
-            {
-                case PipeCode.SERVER_SENSOR:
-                    PipeSensor sensor = (PipeSensor)message;
-
-                    switch (sensor.type)
-                    {
-                        case SensorType.Inclinometer:
-                            Rotate_Needle(-sensor.y);
-                            break;
-                    }
-                    break;
-            }
+            Rotate_Needle(-deviceAngle.Y);
         }
 
         private void Rotate_Needle(float y)

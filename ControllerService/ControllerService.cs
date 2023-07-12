@@ -215,61 +215,14 @@ namespace ControllerService
                     }
                     break;
 
-                case PipeCode.CLIENT_NAVIGATED:
-                    {
-                        PipeNavigation navigation = (PipeNavigation)message;
-                        CurrentTag = navigation.Tag;
-
-                        switch (navigation.Tag)
-                        {
-                            case "SettingsMode0":
-                                // do something
-                                break;
-                            case "SettingsMode1":
-                                // do something
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                    break;
-
-                case PipeCode.CLIENT_OVERLAY:
-                    {
-                        PipeOverlay overlay = (PipeOverlay)message;
-                        CurrentOverlayStatus = overlay.Visibility;
-                    }
-                    break;
-
                 case PipeCode.CLIENT_INPUT:
                     {
                         PipeClientInputs input = (PipeClientInputs)message;
 
+                        // TODO: put touch first
                         vTarget?.UpdateInputs(input.Inputs);
                         DSUServer.UpdateInputs(input.Inputs);
                         DS4Touch.UpdateInputs(input.Inputs);
-                    }
-                    break;
-
-                case PipeCode.CLIENT_MOVEMENTS:
-                    {
-                        PipeClientMovements movements = (PipeClientMovements)message;
-
-                        IMU.UpdateMovements(movements.Movements);
-                    }
-                    break;
-
-                case PipeCode.CLIENT_CONTROLLER_CONNECT:
-                    {
-                        PipeClientControllerConnect connect = (PipeClientControllerConnect)message;
-                        // do something?
-                    }
-                    break;
-
-                case PipeCode.CLIENT_CONTROLLER_DISCONNECT:
-                    {
-                        PipeClientControllerDisconnect disconnect = (PipeClientControllerDisconnect)message;
-                        // do something ?
                     }
                     break;
             }
@@ -369,9 +322,6 @@ namespace ControllerService
             // start master timer
             TimerManager.Start();
 
-            // start listening from controller
-            IMU.Start();
-
             // start DSUClient
             if (DSUEnabled)
                 DSUServer.Start();
@@ -390,9 +340,6 @@ namespace ControllerService
         {
             // stop master timer
             TimerManager.Stop();
-
-            // stop listening from controller
-            IMU.Stop();
 
             // update virtual controller
             SetControllerMode(HIDmode.NoController);

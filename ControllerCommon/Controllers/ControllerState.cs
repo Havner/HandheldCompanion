@@ -10,8 +10,7 @@ namespace ControllerCommon.Controllers
     {
         public ButtonState ButtonState = new();
         public AxisState AxisState = new();
-
-        public bool MotionTriggered { get; set; }
+        public GyroState GyroState = new();
 
         [JsonIgnore]
         public static readonly SortedDictionary<AxisLayoutFlags, ButtonFlags> AxisTouchButtons = new()
@@ -25,18 +24,13 @@ namespace ControllerCommon.Controllers
         public ControllerState()
         { }
 
-        public ControllerState(ControllerState Inputs)
-        {
-            ButtonState = Inputs.ButtonState;
-            AxisState = Inputs.AxisState;
-        }
-
         public object Clone()
         {
             return new ControllerState()
             {
                 ButtonState = this.ButtonState.Clone() as ButtonState,
                 AxisState = this.AxisState.Clone() as AxisState,
+                GyroState = this.GyroState.Clone() as GyroState,
             };
         }
     }

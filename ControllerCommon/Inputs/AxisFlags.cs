@@ -10,8 +10,10 @@ namespace ControllerCommon.Inputs
         RightStickX = 3, RightStickY = 4,
         L2 = 5, R2 = 6,
 
-        // Steam Deck
+        // DS4, Steam Deck
         LeftPadX = 7, RightPadX = 8,
         LeftPadY = 9, RightPadY = 10,
+
+        GyroX = 11, GyroY = 12,
     }
 }

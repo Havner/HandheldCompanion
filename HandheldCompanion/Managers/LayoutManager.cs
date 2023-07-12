@@ -281,6 +281,9 @@ namespace HandheldCompanion.Managers
             // only buttons/axes mapped from the layout should be passed on
             ControllerState outputState = new();
 
+            // except the main gyroscope state that's not re-mappable (6 values)
+            outputState.GyroState = controllerState.GyroState;
+
             foreach (var buttonState in controllerState.ButtonState.State)
             {
                 ButtonFlags button = buttonState.Key;

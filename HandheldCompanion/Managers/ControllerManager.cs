@@ -386,12 +386,8 @@ namespace HandheldCompanion.Managers
             if (targetController is not null)
             {
                 targetController.InputsUpdated -= UpdateInputs;
-                targetController.MovementsUpdated -= UpdateMovements;
                 targetController.Unplug();
             }
-
-            // warn service the current controller has been unplugged
-            PipeClient.SendMessage(new PipeClientControllerDisconnect());
 
             // look for new controller
             if (!Controllers.TryGetValue(baseContainerDeviceInstancePath, out IController controller))
@@ -407,7 +403,6 @@ namespace HandheldCompanion.Managers
             targetController = controller;
 
             targetController.InputsUpdated += UpdateInputs;
-            targetController.MovementsUpdated += UpdateMovements;
 
             targetController.Plug();
 
@@ -417,20 +412,12 @@ namespace HandheldCompanion.Managers
             // update settings
             SettingsManager.SetProperty("HIDInstancePath", baseContainerDeviceInstancePath);
 
-            // warn service a new controller has arrived
-            PipeClient.SendMessage(new PipeClientControllerConnect(targetController.ToString(), targetController.Capacities));
-
             // raise event
             ControllerSelected?.Invoke(targetController);
         }
 
         private static void OnClientConnected()
         {
-            // warn service a new controller has arrived
-            if (targetController is null)
-                return;
-
-            PipeClient.SendMessage(new PipeClientControllerConnect(targetController.ToString(), targetController.Capacities));
         }
 
         public static IController GetTargetController()
@@ -455,10 +442,14 @@ namespace HandheldCompanion.Managers
 
         private static void UpdateInputs(ControllerState controllerState)
         {
+            // TODO: why clone? InputsManager clones for prevState
             ButtonState InputsState = controllerState.ButtonState.Clone() as ButtonState;
 
             // pass inputs to Inputs manager
             InputsManager.UpdateReport(InputsState);
+
+            // pass to MotionManager for calculations
+            MotionManager.UpdateReport(controllerState);
 
             // pass inputs to Overlay Model
             MainWindow.overlayModel.UpdateReport(controllerState);
@@ -483,19 +474,8 @@ namespace HandheldCompanion.Managers
                         return;
             }
 
-            // check if motion trigger is pressed
-            Profile currentProfile = ProfileManager.GetCurrent();
-            controllerState.MotionTriggered = (currentProfile.MotionMode == MotionMode.Off && InputsState.ContainsTrue(currentProfile.MotionTrigger)) ||
-                (currentProfile.MotionMode == MotionMode.On && !InputsState.ContainsTrue(currentProfile.MotionTrigger));
-
             // pass inputs to service
             PipeClient.SendMessage(new PipeClientInputs(controllerState));
-        }
-
-        private static void UpdateMovements(ControllerMovements Movements)
-        {
-            // pass movements to service
-            PipeClient.SendMessage(new PipeClientMovements(Movements));
         }
 
         internal static IController GetEmulatedController()

@@ -10,6 +10,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
+using NumVector3 = System.Numerics.Vector3;
+using NumQuaternion = System.Numerics.Quaternion;
 using Timer = System.Timers.Timer;
 
 namespace HandheldCompanion.Views.Windows
@@ -38,7 +40,7 @@ namespace HandheldCompanion.Views.Windows
         private Vector3D DiffAngle = new Vector3D(0, 0, 0);
         Transform3DGroup Transform3DGroupModelPrevious = new Transform3DGroup();
 
-        // TODO Dummy variables, placeholder and for testing 
+        // todo: dummy variables, placeholder and for testing
         private short MotorLeftPlaceholder;
         private short MotorRightPlaceholder;
 
@@ -52,8 +54,8 @@ namespace HandheldCompanion.Views.Windows
         {
             InitializeComponent();
 
-            PipeClient.ServerMessage += OnServerMessage;
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
+            MotionManager.OverlayModelUpdate += MotionManager_OverlayModelUpdate;
 
             // initialize timers
             UpdateTimer = new Timer(33);
@@ -198,8 +200,6 @@ namespace HandheldCompanion.Views.Windows
                         this.Show();
                         break;
                 }
-
-                PipeClient.SendMessage(new PipeOverlay((int)Visibility));
             });
         }
 
@@ -211,31 +211,15 @@ namespace HandheldCompanion.Views.Windows
         private RotateTransform3D LeftJoystickRotateTransform;
         private RotateTransform3D RightJoystickRotateTransform;
 
-        private void OnServerMessage(PipeMessage message)
+        private void MotionManager_OverlayModelUpdate(NumVector3 euler, NumQuaternion quaternion)
         {
-            switch (message.code)
-            {
-                case PipeCode.SERVER_SENSOR:
-                    {
-                        // prevent late PipeMessage to apply
-                        if (this.Visibility != Visibility.Visible)
-                            return;
+            // Add return here if motion is not wanted for 3D model
+            if (!MotionActivated)
+                return;
 
-                        // Add return here if motion is not wanted for 3D model
-                        if (!MotionActivated)
-                            return;
-
-                        PipeSensor sensor = (PipeSensor)message;
-                        switch (sensor.type)
-                        {
-                            case SensorType.Quaternion:
-                                DevicePose = new Quaternion(sensor.q_w, sensor.q_x, sensor.q_y, sensor.q_z);
-                                DevicePoseRad = new Vector3D(sensor.x, sensor.y, sensor.z);
-                                break;
-                        }
-                    }
-                    break;
-            }
+            // TODO: why is the quaternion order shifted?
+            DevicePose = new Quaternion(quaternion.W, quaternion.X, quaternion.Y, quaternion.Z);
+            DevicePoseRad = new Vector3D(euler.X, euler.Y, euler.Z);
         }
 
         private void DrawModel(object? sender, EventArgs e)
@@ -279,7 +263,7 @@ namespace HandheldCompanion.Views.Windows
             {
                 float GradientFactor; // Used for multiple models
 
-                // TODO update motor placeholders!
+                // todo: update motor placeholders!
                 // Motor Left
                 model = CurrentModel.LeftMotor.Children[0] as GeometryModel3D;
                 model.Material = MotorLeftPlaceholder > 0 ? CurrentModel.HighlightMaterials[CurrentModel.LeftMotor] : CurrentModel.DefaultMaterials[CurrentModel.LeftMotor];

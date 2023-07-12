@@ -105,7 +105,7 @@ namespace HandheldCompanion.Models
             B4Button = modelImporter.Load($"models/{ModelName}/B4-Button.obj");
 
             /*
-             * TODO: @CasperH can you please help me figure out which object is the xbox button and rename it to Special.obj
+             * todo: @CasperH can you please help me figure out which object is the xbox button and rename it to Special.obj
              * See XBOX360 changes I made, I believe they're fine
              */
 

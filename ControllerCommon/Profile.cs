@@ -53,18 +53,12 @@ namespace ControllerCommon
         public string LayoutTitle { get; set; } = string.Empty;
         public Layout Layout { get; set; } = new();
 
-        public float GyrometerMultiplier { get; set; } = 1.0f;      // gyroscope multiplicator (remove me)
-        public float AccelerometerMultiplier { get; set; } = 1.0f;  // accelerometer multiplicator (remove me)
-
         public int SteeringAxis { get; set; } = 0;                  // 0 = Roll, 1 = Yaw
 
-        public bool MotionEnabled { get; set; }
         public MotionInput MotionInput { get; set; } = MotionInput.JoystickCamera;
-        public MotionOutput MotionOutput { get; set; } = MotionOutput.RightStick;
         public MotionMode MotionMode { get; set; } = MotionMode.Off;
-        public int MotionAntiDeadzone { get; set; } = 0;
-        public bool MotionInvertHorizontal { get; set; }            // if true, invert horizontal axis
-        public bool MotionInvertVertical { get; set; }              // if false, invert vertical axis
+        public bool MotionInvertHorizontal { get; set; }
+        public bool MotionInvertVertical { get; set; }
         public float MotionSensivityX { get; set; } = 1.0f;
         public float MotionSensivityY { get; set; } = 1.0f;
         public SortedDictionary<double, double> MotionSensivityArray { get; set; } = new();
@@ -79,11 +73,6 @@ namespace ControllerCommon
         // Aiming down sights
         public float AimingSightsMultiplier { get; set; } = 1.0f;
         public ButtonState AimingSightsTrigger { get; set; } = new();
-
-        // flickstick
-        public bool FlickstickEnabled { get; set; }
-        public float FlickstickDuration { get; set; } = 0.1f;
-        public float FlickstickSensivity { get; set; } = 3.0f;
 
         public ProfileErrorCode ErrorCode = ProfileErrorCode.None;
 

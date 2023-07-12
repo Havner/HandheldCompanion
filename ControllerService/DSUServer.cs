@@ -2,7 +2,6 @@ using ControllerCommon.Controllers;
 using ControllerCommon.Inputs;
 using ControllerCommon.Managers;
 using ControllerCommon.Utils;
-using ControllerService.Sensors;
 using Force.Crc32;
 using System;
 using System.Collections.Generic;
@@ -605,43 +604,27 @@ namespace ControllerService
 
                 outIdx += 8;
 
-                //accelerometer
-                if (IMU.Acceleration.TryGetValue(XInputSensorFlags.Default, out Vector3 AccelerationVector) && AccelerationVector != Vector3.Zero)
-                {
-                    // accelXG
-                    Array.Copy(BitConverter.GetBytes(AccelerationVector.X), 0, outputData, outIdx, 4);
-                    outIdx += 4;
-                    // accelYG
-                    Array.Copy(BitConverter.GetBytes(AccelerationVector.Y), 0, outputData, outIdx, 4);
-                    outIdx += 4;
-                    // accelZG
-                    Array.Copy(BitConverter.GetBytes(-AccelerationVector.Z), 0, outputData, outIdx, 4);
-                    outIdx += 4;
-                }
-                else
-                {
-                    Array.Clear(outputData, outIdx, 12);
-                    outIdx += 12;
-                }
+                // Accelerometer
+                // accelXG
+                Array.Copy(BitConverter.GetBytes(Inputs.GyroState.AccelerometerX), 0, outputData, outIdx, 4);
+                outIdx += 4;
+                // accelYG
+                Array.Copy(BitConverter.GetBytes(Inputs.GyroState.AccelerometerY), 0, outputData, outIdx, 4);
+                outIdx += 4;
+                // accelZG
+                Array.Copy(BitConverter.GetBytes(-Inputs.GyroState.AccelerometerZ), 0, outputData, outIdx, 4);
+                outIdx += 4;
 
-                //gyroscope
-                if (IMU.AngularVelocity.TryGetValue(XInputSensorFlags.Default, out Vector3 AngularVector) && AngularVector != Vector3.Zero)
-                {
-                    // angVelPitch
-                    Array.Copy(BitConverter.GetBytes(AngularVector.X), 0, outputData, outIdx, 4);
-                    outIdx += 4;
-                    // angVelYaw
-                    Array.Copy(BitConverter.GetBytes(AngularVector.Y), 0, outputData, outIdx, 4);
-                    outIdx += 4;
-                    // angVelRoll
-                    Array.Copy(BitConverter.GetBytes(-AngularVector.Z), 0, outputData, outIdx, 4);
-                    outIdx += 4;
-                }
-                else
-                {
-                    Array.Clear(outputData, outIdx, 12);
-                    outIdx += 12;
-                }
+                // Gyroscope
+                // angVelPitch
+                Array.Copy(BitConverter.GetBytes(Inputs.GyroState.GyroscopeX), 0, outputData, outIdx, 4);
+                outIdx += 4;
+                // angVelYaw
+                Array.Copy(BitConverter.GetBytes(Inputs.GyroState.GyroscopeY), 0, outputData, outIdx, 4);
+                outIdx += 4;
+                // angVelRoll
+                Array.Copy(BitConverter.GetBytes(-Inputs.GyroState.GyroscopeZ), 0, outputData, outIdx, 4);
+                outIdx += 4;
             }
 
             return true;
@@ -672,7 +655,7 @@ namespace ControllerService
             }
 
             // update status
-            padMeta.IsActive = true; // fixme ?
+            padMeta.IsActive = true; // todo: improve ?
 
             var clientsList = new List<IPEndPoint>();
             var now = DateTime.UtcNow;

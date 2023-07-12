@@ -9,10 +9,10 @@ using WindowsInput.Events;
 namespace ControllerCommon.Devices
 {
     [Flags]
-    public enum DeviceCapacities : ushort
+    public enum DeviceCapabilities : ushort
     {
         None = 0,
-        ControllerSensor = 1,
+        MotionSensor = 1,
         Trackpads = 2,
         FanControl = 4,
     }
@@ -28,7 +28,7 @@ namespace ControllerCommon.Devices
         public string ProductIllustration = "device_generic";
         public string ProductModel = "default";
 
-        public DeviceCapacities Capacities = DeviceCapacities.None;
+        protected DeviceCapabilities Capabilities = DeviceCapabilities.None;
 
         // device TDP max limits (min, nominal, max)
         public uint[] TDP = { 10, 20, 25 };
@@ -95,6 +95,21 @@ namespace ControllerCommon.Devices
             device.ProductName = ProductName;
 
             return device;
+        }
+
+        public bool HasMotionSensor()
+        {
+            return Capabilities.HasFlag(DeviceCapabilities.MotionSensor);
+        }
+
+        public bool HasTrackpads()
+        {
+            return Capabilities.HasFlag(DeviceCapabilities.Trackpads);
+        }
+
+        public bool HasFanControl()
+        {
+            return Capabilities.HasFlag(DeviceCapabilities.FanControl);
         }
 
         public virtual bool IsOpen

@@ -384,7 +384,7 @@ namespace HandheldCompanion.Managers
         public void ControllerSelected(IController controller)
         {
             // (re)draw inputs based on IController type
-            // todo: make this persistent/based on the parameter, just like LayoutPage
+            // TODO: make this persistent/based on the parameter, just like LayoutPage
             // currently DrawInput() checks for the controller by itself
             DrawInput();
         }

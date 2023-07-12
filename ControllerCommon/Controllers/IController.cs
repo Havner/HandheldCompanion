@@ -11,24 +11,20 @@ using System.Windows.Media;
 
 namespace ControllerCommon.Controllers
 {
+    // TODO: those are unused, instead DeviceCapabilities are used in several place
+    // this will have to be remedied in case of full DS4 or SteamController support
     [Flags]
-    public enum ControllerCapacities : ushort
+    public enum ControllerCapabilities : ushort
     {
         None = 0,
-        Gyroscope = 1,
-        Accelerometer = 2,
-        Trackpad = 4,
+        MotionSensor = 1,
+        Trackpads = 2,
     }
 
     public abstract class IController
     {
-        #region events
         public event InputsUpdatedEventHandler InputsUpdated;
         public delegate void InputsUpdatedEventHandler(ControllerState Inputs);
-
-        public event MovementsUpdatedEventHandler MovementsUpdated;
-        public delegate void MovementsUpdatedEventHandler(ControllerMovements Movements);
-        #endregion
 
         public ControllerState Inputs = new();
         public ControllerMovements Movements = new();
@@ -81,7 +77,8 @@ namespace ControllerCommon.Controllers
 
         public ButtonState InjectedButtons = new();
 
-        public ControllerCapacities Capacities = ControllerCapacities.None;
+        // TODO: make protected
+        public ControllerCapabilities Capabilities = ControllerCapabilities.None;
 
         protected int UserIndex;
         protected double VibrationStrength = 1.0d;
@@ -114,24 +111,14 @@ namespace ControllerCommon.Controllers
             InputsUpdated?.Invoke(Inputs);
         }
 
-        public virtual void UpdateMovements(long ticks)
+        public bool HasMotionSensor()
         {
-            MovementsUpdated?.Invoke(Movements);
+            return Capabilities.HasFlag(ControllerCapabilities.MotionSensor);
         }
 
-        public bool HasGyro()
+        public bool HasTrackpads()
         {
-            return Capacities.HasFlag(ControllerCapacities.Gyroscope);
-        }
-
-        public bool HasAccelerometer()
-        {
-            return Capacities.HasFlag(ControllerCapacities.Accelerometer);
-        }
-
-        public bool HasTrackpad()
-        {
-            return Capacities.HasFlag(ControllerCapacities.Trackpad);
+            return Capabilities.HasFlag(ControllerCapabilities.Trackpads);
         }
 
         public bool IsVirtual()

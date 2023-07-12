@@ -2,7 +2,6 @@ using ControllerCommon.Inputs;
 using ControllerCommon.Managers;
 using ControllerCommon.Pipes;
 using ControllerCommon.Utils;
-using ControllerService.Sensors;
 using Nefarius.ViGEm.Client.Exceptions;
 using Nefarius.ViGEm.Client.Targets;
 using Nefarius.ViGEm.Client.Targets.DualShock4;
@@ -93,8 +92,6 @@ namespace ControllerService.Targets
             if (!IsConnected)
                 return;
 
-            base.UpdateReport(ticks);
-
             // reset vars
             byte[] rawOutReportEx = new byte[63];
             ushort tempButtons = 0;
@@ -167,10 +164,10 @@ namespace ControllerService.Targets
                 outDS4Report.bTriggerL = (byte)Inputs.AxisState[AxisFlags.L2];
                 outDS4Report.bTriggerR = (byte)Inputs.AxisState[AxisFlags.R2];
 
-                outDS4Report.bThumbLX = InputUtils.NormalizeXboxInput(LeftStick.X);
-                outDS4Report.bThumbLY = (byte)(byte.MaxValue - InputUtils.NormalizeXboxInput(LeftStick.Y));
-                outDS4Report.bThumbRX = InputUtils.NormalizeXboxInput(RightStick.X);
-                outDS4Report.bThumbRY = (byte)(byte.MaxValue - InputUtils.NormalizeXboxInput(RightStick.Y));
+                outDS4Report.bThumbLX = InputUtils.NormalizeXboxInput(Inputs.AxisState[AxisFlags.LeftStickX]);
+                outDS4Report.bThumbLY = (byte)(byte.MaxValue - InputUtils.NormalizeXboxInput(Inputs.AxisState[AxisFlags.LeftStickY]));
+                outDS4Report.bThumbRX = InputUtils.NormalizeXboxInput(Inputs.AxisState[AxisFlags.RightStickX]);
+                outDS4Report.bThumbRY = (byte)(byte.MaxValue - InputUtils.NormalizeXboxInput(Inputs.AxisState[AxisFlags.RightStickY]));
 
                 outDS4Report.bTouchPacketsN = 0x01;
                 outDS4Report.sCurrentTouch.bPacketCounter = DS4Touch.TouchPacketCounter;
@@ -187,20 +184,14 @@ namespace ControllerService.Targets
                 outDS4Report.sCurrentTouch.bTouchData2[2] = (byte)(DS4Touch.RightPadTouch.Y >> 4);
             }
 
-            // Use IMU sensor data, map to proper range, invert where needed
-            if (IMU.AngularVelocity.TryGetValue(XInputSensorFlags.Default, out System.Numerics.Vector3 velocity))
-            {
-                outDS4Report.wGyroX = (short)InputUtils.rangeMap(velocity.X, DS4GyroscopeSensorSpec);    // gyroPitchFull
-                outDS4Report.wGyroY = (short)InputUtils.rangeMap(-velocity.Y, DS4GyroscopeSensorSpec);   // gyroYawFull
-                outDS4Report.wGyroZ = (short)InputUtils.rangeMap(velocity.Z, DS4GyroscopeSensorSpec);    // gyroRollFull
-            }
+            // Use gyro sensor data, map to proper range, invert where needed
+            outDS4Report.wGyroX = (short)InputUtils.rangeMap(Inputs.GyroState.GyroscopeX, DS4GyroscopeSensorSpec);    // gyroPitchFull
+            outDS4Report.wGyroY = (short)InputUtils.rangeMap(-Inputs.GyroState.GyroscopeY, DS4GyroscopeSensorSpec);   // gyroYawFull
+            outDS4Report.wGyroZ = (short)InputUtils.rangeMap(Inputs.GyroState.GyroscopeZ, DS4GyroscopeSensorSpec);    // gyroRollFull
 
-            if (IMU.Acceleration.TryGetValue(XInputSensorFlags.Default, out System.Numerics.Vector3 acceleration))
-            {
-                outDS4Report.wAccelX = (short)InputUtils.rangeMap(-acceleration.X, DS4AccelerometerSensorSpec); // accelXFull
-                outDS4Report.wAccelY = (short)InputUtils.rangeMap(-acceleration.Y, DS4AccelerometerSensorSpec); // accelYFull
-                outDS4Report.wAccelZ = (short)InputUtils.rangeMap(acceleration.Z, DS4AccelerometerSensorSpec);  // accelZFull
-            }
+            outDS4Report.wAccelX = (short)InputUtils.rangeMap(-Inputs.GyroState.AccelerometerX, DS4AccelerometerSensorSpec); // accelXFull
+            outDS4Report.wAccelY = (short)InputUtils.rangeMap(-Inputs.GyroState.AccelerometerY, DS4AccelerometerSensorSpec); // accelYFull
+            outDS4Report.wAccelZ = (short)InputUtils.rangeMap(Inputs.GyroState.AccelerometerZ, DS4AccelerometerSensorSpec);  // accelZFull
 
             outDS4Report.bBatteryLvlSpecial = 11;
 
@@ -220,8 +211,6 @@ namespace ControllerService.Targets
             {
                 LogManager.LogCritical(ex.Message);
             }
-
-            base.SubmitReport();
         }
 
         public override void Dispose()

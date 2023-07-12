@@ -100,10 +100,6 @@ namespace ControllerCommon.Pipes
             {
                 if (!IsConnected)
                 {
-                    Type nodeType = message.GetType();
-                    if (nodeType == typeof(PipeSensor))
-                        return;
-
                     m_queue.Enqueue(message);
                     m_timer.Start();
                     return;

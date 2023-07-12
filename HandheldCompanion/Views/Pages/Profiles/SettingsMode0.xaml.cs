@@ -1,10 +1,9 @@
 using ControllerCommon;
 using ControllerCommon.Inputs;
-using ControllerCommon.Pipes;
-using ControllerService.Sensors;
 using HandheldCompanion.Controls;
 using HandheldCompanion.Managers;
 using System;
+using System.Numerics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -30,7 +29,8 @@ namespace HandheldCompanion.Views.Pages.Profiles
         {
             this.Tag = Tag;
 
-            PipeClient.ServerMessage += OnServerMessage;
+            //PipeClient.ServerMessage += OnServerMessage;
+            MotionManager.SettingsMode0Update += MotionManager_SettingsMode0Update;
 
             HotkeysManager.HotkeyCreated += TriggerCreated;
             InputsManager.TriggerUpdated += TriggerUpdated;
@@ -78,24 +78,11 @@ namespace HandheldCompanion.Views.Pages.Profiles
 
         public void Page_Closed()
         {
-            PipeClient.ServerMessage -= OnServerMessage;
         }
 
-        private void OnServerMessage(PipeMessage message)
+        private void MotionManager_SettingsMode0Update(Vector3 gyrometer)
         {
-            switch (message.code)
-            {
-                case PipeCode.SERVER_SENSOR:
-                    PipeSensor sensor = (PipeSensor)message;
-
-                    switch (sensor.type)
-                    {
-                        case SensorType.Girometer:
-                            Highlight_Thumb(Math.Max(Math.Max(Math.Abs(sensor.z), Math.Abs(sensor.x)), Math.Abs(sensor.y)));
-                            break;
-                    }
-                    break;
-            }
+            Highlight_Thumb(Math.Max(Math.Max(Math.Abs(gyrometer.Z), Math.Abs(gyrometer.X)), Math.Abs(gyrometer.Y)));
         }
 
         private void SliderSensitivityX_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -119,7 +106,7 @@ namespace HandheldCompanion.Views.Pages.Profiles
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                double dist_x = value / IMUGyrometer.sensorSpec.maxIn;
+                double dist_x = value / MotionManager.gyroscopeSpec.maxIn;
 
                 foreach (Control control in StackCurve.Children)
                 {

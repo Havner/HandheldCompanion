@@ -205,7 +205,7 @@ namespace HandheldCompanion.Managers
 
             if (MainWindow.CurrentDevice.IsOpen && MainWindow.CurrentDevice.IsSupported)
             {
-                if (MainWindow.CurrentDevice.Capacities.HasFlag(DeviceCapacities.FanControl))
+                if (MainWindow.CurrentDevice.HasFanControl())
                     FanControlSupport = true;
             }
 

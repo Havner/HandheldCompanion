@@ -1,4 +1,5 @@
 using ControllerCommon;
+using ControllerCommon.Actions;
 using ControllerCommon.Inputs;
 using ControllerCommon.Managers;
 using ControllerCommon.Utils;
@@ -82,37 +83,6 @@ namespace HandheldCompanion.Views.Pages
                 panel.Children.Add(text);
 
                 cB_Input.Items.Add(panel);
-            }
-
-            // draw output modes
-            foreach (MotionOutput mode in (MotionOutput[])Enum.GetValues(typeof(MotionOutput)))
-            {
-                // create panel
-                SimpleStackPanel panel = new() { Spacing = 6, Orientation = Orientation.Horizontal, VerticalAlignment = VerticalAlignment.Center };
-
-                // create icon
-                FontIcon icon = new() { Glyph = "" };
-
-                switch (mode)
-                {
-                    default:
-                    case MotionOutput.RightStick:
-                        icon.Glyph = "\uF109";
-                        break;
-                    case MotionOutput.LeftStick:
-                        icon.Glyph = "\uF108";
-                        break;
-                }
-
-                if (icon.Glyph != "")
-                    panel.Children.Add(icon);
-
-                // create textblock
-                string description = EnumUtils.GetDescriptionFromEnumValue(mode);
-                TextBlock text = new() { Text = description };
-                panel.Children.Add(text);
-
-                cB_Output.Items.Add(panel);
             }
 
             // auto-sort
@@ -330,20 +300,20 @@ namespace HandheldCompanion.Views.Pages
                 tB_ProfilePath.Text = selectedProfile.Path;
                 Toggle_EnableProfile.IsOn = selectedProfile.Enabled;
 
-                // Motion control settings
-                tb_ProfileGyroValue.Value = selectedProfile.GyrometerMultiplier;
-                tb_ProfileAcceleroValue.Value = selectedProfile.AccelerometerMultiplier;
-
                 cB_GyroSteering.SelectedIndex = selectedProfile.SteeringAxis;
-                cB_InvertHorizontal.IsChecked = selectedProfile.MotionInvertHorizontal;
-                cB_InvertVertical.IsChecked = selectedProfile.MotionInvertVertical;
+                Toggle_InvertHorizontal.IsOn = selectedProfile.MotionInvertHorizontal;
+                Toggle_InvertVertical.IsOn = selectedProfile.MotionInvertVertical;
 
-                // UMC settings
-                Toggle_UniversalMotion.IsOn = selectedProfile.MotionEnabled;
                 cB_Input.SelectedIndex = (int)selectedProfile.MotionInput;
-                cB_Output.SelectedIndex = (int)selectedProfile.MotionOutput;
-                tb_ProfileUMCAntiDeadzone.Value = selectedProfile.MotionAntiDeadzone;
                 cB_UMC_MotionDefaultOffOn.SelectedIndex = (int)selectedProfile.MotionMode;
+
+                bool MotionMapped = false;
+                if (selectedProfile.Layout.AxisLayout.TryGetValue(AxisLayoutFlags.Gyroscope, out IActions action))
+                    if (action.ActionType != ActionType.Disabled)
+                        MotionMapped = true;
+
+                MotionControlAdditional.Visibility = MotionMapped ? Visibility.Visible : Visibility.Collapsed;
+                MotionControlWarning.Visibility = MotionMapped ? Visibility.Collapsed : Visibility.Visible;
 
                 // todo: improve me ?
                 ProfilesPageHotkey.inputsChord.State = selectedProfile.MotionTrigger.Clone() as ButtonState;
@@ -401,18 +371,11 @@ namespace HandheldCompanion.Views.Pages
             selectedProfile.Enabled = Toggle_EnableProfile.IsOn;
 
             // Motion control settings
-            selectedProfile.GyrometerMultiplier = (float)tb_ProfileGyroValue.Value;
-            selectedProfile.AccelerometerMultiplier = (float)tb_ProfileAcceleroValue.Value;
-
             selectedProfile.SteeringAxis = cB_GyroSteering.SelectedIndex;
-            selectedProfile.MotionInvertVertical = cB_InvertVertical.IsChecked == true;
-            selectedProfile.MotionInvertHorizontal = cB_InvertHorizontal.IsChecked == true;
+            selectedProfile.MotionInvertVertical = Toggle_InvertVertical.IsOn == true;
+            selectedProfile.MotionInvertHorizontal = Toggle_InvertHorizontal.IsOn == true;
 
-            // UMC settings
-            selectedProfile.MotionEnabled = Toggle_UniversalMotion.IsOn;
             selectedProfile.MotionInput = (MotionInput)cB_Input.SelectedIndex;
-            selectedProfile.MotionOutput = (MotionOutput)cB_Output.SelectedIndex;
-            selectedProfile.MotionAntiDeadzone = (int)tb_ProfileUMCAntiDeadzone.Value;
             selectedProfile.MotionMode = (MotionMode)cB_UMC_MotionDefaultOffOn.SelectedIndex;
 
             ProfileManager.UpdateOrCreateProfile(selectedProfile, ProfileUpdateSource.ProfilesPage);
@@ -438,20 +401,6 @@ namespace HandheldCompanion.Views.Pages
                 return;
 
             MotionInput input = (MotionInput)cB_Input.SelectedIndex;
-
-            // Check which input type is selected and automatically
-            // set the most used output joystick accordingly.
-            switch (input)
-            {
-                case MotionInput.PlayerSpace:
-                case MotionInput.JoystickCamera:
-                case MotionInput.AutoRollYawSwap:
-                    cB_Output.SelectedIndex = (int)MotionOutput.RightStick;
-                    break;
-                case MotionInput.JoystickSteering:
-                    cB_Output.SelectedIndex = (int)MotionOutput.LeftStick;
-                    break;
-            }
 
             Text_InputHint.Text = Profile.InputDescription[input];
         }
@@ -486,7 +435,6 @@ namespace HandheldCompanion.Views.Pages
             switch (listener)
             {
                 case "shortcutProfilesPage@":
-                case "shortcutProfilesPage@@":
                     selectedProfile.MotionTrigger = inputs.State.Clone() as ButtonState;
                     break;
             }

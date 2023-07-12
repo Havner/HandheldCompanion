@@ -139,22 +139,6 @@ namespace ControllerCommon.Pipes
     }
 
     [Serializable]
-    public partial class PipeClientMovements : PipeMessage
-    {
-        public ControllerMovements Movements;
-
-        public PipeClientMovements()
-        {
-            code = PipeCode.CLIENT_MOVEMENTS;
-        }
-
-        public PipeClientMovements(ControllerMovements movements) : this()
-        {
-            Movements = movements;
-        }
-    }
-
-    [Serializable]
     public partial class PipeClientVibration : PipeMessage
     {
         public byte LargeMotor;
@@ -167,112 +151,12 @@ namespace ControllerCommon.Pipes
     }
 
     [Serializable]
-    public partial class PipeClientControllerConnect : PipeMessage
-    {
-        public string ControllerName;
-        public ControllerCapacities Capacacities;
-
-        public PipeClientControllerConnect()
-        {
-            code = PipeCode.CLIENT_CONTROLLER_CONNECT;
-        }
-
-        public PipeClientControllerConnect(string name, ControllerCapacities capacities) : this()
-        {
-            ControllerName = name;
-            Capacacities = capacities;
-        }
-    }
-
-    [Serializable]
-    public partial class PipeClientControllerDisconnect : PipeMessage
-    {
-        public PipeClientControllerDisconnect()
-        {
-            code = PipeCode.CLIENT_CONTROLLER_DISCONNECT;
-        }
-    }
-
-    [Serializable]
     public enum SensorType
     {
         Girometer = 0,
         Accelerometer = 1,
         Inclinometer = 2,
         Quaternion = 3
-    }
-
-    [Serializable]
-    public partial class PipeSensor : PipeMessage
-    {
-        public float x, y, z;
-        public float q_x, q_y, q_z, q_w;
-        public SensorType type;
-
-        public PipeSensor(SensorType type)
-        {
-            code = PipeCode.SERVER_SENSOR;
-            this.type = type;
-        }
-
-        public PipeSensor(Vector2 reading, SensorType type) : this(type)
-        {
-            this.x = reading.X;
-            this.y = reading.Y;
-        }
-
-        public PipeSensor(Vector3 reading, SensorType type) : this(type)
-        {
-            this.x = reading.X;
-            this.y = reading.Y;
-            this.z = reading.Z;
-        }
-
-        public PipeSensor(Quaternion qt, SensorType type) : this(type)
-        {
-            this.q_x = qt.X;
-            this.q_y = qt.Y;
-            this.q_z = qt.Z;
-            this.q_w = qt.W;
-        }
-
-        public PipeSensor(Vector3 reading, Quaternion qt, SensorType type) : this(type)
-        {
-            this.x = reading.X;
-            this.y = reading.Y;
-            this.z = reading.Z;
-
-            this.q_x = qt.X;
-            this.q_y = qt.Y;
-            this.q_z = qt.Z;
-            this.q_w = qt.W;
-        }
-    }
-
-    [Serializable]
-    public partial class PipeNavigation : PipeMessage
-    {
-        public string Tag;
-
-        public PipeNavigation(string Tag)
-        {
-            code = PipeCode.CLIENT_NAVIGATED;
-
-            this.Tag = Tag;
-        }
-    }
-
-    [Serializable]
-    public partial class PipeOverlay : PipeMessage
-    {
-        public int Visibility;
-
-        public PipeOverlay(int Visibility)
-        {
-            code = PipeCode.CLIENT_OVERLAY;
-
-            this.Visibility = Visibility;
-        }
     }
     #endregion
 }

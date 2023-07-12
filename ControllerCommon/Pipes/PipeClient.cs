@@ -91,10 +91,7 @@ namespace ControllerCommon.Pipes
             {
                 if (!IsConnected)
                 {
-                    Type nodeType = message.GetType();
-                    if (nodeType == typeof(PipeClientMovements))
-                        return;
-                    else if (nodeType == typeof(PipeClientInputs))
+                    if (message.GetType() == typeof(PipeClientInputs))
                         return;
 
                     m_queue.Enqueue(message);

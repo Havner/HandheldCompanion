@@ -70,12 +70,10 @@ namespace ControllerService.Targets
             if (!IsConnected)
                 return;
 
-            base.UpdateReport(ticks);
-
-            virtualController.SetAxisValue(Xbox360Axis.LeftThumbX, (short)LeftStick.X);
-            virtualController.SetAxisValue(Xbox360Axis.LeftThumbY, (short)LeftStick.Y);
-            virtualController.SetAxisValue(Xbox360Axis.RightThumbX, (short)RightStick.X);
-            virtualController.SetAxisValue(Xbox360Axis.RightThumbY, (short)RightStick.Y);
+            virtualController.SetAxisValue(Xbox360Axis.LeftThumbX, Inputs.AxisState[AxisFlags.LeftStickX]);
+            virtualController.SetAxisValue(Xbox360Axis.LeftThumbY, Inputs.AxisState[AxisFlags.LeftStickY]);
+            virtualController.SetAxisValue(Xbox360Axis.RightThumbX, Inputs.AxisState[AxisFlags.RightStickX]);
+            virtualController.SetAxisValue(Xbox360Axis.RightThumbY, Inputs.AxisState[AxisFlags.RightStickY]);
 
             virtualController.SetSliderValue(Xbox360Slider.LeftTrigger, (byte)Inputs.AxisState[AxisFlags.L2]);
             virtualController.SetSliderValue(Xbox360Slider.RightTrigger, (byte)Inputs.AxisState[AxisFlags.R2]);
@@ -113,8 +111,6 @@ namespace ControllerService.Targets
             {
                 LogManager.LogCritical(ex.Message);
             }
-
-            base.SubmitReport();
         }
 
         public override void Dispose()

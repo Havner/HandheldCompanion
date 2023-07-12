@@ -48,12 +48,15 @@ namespace HandheldCompanion.Views.Pages
                     if (!Controller.HasSourceButton(button))
                         buttonMapping.Visibility = Visibility.Collapsed;
                     else
+                    {
                         buttonMapping.Visibility = Visibility.Visible;
 
-                    // update icon
-                    FontIcon newIcon = Controller.GetFontIcon(button);
-                    string newLabel = Controller.GetButtonName(button);
-                    buttonMapping.UpdateIcon(newIcon, newLabel);
+                        // update icon
+                        FontIcon newIcon = Controller.GetFontIcon(button);
+                        string newLabel = Controller.GetButtonName(button);
+
+                        buttonMapping.UpdateIcon(newIcon, newLabel);
+                    }
                 }
             });
         }

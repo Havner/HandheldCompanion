@@ -1657,7 +1657,7 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Change the global motion control settings.
+        ///   Looks up a localized string similar to Change the motion control settings.
         /// </summary>
         public static string ProfilesPage_MotionControlSettingsDesc {
             get {
