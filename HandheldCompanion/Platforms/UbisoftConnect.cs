@@ -2,7 +2,6 @@ using ControllerCommon.Platforms;
 using ControllerCommon.Utils;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 
 namespace HandheldCompanion.Platforms

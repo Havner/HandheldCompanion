@@ -1,12 +1,9 @@
-using ControllerCommon;
 using ControllerCommon.Platforms;
 using ControllerCommon.Utils;
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Windows;
 using System.Windows.Media;
 
 namespace HandheldCompanion.Managers

@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows;
 using static HandheldCompanion.Managers.InputsHotkey;
@@ -256,7 +255,7 @@ namespace HandheldCompanion.Managers
             });
 
             // These are special shortcut keys with no related events
-            switch(type)
+            switch (type)
             {
                 case InputsHotkeyType.Embedded:
                     return;

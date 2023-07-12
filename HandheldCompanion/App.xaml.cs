@@ -1,6 +1,5 @@
 using ControllerCommon.Managers;
 using ControllerCommon.Utils;
-using HandheldCompanion.Managers;
 using HandheldCompanion.Views;
 using System;
 using System.Diagnostics;

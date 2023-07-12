@@ -1,9 +1,7 @@
 using ControllerCommon;
-using ControllerCommon.Actions;
 using ControllerCommon.Inputs;
 using GregsStack.InputSimulatorStandard.Native;
 using HandheldCompanion.Actions;
-using HandheldCompanion.Controllers;
 using Newtonsoft.Json;
 using System;
 using System.Windows.Controls;
