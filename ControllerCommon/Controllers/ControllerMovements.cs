@@ -8,8 +8,6 @@ namespace ControllerCommon.Controllers
         public float GyroAccelX, GyroAccelY, GyroAccelZ;
         public float GyroRoll, GyroPitch, GyroYaw;
 
-        public long TickCount;
-
         public ControllerMovements()
         { }
 

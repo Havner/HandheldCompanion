@@ -4,9 +4,7 @@ using ControllerCommon.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using WindowsInput.Events;
-using static ControllerCommon.OneEuroFilter;
 
 namespace ControllerCommon.Devices
 {
@@ -39,25 +37,6 @@ namespace ControllerCommon.Devices
 
         // mininum delay before trying to emulate a virtual controller on system resume (milliseconds)
         public short ResumeDelay = 6000;
-
-        public Vector3 AngularVelocityAxis = new Vector3(1.0f, 1.0f, 1.0f);
-        public SortedDictionary<char, char> AngularVelocityAxisSwap = new()
-        {
-            { 'X', 'X' },
-            { 'Y', 'Y' },
-            { 'Z', 'Z' },
-        };
-
-        public Vector3 AccelerationAxis = new Vector3(1.0f, 1.0f, 1.0f);
-        public SortedDictionary<char, char> AccelerationAxisSwap = new()
-        {
-            { 'X', 'X' },
-            { 'Y', 'Y' },
-            { 'Z', 'Z' },
-        };
-
-        // filter settings
-        public OneEuroSettings oneEuroSettings = new OneEuroSettings(0.002d, 0.008d);
 
         // trigger specific settings
         public List<DeviceChord> OEMChords = new();

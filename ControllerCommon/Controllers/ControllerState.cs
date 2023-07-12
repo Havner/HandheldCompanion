@@ -11,7 +11,6 @@ namespace ControllerCommon.Controllers
         public ButtonState ButtonState = new();
         public AxisState AxisState = new();
 
-        public int Timestamp { get; set; }
         public bool MotionTriggered { get; set; }
 
         [JsonIgnore]
@@ -30,8 +29,6 @@ namespace ControllerCommon.Controllers
         {
             ButtonState = Inputs.ButtonState;
             AxisState = Inputs.AxisState;
-
-            Timestamp = Inputs.Timestamp;
         }
 
         public object Clone()
@@ -40,7 +37,6 @@ namespace ControllerCommon.Controllers
             {
                 ButtonState = this.ButtonState.Clone() as ButtonState,
                 AxisState = this.AxisState.Clone() as AxisState,
-                Timestamp = this.Timestamp
             };
         }
     }

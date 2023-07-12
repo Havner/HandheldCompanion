@@ -19,7 +19,7 @@ namespace ControllerCommon.Controllers
         None = 0,
         Gyroscope = 1,
         Accelerometer = 2,
-        Trackpad = 3,
+        Trackpad = 4,
     }
 
     public abstract class IController
@@ -113,17 +113,11 @@ namespace ControllerCommon.Controllers
 
         public virtual void UpdateInputs(long ticks)
         {
-            // update states
-            Inputs.Timestamp = Environment.TickCount;
-
             InputsUpdated?.Invoke(Inputs);
         }
 
         public virtual void UpdateMovements(long ticks)
         {
-            // update states
-            Movements.TickCount = ticks;
-
             MovementsUpdated?.Invoke(Movements);
         }
 
@@ -305,7 +299,6 @@ namespace ControllerCommon.Controllers
             HidHide.HidePath(Details.baseContainerDeviceInstanceId);
 
             RefreshControls();
-            // CyclePort();
         }
 
         public void Unhide()
@@ -314,22 +307,6 @@ namespace ControllerCommon.Controllers
             HidHide.UnhidePath(Details.baseContainerDeviceInstanceId);
 
             RefreshControls();
-            // CyclePort();
-        }
-
-        private void CyclePort()
-        {
-            var pnpDevice = PnPDevice.GetDeviceByInstanceId(Details.baseContainerDeviceInstanceId);
-            if (pnpDevice is null)
-                return;
-
-            // is this a USB device
-            string enumerator = pnpDevice.GetProperty<string>(DevicePropertyKey.Device_EnumeratorName);
-            if (!Equals(enumerator, "USB"))
-                return;
-
-            var usbDevice = pnpDevice.ToUsbPnPDevice();
-            usbDevice.CyclePort();
         }
 
         public static readonly string defaultGlyph = "\u2753";
