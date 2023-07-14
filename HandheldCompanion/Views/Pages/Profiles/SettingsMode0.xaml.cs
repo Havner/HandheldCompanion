@@ -40,6 +40,7 @@ namespace HandheldCompanion.Views.Pages.Profiles
         {
             SliderSensitivityX.Value = ProfilesPage.selectedProfile.MotionSensivityX;
             SliderSensitivityY.Value = ProfilesPage.selectedProfile.MotionSensivityY;
+            Toggle_StackCurveEnabled.IsOn = ProfilesPage.selectedProfile.MotionSensivityArrayEnabled;
             tb_ProfileAimingDownSightsMultiplier.Value = ProfilesPage.selectedProfile.AimingSightsMultiplier;
 
             // todo: improve me ?
@@ -70,6 +71,8 @@ namespace HandheldCompanion.Views.Pages.Profiles
 
                 StackCurve.Children.Add(thumb);
             }
+
+            StackCurvePanel.Visibility = ProfilesPage.selectedProfile.MotionSensivityArrayEnabled ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -99,6 +102,12 @@ namespace HandheldCompanion.Views.Pages.Profiles
                 return;
 
             ProfilesPage.selectedProfile.MotionSensivityY = (float)SliderSensitivityY.Value;
+        }
+
+        private void Toggle_StackCurveEnabled_Toggled(object sender, RoutedEventArgs e)
+        {
+            ProfilesPage.selectedProfile.MotionSensivityArrayEnabled = Toggle_StackCurveEnabled.IsOn;
+            StackCurvePanel.Visibility = ProfilesPage.selectedProfile.MotionSensivityArrayEnabled ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void Highlight_Thumb(float value)

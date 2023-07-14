@@ -236,9 +236,11 @@ namespace HandheldCompanion.Managers
                     }
 
                     // apply sensivity curve
-                    // TODO: implement some checkbox to disable this feature
-                    output.X *= InputUtils.ApplyCustomSensitivity(output.X, gyroscopeSpec.maxIn, current.MotionSensivityArray);
-                    output.Y *= InputUtils.ApplyCustomSensitivity(output.Y, gyroscopeSpec.maxIn, current.MotionSensivityArray);
+                    if (current.MotionSensivityArrayEnabled)
+                    {
+                        output.X *= InputUtils.ApplyCustomSensitivity(output.X, gyroscopeSpec.maxIn, current.MotionSensivityArray);
+                        output.Y *= InputUtils.ApplyCustomSensitivity(output.Y, gyroscopeSpec.maxIn, current.MotionSensivityArray);
+                    }
 
                     // apply aiming down scopes multiplier if activated
                     if (controllerState.ButtonState.Contains(current.AimingSightsTrigger))

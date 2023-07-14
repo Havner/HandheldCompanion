@@ -61,6 +61,7 @@ namespace ControllerCommon
         public bool MotionInvertVertical { get; set; }
         public float MotionSensivityX { get; set; } = 1.0f;
         public float MotionSensivityY { get; set; } = 1.0f;
+        public bool MotionSensivityArrayEnabled = false;
         public SortedDictionary<double, double> MotionSensivityArray { get; set; } = new();
 
         public ButtonState MotionTrigger { get; set; } = new();

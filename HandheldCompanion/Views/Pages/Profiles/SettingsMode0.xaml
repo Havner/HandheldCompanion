@@ -233,14 +233,51 @@
                     </Expander.Content>
                 </Expander>
 
-                <!--  Flick Stick settings  -->
+                <!--  Enable stack curve  -->
+                <Border
+                        Padding="15,12,12,12"
+                        Background="{DynamicResource ExpanderHeaderBackground}"
+                        CornerRadius="{DynamicResource ControlCornerRadius}">
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="9*" MinWidth="200" />
+                            <ColumnDefinition MinWidth="200" />
+                        </Grid.ColumnDefinitions>
+
+                        <DockPanel>
+                            <ui:FontIcon
+                                    Height="40"
+                                    HorizontalAlignment="Center"
+                                    FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                                    Glyph="&#xE870;" />
+
+                            <ui:SimpleStackPanel Margin="12,0,0,0" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Static resx:Resources.SettingsMode0_CustomResponseCurve}" />
+                                <TextBlock
+                                        Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                        Style="{StaticResource CaptionTextBlockStyle}"
+                                        Text="Change the custom response curve for the gyroscope movement"
+                                        TextWrapping="Wrap" />
+                            </ui:SimpleStackPanel>
+                        </DockPanel>
+
+                        <ui:ToggleSwitch
+                                Name="Toggle_StackCurveEnabled"
+                                Grid.Column="1"
+                                HorizontalAlignment="Right"
+                                Style="{DynamicResource InvertedToggleSwitchStyle}"
+                                Toggled="Toggle_StackCurveEnabled_Toggled" />
+                    </Grid>
+                </Border>
+
             </ui:SimpleStackPanel>
 
             <!--  Custom response curve  -->
             <ui:SimpleStackPanel Spacing="6">
-                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="{x:Static resx:Resources.SettingsMode0_CustomResponseCurve}" />
 
                 <Border
+                    Name="StackCurvePanel"
                     Padding="0,12,12,12"
                     Background="{DynamicResource ExpanderHeaderBackground}"
                     CornerRadius="{DynamicResource ControlCornerRadius}">
