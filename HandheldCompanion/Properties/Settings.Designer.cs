@@ -562,5 +562,65 @@ namespace HandheldCompanion.Properties {
                 this["DesktopProfileOnStart"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int HIDmode {
+            get {
+                return ((int)(this["HIDmode"]));
+            }
+            set {
+                this["HIDmode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int HIDstatus {
+            get {
+                return ((int)(this["HIDstatus"]));
+            }
+            set {
+                this["HIDstatus"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool DSUEnabled {
+            get {
+                return ((bool)(this["DSUEnabled"]));
+            }
+            set {
+                this["DSUEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("26760")]
+        public int DSUport {
+            get {
+                return ((int)(this["DSUport"]));
+            }
+            set {
+                this["DSUport"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("127.0.0.1")]
+        public string DSUip {
+            get {
+                return ((string)(this["DSUip"]));
+            }
+            set {
+                this["DSUip"] = value;
+            }
+        }
     }
 }
