@@ -55,31 +55,75 @@
                             <ui:SimpleStackPanel
                                 Grid.Column="1"
                                 Margin="12,0,0,0"
-                                Spacing="6">
+                                Spacing="12">
                                 <ComboBox
                                     Name="cB_Profiles"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Center"
                                     SelectionChanged="Profiles_SelectionChanged" />
 
-                                <!--  Create new profile  -->
-                                <Button Click="CreateProfile_Click" Style="{DynamicResource AccentButtonStyle}">
-                                    <ui:SimpleStackPanel
-                                        HorizontalAlignment="Center"
-                                        Orientation="Horizontal"
-                                        Spacing="12">
-                                        <ui:FontIcon
-                                            Grid.Column="2"
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!--  Create new profile  -->
+                                    <Button Click="CreateProfile_Click" Style="{DynamicResource AccentButtonStyle}" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,12,0">
+                                        <ui:SimpleStackPanel
                                             HorizontalAlignment="Center"
-                                            VerticalAlignment="Center"
-                                            FontFamily="{DynamicResource SymbolThemeFontFamily}"
-                                            Glyph="&#xE8E5;" />
-                                        <TextBlock
-                                            VerticalAlignment="Center"
-                                            Style="{StaticResource BodyTextBlockStyle}"
-                                            Text="{x:Static resx:Resources.ProfilesPage_CreateNewProfile}" />
-                                    </ui:SimpleStackPanel>
-                                </Button>
+                                            Orientation="Horizontal"
+                                            Spacing="12">
+                                            <ui:FontIcon
+                                                Grid.Column="2"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                                                Glyph="&#xE8E5;" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource BodyTextBlockStyle}"
+                                                Text="{x:Static resx:Resources.ProfilesPage_CreateNewProfile}" />
+                                        </ui:SimpleStackPanel>
+                                    </Button>
+                                    <!--  Delete profile  -->
+                                    <Button Name="b_DeleteProfile" Click="DeleteProfile_Click" Style="{DynamicResource AccentButtonStyle}" Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,0,12,0" Background="Maroon">
+                                        <ui:SimpleStackPanel
+                                            HorizontalAlignment="Center"
+                                            Orientation="Horizontal"
+                                            Spacing="12">
+                                            <ui:FontIcon
+                                                Grid.Column="2"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                                                Glyph="&#xE74D;" />
+                                            <TextBlock
+                                                Style="{StaticResource BodyTextBlockStyle}"
+                                                Text="{x:Static resx:Resources.ProfilesPage_DeleteProfile}" VerticalAlignment="Center" />
+                                        </ui:SimpleStackPanel>
+                                    </Button>
+                                    <!--  Update profile  -->
+                                    <Button Click="UpdateProfile_Click" Style="{DynamicResource AccentButtonStyle}" Grid.Column="3" HorizontalAlignment="Stretch" Margin="12,0,0,0">
+                                        <ui:SimpleStackPanel
+                                            HorizontalAlignment="Center"
+                                            Orientation="Horizontal"
+                                            Spacing="12">
+                                            <ui:FontIcon
+                                                Grid.Column="2"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                FontFamily="{DynamicResource SymbolThemeFontFamily}"
+                                                Glyph="&#xE74E;" />
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource BodyTextBlockStyle}"
+                                                Text="{x:Static resx:Resources.ProfilesPage_UpdateProfile}" />
+                                        </ui:SimpleStackPanel>
+                                    </Button>
+                                </Grid>
                             </ui:SimpleStackPanel>
                         </Grid>
                     </Border>
@@ -186,28 +230,6 @@
                                         Background="{DynamicResource SystemControlBackgroundBaseLowBrush}" />
                                 </DockPanel>
                             </Grid>
-
-                            <ui:SimpleStackPanel
-                                Grid.Row="2"
-                                HorizontalAlignment="Right"
-                                Orientation="Horizontal"
-                                Spacing="18">
-                                <ui:AppBarButton
-                                    Name="b_DeleteProfile"
-                                    Width="Auto"
-                                    Click="DeleteProfile_Click"
-                                    Icon="Delete"
-                                    Label="{x:Static resx:Resources.ProfilesPage_DeleteProfile}" />
-                                <ui:AppBarButton
-                                    Name="b_UpdateProfile"
-                                    Width="Auto"
-                                    Click="UpdateProfile_Click"
-                                    Foreground="{DynamicResource AccentButtonBackground}"
-                                    Icon="Save"
-                                    Label="{x:Static resx:Resources.ProfilesPage_UpdateProfile}"
-                                    ToolTipService.InitialShowDelay="100"
-                                    ToolTipService.ShowOnDisabled="True" />
-                            </ui:SimpleStackPanel>
                         </ui:SimpleStackPanel>
                     </Border>
 
