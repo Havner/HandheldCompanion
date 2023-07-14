@@ -161,7 +161,7 @@ namespace ControllerService
             PipeServer.SendMessage(new PipeServerToast
             {
                 title = $"{target}",
-                content = Properties.Resources.ToastOnTargetDisconnected,
+                content = "is now disconnected",
                 image = $"HIDmode{(uint)target.HID}"
             });
         }
@@ -172,7 +172,7 @@ namespace ControllerService
             PipeServer.SendMessage(new PipeServerToast
             {
                 title = $"{target}",
-                content = Properties.Resources.ToastOnTargetConnected,
+                content = "is now connected",
                 image = $"HIDmode{(uint)target.HID}"
             });
         }
