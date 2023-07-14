@@ -39,7 +39,7 @@ namespace HandheldCompanion.Actions
 
         // settings
         public float Sensivity { get; set; } = 25.0f;
-        public float Deadzone { get; set; } = 25.0f;
+        public float Deadzone { get; set; } = 10.0f;
         public bool AxisInverted { get; set; } = false;
         public bool AxisRotated { get; set; } = false;
 

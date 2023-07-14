@@ -231,7 +231,7 @@ namespace HandheldCompanion.Managers
                             break;
                         case MotionInput.JoystickCamera:
                         default:
-                            output = new Vector2(-gyroscope[(int)SensorIndex.Default].Z, gyroscope[(int)SensorIndex.Default].X);
+                            output = new Vector2(gyroscope[(int)SensorIndex.Default].Z, gyroscope[(int)SensorIndex.Default].X);
                             break;
                     }
 
