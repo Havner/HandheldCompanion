@@ -1,13 +1,13 @@
-﻿using ControllerCommon.Controllers;
+﻿using ControllerCommon;
+using ControllerCommon.Actions;
+using ControllerCommon.Controllers;
 using ControllerCommon.Inputs;
 using ControllerCommon.Utils;
-using ControllerCommon;
+using HandheldCompanion.Views;
 using System;
 using System.Diagnostics;
 using System.Numerics;
-using HandheldCompanion.Views;
 using System.Windows;
-using ControllerCommon.Actions;
 
 namespace HandheldCompanion.Managers
 {

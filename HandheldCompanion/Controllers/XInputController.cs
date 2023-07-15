@@ -1,7 +1,6 @@
 using ControllerCommon.Controllers;
 using ControllerCommon.Inputs;
 using ControllerCommon.Managers;
-using ControllerCommon.Pipes;
 using SharpDX.XInput;
 using System;
 using System.Linq;
@@ -298,28 +297,13 @@ namespace HandheldCompanion.Controllers
         public override void Plug()
         {
             TimerManager.Tick += UpdateInputs;
-            PipeClient.ServerMessage += OnServerMessage;
             base.Plug();
         }
 
         public override void Unplug()
         {
             TimerManager.Tick -= UpdateInputs;
-            PipeClient.ServerMessage -= OnServerMessage;
             base.Unplug();
-        }
-
-        private void OnServerMessage(PipeMessage message)
-        {
-            switch (message.code)
-            {
-                case PipeCode.SERVER_VIBRATION:
-                    {
-                        PipeClientVibration e = (PipeClientVibration)message;
-                        SetVibration(e.LargeMotor, e.SmallMotor);
-                    }
-                    break;
-            }
         }
 
         public override string GetGlyph(ButtonFlags button)

@@ -1,7 +1,6 @@
 using ControllerCommon;
 using ControllerCommon.Devices;
 using ControllerCommon.Managers;
-using ControllerCommon.Pipes;
 using HandheldCompanion.Managers;
 using HandheldCompanion.Views.Pages;
 using HandheldCompanion.Views.Windows;
@@ -14,7 +13,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.ServiceProcess;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -24,7 +22,6 @@ using System.Windows.Navigation;
 using static ControllerCommon.Managers.PowerManager;
 using Application = System.Windows.Application;
 using Page = System.Windows.Controls.Page;
-using ServiceControllerStatus = ControllerCommon.Managers.ServiceControllerStatus;
 
 namespace HandheldCompanion.Views
 {
@@ -54,14 +51,13 @@ namespace HandheldCompanion.Views
 
         // manager(s) vars
         private static List<Manager> _managers = new();
-        public static ServiceManager serviceManager;
         public static TaskManager taskManager;
         public static PerformanceManager performanceManager;
 
         private WindowState visibleWindowState;
         private NotifyIcon notifyIcon;
 
-        public static string CurrentExe, CurrentPath, CurrentPathService;
+        public static string CurrentExe;
         private bool appClosing;
         private bool IsReady;
 
@@ -118,25 +114,12 @@ namespace HandheldCompanion.Views
 
             AddNotifyIconItem("Main Window");
             AddNotifyIconItem("Quick Tools");
-            AddNotifyIconSeparator();
-
-            foreach (NavigationViewItem item in navView.FooterMenuItems)
-                AddNotifyIconItem(item.Content.ToString(), item.Tag);
 
             AddNotifyIconSeparator();
             AddNotifyIconItem("Exit");
 
             // paths
             CurrentExe = process.MainModule.FileName;
-            CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
-            CurrentPathService = Path.Combine(CurrentPath, "ControllerService.exe");
-
-            // verifying HidHide is installed
-            if (!File.Exists(CurrentPathService))
-            {
-                LogManager.LogCritical("Controller Service executable is missing");
-                throw new InvalidOperationException();
-            }
 
             // initialize HidHide
             HidHide.RegisterApplication(CurrentExe);
@@ -185,17 +168,13 @@ namespace HandheldCompanion.Views
             VirtualManager.Start();
 
             // start managers asynchroneously
+            // TODO: remove those threads
             foreach (Manager manager in _managers)
                 new Thread(manager.Start).Start();
 
             // start setting last
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
             SettingsManager.Start();
-
-            PipeClient.ServerMessage += OnServerMessage;
-            PipeClient.Connected += OnClientConnected;
-            PipeClient.Disconnected += OnClientDisconnected;
-            PipeClient.Open();
 
             // update Position and Size
             Height = (int)Math.Max(MinHeight, SettingsManager.GetDouble("MainWindowHeight"));
@@ -304,36 +283,12 @@ namespace HandheldCompanion.Views
         private void loadManagers()
         {
             // initialize managers
-            serviceManager = new ServiceManager("ControllerService", Properties.Resources.ServiceName, Properties.Resources.ServiceDescription);
             taskManager = new TaskManager("HandheldCompanion", CurrentExe);
             performanceManager = new();
 
             // store managers
-            _managers.Add(serviceManager);
             _managers.Add(taskManager);
             _managers.Add(performanceManager);
-
-            serviceManager.Initialized += () =>
-            {
-                // listen for service update once initialized
-                serviceManager.Updated += OnServiceUpdate;
-
-                if (SettingsManager.GetBoolean("StartServiceWithCompanion"))
-                {
-                    if (!serviceManager.Exists())
-                        serviceManager.CreateService(CurrentPathService);
-
-                    _ = serviceManager.StartServiceAsync();
-                }
-            };
-            serviceManager.StartFailed += (status, message) =>
-            {
-                _ = Dialog.ShowAsync($"{Properties.Resources.MainWindow_ServiceManager}", $"{Properties.Resources.MainWindow_ServiceManagerStartIssue}\n\n{message}", ContentDialogButton.Primary, null, $"{Properties.Resources.MainWindow_OK}");
-            };
-            serviceManager.StopFailed += (status) =>
-            {
-                _ = Dialog.ShowAsync($"{Properties.Resources.MainWindow_ServiceManager}", $"{Properties.Resources.MainWindow_ServiceManagerStopIssue}", ContentDialogButton.Primary, null, $"{Properties.Resources.MainWindow_OK}");
-            };
         }
 
         private void GenericDeviceUpdated(PnPDevice device, DeviceEventArgs obj)
@@ -367,31 +322,11 @@ namespace HandheldCompanion.Views
                 case "QuickTools":
                     overlayquickTools.UpdateVisibility();
                     break;
-                case "ServiceStart":
-                    _ = serviceManager.StartServiceAsync();
-                    break;
-                case "ServiceStop":
-                    _ = serviceManager.StopServiceAsync();
-                    break;
-                case "ServiceInstall":
-                    serviceManager.CreateService(CurrentPathService);
-                    break;
-                case "ServiceDelete":
-                    serviceManager.DeleteService();
-                    break;
                 case "Exit":
                     appClosing = true;
                     this.Close();
                     break;
             }
-        }
-
-        private void OnClientConnected()
-        {
-        }
-
-        private void OnClientDisconnected()
-        {
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -411,151 +346,15 @@ namespace HandheldCompanion.Views
             IsReady = true;
         }
 
-        #region PipeServer
-        private void OnServerMessage(PipeMessage message)
-        {
-            switch (message.code)
-            {
-                case PipeCode.SERVER_TOAST:
-                    PipeServerToast toast = (PipeServerToast)message;
-                    ToastManager.SendToast(toast.title, toast.content, toast.image);
-                    break;
-            }
-        }
-        #endregion
-
-        #region serviceManager
-
-        /*
-         * Stop
-         * Start
-         * Deploy
-         * Remove
-         */
-
-        private void OnServiceUpdate(ServiceControllerStatus status, int mode)
-        {
-            // UI thread (async)
-            Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                switch ((ServiceStartMode)mode)
-                {
-                    case ServiceStartMode.Disabled:
-                        b_ServiceStop.IsEnabled = false;
-                        b_ServiceStart.IsEnabled = false;
-                        b_ServiceInstall.IsEnabled = true;
-                        b_ServiceDelete.IsEnabled = false;
-
-                        if (notifyIcon.ContextMenuStrip is not null)
-                        {
-                            notifyIcon.ContextMenuStrip.Items[3].Enabled = false;
-                            notifyIcon.ContextMenuStrip.Items[4].Enabled = false;
-                            notifyIcon.ContextMenuStrip.Items[5].Enabled = true;
-                            notifyIcon.ContextMenuStrip.Items[6].Enabled = false;
-                        }
-                        break;
-
-                    default:
-                        {
-                            switch (status)
-                            {
-                                case ServiceControllerStatus.Paused:
-                                case ServiceControllerStatus.Stopped:
-                                    b_ServiceStop.IsEnabled = false;
-                                    b_ServiceStart.IsEnabled = true;
-                                    b_ServiceInstall.IsEnabled = false;
-                                    b_ServiceDelete.IsEnabled = true;
-
-                                    if (notifyIcon.ContextMenuStrip is not null)
-                                    {
-                                        notifyIcon.ContextMenuStrip.Items[3].Enabled = false;
-                                        notifyIcon.ContextMenuStrip.Items[4].Enabled = true;
-                                        notifyIcon.ContextMenuStrip.Items[5].Enabled = false;
-                                        notifyIcon.ContextMenuStrip.Items[6].Enabled = true;
-                                    }
-                                    break;
-                                case ServiceControllerStatus.Running:
-                                    b_ServiceStop.IsEnabled = true;
-                                    b_ServiceStart.IsEnabled = false;
-                                    b_ServiceInstall.IsEnabled = false;
-                                    b_ServiceDelete.IsEnabled = false;
-
-                                    if (notifyIcon.ContextMenuStrip is not null)
-                                    {
-                                        notifyIcon.ContextMenuStrip.Items[3].Enabled = true;
-                                        notifyIcon.ContextMenuStrip.Items[4].Enabled = false;
-                                        notifyIcon.ContextMenuStrip.Items[5].Enabled = false;
-                                        notifyIcon.ContextMenuStrip.Items[6].Enabled = false;
-                                    }
-                                    break;
-                                case ServiceControllerStatus.ContinuePending:
-                                case ServiceControllerStatus.PausePending:
-                                case ServiceControllerStatus.StartPending:
-                                case ServiceControllerStatus.StopPending:
-                                    b_ServiceStop.IsEnabled = false;
-                                    b_ServiceStart.IsEnabled = false;
-                                    b_ServiceInstall.IsEnabled = false;
-                                    b_ServiceDelete.IsEnabled = false;
-
-                                    if (notifyIcon.ContextMenuStrip is not null)
-                                    {
-                                        notifyIcon.ContextMenuStrip.Items[3].Enabled = false;
-                                        notifyIcon.ContextMenuStrip.Items[4].Enabled = false;
-                                        notifyIcon.ContextMenuStrip.Items[5].Enabled = false;
-                                        notifyIcon.ContextMenuStrip.Items[6].Enabled = false;
-                                    }
-                                    break;
-                                default:
-                                    b_ServiceStop.IsEnabled = false;
-                                    b_ServiceStart.IsEnabled = false;
-                                    b_ServiceInstall.IsEnabled = true;
-                                    b_ServiceDelete.IsEnabled = false;
-
-                                    if (notifyIcon.ContextMenuStrip is not null)
-                                    {
-                                        notifyIcon.ContextMenuStrip.Items[3].Enabled = false;
-                                        notifyIcon.ContextMenuStrip.Items[4].Enabled = false;
-                                        notifyIcon.ContextMenuStrip.Items[5].Enabled = true;
-                                        notifyIcon.ContextMenuStrip.Items[6].Enabled = false;
-                                    }
-                                    break;
-                            }
-                        }
-                        break;
-                }
-            });
-        }
-        #endregion
-
         #region UI
         private void navView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
-            if (args.InvokedItemContainer is not null)
-            {
-                NavigationViewItem navItem = (NavigationViewItem)args.InvokedItemContainer;
-                string navItemTag = (string)navItem.Tag;
+            if (args.InvokedItemContainer is null)
+                return;
 
-                switch (navItemTag)
-                {
-                    case "ServiceStart":
-                        _ = serviceManager.StartServiceAsync();
-                        return;
-                    case "ServiceStop":
-                        _ = serviceManager.StopServiceAsync();
-                        return;
-                    case "ServiceInstall":
-                        serviceManager.CreateService(CurrentPathService);
-                        return;
-                    case "ServiceDelete":
-                        serviceManager.DeleteService();
-                        return;
-                    default:
-                        preNavItemTag = navItemTag;
-                        break;
-                }
-
-                NavView_Navigate(preNavItemTag);
-            }
+            NavigationViewItem navItem = (NavigationViewItem)args.InvokedItemContainer;
+            preNavItemTag = (string)navItem.Tag;
+            NavView_Navigate(preNavItemTag);
         }
 
         public void NavView_Navigate(string navItemTag)
@@ -569,9 +368,7 @@ namespace HandheldCompanion.Views
 
             // Only navigate if the selected page isn't currently loaded.
             if (!(_page is null) && !Type.Equals(preNavPageType, _page))
-            {
                 NavView_Navigate(_page);
-            }
         }
 
         public static void NavView_Navigate(Page _page)
@@ -596,9 +393,6 @@ namespace HandheldCompanion.Views
 
             overlayModel.Close();
             overlayquickTools.Close(true);
-
-            if (PipeClient.IsConnected)
-                PipeClient.Close();
 
             VirtualManager.Stop();
             SystemManager.Stop();
@@ -649,14 +443,6 @@ namespace HandheldCompanion.Views
                 e.Cancel = true;
                 WindowState = WindowState.Minimized;
                 return;
-            }
-
-            // stop service with companion
-            if (SettingsManager.GetBoolean("HaltServiceWithCompanion"))
-            {
-                // only halt process if start mode isn't set to "Automatic"
-                if (serviceManager.type != ServiceStartMode.Automatic)
-                    _ = serviceManager.StopServiceAsync();
             }
         }
 
@@ -714,9 +500,6 @@ namespace HandheldCompanion.Views
             if (ContentFrame.SourcePageType is not null)
             {
                 CurrentPageName = ContentFrame.CurrentSourcePageType.Name;
-                //var preNavPageType = ContentFrame.CurrentSourcePageType;
-                //var preNavPageName = preNavPageType.Name;
-                //PipeClient.SendMessage(new PipeNavigation((string)preNavPageName));
 
                 var NavViewItem = navView.MenuItems
                     .OfType<NavigationViewItem>()
@@ -761,9 +544,6 @@ namespace HandheldCompanion.Views
                     {
                         // stop timer manager
                         TimerManager.Stop();
-
-                        // clear pipes
-                        PipeClient.ClearQueue();
 
                         // pause inputs manager
                         InputsManager.Stop();

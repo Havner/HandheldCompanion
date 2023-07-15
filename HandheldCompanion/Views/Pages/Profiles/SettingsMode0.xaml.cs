@@ -29,7 +29,6 @@ namespace HandheldCompanion.Views.Pages.Profiles
         {
             this.Tag = Tag;
 
-            //PipeClient.ServerMessage += OnServerMessage;
             MotionManager.SettingsMode0Update += MotionManager_SettingsMode0Update;
 
             HotkeysManager.HotkeyCreated += TriggerCreated;

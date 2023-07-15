@@ -1,6 +1,5 @@
 using ControllerCommon;
 using ControllerCommon.Managers;
-using ControllerCommon.Pipes;
 using ControllerCommon.Utils;
 using HandheldCompanion.Controls;
 using HandheldCompanion.Views;
@@ -131,12 +130,6 @@ namespace HandheldCompanion.Managers
         {
             currentProfile = profile;
             Applied?.Invoke(profile, source);
-
-            // Remove Layout before sending Profile to service
-            // It's not needed and has problems deserializing due to Actions defined in HC
-            Profile limited = profile.Clone() as Profile;
-            limited.Layout = null;
-            PipeClient.SendMessage(new PipeClientProfile(limited));
 
             LogManager.LogInformation("Profile {0} applied", profile.Name);
             ToastManager.SendToast($"Profile {profile.Name} applied");

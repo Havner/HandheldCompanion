@@ -1,6 +1,5 @@
 using ControllerCommon.Actions;
 using ControllerCommon.Controllers;
-using ControllerCommon.Devices;
 using ControllerCommon.Inputs;
 using HandheldCompanion.Controls;
 using HandheldCompanion.Managers;

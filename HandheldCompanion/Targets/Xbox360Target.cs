@@ -1,6 +1,5 @@
 using ControllerCommon.Inputs;
 using ControllerCommon.Managers;
-using ControllerCommon.Pipes;
 using ControllerCommon.Utils;
 using HandheldCompanion.Managers;
 using Nefarius.ViGEm.Client.Exceptions;
@@ -62,8 +61,7 @@ namespace HandheldCompanion.Targets
 
         public void FeedbackReceived(object sender, Xbox360FeedbackReceivedEventArgs e)
         {
-            // pass raw vibration to client
-            PipeServer.SendMessage(new PipeClientVibration() { LargeMotor = e.LargeMotor, SmallMotor = e.SmallMotor });
+            SendVibrate(e.LargeMotor, e.SmallMotor);
         }
 
         public override unsafe void UpdateReport(long ticks)

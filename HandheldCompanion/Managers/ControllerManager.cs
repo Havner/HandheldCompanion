@@ -2,7 +2,6 @@ using ControllerCommon;
 using ControllerCommon.Controllers;
 using ControllerCommon.Inputs;
 using ControllerCommon.Managers;
-using ControllerCommon.Pipes;
 using ControllerCommon.Platforms;
 using ControllerCommon.Utils;
 using HandheldCompanion.Controllers;
@@ -65,7 +64,7 @@ namespace HandheldCompanion.Managers
 
             ProcessManager.ForegroundChanged += ProcessManager_ForegroundChanged;
 
-            PipeClient.Connected += OnClientConnected;
+            VirtualManager.Vibrated += VirtualManager_Vibrated;
 
             // enable HidHide
             HidHide.SetCloaking(true);
@@ -106,8 +105,7 @@ namespace HandheldCompanion.Managers
                     controller.Unhide();
 
             // unplug on close
-            IController target = GetTargetController();
-            target?.Unplug();
+            targetController?.Unplug();
 
             LogManager.LogInformation("{0} has stopped", "ControllerManager");
         }
@@ -126,15 +124,14 @@ namespace HandheldCompanion.Managers
 
                     case "SteamDeckMuteController":
                         {
-                            IController target = GetTargetController();
-                            if (target is null)
+                            if (targetController is null)
                                 return;
 
-                            if (typeof(NeptuneController) != target.GetType())
+                            if (typeof(NeptuneController) != targetController.GetType())
                                 return;
 
                             bool Muted = Convert.ToBoolean(value);
-                            ((NeptuneController)target).SetVirtualMuted(Muted);
+                            ((NeptuneController)targetController).SetVirtualMuted(Muted);
                         }
                         break;
                 }
@@ -160,8 +157,12 @@ namespace HandheldCompanion.Managers
 
         private static void SetHIDStrength(uint value)
         {
-            IController target = GetTargetController();
-            target?.SetVibrationStrength(value);
+            targetController?.SetVibrationStrength(value);
+        }
+
+        private static void VirtualManager_Vibrated(byte LargeMotor, byte SmallMotor)
+        {
+            targetController?.SetVibration(LargeMotor, SmallMotor);
         }
 
         private static void HidDeviceArrived(PnPDetails details, DeviceEventArgs obj)
@@ -416,10 +417,6 @@ namespace HandheldCompanion.Managers
             ControllerSelected?.Invoke(targetController);
         }
 
-        private static void OnClientConnected()
-        {
-        }
-
         public static IController GetTargetController()
         {
             return targetController;
@@ -474,8 +471,7 @@ namespace HandheldCompanion.Managers
                         return;
             }
 
-            // pass inputs to service
-            PipeClient.SendMessage(new PipeClientInputs(controllerState));
+            VirtualManager.UpdateInputs(controllerState);
         }
 
         internal static IController GetEmulatedController()

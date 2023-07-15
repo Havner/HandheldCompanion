@@ -133,30 +133,6 @@ namespace HandheldCompanion.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool StartServiceWithCompanion {
-            get {
-                return ((bool)(this["StartServiceWithCompanion"]));
-            }
-            set {
-                this["StartServiceWithCompanion"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool HaltServiceWithCompanion {
-            get {
-                return ((bool)(this["HaltServiceWithCompanion"]));
-            }
-            set {
-                this["HaltServiceWithCompanion"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public int OverlayModel {
             get {
@@ -368,18 +344,6 @@ namespace HandheldCompanion.Properties {
             }
             set {
                 this["MainWindowVisibleState"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3")]
-        public int ServiceStartMode {
-            get {
-                return ((int)(this["ServiceStartMode"]));
-            }
-            set {
-                this["ServiceStartMode"] = value;
             }
         }
         

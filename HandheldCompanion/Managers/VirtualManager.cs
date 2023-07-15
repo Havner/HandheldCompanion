@@ -1,6 +1,5 @@
-using ControllerCommon;
+using ControllerCommon.Controllers;
 using ControllerCommon.Managers;
-using ControllerCommon.Pipes;
 using ControllerCommon.Utils;
 using HandheldCompanion.Targets;
 using Nefarius.ViGEm.Client;
@@ -26,13 +25,13 @@ namespace HandheldCompanion.Managers
         private static HIDmode HIDmode = HIDmode.NoController;
         private static HIDstatus HIDstatus = HIDstatus.Disconnected;
 
-        // profile vars
-        public static Profile currentProfile = new();
-
         public static bool IsInitialized;
 
         public static event InitializedEventHandler Initialized;
         public delegate void InitializedEventHandler();
+
+        public static event VibrateEventHandler Vibrated;
+        public delegate void VibrateEventHandler(byte LargeMotor, byte SmallMotor);
 
         static VirtualManager()
         {
@@ -46,11 +45,6 @@ namespace HandheldCompanion.Managers
                 LogManager.LogCritical("ViGEm is missing. Please get it from: {0}", "https://github.com/ViGEm/ViGEmBus/releases");
                 throw new InvalidOperationException();
             }
-
-            // initialize PipeServer
-            PipeServer.Connected += OnClientConnected;
-            PipeServer.Disconnected += OnClientDisconnected;
-            PipeServer.ClientMessage += OnClientMessage;
         }
 
         public static void Start()
@@ -60,9 +54,6 @@ namespace HandheldCompanion.Managers
 
             // initialize DSUClient
             DSUServer = new DSUServer();
-
-            // start Pipe Server
-            PipeServer.Open();
 
             PowerManager.SystemStatusChanged += OnSystemStatusChanged;
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
@@ -79,9 +70,6 @@ namespace HandheldCompanion.Managers
 
             // stop DSUClient
             DSUServer?.Stop();
-
-            // stop Pipe Server
-            PipeServer.Close();
 
             IsInitialized = false;
         }
@@ -164,6 +152,7 @@ namespace HandheldCompanion.Managers
 
             vTarget.Connected += OnTargetConnected;
             vTarget.Disconnected += OnTargetDisconnected;
+            vTarget.Vibrated += OnTargetVibrated;
 
             // update status
             SetControllerStatus(HIDstatus);
@@ -202,50 +191,20 @@ namespace HandheldCompanion.Managers
             ToastManager.SendToast($"{target}", "is now disconnected", $"HIDmode{(uint)target.HID}");
         }
 
-        private static void OnClientMessage(PipeMessage message)
+        private static void OnTargetVibrated(byte LargeMotor, byte SmallMotor)
         {
-            switch (message.code)
-            {
-                case PipeCode.CLIENT_PROFILE:
-                    {
-                        PipeClientProfile profile = (PipeClientProfile)message;
-                        UpdateProfile(profile.GetProfile());
-                    }
-                    break;
-
-                case PipeCode.CLIENT_INPUT:
-                    {
-                        PipeClientInputs input = (PipeClientInputs)message;
-
-                        // TODO: put touch first
-                        vTarget?.UpdateInputs(input.Inputs);
-                        DSUServer.UpdateInputs(input.Inputs);
-                        DS4Touch.UpdateInputs(input.Inputs);
-                    }
-                    break;
-            }
+            Vibrated?.Invoke(LargeMotor, SmallMotor);
         }
 
-        private static void OnClientConnected()
+        public static void UpdateInputs(ControllerState controllerState)
         {
+            // TODO: put touch first
+            vTarget?.UpdateInputs(controllerState);
+            DSUServer?.UpdateInputs(controllerState);
+            DS4Touch.UpdateInputs(controllerState);
         }
 
-        private static void OnClientDisconnected()
-        {
-        }
-
-        internal static void UpdateProfile(Profile profile)
-        {
-            // skip if current profile
-            if (profile == currentProfile)
-                return;
-
-            // update current profile
-            currentProfile = profile;
-
-            LogManager.LogInformation("Profile {0} applied", profile.Name);
-        }
-
+        // TODO: move to MainWindow?
         private static void OnSystemStatusChanged(SystemStatus status, SystemStatus prevStatus)
         {
             if (status == prevStatus)
@@ -258,6 +217,7 @@ namespace HandheldCompanion.Managers
                         if (prevStatus == SystemStatus.SystemPending)
                         {
                             // resume from sleep
+                            // TODO: switch to Task.Delay
                             Thread.Sleep(CurrentDevice.ResumeDelay);
                         }
 
@@ -282,9 +242,6 @@ namespace HandheldCompanion.Managers
                     break;
                 case SystemStatus.SystemPending:
                     {
-                        // clear pipes
-                        PipeServer.ClearQueue();
-
                         // reset vigem
                         ResetViGEm();
                     }

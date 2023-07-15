@@ -20,6 +20,9 @@ namespace HandheldCompanion.Targets
         public event DisconnectedEventHandler Disconnected;
         public delegate void DisconnectedEventHandler(ViGEmTarget target);
 
+        public event VibratedEventHandler Vibrated;
+        public delegate void VibratedEventHandler(byte LargeMotor, byte SmallMotor);
+
         public bool IsConnected = false;
 
         protected ViGEmTarget()
@@ -29,6 +32,11 @@ namespace HandheldCompanion.Targets
         public override string ToString()
         {
             return EnumUtils.GetDescriptionFromEnumValue(HID);
+        }
+
+        protected virtual void SendVibrate(byte LargeMotor, byte SmallMotor)
+        {
+            Vibrated?.Invoke(LargeMotor, SmallMotor);
         }
 
         public virtual void Connect()

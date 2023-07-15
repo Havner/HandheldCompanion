@@ -1,6 +1,5 @@
 using ControllerCommon.Controllers;
 using ControllerCommon.Inputs;
-using ControllerCommon.Pipes;
 using ControllerCommon.Utils;
 using HandheldCompanion.Managers;
 using HandheldCompanion.Models;
@@ -10,8 +9,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
-using NumVector3 = System.Numerics.Vector3;
 using NumQuaternion = System.Numerics.Quaternion;
+using NumVector3 = System.Numerics.Vector3;
 using Timer = System.Timers.Timer;
 
 namespace HandheldCompanion.Views.Windows

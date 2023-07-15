@@ -29,12 +29,6 @@
     <Setting Name="MainWindowTheme" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="StartServiceWithCompanion" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="HaltServiceWithCompanion" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="OverlayModel" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
@@ -88,9 +82,6 @@
     </Setting>
     <Setting Name="MainWindowVisibleState" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="ServiceStartMode" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">3</Value>
     </Setting>
     <Setting Name="FirstStart" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

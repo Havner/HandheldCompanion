@@ -1,21 +1,16 @@
 using ControllerCommon.Controllers;
 using ControllerCommon.Devices;
 using ControllerCommon.Managers;
-using ControllerCommon.Pipes;
 using ControllerCommon.Utils;
 using HandheldCompanion.Controls;
 using HandheldCompanion.Managers;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Page = System.Windows.Controls.Page;
-using ServiceControllerStatus = ControllerCommon.Managers.ServiceControllerStatus;
 
 namespace HandheldCompanion.Views.Pages
 {
@@ -24,11 +19,6 @@ namespace HandheldCompanion.Views.Pages
     /// </summary>
     public partial class ControllerPage : Page
     {
-        // pipe vars
-        bool isConnected;
-        bool isLoading;
-        bool hasSettings;
-
         // controllers vars
         private HIDmode controllerMode = HIDmode.NoController;
         private HIDstatus controllerStatus = HIDstatus.Disconnected;
@@ -47,8 +37,6 @@ namespace HandheldCompanion.Views.Pages
             foreach (HIDstatus status in ((HIDstatus[])Enum.GetValues(typeof(HIDstatus))))
                 cB_ServiceSwitch.Items.Add(EnumUtils.GetDescriptionFromEnumValue(status));
 
-            PipeClient.ServerMessage += OnServerMessage;
-            MainWindow.serviceManager.Updated += OnServiceUpdate;
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
 
             ControllerManager.ControllerPlugged += ControllerPlugged;
@@ -101,50 +89,6 @@ namespace HandheldCompanion.Views.Pages
 
         public void Page_Closed()
         {
-            PipeClient.ServerMessage -= OnServerMessage;
-            MainWindow.serviceManager.Updated -= OnServiceUpdate;
-        }
-
-        private void OnServiceUpdate(ServiceControllerStatus status, int mode)
-        {
-            switch (status)
-            {
-                case ServiceControllerStatus.ContinuePending:
-                case ServiceControllerStatus.PausePending:
-                case ServiceControllerStatus.StartPending:
-                case ServiceControllerStatus.StopPending:
-                    isLoading = true;
-                    break;
-                case ServiceControllerStatus.Paused:
-                    isLoading = false;
-                    break;
-                case ServiceControllerStatus.Stopped:
-                    isLoading = false;
-                    isConnected = false;
-                    break;
-                case ServiceControllerStatus.Running:
-                    {
-                        Task.Factory.StartNew(() =>
-                        {
-                            while (!hasSettings)
-                                Thread.Sleep(250);
-                        });
-
-                        isLoading = false;
-                        isConnected = true;
-                    }
-                    break;
-                default:
-                    isLoading = false;
-                    break;
-            }
-
-            // UI thread (async)
-            Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                //navLoad.Visibility = isLoading ? Visibility.Visible : Visibility.Hidden;
-                //ControllerGrid.IsEnabled = isConnected && !isLoading;
-            });
         }
 
         private void ControllerUnplugged(IController Controller)
@@ -241,42 +185,6 @@ namespace HandheldCompanion.Views.Pages
             {
                 ControllerGrid.Background = uniformToFillBrush;
             });
-        }
-
-        private void OnServerMessage(PipeMessage message)
-        {
-            switch (message.code)
-            {
-                case PipeCode.SERVER_SETTINGS:
-                    PipeServerSettings settings = (PipeServerSettings)message;
-                    UpdateSettings(settings.settings);
-                    break;
-            }
-        }
-
-        public void UpdateSettings(Dictionary<string, string> args)
-        {
-            // UI thread
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                foreach (KeyValuePair<string, string> pair in args)
-                {
-                    string name = pair.Key;
-                    string property = pair.Value;
-
-                    switch (name)
-                    {
-                        case "HIDmode":
-                            cB_HidMode.SelectedIndex = (int)Enum.Parse(typeof(HIDmode), property);
-                            break;
-                        case "HIDstatus":
-                            cB_ServiceSwitch.SelectedIndex = (int)Enum.Parse(typeof(HIDstatus), property);
-                            break;
-                    }
-                }
-            });
-
-            hasSettings = true;
         }
 
         private void cB_HidMode_SelectionChanged(object sender, SelectionChangedEventArgs e)

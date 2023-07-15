@@ -36,13 +36,6 @@
                             <ImageBrush ImageSource="/Resources/controller_2_0.png" Stretch="Uniform" />
                         </Grid.Background>
 
-                        <ui:ProgressRing
-                            Name="navLoad"
-                            Width="50"
-                            Height="50"
-                            IsActive="True"
-                            Visibility="Hidden" />
-
                         <ui:SimpleStackPanel
                             HorizontalAlignment="Right"
                             VerticalAlignment="Bottom"

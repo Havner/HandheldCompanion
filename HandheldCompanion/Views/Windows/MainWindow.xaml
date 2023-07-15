@@ -98,45 +98,6 @@
             </ui:NavigationViewItem>
         </ui:NavigationView.MenuItems>
 
-        <ui:NavigationView.FooterMenuItems>
-            <ui:NavigationViewItem
-                Name="b_ServiceStop"
-                Background="{DynamicResource SystemControlHighlightAltListAccentLowBrush}"
-                Content="{x:Static resx:Resources.MainWindow_serviceStop}"
-                Icon="Stop"
-                SelectsOnInvoked="False"
-                Tag="ServiceStop"
-                ToolTipService.InitialShowDelay="100"
-                ToolTipService.ShowOnDisabled="True" />
-            <ui:NavigationViewItem
-                Name="b_ServiceStart"
-                Background="{DynamicResource SystemControlHighlightAltListAccentLowBrush}"
-                Content="{x:Static resx:Resources.MainWindow_serviceStart}"
-                Icon="Play"
-                SelectsOnInvoked="False"
-                Tag="ServiceStart"
-                ToolTipService.InitialShowDelay="100"
-                ToolTipService.ShowOnDisabled="True" />
-            <ui:NavigationViewItem
-                Name="b_ServiceInstall"
-                Background="{DynamicResource SystemControlHighlightAltListAccentLowBrush}"
-                Content="{x:Static resx:Resources.MainWindow_serviceDeploy}"
-                Icon="Refresh"
-                SelectsOnInvoked="False"
-                Tag="ServiceInstall"
-                ToolTipService.InitialShowDelay="100"
-                ToolTipService.ShowOnDisabled="True" />
-            <ui:NavigationViewItem
-                Name="b_ServiceDelete"
-                Background="{DynamicResource SystemControlHighlightAltListAccentLowBrush}"
-                Content="{x:Static resx:Resources.MainWindow_serviceRemove}"
-                Icon="Delete"
-                SelectsOnInvoked="False"
-                Tag="ServiceDelete"
-                ToolTipService.InitialShowDelay="100"
-                ToolTipService.ShowOnDisabled="True" />
-        </ui:NavigationView.FooterMenuItems>
-
         <common:TouchScrollViewer x:Name="scrollViewer" PanningMode="VerticalOnly">
             <ui:Frame
                 Name="ContentFrame"

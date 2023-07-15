@@ -2,7 +2,6 @@ using ControllerCommon;
 using ControllerCommon.Controllers;
 using ControllerCommon.Inputs;
 using ControllerCommon.Managers;
-using ControllerCommon.Pipes;
 using HandheldCompanion.Managers;
 using neptune_hidapi.net;
 using neptune_hidapi.net.Hid;
@@ -295,7 +294,6 @@ namespace HandheldCompanion.Controllers
 
             Controller.OnControllerInputReceived = input => Task.Run(() => OnControllerInputReceived(input));
 
-            PipeClient.ServerMessage += OnServerMessage;
             base.Plug();
         }
 
@@ -325,7 +323,6 @@ namespace HandheldCompanion.Controllers
             // kill rumble thread
             ThreadRunning = false;
 
-            PipeClient.ServerMessage -= OnServerMessage;
             base.Unplug();
         }
 
@@ -350,19 +347,6 @@ namespace HandheldCompanion.Controllers
         {
             this.FeedbackLargeMotor = LargeMotor;
             this.FeedbackSmallMotor = SmallMotor;
-        }
-
-        private void OnServerMessage(PipeMessage message)
-        {
-            switch (message.code)
-            {
-                case PipeCode.SERVER_VIBRATION:
-                    {
-                        PipeClientVibration e = (PipeClientVibration)message;
-                        SetVibration(e.LargeMotor, e.SmallMotor);
-                    }
-                    break;
-            }
         }
 
         public void SetLizardMouse(bool lizardMode)

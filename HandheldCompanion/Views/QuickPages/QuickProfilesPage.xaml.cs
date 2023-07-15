@@ -1,14 +1,9 @@
 using ControllerCommon;
-using ControllerCommon.Inputs;
-using ControllerCommon.Utils;
 using HandheldCompanion.Controls;
 using HandheldCompanion.Managers;
-using ModernWpf.Controls;
-using System;
 using System.Threading;
 using System.Timers;
 using System.Windows;
-using System.Windows.Controls;
 using Layout = ControllerCommon.Layout;
 using Page = System.Windows.Controls.Page;
 using Timer = System.Timers.Timer;

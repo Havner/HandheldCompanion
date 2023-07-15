@@ -1,4 +1,3 @@
-using ControllerCommon.Devices;
 using ControllerCommon.Managers;
 using HandheldCompanion.Managers.Desktop;
 using HandheldCompanion.Views;
