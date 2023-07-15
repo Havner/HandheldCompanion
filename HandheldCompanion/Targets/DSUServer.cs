@@ -99,8 +99,8 @@ namespace HandheldCompanion.Targets
             meta = padMeta;
         }
 
-        public string ip;
-        public int port;
+        public string ip = "127.0.0.1";
+        public int port = 26760;
 
         public event StartedEventHandler Started;
         public delegate void StartedEventHandler(DSUServer server);
@@ -108,11 +108,8 @@ namespace HandheldCompanion.Targets
         public event StoppedEventHandler Stopped;
         public delegate void StoppedEventHandler(DSUServer server);
 
-        public DSUServer(string ipString, int port)
+        public DSUServer()
         {
-            this.ip = ipString;
-            this.port = port;
-
             if (!CommonUtils.IsTextAValidIPAddress(ip))
                 this.ip = "127.0.0.1";
 

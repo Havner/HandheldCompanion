@@ -5,13 +5,7 @@ using ControllerCommon.Utils;
 using HandheldCompanion.Targets;
 using Nefarius.ViGEm.Client;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using static ControllerCommon.Managers.PowerManager;
 using IDevice = ControllerCommon.Devices.IDevice;
 
@@ -28,41 +22,20 @@ namespace HandheldCompanion.Managers
         // devices vars
         public static IDevice CurrentDevice;
 
-        public static string CurrentPath, CurrentPathDep;
-        public static string CurrentTag;
-        public static int CurrentOverlayStatus = 2;
-
         // settings vars
-        public static Configuration configuration;
-        private static string DSUip;
-        private static bool DSUEnabled;
-        private static int DSUport;
         private static HIDmode HIDmode = HIDmode.NoController;
         private static HIDstatus HIDstatus = HIDstatus.Disconnected;
 
         // profile vars
         public static Profile currentProfile = new();
 
+        public static bool IsInitialized;
+
+        public static event InitializedEventHandler Initialized;
+        public delegate void InitializedEventHandler();
+
         static VirtualManager()
         {
-            CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
-            CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
-
-            // paths
-            CurrentPath = AppDomain.CurrentDomain.BaseDirectory;
-            CurrentPathDep = Path.Combine(CurrentPath, "dependencies");
-
-            // settings
-            // todo: move me to a specific class
-            configuration = ConfigurationManager.OpenExeConfiguration("ControllerService.exe");
-
-            HIDmode = Enum.Parse<HIDmode>(configuration.AppSettings.Settings["HIDmode"].Value);
-            HIDstatus = Enum.Parse<HIDstatus>(configuration.AppSettings.Settings["HIDstatus"].Value);
-
-            DSUEnabled = bool.Parse(configuration.AppSettings.Settings["DSUEnabled"].Value);
-            DSUip = configuration.AppSettings.Settings["DSUip"].Value;
-            DSUport = int.Parse(configuration.AppSettings.Settings["DSUport"].Value);
-
             // verifying ViGEm is installed
             try
             {
@@ -78,14 +51,79 @@ namespace HandheldCompanion.Managers
             PipeServer.Connected += OnClientConnected;
             PipeServer.Disconnected += OnClientDisconnected;
             PipeServer.ClientMessage += OnClientMessage;
+        }
 
+        public static void Start()
+        {
             // initialize device
             CurrentDevice = IDevice.GetDefault();
 
             // initialize DSUClient
-            DSUServer = new DSUServer(DSUip, DSUport);
-            DSUServer.Started += OnDSUStarted;
-            DSUServer.Stopped += OnDSUStopped;
+            DSUServer = new DSUServer();
+
+            // start Pipe Server
+            PipeServer.Open();
+
+            PowerManager.SystemStatusChanged += OnSystemStatusChanged;
+            SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
+            SettingsManager.Initialized += SettingsManager_Initialized;
+
+            IsInitialized = true;
+            Initialized?.Invoke();
+        }
+
+        public static void Stop()
+        {
+            // update virtual controller
+            SetControllerMode(HIDmode.NoController);
+
+            // stop DSUClient
+            DSUServer?.Stop();
+
+            // stop Pipe Server
+            PipeServer.Close();
+
+            IsInitialized = false;
+        }
+
+        private static void SettingsManager_SettingValueChanged(string name, object value)
+        {
+            switch (name)
+            {
+                case "HIDmode":
+                    SetControllerMode((HIDmode)Convert.ToInt32(value));
+                    break;
+                case "HIDstatus":
+                    SetControllerStatus((HIDstatus)Convert.ToInt32(value));
+                    break;
+                case "DSUEnabled":
+                    if (SettingsManager.IsInitialized)
+                        SetDSUStatus(Convert.ToBoolean(value));
+                    break;
+                case "DSUip":
+                    DSUServer.ip = Convert.ToString(value);
+                    if (SettingsManager.IsInitialized)
+                        SetDSUStatus(SettingsManager.GetBoolean("DSUEnabled"));
+                    break;
+                case "DSUport":
+                    DSUServer.port = Convert.ToInt32(value);
+                    if (SettingsManager.IsInitialized)
+                        SetDSUStatus(SettingsManager.GetBoolean("DSUEnabled"));
+                    break;
+            }
+        }
+
+        private static void SettingsManager_Initialized()
+        {
+            SetDSUStatus(SettingsManager.GetBoolean("DSUEnabled"));
+        }
+
+        private static void SetDSUStatus(bool started)
+        {
+            if (started)
+                DSUServer.Start();
+            else
+                DSUServer.Stop();
         }
 
         private static void SetControllerMode(HIDmode mode)
@@ -154,46 +192,14 @@ namespace HandheldCompanion.Managers
             HIDstatus = status;
         }
 
-        private static void OnTargetDisconnected(ViGEmTarget target)
-        {
-            // send notification
-            PipeServer.SendMessage(new PipeServerToast
-            {
-                title = $"{target}",
-                content = "is now disconnected",
-                image = $"HIDmode{(uint)target.HID}"
-            });
-        }
-
         private static void OnTargetConnected(ViGEmTarget target)
         {
-            // send notification
-            PipeServer.SendMessage(new PipeServerToast
-            {
-                title = $"{target}",
-                content = "is now connected",
-                image = $"HIDmode{(uint)target.HID}"
-            });
+            ToastManager.SendToast($"{target}", "is now connected", $"HIDmode{(uint)target.HID}");
         }
 
-        // deprecated
-        private static void OnDSUStopped(DSUServer server)
+        private static void OnTargetDisconnected(ViGEmTarget target)
         {
-            /* DSUEnabled = false;
-            configuration.GetSection("Settings:DSUEnabled").Value = false.ToString();
-
-            PipeServerSettings settings = new PipeServerSettings("DSUEnabled", DSUEnabled.ToString());
-            pipeServer.SendMessage(settings); */
-        }
-
-        // deprecated
-        private static void OnDSUStarted(DSUServer server)
-        {
-            /* DSUEnabled = true;
-            configuration.GetSection("Settings:DSUEnabled").Value = true.ToString();
-
-            PipeServerSettings settings = new PipeServerSettings("DSUEnabled", DSUEnabled.ToString());
-            pipeServer.SendMessage(settings); */
+            ToastManager.SendToast($"{target}", "is now disconnected", $"HIDmode{(uint)target.HID}");
         }
 
         private static void OnClientMessage(PipeMessage message)
@@ -204,13 +210,6 @@ namespace HandheldCompanion.Managers
                     {
                         PipeClientProfile profile = (PipeClientProfile)message;
                         UpdateProfile(profile.GetProfile());
-                    }
-                    break;
-
-                case PipeCode.CLIENT_SETTINGS:
-                    {
-                        PipeClientSettings settings = (PipeClientSettings)message;
-                        UpdateSettings(settings.settings);
                     }
                     break;
 
@@ -227,14 +226,12 @@ namespace HandheldCompanion.Managers
             }
         }
 
-        private static void OnClientDisconnected()
+        private static void OnClientConnected()
         {
         }
 
-        private static void OnClientConnected()
+        private static void OnClientDisconnected()
         {
-            // send server settings to client
-            PipeServer.SendMessage(new PipeServerSettings() { settings = GetSettings() });
         }
 
         internal static void UpdateProfile(Profile profile)
@@ -247,115 +244,6 @@ namespace HandheldCompanion.Managers
             currentProfile = profile;
 
             LogManager.LogInformation("Profile {0} applied", profile.Name);
-        }
-
-        public static void UpdateSettings(Dictionary<string, object> args)
-        {
-            foreach (KeyValuePair<string, object> pair in args)
-            {
-                string name = pair.Key;
-                string property = pair.Value.ToString();
-
-                if (configuration.AppSettings.Settings.AllKeys.ToList().Contains(name))
-                {
-                    configuration.AppSettings.Settings[name].Value = property;
-                    configuration.Save(ConfigurationSaveMode.Modified);
-                }
-
-                ApplySetting(name, property);
-                LogManager.LogDebug("{0} set to {1}", name, property);
-            }
-        }
-
-        private static void ApplySetting(string name, string property)
-        {
-            switch (name)
-            {
-                case "HIDmode":
-                    {
-                        HIDmode value = Enum.Parse<HIDmode>(property);
-
-                        if (HIDmode == value)
-                            return;
-
-                        SetControllerMode(value);
-                    }
-                    break;
-                case "HIDstatus":
-                    {
-                        HIDstatus value = Enum.Parse<HIDstatus>(property);
-
-                        if (HIDstatus == value)
-                            return;
-
-                        SetControllerStatus(value);
-                    }
-                    break;
-                case "DSUEnabled":
-                    {
-                        bool value = Convert.ToBoolean(property);
-                        switch (value)
-                        {
-                            case true: DSUServer.Start(); break;
-                            case false: DSUServer.Stop(); break;
-                        }
-                    }
-                    break;
-                case "DSUip":
-                    {
-                        string value = Convert.ToString(property);
-                        DSUServer.ip = value;
-                    }
-                    break;
-                case "DSUport":
-                    {
-                        int value = Convert.ToInt32(property);
-                        DSUServer.port = value;
-                    }
-                    break;
-            }
-        }
-
-        public static Task StartAsync(CancellationToken cancellationToken)
-        {
-            // start master timer
-            TimerManager.Start();
-
-            // start DSUClient
-            if (DSUEnabled)
-                DSUServer.Start();
-
-            // start Pipe Server
-            PipeServer.Open();
-
-            // start Power Manager
-            PowerManager.SystemStatusChanged += OnSystemStatusChanged;
-            PowerManager.Start(true);
-
-            return Task.CompletedTask;
-        }
-
-        public static Task StopAsync(CancellationToken cancellationToken)
-        {
-            // stop master timer
-            TimerManager.Stop();
-
-            // update virtual controller
-            SetControllerMode(HIDmode.NoController);
-
-            // stop Power Manager
-            PowerManager.Stop();
-
-            // stop DSUClient
-            DSUServer?.Stop();
-
-            // stop Pipe Server
-            PipeServer.Close();
-
-            // stop System Manager
-            DeviceManager.Stop();
-
-            return Task.CompletedTask;
         }
 
         private static void OnSystemStatusChanged(SystemStatus status, SystemStatus prevStatus)
@@ -390,16 +278,10 @@ namespace HandheldCompanion.Managers
 
                             Thread.Sleep(1000);
                         }
-
-                        // start timer manager
-                        TimerManager.Start();
                     }
                     break;
                 case SystemStatus.SystemPending:
                     {
-                        // stop timer manager
-                        TimerManager.Stop();
-
                         // clear pipes
                         PipeServer.ClearQueue();
 
@@ -425,16 +307,6 @@ namespace HandheldCompanion.Managers
                 vClient.Dispose();
                 vClient = null;
             }
-        }
-
-        public static Dictionary<string, string> GetSettings()
-        {
-            Dictionary<string, string> settings = new();
-
-            foreach (string key in configuration.AppSettings.Settings.AllKeys)
-                settings.Add(key, configuration.AppSettings.Settings[key].Value);
-
-            return settings;
         }
     }
 }

@@ -31,7 +31,7 @@
                     Padding="15,12,12,12"
                     CornerRadius="{DynamicResource ControlCornerRadius}">
 
-                    <Grid Name="ControllerGrid" IsEnabled="False">
+                    <Grid Name="ControllerGrid">
                         <Grid.Background>
                             <ImageBrush ImageSource="/Resources/controller_2_0.png" Stretch="Uniform" />
                         </Grid.Background>
@@ -50,11 +50,11 @@
                             Spacing="18">
                             <ComboBox
                                 Name="cB_ServiceSwitch"
-                                Width="Auto"
+                                Width="140"
                                 SelectionChanged="cB_ServiceSwitch_SelectionChanged" />
                             <ComboBox
                                 Name="cB_HidMode"
-                                Width="Auto"
+                                Width="260"
                                 SelectionChanged="cB_HidMode_SelectionChanged" />
                         </ui:SimpleStackPanel>
                     </Grid>

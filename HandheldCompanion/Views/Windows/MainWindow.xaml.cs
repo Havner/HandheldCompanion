@@ -182,6 +182,7 @@ namespace HandheldCompanion.Views
             PowerManager.Start();
 
             SystemManager.Start();
+            VirtualManager.Start();
 
             // start managers asynchroneously
             foreach (Manager manager in _managers)
@@ -238,12 +239,6 @@ namespace HandheldCompanion.Views
                     bool DesktopLayout = Convert.ToBoolean(value);
                     SettingsManager.SetProperty("DesktopLayoutEnabled", DesktopLayout, false, true);
                     break;
-            }
-
-            if (PipeClient.IsConnected)
-            {
-                PipeClientSettings settings = new PipeClientSettings(name, value);
-                PipeClient.SendMessage(settings);
             }
         }
 
@@ -393,18 +388,10 @@ namespace HandheldCompanion.Views
 
         private void OnClientConnected()
         {
-            // (re)send all local settings to server at once
-            PipeClientSettings settings = new PipeClientSettings();
-
-            foreach (KeyValuePair<string, object> values in SettingsManager.GetProperties())
-                settings.settings.Add(values.Key, values.Value);
-
-            PipeClient.SendMessage(settings);
         }
 
         private void OnClientDisconnected()
         {
-            // do something
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -424,25 +411,6 @@ namespace HandheldCompanion.Views
             IsReady = true;
         }
 
-        public void UpdateSettings(Dictionary<string, string> args)
-        {
-            foreach (KeyValuePair<string, string> pair in args)
-            {
-                string name = pair.Key;
-                string property = pair.Value;
-
-                switch (name)
-                {
-                    case "DSUEnabled":
-                        break;
-                    case "DSUip":
-                        break;
-                    case "DSUport":
-                        break;
-                }
-            }
-        }
-
         #region PipeServer
         private void OnServerMessage(PipeMessage message)
         {
@@ -451,11 +419,6 @@ namespace HandheldCompanion.Views
                 case PipeCode.SERVER_TOAST:
                     PipeServerToast toast = (PipeServerToast)message;
                     ToastManager.SendToast(toast.title, toast.content, toast.image);
-                    break;
-
-                case PipeCode.SERVER_SETTINGS:
-                    PipeServerSettings settings = (PipeServerSettings)message;
-                    UpdateSettings(settings.settings);
                     break;
             }
         }
@@ -637,6 +600,8 @@ namespace HandheldCompanion.Views
             if (PipeClient.IsConnected)
                 PipeClient.Close();
 
+            VirtualManager.Stop();
+            SystemManager.Stop();
             MotionManager.Stop();
             ControllerManager.Stop();
             HotkeysManager.Stop();

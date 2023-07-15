@@ -84,6 +84,13 @@ namespace HandheldCompanion.Views.Pages
                     case "SteamDeckMuteController":
                         Toggle_SDMuteController.IsOn = Convert.ToBoolean(value);
                         break;
+                    case "HIDmode":
+                        cB_HidMode.SelectedIndex = Convert.ToInt32(value);
+                        break;
+                    case "HIDstatus":
+                        cB_ServiceSwitch.SelectedIndex = Convert.ToInt32(value);
+                        UpdateControllerImage();
+                        break;
                 }
             });
         }
@@ -135,8 +142,8 @@ namespace HandheldCompanion.Views.Pages
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                navLoad.Visibility = isLoading ? Visibility.Visible : Visibility.Hidden;
-                ControllerGrid.IsEnabled = isConnected && !isLoading;
+                //navLoad.Visibility = isLoading ? Visibility.Visible : Visibility.Hidden;
+                //ControllerGrid.IsEnabled = isConnected && !isLoading;
             });
         }
 
@@ -213,25 +220,25 @@ namespace HandheldCompanion.Views.Pages
             });
         }
 
-        private void UpdateController()
+        private void UpdateControllerImage()
         {
-            if (controllerMode == HIDmode.NoController)
-                return;
+            BitmapImage controllerImage;
+            if (controllerMode == HIDmode.NoController || controllerStatus == HIDstatus.Disconnected)
+                controllerImage = new BitmapImage(new Uri($"pack://application:,,,/Resources/controller_2_0.png"));
+            else
+                controllerImage = new BitmapImage(new Uri($"pack://application:,,,/Resources/controller_{Convert.ToInt32(controllerMode)}_{Convert.ToInt32(controllerStatus)}.png"));
 
             // update UI icon to match HIDmode
             ImageBrush uniformToFillBrush = new ImageBrush()
             {
                 Stretch = Stretch.Uniform,
-                ImageSource = new BitmapImage(new Uri($"pack://application:,,,/Resources/controller_{Convert.ToInt32(controllerMode)}_{Convert.ToInt32(controllerStatus)}.png"))
+                ImageSource = controllerImage,
             };
             uniformToFillBrush.Freeze();
 
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                cB_HidMode.SelectedIndex = (int)controllerMode;
-                cB_ServiceSwitch.SelectedIndex = (int)controllerStatus;
-
                 ControllerGrid.Background = uniformToFillBrush;
             });
         }
@@ -278,16 +285,15 @@ namespace HandheldCompanion.Views.Pages
                 return;
 
             controllerMode = (HIDmode)cB_HidMode.SelectedIndex;
+            UpdateControllerImage();
 
             // raise event
             HIDchanged?.Invoke(controllerMode);
 
-            PipeClientSettings settings = new PipeClientSettings("HIDmode", controllerMode);
-            PipeClient.SendMessage(settings);
+            if (!IsLoaded)
+                return;
 
-            UpdateController();
-
-            SettingsManager.SetProperty("HIDmode", controllerMode, false, true);
+            SettingsManager.SetProperty("HIDmode", (int)controllerMode);
         }
 
         private void cB_ServiceSwitch_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -296,13 +302,12 @@ namespace HandheldCompanion.Views.Pages
                 return;
 
             controllerStatus = (HIDstatus)cB_ServiceSwitch.SelectedIndex;
+            UpdateControllerImage();
 
-            PipeClientSettings settings = new PipeClientSettings("HIDstatus", controllerStatus);
-            PipeClient.SendMessage(settings);
+            if (!IsLoaded)
+                return;
 
-            UpdateController();
-
-            SettingsManager.SetProperty("HIDstatus", controllerStatus, false, true);
+            SettingsManager.SetProperty("HIDstatus", (int)controllerStatus);
         }
 
         private void Toggle_Cloaked_Toggled(object sender, RoutedEventArgs e)
