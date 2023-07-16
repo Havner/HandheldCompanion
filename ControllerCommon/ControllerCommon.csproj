@@ -26,7 +26,6 @@
     <PackageReference Include="Nefarius.Drivers.HidHide" Version="1.8.60" />
     <PackageReference Include="Nefarius.Utilities.DeviceManagement" Version="3.9.255" />
     <PackageReference Include="Nefarius.ViGEm.Client" Version="1.21.256" />
-    <PackageReference Include="NetCoreNamedPipeWrapper" Version="1.0.4" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="PInvoke.Kernel32" Version="0.7.124" />
     <PackageReference Include="PInvoke.User32" Version="0.7.124" />
@@ -38,10 +37,7 @@
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.DirectInput" Version="4.2.0" />
     <PackageReference Include="SharpDX.XInput" Version="4.2.0" />
-    <PackageReference Include="System.IO.Pipes.AccessControl" Version="5.0.0" />
-    <PackageReference Include="System.IO.Ports" Version="7.0.0" />
     <PackageReference Include="System.Management" Version="7.0.1" />
-    <PackageReference Include="System.ServiceProcess.ServiceController" Version="7.0.0" />
     <PackageReference Include="WindowsInput" Version="6.4.1" />
   </ItemGroup>
 
