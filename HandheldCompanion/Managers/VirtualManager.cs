@@ -5,7 +5,7 @@ using HandheldCompanion.Targets;
 using Nefarius.ViGEm.Client;
 using System;
 using System.Threading;
-using static ControllerCommon.Managers.PowerManager;
+using System.Threading.Tasks;
 using IDevice = ControllerCommon.Devices.IDevice;
 
 namespace HandheldCompanion.Managers
@@ -45,33 +45,41 @@ namespace HandheldCompanion.Managers
                 LogManager.LogCritical("ViGEm is missing. Please get it from: {0}", "https://github.com/ViGEm/ViGEmBus/releases");
                 throw new InvalidOperationException();
             }
-        }
 
-        public static void Start()
-        {
             // initialize device
             CurrentDevice = IDevice.GetDefault();
 
             // initialize DSUClient
             DSUServer = new DSUServer();
 
-            PowerManager.SystemStatusChanged += OnSystemStatusChanged;
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
             SettingsManager.Initialized += SettingsManager_Initialized;
+        }
+
+        public static void Start()
+        {
+            PowerManager.SystemStatusChanged += OnSystemStatusChanged;
 
             IsInitialized = true;
             Initialized?.Invoke();
+
+            LogManager.LogInformation("{0} has started", "VirtualManager");
         }
 
         public static void Stop()
         {
+            if (!IsInitialized)
+                return;
+
+            IsInitialized = false;
+
             // update virtual controller
             SetControllerMode(HIDmode.NoController);
 
             // stop DSUClient
             DSUServer?.Stop();
 
-            IsInitialized = false;
+            LogManager.LogInformation("{0} has stopped", "VirtualManager");
         }
 
         private static void SettingsManager_SettingValueChanged(string name, object value)
@@ -198,27 +206,27 @@ namespace HandheldCompanion.Managers
 
         public static void UpdateInputs(ControllerState controllerState)
         {
-            // TODO: put touch first
+            // DS4Touch is used by both targets below, update first
+            DS4Touch.UpdateInputs(controllerState);
+
             vTarget?.UpdateInputs(controllerState);
             DSUServer?.UpdateInputs(controllerState);
-            DS4Touch.UpdateInputs(controllerState);
         }
 
         // TODO: move to MainWindow?
-        private static void OnSystemStatusChanged(SystemStatus status, SystemStatus prevStatus)
+        private static async void OnSystemStatusChanged(PowerManager.SystemStatus status, PowerManager.SystemStatus prevStatus)
         {
             if (status == prevStatus)
                 return;
 
             switch (status)
             {
-                case SystemStatus.SystemReady:
+                case PowerManager.SystemStatus.SystemReady:
                     {
-                        if (prevStatus == SystemStatus.SystemPending)
+                        if (prevStatus == PowerManager.SystemStatus.SystemPending)
                         {
                             // resume from sleep
-                            // TODO: switch to Task.Delay
-                            Thread.Sleep(CurrentDevice.ResumeDelay);
+                            await Task.Delay(CurrentDevice.ResumeDelay);
                         }
 
                         // check if service/system was suspended previously
@@ -236,11 +244,11 @@ namespace HandheldCompanion.Managers
                             // set controller mode
                             SetControllerMode(HIDmode);
 
-                            Thread.Sleep(1000);
+                            await Task.Delay(1000);
                         }
                     }
                     break;
-                case SystemStatus.SystemPending:
+                case PowerManager.SystemStatus.SystemPending:
                     {
                         // reset vigem
                         ResetViGEm();

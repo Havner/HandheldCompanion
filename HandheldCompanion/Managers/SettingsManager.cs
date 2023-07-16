@@ -27,7 +27,7 @@ namespace HandheldCompanion.Managers
             var properties = Properties.Settings
                 .Default
                 .Properties
-                .Cast<System.Configuration.SettingsProperty>()
+                .Cast<SettingsProperty>()
                 .OrderBy(s => s.Name);
 
             foreach (SettingsProperty property in properties)

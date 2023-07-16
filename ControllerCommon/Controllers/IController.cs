@@ -77,8 +77,7 @@ namespace ControllerCommon.Controllers
 
         public ButtonState InjectedButtons = new();
 
-        // TODO: make protected
-        public ControllerCapabilities Capabilities = ControllerCapabilities.None;
+        protected ControllerCapabilities Capabilities = ControllerCapabilities.None;
 
         protected int UserIndex;
         protected double VibrationStrength = 1.0d;

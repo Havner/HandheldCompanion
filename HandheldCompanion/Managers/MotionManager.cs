@@ -98,23 +98,18 @@ namespace HandheldCompanion.Managers
         private static void SetupMotion(ControllerState controllerState)
         {
             // store raw values for later use
-            // TODO: from Vector3
-            accelerometer[(int)SensorIndex.Raw].X = controllerState.GyroState.AccelerometerX;
-            accelerometer[(int)SensorIndex.Raw].Y = controllerState.GyroState.AccelerometerY;
-            accelerometer[(int)SensorIndex.Raw].Z = controllerState.GyroState.AccelerometerZ;
-            gyroscope[(int)SensorIndex.Raw].X = controllerState.GyroState.GyroscopeX;
-            gyroscope[(int)SensorIndex.Raw].Y = controllerState.GyroState.GyroscopeY;
-            gyroscope[(int)SensorIndex.Raw].Z = controllerState.GyroState.GyroscopeZ;
+            accelerometer[(int)SensorIndex.Raw] = controllerState.GyroState.Accelerometer;
+            gyroscope[(int)SensorIndex.Raw] = controllerState.GyroState.Gyroscope;
 
             Profile current = ProfileManager.GetCurrent();
 
-            accelerometer[(int)SensorIndex.Default].Z = current.SteeringAxis == 0 ? controllerState.GyroState.AccelerometerZ : controllerState.GyroState.AccelerometerY;
-            accelerometer[(int)SensorIndex.Default].Y = current.SteeringAxis == 0 ? controllerState.GyroState.AccelerometerY : -controllerState.GyroState.AccelerometerZ;
-            accelerometer[(int)SensorIndex.Default].X = current.SteeringAxis == 0 ? controllerState.GyroState.AccelerometerX : controllerState.GyroState.AccelerometerX;
+            accelerometer[(int)SensorIndex.Default].Z = current.SteeringAxis == 0 ? controllerState.GyroState.Accelerometer.Z : controllerState.GyroState.Accelerometer.Y;
+            accelerometer[(int)SensorIndex.Default].Y = current.SteeringAxis == 0 ? controllerState.GyroState.Accelerometer.Y : -controllerState.GyroState.Accelerometer.Z;
+            accelerometer[(int)SensorIndex.Default].X = current.SteeringAxis == 0 ? controllerState.GyroState.Accelerometer.X : controllerState.GyroState.Accelerometer.X;
 
-            gyroscope[(int)SensorIndex.Default].Z = current.SteeringAxis == 0 ? controllerState.GyroState.GyroscopeZ : controllerState.GyroState.GyroscopeY;
-            gyroscope[(int)SensorIndex.Default].Y = current.SteeringAxis == 0 ? controllerState.GyroState.GyroscopeY : controllerState.GyroState.GyroscopeZ;
-            gyroscope[(int)SensorIndex.Default].X = current.SteeringAxis == 0 ? controllerState.GyroState.GyroscopeX : controllerState.GyroState.GyroscopeX;
+            gyroscope[(int)SensorIndex.Default].Z = current.SteeringAxis == 0 ? controllerState.GyroState.Gyroscope.Z : controllerState.GyroState.Gyroscope.Y;
+            gyroscope[(int)SensorIndex.Default].Y = current.SteeringAxis == 0 ? controllerState.GyroState.Gyroscope.Y : controllerState.GyroState.Gyroscope.Z;
+            gyroscope[(int)SensorIndex.Default].X = current.SteeringAxis == 0 ? controllerState.GyroState.Gyroscope.X : controllerState.GyroState.Gyroscope.X;
 
             if (current.MotionInvertHorizontal)
             {
@@ -133,13 +128,8 @@ namespace HandheldCompanion.Managers
             }
 
             // store modified values, they are used by DS4 and DSU, raws are only used later on in MotionManager
-            // TODO: to Vector3
-            controllerState.GyroState.AccelerometerX = accelerometer[(int)SensorIndex.Default].X;
-            controllerState.GyroState.AccelerometerY = accelerometer[(int)SensorIndex.Default].Y;
-            controllerState.GyroState.AccelerometerZ = accelerometer[(int)SensorIndex.Default].Z;
-            controllerState.GyroState.GyroscopeX = gyroscope[(int)SensorIndex.Default].X;
-            controllerState.GyroState.GyroscopeY = gyroscope[(int)SensorIndex.Default].Y;
-            controllerState.GyroState.GyroscopeZ = gyroscope[(int)SensorIndex.Default].Z;
+            controllerState.GyroState.Accelerometer = accelerometer[(int)SensorIndex.Default];
+            controllerState.GyroState.Gyroscope = gyroscope[(int)SensorIndex.Default];
         }
 
         // this function is used for advanced motion calculations used by

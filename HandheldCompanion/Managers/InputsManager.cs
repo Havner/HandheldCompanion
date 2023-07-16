@@ -551,8 +551,6 @@ namespace HandheldCompanion.Managers
             }
 
             prevState = buttonState.Clone() as ButtonState;
-
-            // GamepadResetTimer.Start();
         }
 
         public static void StartListening(Hotkey hotkey, ListenerType type)

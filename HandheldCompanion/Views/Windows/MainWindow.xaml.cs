@@ -13,12 +13,12 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Navigation;
-using static ControllerCommon.Managers.PowerManager;
 using Application = System.Windows.Application;
 using Page = System.Windows.Controls.Page;
 
@@ -491,7 +491,7 @@ namespace HandheldCompanion.Views
         }
         #endregion
 
-        private async void OnSystemStatusChanged(PowerManager.SystemStatus status, SystemStatus prevStatus)
+        private async void OnSystemStatusChanged(PowerManager.SystemStatus status, PowerManager.SystemStatus prevStatus)
         {
             if (status == prevStatus)
                 return;
@@ -502,12 +502,12 @@ namespace HandheldCompanion.Views
                     {
                         switch (prevStatus)
                         {
-                            case SystemStatus.SystemBooting:
+                            case PowerManager.SystemStatus.SystemBooting:
                                 // cold boot
                                 break;
-                            case SystemStatus.SystemPending:
+                            case PowerManager.SystemStatus.SystemPending:
                                 // resume from sleep
-                                Thread.Sleep(2000);
+                                await Task.Delay(2000);
                                 break;
                         }
 

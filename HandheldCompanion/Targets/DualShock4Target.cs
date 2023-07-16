@@ -184,13 +184,13 @@ namespace HandheldCompanion.Targets
             }
 
             // Use gyro sensor data, map to proper range, invert where needed
-            outDS4Report.wGyroX = (short)InputUtils.rangeMap(Inputs.GyroState.GyroscopeX, DS4GyroscopeSensorSpec);    // gyroPitchFull
-            outDS4Report.wGyroY = (short)InputUtils.rangeMap(-Inputs.GyroState.GyroscopeY, DS4GyroscopeSensorSpec);   // gyroYawFull
-            outDS4Report.wGyroZ = (short)InputUtils.rangeMap(Inputs.GyroState.GyroscopeZ, DS4GyroscopeSensorSpec);    // gyroRollFull
+            outDS4Report.wGyroX = (short)InputUtils.rangeMap(Inputs.GyroState.Gyroscope.X, DS4GyroscopeSensorSpec);    // gyroPitchFull
+            outDS4Report.wGyroY = (short)InputUtils.rangeMap(-Inputs.GyroState.Gyroscope.Y, DS4GyroscopeSensorSpec);   // gyroYawFull
+            outDS4Report.wGyroZ = (short)InputUtils.rangeMap(Inputs.GyroState.Gyroscope.Z, DS4GyroscopeSensorSpec);    // gyroRollFull
 
-            outDS4Report.wAccelX = (short)InputUtils.rangeMap(-Inputs.GyroState.AccelerometerX, DS4AccelerometerSensorSpec); // accelXFull
-            outDS4Report.wAccelY = (short)InputUtils.rangeMap(-Inputs.GyroState.AccelerometerY, DS4AccelerometerSensorSpec); // accelYFull
-            outDS4Report.wAccelZ = (short)InputUtils.rangeMap(Inputs.GyroState.AccelerometerZ, DS4AccelerometerSensorSpec);  // accelZFull
+            outDS4Report.wAccelX = (short)InputUtils.rangeMap(-Inputs.GyroState.Accelerometer.X, DS4AccelerometerSensorSpec); // accelXFull
+            outDS4Report.wAccelY = (short)InputUtils.rangeMap(-Inputs.GyroState.Accelerometer.Y, DS4AccelerometerSensorSpec); // accelYFull
+            outDS4Report.wAccelZ = (short)InputUtils.rangeMap(Inputs.GyroState.Accelerometer.Z, DS4AccelerometerSensorSpec);  // accelZFull
 
             outDS4Report.bBatteryLvlSpecial = 11;
 

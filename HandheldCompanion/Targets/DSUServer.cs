@@ -602,24 +602,24 @@ namespace HandheldCompanion.Targets
 
                 // Accelerometer
                 // accelXG
-                Array.Copy(BitConverter.GetBytes(Inputs.GyroState.AccelerometerX), 0, outputData, outIdx, 4);
+                Array.Copy(BitConverter.GetBytes(Inputs.GyroState.Accelerometer.X), 0, outputData, outIdx, 4);
                 outIdx += 4;
                 // accelYG
-                Array.Copy(BitConverter.GetBytes(Inputs.GyroState.AccelerometerY), 0, outputData, outIdx, 4);
+                Array.Copy(BitConverter.GetBytes(Inputs.GyroState.Accelerometer.Y), 0, outputData, outIdx, 4);
                 outIdx += 4;
                 // accelZG
-                Array.Copy(BitConverter.GetBytes(-Inputs.GyroState.AccelerometerZ), 0, outputData, outIdx, 4);
+                Array.Copy(BitConverter.GetBytes(-Inputs.GyroState.Accelerometer.Z), 0, outputData, outIdx, 4);
                 outIdx += 4;
 
                 // Gyroscope
                 // angVelPitch
-                Array.Copy(BitConverter.GetBytes(Inputs.GyroState.GyroscopeX), 0, outputData, outIdx, 4);
+                Array.Copy(BitConverter.GetBytes(Inputs.GyroState.Gyroscope.X), 0, outputData, outIdx, 4);
                 outIdx += 4;
                 // angVelYaw
-                Array.Copy(BitConverter.GetBytes(Inputs.GyroState.GyroscopeY), 0, outputData, outIdx, 4);
+                Array.Copy(BitConverter.GetBytes(Inputs.GyroState.Gyroscope.Y), 0, outputData, outIdx, 4);
                 outIdx += 4;
                 // angVelRoll
-                Array.Copy(BitConverter.GetBytes(-Inputs.GyroState.GyroscopeZ), 0, outputData, outIdx, 4);
+                Array.Copy(BitConverter.GetBytes(-Inputs.GyroState.Gyroscope.Z), 0, outputData, outIdx, 4);
                 outIdx += 4;
             }
 

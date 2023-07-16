@@ -1,38 +1,26 @@
 ﻿using System;
+using System.Numerics;
 
 namespace ControllerCommon.Inputs
 {
-    [Serializable]
     public class GyroState : ICloneable
     {
-        // TODO: switch to vectors when service is gone
-        //public Vector3 Accelerometer = new();
-        //public Vector3 Gyroscope = new();
-
-        public float AccelerometerX;
-        public float AccelerometerY;
-        public float AccelerometerZ;
-        public float GyroscopeX;
-        public float GyroscopeY;
-        public float GyroscopeZ;
+        public Vector3 Accelerometer = new();
+        public Vector3 Gyroscope = new();
 
         public GyroState()
         {
         }
 
-        public GyroState(GyroState state)
+        public GyroState(Vector3 accelerometer, Vector3 gyroscope)
         {
-            AccelerometerX = state.AccelerometerX;
-            AccelerometerY = state.AccelerometerY;
-            AccelerometerZ = state.AccelerometerZ;
-            GyroscopeX = state.GyroscopeX;
-            GyroscopeY = state.GyroscopeY;
-            GyroscopeZ = state.GyroscopeZ;
+            Accelerometer = accelerometer;
+            Gyroscope = gyroscope;
         }
 
         public object Clone()
         {
-            return new GyroState(this);
+            return new GyroState(Accelerometer, Gyroscope);
         }
     }
 }

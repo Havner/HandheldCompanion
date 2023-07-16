@@ -97,7 +97,6 @@ namespace HandheldCompanion.Controllers
                 if (GetHapticIntensity(FeedbackSmallMotor, MaxIntensity, out var rightIntensity))
                     lastRightHapticOn = Controller.SetHaptic2(HapticPad.Right, HapticStyle.Weak, rightIntensity);
 
-                //Thread.Sleep(TimerManager.GetPeriod() * 2);
                 await Task.Delay(TimerManager.GetPeriod() * 2);
 
                 if (lastLeftHapticOn is not null)
@@ -239,14 +238,14 @@ namespace HandheldCompanion.Controllers
             }
 
             // TODO: why Z/Y swapped?
-            Inputs.GyroState.AccelerometerX = -(float)input.State.AxesState[NeptuneControllerAxis.GyroAccelX] / short.MaxValue * 2.0f;
-            Inputs.GyroState.AccelerometerY = -(float)input.State.AxesState[NeptuneControllerAxis.GyroAccelZ] / short.MaxValue * 2.0f;
-            Inputs.GyroState.AccelerometerZ = -(float)input.State.AxesState[NeptuneControllerAxis.GyroAccelY] / short.MaxValue * 2.0f;
+            Inputs.GyroState.Accelerometer.X = -(float)input.State.AxesState[NeptuneControllerAxis.GyroAccelX] / short.MaxValue * 2.0f;
+            Inputs.GyroState.Accelerometer.Y = -(float)input.State.AxesState[NeptuneControllerAxis.GyroAccelZ] / short.MaxValue * 2.0f;
+            Inputs.GyroState.Accelerometer.Z = -(float)input.State.AxesState[NeptuneControllerAxis.GyroAccelY] / short.MaxValue * 2.0f;
 
             // TODO: why Roll/Pitch swapped?
-            Inputs.GyroState.GyroscopeX =  (float)input.State.AxesState[NeptuneControllerAxis.GyroPitch] / short.MaxValue * 2000.0f;  // Roll
-            Inputs.GyroState.GyroscopeY = -(float)input.State.AxesState[NeptuneControllerAxis.GyroRoll] / short.MaxValue * 2000.0f;   // Pitch
-            Inputs.GyroState.GyroscopeZ = -(float)input.State.AxesState[NeptuneControllerAxis.GyroYaw] / short.MaxValue * 2000.0f;    // Yaw
+            Inputs.GyroState.Gyroscope.X =  (float)input.State.AxesState[NeptuneControllerAxis.GyroPitch] / short.MaxValue * 2000.0f;  // Roll
+            Inputs.GyroState.Gyroscope.Y = -(float)input.State.AxesState[NeptuneControllerAxis.GyroRoll] / short.MaxValue * 2000.0f;   // Pitch
+            Inputs.GyroState.Gyroscope.Z = -(float)input.State.AxesState[NeptuneControllerAxis.GyroYaw] / short.MaxValue * 2000.0f;    // Yaw
 
             // update states
             prevState = input.State;
