@@ -23,8 +23,6 @@ namespace ControllerCommon.Utils
             if (root is not null)
                 return root;
 
-            LogManager.LogError("Missing localization value for enum: {0}", key);
-
             // return description otherwise
             DescriptionAttribute attribute = null;
 
@@ -36,7 +34,12 @@ namespace ControllerCommon.Utils
                 .SingleOrDefault() as DescriptionAttribute;
             }
             catch { }
-            return attribute is null ? value.ToString() : attribute.Description;
+
+            if (attribute is not null)
+                return attribute.Description;
+
+            LogManager.LogError("Neither localization nor description exists for enum: {0}", key);
+            return value.ToString();
         }
 
         public static T GetEnumValueFromDescription<T>(string description)
