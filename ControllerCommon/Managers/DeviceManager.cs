@@ -35,11 +35,6 @@ namespace ControllerCommon.Managers
         public static event XInputDeviceRemovedEventHandler XUsbDeviceRemoved;
         public delegate void XInputDeviceRemovedEventHandler(PnPDetails device, DeviceEventArgs obj);
 
-        public static event GenericDeviceArrivedEventHandler UsbDeviceArrived;
-        public delegate void GenericDeviceArrivedEventHandler(PnPDevice device, DeviceEventArgs obj);
-        public static event GenericDeviceRemovedEventHandler UsbDeviceRemoved;
-        public delegate void GenericDeviceRemovedEventHandler(PnPDevice device, DeviceEventArgs obj);
-
         public static event DInputDeviceArrivedEventHandler HidDeviceArrived;
         public delegate void DInputDeviceArrivedEventHandler(PnPDetails device, DeviceEventArgs obj);
         public static event DInputDeviceRemovedEventHandler HidDeviceRemoved;

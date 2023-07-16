@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Numerics;
-using Windows.Devices.Sensors;
 
 namespace ControllerCommon.Inputs
 {

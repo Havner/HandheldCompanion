@@ -5,7 +5,6 @@ using HandheldCompanion.Managers;
 using HandheldCompanion.Views.Pages;
 using HandheldCompanion.Views.Windows;
 using ModernWpf.Controls;
-using Nefarius.Utilities.DeviceManagement.PnP;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -153,8 +152,6 @@ namespace HandheldCompanion.Views
             HotkeysManager.CommandExecuted += HotkeysManager_CommandExecuted;
             HotkeysManager.Start();
 
-            DeviceManager.UsbDeviceArrived += GenericDeviceUpdated;
-            DeviceManager.UsbDeviceRemoved += GenericDeviceUpdated;
             DeviceManager.Start();
 
             PlatformManager.Start();
@@ -289,11 +286,6 @@ namespace HandheldCompanion.Views
             // store managers
             _managers.Add(taskManager);
             _managers.Add(performanceManager);
-        }
-
-        private void GenericDeviceUpdated(PnPDevice device, DeviceEventArgs obj)
-        {
-            aboutPage.UpdateDevice(device);
         }
 
         private void HotkeysManager_CommandExecuted(string listener)

@@ -29,12 +29,6 @@ namespace HandheldCompanion.Managers
         public ProcessFilter Filter;
         public PlatformType Platform { get; set; }
 
-        public event MainThreadChangedEventHandler MainThreadChanged;
-        public delegate void MainThreadChangedEventHandler(ProcessEx process);
-
-        public event TitleChangedEventHandler TitleChanged;
-        public delegate void TitleChangedEventHandler(ProcessEx process);
-
         public ProcessEx()
         {
         }

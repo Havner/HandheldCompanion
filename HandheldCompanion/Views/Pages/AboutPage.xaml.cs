@@ -1,5 +1,4 @@
 using ControllerCommon.Devices;
-using Nefarius.Utilities.DeviceManagement.PnP;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,10 +22,10 @@ namespace HandheldCompanion.Views.Pages
             this.Tag = Tag;
 
             // call functions
-            UpdateDevice(null);
+            UpdateDevice();
         }
 
-        public void UpdateDevice(PnPDevice device)
+        public void UpdateDevice()
         {
             // Device visual
             Uri ImageSource = new Uri($"pack://application:,,,/Resources/{MainWindow.CurrentDevice.ProductIllustration}.png");
