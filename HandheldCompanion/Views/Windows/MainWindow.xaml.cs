@@ -77,16 +77,6 @@ namespace HandheldCompanion.Views
             // get process
             Process process = Process.GetCurrentProcess();
 
-            // initialize splash screen on first start only
-            bool IsFirstStart = SettingsManager.GetBoolean("FirstStart");
-#if !DEBUG
-            if (IsFirstStart)
-            {
-                SplashScreen splashScreen = new SplashScreen(CurrentAssembly, "Resources/icon.png");
-                splashScreen.Show(true, true);
-            }
-#endif
-
             // fix touch support
             var tablets = Tablet.TabletDevices;
 
@@ -179,10 +169,6 @@ namespace HandheldCompanion.Views
             Left = Math.Min(SystemParameters.PrimaryScreenWidth - MinWidth, SettingsManager.GetDouble("MainWindowLeft"));
             Top = Math.Min(SystemParameters.PrimaryScreenHeight - MinHeight, SettingsManager.GetDouble("MainWindowTop"));
             navView.IsPaneOpen = SettingsManager.GetBoolean("MainWindowIsPaneOpen");
-
-            // update FirstStart
-            if (IsFirstStart)
-                SettingsManager.SetProperty("FirstStart", false);
         }
 
         private void AddNotifyIconItem(string name, object tag = null)

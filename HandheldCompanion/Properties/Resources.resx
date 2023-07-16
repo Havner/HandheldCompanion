@@ -213,10 +213,6 @@
   <data name="ControllerPage_VibrationStrengthExpl" xml:space="preserve">
     <value>Change controller vibration strength</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\icon.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="InputsHotkey_decreaseTDP" xml:space="preserve">
     <value>Decrease TDP</value>
   </data>
@@ -1052,11 +1048,9 @@ with motion input enabled, use selected button(s) to disable motion.</value>
   <data name="ProfilesPage_UMCAntiDeadzoneDesc" xml:space="preserve">
     <value>Compensate for in game deadzone, improve registration of small movements</value>
   </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="chord_neptune" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\controller_base\chord_neptune.vdf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="empty_neptune" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\controller_base\empty_neptune.vdf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
   <data name="ProfilesPage_ThumbImproveCircularityDesc" xml:space="preserve">
     <value>Improve the stick circularity</value>

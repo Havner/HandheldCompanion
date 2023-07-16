@@ -395,26 +395,6 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        public static byte[] empty_neptune {
-            get {
-                object obj = ResourceManager.GetObject("empty_neptune", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        public static System.Drawing.Bitmap icon {
-            get {
-                object obj = ResourceManager.GetObject("icon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Decrease brightness.
         /// </summary>
         public static string InputsHotkey_decreaseBrightness {
