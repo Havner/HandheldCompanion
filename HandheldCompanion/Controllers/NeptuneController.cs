@@ -275,10 +275,10 @@ namespace HandheldCompanion.Controllers
 
         public override void Rumble()
         {
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew(async () =>
             {
                 SetVibration(byte.MaxValue, byte.MaxValue);
-                Thread.Sleep(125);
+                await Task.Delay(125);
                 SetVibration(0, 0);
             });
 

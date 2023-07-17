@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
+using System.Threading.Tasks;
 using Attributes = ControllerCommon.Managers.Hid.Attributes;
 using Capabilities = ControllerCommon.Managers.Hid.Capabilities;
 
@@ -369,7 +369,7 @@ namespace ControllerCommon.Managers
             return output;
         }
 
-        private static void XUsbDevice_DeviceRemoved(DeviceEventArgs obj)
+        private static async void XUsbDevice_DeviceRemoved(DeviceEventArgs obj)
         {
             try
             {
@@ -380,7 +380,7 @@ namespace ControllerCommon.Managers
                     return;
 
                 // give system at least one second to initialize device
-                Thread.Sleep(1000);
+                await Task.Delay(1000);
                 PnPDevices.TryRemove(deviceEx.SymLink, out var value);
 
                 // RefreshHID();
@@ -393,7 +393,7 @@ namespace ControllerCommon.Managers
             catch { }
         }
 
-        private static void XUsbDevice_DeviceArrived(DeviceEventArgs obj)
+        private static async void XUsbDevice_DeviceArrived(DeviceEventArgs obj)
         {
             try
             {
@@ -402,7 +402,7 @@ namespace ControllerCommon.Managers
                 if (IsInitialized)
                 {
                     // give system at least one second to initialize device
-                    Thread.Sleep(1000);
+                    await Task.Delay(1000);
                     RefreshHID();
                 }
 
@@ -418,7 +418,7 @@ namespace ControllerCommon.Managers
             catch { }
         }
 
-        private static void HidDevice_DeviceRemoved(DeviceEventArgs obj)
+        private static async void HidDevice_DeviceRemoved(DeviceEventArgs obj)
         {
             try
             {
@@ -429,7 +429,7 @@ namespace ControllerCommon.Managers
                     return;
 
                 // give system at least one second to initialize device (+500 ms to give XInput priority)
-                Thread.Sleep(1500);
+                await Task.Delay(1500);
                 PnPDevices.TryRemove(deviceEx.SymLink, out var value);
 
                 // RefreshHID();
@@ -442,7 +442,7 @@ namespace ControllerCommon.Managers
             catch { }
         }
 
-        private static void HidDevice_DeviceArrived(DeviceEventArgs obj)
+        private static async void HidDevice_DeviceArrived(DeviceEventArgs obj)
         {
             try
             {
@@ -451,7 +451,7 @@ namespace ControllerCommon.Managers
                 if (IsInitialized)
                 {
                     // give system at least one second to initialize device (+500 ms to give XInput priority)
-                    Thread.Sleep(1500);
+                    await Task.Delay(1500);
                     RefreshHID();
                 }
 
