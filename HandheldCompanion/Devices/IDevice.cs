@@ -36,9 +36,6 @@ namespace HandheldCompanion.Devices
         // device GPU max frequency limits (min, nominal/max)
         public uint[] GPU = { 100, 1800 };
 
-        // mininum delay before trying to emulate a virtual controller on system resume (milliseconds)
-        public short ResumeDelay = 6000;
-
         // trigger specific settings
         public List<DeviceChord> OEMChords = new();
         public IEnumerable<ButtonFlags> OEMButtons => OEMChords.SelectMany(a => a.state.Buttons).Distinct();

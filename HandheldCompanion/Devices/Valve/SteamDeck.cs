@@ -59,8 +59,6 @@ namespace HandheldCompanion.Devices
             // https://www.techpowerup.com/gpu-specs/steam-deck-gpu.c3897
             this.GPU = new uint[] { 100, 1600 };
 
-            this.ResumeDelay = 14000;
-
             OEMChords.Add(new DeviceChord("...",
                 new(), new(),
                 false, ButtonFlags.OEM1

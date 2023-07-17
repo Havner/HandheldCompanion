@@ -483,7 +483,7 @@ namespace HandheldCompanion.Views
                     // TODO: lower those delays?
                     if (prevStatus == PowerManager.SystemStatus.SystemPending)
                     {
-                        await Task.Delay(2000);
+                        await Task.Delay(1000);
 
                         // restore inputs manager
                         InputsManager.Start();
@@ -492,7 +492,6 @@ namespace HandheldCompanion.Views
                         TimerManager.Start();
 
                         // resume the virtual controller last
-                        await Task.Delay(CurrentDevice.ResumeDelay);
                         VirtualManager.Resume();
                     }
                     break;
