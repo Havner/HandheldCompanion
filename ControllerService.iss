@@ -6,7 +6,6 @@
 #define MyAppCopyright 'Copyright © BenjaminLSR'
 #define MyAppURL 'https://github.com/Valkirie/HandheldCompanion'
 #define MyAppExeName "HandheldCompanion.exe"
-#define MySerExeName "ControllerService.exe"
 #define MyConfiguration "Release"
 
 #define MyConfigurationExt "net7.0"
@@ -62,8 +61,6 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"
 [Run]
 
 [UninstallRun]
-Filename: "{sys}\sc.exe"; Parameters: "stop ControllerService" ; RunOnceId: "StopService"; Flags: runascurrentuser runhidden
-Filename: "{sys}\sc.exe"; Parameters: "delete ControllerService" ; RunOnceId: "DeleteService"; Flags: runascurrentuser runhidden
 
 [UninstallDelete]
 Type: filesandordirs; Name: "{app}"
@@ -72,7 +69,6 @@ Type: filesandordirs; Name: "{app}"
 
 [Registry]
 Root: HKLM; Subkey: "Software\Microsoft\Windows\Windows Error Reporting\LocalDumps"; Flags: uninsdeletekeyifempty
-Root: HKLM; Subkey: "Software\Microsoft\Windows\Windows Error Reporting\LocalDumps\ControllerService.exe"; ValueType: string; ValueName: "DumpFolder"; ValueData: "{userdocs}\HandheldCompanion\dumps"; Flags: uninsdeletekey
 Root: HKLM; Subkey: "Software\Microsoft\Windows\Windows Error Reporting\LocalDumps\HandheldCompanion.exe"; ValueType: string; ValueName: "DumpFolder"; ValueData: "{userdocs}\HandheldCompanion\dumps"; Flags: uninsdeletekey
 
 [Code]
