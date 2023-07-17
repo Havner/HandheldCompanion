@@ -1,27 +1,33 @@
 using ControllerCommon.Managers;
+using HandheldCompanion.Views;
 using Microsoft.Win32.TaskScheduler;
 using System;
 
 namespace HandheldCompanion.Managers
 {
-    public class TaskManager : Manager
+    public static class TaskManager
     {
         // TaskManager vars
-        private Task task;
-        private TaskDefinition taskDefinition;
-        private TaskService TaskServ;
+        private static Task task;
+        private static TaskDefinition taskDefinition;
+        private static TaskService TaskServ;
 
-        private string ServiceName, ServiceExecutable;
+        private static string ServiceName, ServiceExecutable;
 
-        public TaskManager(string ServiceName, string Executable) : base()
+        private static bool IsInitialized;
+
+        public static event InitializedEventHandler Initialized;
+        public delegate void InitializedEventHandler();
+
+        static TaskManager()
         {
-            this.ServiceName = ServiceName;
-            this.ServiceExecutable = Executable;
+            ServiceName = "HandheldCompanion";
+            ServiceExecutable = MainWindow.CurrentExe;
 
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
         }
 
-        private void SettingsManager_SettingValueChanged(string name, object value)
+        private static void SettingsManager_SettingValueChanged(string name, object value)
         {
             switch (name)
             {
@@ -31,7 +37,7 @@ namespace HandheldCompanion.Managers
             }
         }
 
-        public override void Start()
+        public static void Start()
         {
             TaskServ = new TaskService();
             task = TaskServ.FindTask(ServiceName);
@@ -60,18 +66,23 @@ namespace HandheldCompanion.Managers
             }
             catch { }
 
-            base.Start();
+            IsInitialized = true;
+            Initialized?.Invoke();
+
+            LogManager.LogInformation("{0} has started", "TaskManager");
         }
 
-        public override void Stop()
+        public static void Stop()
         {
             if (!IsInitialized)
                 return;
 
-            base.Stop();
+            IsInitialized = false;
+
+            LogManager.LogInformation("{0} has stopped", "TaskManager");
         }
 
-        public void UpdateTask(bool value)
+        public static void UpdateTask(bool value)
         {
             if (task is null)
                 return;

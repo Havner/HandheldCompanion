@@ -109,7 +109,7 @@ namespace HandheldCompanion.Managers
                 case "HasFanControlSupport":
                     return SystemManager.HasFanControlSupport();
                 case "HasTDPSupport":
-                    return MainWindow.performanceManager.CanChangeTDP();
+                    return PerformanceManager.CanChangeTDP();
 
                 default:
                     if (temporary && Settings.ContainsKey(name))

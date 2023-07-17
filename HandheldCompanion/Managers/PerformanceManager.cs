@@ -29,7 +29,7 @@ namespace HandheldCompanion.Managers
         public static Guid BestPerformance = new("ded574b5-45a0-4f42-8737-46345c09c238");
     }
 
-    public class PerformanceManager : Manager
+    static class PerformanceManager
     {
         #region imports
         /// <summary>
@@ -49,27 +49,32 @@ namespace HandheldCompanion.Managers
         private static extern uint PowerSetActiveOverlayScheme(Guid OverlaySchemeGuid);
         #endregion
 
-        public event PowerModeChangedEventHandler PowerModeChanged;
+        public static event PowerModeChangedEventHandler PowerModeChanged;
         public delegate void PowerModeChangedEventHandler(int idx);
 
-        private Processor processor;
+        private static Processor processor;
         public static int MaxDegreeOfParallelism = 4;
 
         private static readonly Guid[] PowerModes = new Guid[3] { PowerMode.BetterBattery, PowerMode.BetterPerformance, PowerMode.BestPerformance };
-        private Guid currentPowerMode = new("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF");
-        private readonly Timer powerWatchdog;
+        private static Guid currentPowerMode = new("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF");
+        private static readonly Timer powerWatchdog;
 
-        private uint tdpRequest;
-        private readonly Timer tdpWatchdog;
-        protected object tdpLock = new();
+        private static uint tdpRequest;
+        private static readonly Timer tdpWatchdog;
+        private static object tdpLock = new();
 
-        private uint gpuRequest;
-        private readonly Timer gpuWatchdog;
-        protected object gpuLock = new();
+        private static uint gpuRequest;
+        private static readonly Timer gpuWatchdog;
+        private static object gpuLock = new();
 
-        private const short INTERVAL_DEFAULT = 2000;            // default interval between value scans
+        private static short INTERVAL_DEFAULT = 2000;            // default interval between value scans
 
-        public PerformanceManager() : base()
+        private static bool IsInitialized;
+
+        public static event InitializedEventHandler Initialized;
+        public delegate void InitializedEventHandler();
+
+        static PerformanceManager()
         {
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
 
@@ -89,7 +94,7 @@ namespace HandheldCompanion.Managers
             MaxDegreeOfParallelism = Convert.ToInt32(Environment.ProcessorCount / 2);
         }
 
-        private void SettingsManager_SettingValueChanged(string name, object value)
+        private static void SettingsManager_SettingValueChanged(string name, object value)
         {
             switch (name)
             {
@@ -131,7 +136,7 @@ namespace HandheldCompanion.Managers
             }
         }
 
-        private void HotkeysManager_CommandExecuted(string listener)
+        private static void HotkeysManager_CommandExecuted(string listener)
         {
             switch (listener)
             {
@@ -156,7 +161,7 @@ namespace HandheldCompanion.Managers
             }
         }
 
-        private void PowerWatchdog_Elapsed(object? sender, ElapsedEventArgs e)
+        private static void PowerWatchdog_Elapsed(object? sender, ElapsedEventArgs e)
         {
             // Checking if active power shceme has changed to reflect that
             if (PowerGetEffectiveOverlayScheme(out Guid activeScheme) == 0)
@@ -171,7 +176,7 @@ namespace HandheldCompanion.Managers
             }
         }
 
-        public bool CanChangeTDP()
+        public static bool CanChangeTDP()
         {
             if (processor is null || !processor.IsInitialized)
                 return false;
@@ -179,7 +184,7 @@ namespace HandheldCompanion.Managers
             return processor.CanChangeTDP();
         }
 
-        public bool CanChangeGPU()
+        public static bool CanChangeGPU()
         {
             if (processor is null || !processor.IsInitialized)
                 return false;
@@ -187,7 +192,7 @@ namespace HandheldCompanion.Managers
             return processor.CanChangeGPU();
         }
 
-        private void TDPWatchdog_Elapsed(object? sender, ElapsedEventArgs e)
+        private static void TDPWatchdog_Elapsed(object? sender, ElapsedEventArgs e)
         {
             if (processor is null || !processor.IsInitialized)
                 return;
@@ -199,7 +204,7 @@ namespace HandheldCompanion.Managers
             }
         }
 
-        private void GPUWatchdog_Elapsed(object? sender, ElapsedEventArgs e)
+        private static void GPUWatchdog_Elapsed(object? sender, ElapsedEventArgs e)
         {
             if (processor is null || !processor.IsInitialized)
                 return;
@@ -212,12 +217,13 @@ namespace HandheldCompanion.Managers
                     goto notsupported;
 
                 processor.SetGPUClock(gpuRequest);
+
             notsupported:
                 Monitor.Exit(gpuLock);
             }
         }
 
-        public void RequestTDP(uint value)
+        public static void RequestTDP(uint value)
         {
             // update value read by timer
             if (Monitor.TryEnter(tdpLock))
@@ -229,7 +235,7 @@ namespace HandheldCompanion.Managers
             }
         }
 
-        public void RequestGPU(uint value)
+        public static void RequestGPU(uint value)
         {
             // update value read by timer
             if (Monitor.TryEnter(gpuLock))
@@ -241,7 +247,7 @@ namespace HandheldCompanion.Managers
             }
         }
 
-        public void RequestPowerMode(int idx)
+        public static void RequestPowerMode(int idx)
         {
             currentPowerMode = PowerModes[idx];
             LogManager.LogInformation("User requested power scheme: {0}", currentPowerMode);
@@ -249,7 +255,7 @@ namespace HandheldCompanion.Managers
                 LogManager.LogWarning("Failed to set requested power scheme: {0}", currentPowerMode);
         }
 
-        public override void Start()
+        public static void Start()
         {
             // initialize watchdog(s)
             powerWatchdog.Start();
@@ -261,10 +267,13 @@ namespace HandheldCompanion.Managers
             if (VulnerableDriverBlocklistEnabled || HypervisorEnforcedCodeIntegrityEnabled)
                 LogManager.LogWarning("Core isolation settings are turned on. TDP read/write is disabled");
 
-            base.Start();
+            IsInitialized = true;
+            Initialized?.Invoke();
+
+            LogManager.LogInformation("{0} has started", "PerformanceManager");
         }
 
-        public override void Stop()
+        public static void Stop()
         {
             if (!IsInitialized)
                 return;
@@ -273,7 +282,9 @@ namespace HandheldCompanion.Managers
             tdpWatchdog.Stop();
             gpuWatchdog.Stop();
 
-            base.Stop();
+            IsInitialized = false;
+
+            LogManager.LogInformation("{0} has stopped", "PerformanceManager");
         }
     }
 }

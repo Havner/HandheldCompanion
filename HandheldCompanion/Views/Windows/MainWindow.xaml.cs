@@ -12,7 +12,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -47,11 +46,6 @@ namespace HandheldCompanion.Views
         // overlay(s) vars
         public static OverlayModel overlayModel;
         public static OverlayQuickTools overlayquickTools;
-
-        // manager(s) vars
-        private static List<Manager> _managers = new();
-        public static TaskManager taskManager;
-        public static PerformanceManager performanceManager;
 
         private WindowState visibleWindowState;
         private NotifyIcon notifyIcon;
@@ -120,9 +114,6 @@ namespace HandheldCompanion.Views
             CurrentDevice = IDevice.GetDefault();
             CurrentDevice.Open();
 
-            // load manager(s)
-            loadManagers();
-
             // load window(s)
             loadWindows();
 
@@ -156,10 +147,8 @@ namespace HandheldCompanion.Views
             InputsManager.Start();
             TimerManager.Start();
 
-            // start managers asynchroneously
-            // TODO: remove those threads
-            foreach (Manager manager in _managers)
-                new Thread(manager.Start).Start();
+            TaskManager.Start();
+            PerformanceManager.Start();
 
             // start setting last
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
@@ -265,17 +254,6 @@ namespace HandheldCompanion.Views
             overlayquickTools = new OverlayQuickTools();
         }
 
-        private void loadManagers()
-        {
-            // initialize managers
-            taskManager = new TaskManager("HandheldCompanion", CurrentExe);
-            performanceManager = new();
-
-            // store managers
-            _managers.Add(taskManager);
-            _managers.Add(performanceManager);
-        }
-
         private void HotkeysManager_CommandExecuted(string listener)
         {
             switch (listener)
@@ -365,15 +343,14 @@ namespace HandheldCompanion.Views
         {
             CurrentDevice.Close();
 
-            foreach (Manager manager in _managers)
-                manager.Stop();
-
             notifyIcon.Visible = false;
             notifyIcon.Dispose();
 
             overlayModel.Close();
             overlayquickTools.Close(true);
 
+            TaskManager.Stop();
+            PerformanceManager.Stop();
             VirtualManager.Stop();
             SystemManager.Stop();
             MotionManager.Stop();

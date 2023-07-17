@@ -19,8 +19,8 @@ namespace HandheldCompanion.Views.QuickPages
         {
             InitializeComponent();
 
-            MainWindow.performanceManager.Initialized += PerformanceManager_Initialized;
-            MainWindow.performanceManager.PowerModeChanged += PerformanceManager_PowerModeChanged;
+            PerformanceManager.Initialized += PerformanceManager_Initialized;
+            PerformanceManager.PowerModeChanged += PerformanceManager_PowerModeChanged;
 
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
 
@@ -46,8 +46,8 @@ namespace HandheldCompanion.Views.QuickPages
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                TDPToggle.IsEnabled = TDPSlider.IsEnabled = MainWindow.performanceManager.CanChangeTDP();
-                GPUToggle.IsEnabled = GPUSlider.IsEnabled = MainWindow.performanceManager.CanChangeGPU();
+                TDPToggle.IsEnabled = TDPSlider.IsEnabled = PerformanceManager.CanChangeTDP();
+                GPUToggle.IsEnabled = GPUSlider.IsEnabled = PerformanceManager.CanChangeGPU();
 
                 TDPSlider.Minimum = MainWindow.CurrentDevice.TDP[0];
                 TDPSlider.Maximum = MainWindow.CurrentDevice.TDP[2];
@@ -152,7 +152,7 @@ namespace HandheldCompanion.Views.QuickPages
 
             if (Monitor.TryEnter(powerModeLock))
             {
-                MainWindow.performanceManager.RequestPowerMode(idx);
+                PerformanceManager.RequestPowerMode(idx);
                 Monitor.Exit(powerModeLock);
             }
         }
