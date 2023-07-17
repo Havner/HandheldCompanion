@@ -99,8 +99,8 @@ namespace HandheldCompanion.Controls
                         {
                             { ButtonFlags.B1, new KeyboardActions() { Key = VirtualKeyCode.RETURN } },
                             { ButtonFlags.B2, new KeyboardActions() { Key = VirtualKeyCode.ESCAPE } },
-                            { ButtonFlags.B3, new KeyboardActions() { Key = VirtualKeyCode.PRIOR } },
-                            { ButtonFlags.B4, new KeyboardActions() { Key = VirtualKeyCode.NEXT } },
+                            { ButtonFlags.B3, new KeyboardActions() { Key = VirtualKeyCode.NEXT } },
+                            { ButtonFlags.B4, new KeyboardActions() { Key = VirtualKeyCode.PRIOR } },
 
                             { ButtonFlags.L1, new KeyboardActions() { Key = VirtualKeyCode.BACK } },
                             { ButtonFlags.R1, new KeyboardActions() { Key = VirtualKeyCode.SPACE } },
