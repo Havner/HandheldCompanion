@@ -89,7 +89,10 @@
                                         </ui:SimpleStackPanel>
                                     </Button>
                                     <!--  Delete profile  -->
-                                    <Button Name="b_DeleteProfile" Click="DeleteProfile_Click" Style="{DynamicResource AccentButtonStyle}" Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,0,12,0" Background="Maroon">
+                                    <Button Name="b_DeleteProfile" Click="DeleteProfile_Click" Style="{DynamicResource AccentButtonStyle}" Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,0,12,0">
+                                        <Button.Background>
+                                            <SolidColorBrush Color="{DynamicResource SystemFillColorCritical}"/>
+                                        </Button.Background>
                                         <ui:SimpleStackPanel
                                             HorizontalAlignment="Center"
                                             Orientation="Horizontal"
