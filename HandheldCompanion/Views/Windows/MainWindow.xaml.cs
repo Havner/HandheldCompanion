@@ -130,7 +130,6 @@ namespace HandheldCompanion.Views
             loadPages();
 
             // start static managers in sequence
-            // managers that has to be stopped/started when session status changes shouldn't be put here
 
             ToastManager.Start();
             ToastManager.IsEnabled = SettingsManager.GetBoolean("ToastEnable");
@@ -153,6 +152,9 @@ namespace HandheldCompanion.Views
 
             SystemManager.Start();
             VirtualManager.Start();
+
+            InputsManager.Start();
+            TimerManager.Start();
 
             // start managers asynchroneously
             // TODO: remove those threads
@@ -386,6 +388,7 @@ namespace HandheldCompanion.Views
             PowerManager.Stop();
             ToastManager.Stop();
             SettingsManager.Stop();
+            TimerManager.Stop();
 
             // closing page(s)
             controllerPage.Page_Closed();
@@ -491,6 +494,7 @@ namespace HandheldCompanion.Views
         }
         #endregion
 
+        // no code from the cases inside this function will be called on program start
         private async void OnSystemStatusChanged(PowerManager.SystemStatus status, PowerManager.SystemStatus prevStatus)
         {
             if (status == prevStatus)
@@ -499,27 +503,30 @@ namespace HandheldCompanion.Views
             switch (status)
             {
                 case PowerManager.SystemStatus.SystemReady:
+                    // resume from sleep
+                    // TODO: lower those delays?
+                    if (prevStatus == PowerManager.SystemStatus.SystemPending)
                     {
-                        switch (prevStatus)
-                        {
-                            case PowerManager.SystemStatus.SystemBooting:
-                                // cold boot
-                                break;
-                            case PowerManager.SystemStatus.SystemPending:
-                                // resume from sleep
-                                await Task.Delay(2000);
-                                break;
-                        }
+                        await Task.Delay(2000);
 
                         // restore inputs manager
                         InputsManager.Start();
 
                         // start timer manager
                         TimerManager.Start();
+
+                        // resume the virtual controller last
+                        await Task.Delay(CurrentDevice.ResumeDelay);
+                        VirtualManager.Resume();
                     }
                     break;
+
                 case PowerManager.SystemStatus.SystemPending:
+                    // sleep
                     {
+                        // stop the virtual controller
+                        VirtualManager.Pause();
+
                         // stop timer manager
                         TimerManager.Stop();
 

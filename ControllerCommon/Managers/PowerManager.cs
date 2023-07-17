@@ -183,7 +183,7 @@ namespace ControllerCommon.Managers
             // only raise event is system status has changed
             if (previousSystemStatus != currentSystemStatus)
             {
-                LogManager.LogInformation("System status set to {0}", currentSystemStatus);
+                LogManager.LogInformation("System status set from {0} to {1}", previousSystemStatus, currentSystemStatus);
                 SystemStatusChanged?.Invoke(currentSystemStatus, previousSystemStatus);
 
                 previousSystemStatus = currentSystemStatus;

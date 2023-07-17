@@ -64,7 +64,7 @@ namespace HandheldCompanion.Targets
 
         public virtual void Dispose()
         {
-            this.Disconnect();
+            Disconnect();
             GC.SuppressFinalize(this);
         }
     }

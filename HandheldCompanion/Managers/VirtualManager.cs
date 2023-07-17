@@ -4,9 +4,7 @@ using ControllerCommon.Utils;
 using HandheldCompanion.Targets;
 using Nefarius.ViGEm.Client;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
-using IDevice = ControllerCommon.Devices.IDevice;
 
 namespace HandheldCompanion.Managers
 {
@@ -17,9 +15,6 @@ namespace HandheldCompanion.Managers
         public static ViGEmTarget vTarget;
 
         private static DSUServer DSUServer;
-
-        // devices vars
-        public static IDevice CurrentDevice;
 
         // settings vars
         private static HIDmode HIDmode = HIDmode.NoController;
@@ -46,9 +41,6 @@ namespace HandheldCompanion.Managers
                 throw new InvalidOperationException();
             }
 
-            // initialize device
-            CurrentDevice = IDevice.GetDefault();
-
             // initialize DSUClient
             DSUServer = new DSUServer();
 
@@ -58,8 +50,6 @@ namespace HandheldCompanion.Managers
 
         public static void Start()
         {
-            PowerManager.SystemStatusChanged += OnSystemStatusChanged;
-
             IsInitialized = true;
             Initialized?.Invoke();
 
@@ -71,15 +61,34 @@ namespace HandheldCompanion.Managers
             if (!IsInitialized)
                 return;
 
+            ResetViGEm();
+            DSUServer.Stop();
+
             IsInitialized = false;
 
-            // update virtual controller
-            SetControllerMode(HIDmode.NoController);
-
-            // stop DSUClient
-            DSUServer?.Stop();
-
             LogManager.LogInformation("{0} has stopped", "VirtualManager");
+        }
+
+        public static async void Resume()
+        {
+            while (vTarget is null || !vTarget.IsConnected)
+            {
+                // reset vigem
+                ResetViGEm();
+
+                // create new ViGEm client
+                vClient = new ViGEmClient();
+
+                // set controller mode
+                SetControllerMode(HIDmode);
+
+                await Task.Delay(1000);
+            }
+        }
+
+        public static void Pause()
+        {
+            ResetViGEm();
         }
 
         private static void SettingsManager_SettingValueChanged(string name, object value)
@@ -211,50 +220,6 @@ namespace HandheldCompanion.Managers
 
             vTarget?.UpdateInputs(controllerState);
             DSUServer?.UpdateInputs(controllerState);
-        }
-
-        // TODO: move to MainWindow?
-        private static async void OnSystemStatusChanged(PowerManager.SystemStatus status, PowerManager.SystemStatus prevStatus)
-        {
-            if (status == prevStatus)
-                return;
-
-            switch (status)
-            {
-                case PowerManager.SystemStatus.SystemReady:
-                    {
-                        if (prevStatus == PowerManager.SystemStatus.SystemPending)
-                        {
-                            // resume from sleep
-                            await Task.Delay(CurrentDevice.ResumeDelay);
-                        }
-
-                        // check if service/system was suspended previously
-                        if (vTarget is not null)
-                            return;
-
-                        while (vTarget is null || !vTarget.IsConnected)
-                        {
-                            // reset vigem
-                            ResetViGEm();
-
-                            // create new ViGEm client
-                            vClient = new ViGEmClient();
-
-                            // set controller mode
-                            SetControllerMode(HIDmode);
-
-                            await Task.Delay(1000);
-                        }
-                    }
-                    break;
-                case PowerManager.SystemStatus.SystemPending:
-                    {
-                        // reset vigem
-                        ResetViGEm();
-                    }
-                    break;
-            }
         }
 
         private static void ResetViGEm()
