@@ -1,4 +1,4 @@
-using ControllerCommon.Inputs;
+using HandheldCompanion.Inputs;
 using System;
 using System.Collections.Generic;
 using System.Windows;

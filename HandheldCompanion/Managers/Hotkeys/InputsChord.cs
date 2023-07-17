@@ -2,7 +2,7 @@ using Gma.System.MouseKeyHook;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using ButtonState = ControllerCommon.Inputs.ButtonState;
+using ButtonState = HandheldCompanion.Inputs.ButtonState;
 
 namespace HandheldCompanion.Managers
 {

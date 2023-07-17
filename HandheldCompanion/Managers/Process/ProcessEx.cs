@@ -1,5 +1,5 @@
-using ControllerCommon.Platforms;
-using ControllerCommon.Utils;
+using HandheldCompanion.Platforms;
+using HandheldCompanion.Utils;
 using System;
 using System.Diagnostics;
 using System.Drawing;

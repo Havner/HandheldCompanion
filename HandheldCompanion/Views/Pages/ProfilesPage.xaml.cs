@@ -1,11 +1,9 @@
-using ControllerCommon.Actions;
-using ControllerCommon.Inputs;
-using ControllerCommon.Managers;
-using ControllerCommon.Misc;
-using ControllerCommon.Utils;
+using HandheldCompanion.Actions;
 using HandheldCompanion.Controls;
+using HandheldCompanion.Inputs;
 using HandheldCompanion.Managers;
 using HandheldCompanion.Misc;
+using HandheldCompanion.Utils;
 using HandheldCompanion.Views.Pages.Profiles;
 using Microsoft.Win32;
 using ModernWpf.Controls;
@@ -16,7 +14,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
-using Layout = ControllerCommon.Misc.Layout;
+using Layout = HandheldCompanion.Misc.Layout;
 using Page = System.Windows.Controls.Page;
 
 namespace HandheldCompanion.Views.Pages

@@ -1,6 +1,6 @@
-using ControllerCommon.Utils;
 using HandheldCompanion.Controls;
 using HandheldCompanion.Managers;
+using HandheldCompanion.Utils;
 using ModernWpf.Controls;
 using System.Windows;
 using System.Windows.Controls;

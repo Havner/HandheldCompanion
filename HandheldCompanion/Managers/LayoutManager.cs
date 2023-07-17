@@ -1,10 +1,8 @@
-using ControllerCommon.Actions;
-using ControllerCommon.Controllers;
-using ControllerCommon.Inputs;
-using ControllerCommon.Managers;
-using ControllerCommon.Misc;
 using HandheldCompanion.Actions;
+using HandheldCompanion.Controllers;
 using HandheldCompanion.Controls;
+using HandheldCompanion.Inputs;
+using HandheldCompanion.Misc;
 using HandheldCompanion.Views;
 using Newtonsoft.Json;
 using System;
@@ -12,7 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
-using Layout = ControllerCommon.Misc.Layout;
+using Layout = HandheldCompanion.Misc.Layout;
 
 namespace HandheldCompanion.Managers
 {

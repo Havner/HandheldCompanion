@@ -1,5 +1,5 @@
-using ControllerCommon.Controllers;
-using ControllerCommon.Inputs;
+using HandheldCompanion.Controllers;
+using HandheldCompanion.Inputs;
 
 namespace HandheldCompanion.Targets
 {

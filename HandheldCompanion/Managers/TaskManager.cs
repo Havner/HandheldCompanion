@@ -1,4 +1,3 @@
-using ControllerCommon.Managers;
 using HandheldCompanion.Views;
 using Microsoft.Win32.TaskScheduler;
 using System;

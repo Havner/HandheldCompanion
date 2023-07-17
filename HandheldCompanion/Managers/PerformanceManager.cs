@@ -1,6 +1,5 @@
-using ControllerCommon.Managers;
-using ControllerCommon.Processor;
-using ControllerCommon.Utils;
+using HandheldCompanion.Processor;
+using HandheldCompanion.Utils;
 using HandheldCompanion.Views;
 using System;
 using System.Runtime.InteropServices;
@@ -52,7 +51,7 @@ namespace HandheldCompanion.Managers
         public static event PowerModeChangedEventHandler PowerModeChanged;
         public delegate void PowerModeChangedEventHandler(int idx);
 
-        private static Processor processor;
+        private static IProcessor processor;
         public static int MaxDegreeOfParallelism = 4;
 
         private static readonly Guid[] PowerModes = new Guid[3] { PowerMode.BetterBattery, PowerMode.BetterPerformance, PowerMode.BestPerformance };
@@ -80,7 +79,7 @@ namespace HandheldCompanion.Managers
 
             HotkeysManager.CommandExecuted += HotkeysManager_CommandExecuted;
 
-            processor = Processor.GetCurrent();
+            processor = IProcessor.GetCurrent();
 
             powerWatchdog = new Timer() { Interval = INTERVAL_DEFAULT, AutoReset = true, Enabled = false };
             powerWatchdog.Elapsed += PowerWatchdog_Elapsed;

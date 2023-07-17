@@ -1,8 +1,6 @@
-using ControllerCommon.Managers;
-using ControllerCommon.Platforms;
-using ControllerCommon.Utils;
 using HandheldCompanion.Managers;
 using HandheldCompanion.Properties;
+using HandheldCompanion.Utils;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;

@@ -1,6 +1,6 @@
-using ControllerCommon.Inputs;
-using ControllerCommon.Managers;
-using ControllerCommon.Misc;
+using HandheldCompanion.Inputs;
+using HandheldCompanion.Managers;
+using HandheldCompanion.Misc;
 using SharpDX.DirectInput;
 using SharpDX.XInput;
 using System;

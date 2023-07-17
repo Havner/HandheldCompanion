@@ -1,7 +1,6 @@
-using ControllerCommon.Inputs;
-using ControllerCommon.Managers;
-using ControllerCommon.Utils;
+using HandheldCompanion.Inputs;
 using HandheldCompanion.Managers;
+using HandheldCompanion.Utils;
 using Nefarius.ViGEm.Client.Exceptions;
 using Nefarius.ViGEm.Client.Targets;
 using Nefarius.ViGEm.Client.Targets.Xbox360;

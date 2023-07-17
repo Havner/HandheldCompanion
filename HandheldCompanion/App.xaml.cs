@@ -1,5 +1,5 @@
-using ControllerCommon.Managers;
-using ControllerCommon.Utils;
+using HandheldCompanion.Managers;
+using HandheldCompanion.Utils;
 using HandheldCompanion.Views;
 using System;
 using System.Diagnostics;
@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
-using static ControllerCommon.Misc.WinAPI;
+using static HandheldCompanion.Misc.WinAPI;
 
 namespace HandheldCompanion
 {

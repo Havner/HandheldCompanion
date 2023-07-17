@@ -1,9 +1,8 @@
-using ControllerCommon.Controllers;
-using ControllerCommon.Devices;
-using ControllerCommon.Managers;
-using ControllerCommon.Utils;
+using HandheldCompanion.Controllers;
 using HandheldCompanion.Controls;
+using HandheldCompanion.Devices;
 using HandheldCompanion.Managers;
+using HandheldCompanion.Utils;
 using System;
 using System.Linq;
 using System.Windows;

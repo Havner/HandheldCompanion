@@ -1,5 +1,4 @@
-using ControllerCommon.Managers;
-using ControllerCommon.Utils;
+using HandheldCompanion.Utils;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -7,8 +6,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using Windows.System.Diagnostics;
-using static ControllerCommon.Misc.WinAPI;
 using static HandheldCompanion.Managers.ProcessEx;
+using static HandheldCompanion.Misc.WinAPI;
 using Timer = System.Timers.Timer;
 
 namespace HandheldCompanion.Managers

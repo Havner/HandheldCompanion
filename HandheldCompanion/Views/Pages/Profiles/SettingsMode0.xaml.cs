@@ -1,7 +1,7 @@
-using ControllerCommon.Inputs;
-using ControllerCommon.Misc;
 using HandheldCompanion.Controls;
+using HandheldCompanion.Inputs;
 using HandheldCompanion.Managers;
+using HandheldCompanion.Misc;
 using System;
 using System.Numerics;
 using System.Windows;

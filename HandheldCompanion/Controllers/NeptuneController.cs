@@ -1,8 +1,6 @@
-using ControllerCommon.Controllers;
-using ControllerCommon.Inputs;
-using ControllerCommon.Managers;
-using ControllerCommon.Misc;
+using HandheldCompanion.Inputs;
 using HandheldCompanion.Managers;
+using HandheldCompanion.Misc;
 using neptune_hidapi.net;
 using neptune_hidapi.net.Hid;
 using SharpDX.XInput;

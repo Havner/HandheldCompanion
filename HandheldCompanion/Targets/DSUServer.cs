@@ -1,8 +1,8 @@
-using ControllerCommon.Controllers;
-using ControllerCommon.Inputs;
-using ControllerCommon.Managers;
-using ControllerCommon.Utils;
 using Force.Crc32;
+using HandheldCompanion.Controllers;
+using HandheldCompanion.Inputs;
+using HandheldCompanion.Managers;
+using HandheldCompanion.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

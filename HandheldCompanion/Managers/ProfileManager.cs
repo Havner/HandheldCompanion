@@ -1,7 +1,6 @@
-using ControllerCommon.Managers;
-using ControllerCommon.Misc;
-using ControllerCommon.Utils;
 using HandheldCompanion.Controls;
+using HandheldCompanion.Misc;
+using HandheldCompanion.Utils;
 using HandheldCompanion.Views;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

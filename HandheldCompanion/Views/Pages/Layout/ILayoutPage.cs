@@ -1,8 +1,7 @@
-using ControllerCommon.Actions;
-using ControllerCommon.Controllers;
-using ControllerCommon.Inputs;
 using HandheldCompanion.Actions;
+using HandheldCompanion.Controllers;
 using HandheldCompanion.Controls;
+using HandheldCompanion.Inputs;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;

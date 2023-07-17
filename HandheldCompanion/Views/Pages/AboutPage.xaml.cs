@@ -1,4 +1,4 @@
-using ControllerCommon.Devices;
+using HandheldCompanion.Devices;
 using System;
 using System.Windows;
 using System.Windows.Controls;

@@ -1,10 +1,8 @@
-using ControllerCommon.Controllers;
-using ControllerCommon.Inputs;
-using ControllerCommon.Managers;
-using ControllerCommon.Misc;
-using ControllerCommon.Platforms;
-using ControllerCommon.Utils;
 using HandheldCompanion.Controllers;
+using HandheldCompanion.Inputs;
+using HandheldCompanion.Misc;
+using HandheldCompanion.Platforms;
+using HandheldCompanion.Utils;
 using HandheldCompanion.Views;
 using Nefarius.Utilities.DeviceManagement.PnP;
 using SharpDX.DirectInput;

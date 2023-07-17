@@ -1,9 +1,8 @@
-using ControllerCommon.Controllers;
-using ControllerCommon.Managers;
-using ControllerCommon.Utils;
 using GregsStack.InputSimulatorStandard.Native;
+using HandheldCompanion.Controllers;
 using HandheldCompanion.Misc;
 using HandheldCompanion.Simulators;
+using HandheldCompanion.Utils;
 using HandheldCompanion.Views;
 using ModernWpf.Controls;
 using Newtonsoft.Json;

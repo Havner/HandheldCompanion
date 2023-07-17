@@ -1,8 +1,8 @@
-using ControllerCommon.Controllers;
-using ControllerCommon.Inputs;
-using ControllerCommon.Utils;
+using HandheldCompanion.Controllers;
+using HandheldCompanion.Inputs;
 using HandheldCompanion.Managers;
 using HandheldCompanion.Models;
+using HandheldCompanion.Utils;
 using HandheldCompanion.Views.Classes;
 using System;
 using System.Linq;

@@ -1,4 +1,3 @@
-using ControllerCommon.Managers;
 using HandheldCompanion.Managers.Desktop;
 using HandheldCompanion.Views;
 using Microsoft.Win32;

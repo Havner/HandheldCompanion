@@ -1,9 +1,8 @@
-using ControllerCommon.Controllers;
-using ControllerCommon.Inputs;
-using ControllerCommon.Managers;
-using ControllerCommon.Misc;
 using Gma.System.MouseKeyHook;
 using GregsStack.InputSimulatorStandard.Native;
+using HandheldCompanion.Controllers;
+using HandheldCompanion.Inputs;
+using HandheldCompanion.Misc;
 using HandheldCompanion.Views;
 using PrecisionTiming;
 using System;
@@ -12,7 +11,7 @@ using System.Linq;
 using System.Windows.Forms;
 using WindowsInput.Events;
 using static HandheldCompanion.Managers.InputsHotkey;
-using ButtonState = ControllerCommon.Inputs.ButtonState;
+using ButtonState = HandheldCompanion.Inputs.ButtonState;
 using KeyboardSimulator = HandheldCompanion.Simulators.KeyboardSimulator;
 using Timer = System.Timers.Timer;
 

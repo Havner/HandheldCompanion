@@ -1,10 +1,10 @@
-using ControllerCommon.Misc;
 using HandheldCompanion.Controls;
 using HandheldCompanion.Managers;
+using HandheldCompanion.Misc;
 using System.Threading;
 using System.Timers;
 using System.Windows;
-using Layout = ControllerCommon.Misc.Layout;
+using Layout = HandheldCompanion.Misc.Layout;
 using Page = System.Windows.Controls.Page;
 using Timer = System.Timers.Timer;
 

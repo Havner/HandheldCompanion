@@ -12,7 +12,7 @@ using Windows.System.Power;
 using Application = System.Windows.Application;
 using Input = System.Windows.Input;
 using Page = System.Windows.Controls.Page;
-using PowerManager = ControllerCommon.Managers.PowerManager;
+using PowerManager = HandheldCompanion.Managers.PowerManager;
 using SystemPowerManager = Windows.System.Power.PowerManager;
 
 namespace HandheldCompanion.Views.Windows

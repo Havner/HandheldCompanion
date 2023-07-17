@@ -1,5 +1,3 @@
-using ControllerCommon.Managers;
-using ControllerCommon.Platforms;
 using HandheldCompanion.Platforms;
 using System.Diagnostics;
 

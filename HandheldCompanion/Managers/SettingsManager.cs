@@ -1,4 +1,3 @@
-using ControllerCommon.Managers;
 using HandheldCompanion.Views;
 using System;
 using System.Collections.Generic;
