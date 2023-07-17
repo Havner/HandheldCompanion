@@ -34,7 +34,8 @@
         OpenPaneLength="160"
         PaneDisplayMode="Left"
         SelectionFollowsFocus="Enabled"
-        ShoulderNavigationEnabled="Always">
+        ShoulderNavigationEnabled="Always"
+        IsPaneToggleButtonVisible="False">
 
         <ui:NavigationView.MenuItems>
             <!--  Game icon  -->
