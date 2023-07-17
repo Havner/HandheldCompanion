@@ -1,4 +1,5 @@
 using ControllerCommon.Managers.Hid;
+using ControllerCommon.Misc;
 using ControllerCommon.Utils;
 using Nefarius.Utilities.DeviceManagement.PnP;
 using PInvoke;

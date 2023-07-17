@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using Windows.System.Diagnostics;
-using static ControllerCommon.WinAPI;
+using static ControllerCommon.Misc.WinAPI;
 using static HandheldCompanion.Managers.ProcessEx;
 using Timer = System.Timers.Timer;
 

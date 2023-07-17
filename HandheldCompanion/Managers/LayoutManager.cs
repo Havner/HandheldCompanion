@@ -1,8 +1,8 @@
-using ControllerCommon;
 using ControllerCommon.Actions;
 using ControllerCommon.Controllers;
 using ControllerCommon.Inputs;
 using ControllerCommon.Managers;
+using ControllerCommon.Misc;
 using HandheldCompanion.Actions;
 using HandheldCompanion.Controls;
 using HandheldCompanion.Views;
@@ -12,7 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
-using Layout = ControllerCommon.Layout;
+using Layout = ControllerCommon.Misc.Layout;
 
 namespace HandheldCompanion.Managers
 {

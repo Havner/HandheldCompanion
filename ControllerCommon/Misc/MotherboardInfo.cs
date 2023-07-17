@@ -1,6 +1,6 @@
 using System.Management;
 
-namespace ControllerCommon
+namespace ControllerCommon.Misc
 {
     static public class MotherboardInfo
     {

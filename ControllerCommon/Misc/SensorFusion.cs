@@ -2,7 +2,7 @@ using ControllerCommon.Utils;
 using System;
 using System.Numerics;
 
-namespace ControllerCommon
+namespace ControllerCommon.Misc
 {
     public class SensorFusion
     {
@@ -116,7 +116,7 @@ namespace ControllerCommon
             SmoothAccel = Vector3.Transform(SmoothAccel, reverseRotation);
 
             // Note to self, SmoothAccel seems OK.
-            float smoothInterpolator = (float)Math.Pow(2, (-(float)DeltaTimeSec / SmoothingHalfTime));
+            float smoothInterpolator = (float)Math.Pow(2, -(float)DeltaTimeSec / SmoothingHalfTime);
             // Note to self, SmoothInterpolator seems OK, still no sure about the Pow from C++ to C#, also, is it suppose to be a negative value?
 
             Shakiness *= smoothInterpolator;
@@ -213,8 +213,8 @@ namespace ControllerCommon
 
             // Calculate angles around Y and X axis (Theta and Psi) using all 3 directions of accelerometer
             // Based on: https://www.digikey.com/en/articles/using-an-accelerometer-for-inclination-sensing               
-            DeviceAngle.X = (float)((Math.Atan(GravityVector.Y / (Math.Sqrt(Math.Pow(GravityVector.X, 2) + Math.Pow(GravityVector.Z, 2))))) * 180 / Math.PI);
-            DeviceAngle.Y = (float)((Math.Atan(GravityVector.X / (Math.Sqrt(Math.Pow(GravityVector.Y, 2) + Math.Pow(GravityVector.Z, 2))))) * 180 / Math.PI);
+            DeviceAngle.X = (float)(Math.Atan(GravityVector.Y / Math.Sqrt(Math.Pow(GravityVector.X, 2) + Math.Pow(GravityVector.Z, 2))) * 180 / Math.PI);
+            DeviceAngle.Y = (float)(Math.Atan(GravityVector.X / Math.Sqrt(Math.Pow(GravityVector.Y, 2) + Math.Pow(GravityVector.Z, 2))) * 180 / Math.PI);
         }
     }
 }

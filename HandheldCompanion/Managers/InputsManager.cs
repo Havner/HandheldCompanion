@@ -1,7 +1,7 @@
-using ControllerCommon;
 using ControllerCommon.Controllers;
 using ControllerCommon.Inputs;
 using ControllerCommon.Managers;
+using ControllerCommon.Misc;
 using Gma.System.MouseKeyHook;
 using GregsStack.InputSimulatorStandard.Native;
 using HandheldCompanion.Views;

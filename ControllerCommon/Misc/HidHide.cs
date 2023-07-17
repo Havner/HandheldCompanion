@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace ControllerCommon
+namespace ControllerCommon.Misc
 {
     public static class HidHide
     {

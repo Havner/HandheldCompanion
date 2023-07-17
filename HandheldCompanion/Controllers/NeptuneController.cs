@@ -1,7 +1,7 @@
-using ControllerCommon;
 using ControllerCommon.Controllers;
 using ControllerCommon.Inputs;
 using ControllerCommon.Managers;
+using ControllerCommon.Misc;
 using HandheldCompanion.Managers;
 using neptune_hidapi.net;
 using neptune_hidapi.net.Hid;

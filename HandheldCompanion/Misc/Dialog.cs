@@ -1,7 +1,7 @@
 using ModernWpf.Controls;
 using System.Threading.Tasks;
 
-namespace HandheldCompanion
+namespace HandheldCompanion.Misc
 {
     internal class Dialog
     {

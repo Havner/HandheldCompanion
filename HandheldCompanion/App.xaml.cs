@@ -7,7 +7,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
-using static ControllerCommon.WinAPI;
+using static ControllerCommon.Misc.WinAPI;
 
 namespace HandheldCompanion
 {

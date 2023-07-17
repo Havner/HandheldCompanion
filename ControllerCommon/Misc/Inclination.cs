@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace ControllerCommon
+namespace ControllerCommon.Misc
 {
     public class Inclination
     {

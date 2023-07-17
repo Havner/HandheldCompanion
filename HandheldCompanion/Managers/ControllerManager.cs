@@ -1,7 +1,7 @@
-using ControllerCommon;
 using ControllerCommon.Controllers;
 using ControllerCommon.Inputs;
 using ControllerCommon.Managers;
+using ControllerCommon.Misc;
 using ControllerCommon.Platforms;
 using ControllerCommon.Utils;
 using HandheldCompanion.Controllers;

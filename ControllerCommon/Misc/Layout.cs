@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace ControllerCommon
+namespace ControllerCommon.Misc
 {
     [Serializable]
     public class Layout : ICloneable, IDisposable
@@ -57,25 +57,25 @@ namespace ControllerCommon
 
         public void UpdateLayout(ButtonFlags button, IActions action)
         {
-            this.ButtonLayout[button] = action;
+            ButtonLayout[button] = action;
             Updated?.Invoke(this);
         }
 
         public void UpdateLayout(AxisLayoutFlags axis, IActions action)
         {
-            this.AxisLayout[axis] = action;
+            AxisLayout[axis] = action;
             Updated?.Invoke(this);
         }
 
         public void RemoveLayout(ButtonFlags button)
         {
-            this.ButtonLayout.Remove(button);
+            ButtonLayout.Remove(button);
             Updated?.Invoke(this);
         }
 
         public void RemoveLayout(AxisLayoutFlags axis)
         {
-            this.AxisLayout.Remove(axis);
+            AxisLayout.Remove(axis);
             Updated?.Invoke(this);
         }
 

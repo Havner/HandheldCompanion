@@ -1,20 +1,20 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace ControllerCommon
+namespace ControllerCommon.Misc
 {
     public static class WinAPI
     {
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern IntPtr GetForegroundWindow();
+        private static extern nint GetForegroundWindow();
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern int GetWindowThreadProcessId(
-            IntPtr hWnd,
+            nint hWnd,
             out int lpdwProcessId);
 
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern int SetPriorityClass(IntPtr hProcess, int dwPriorityClass);
+        public static extern int SetPriorityClass(nint hProcess, int dwPriorityClass);
 
         [Flags]
         public enum PriorityClass : uint
@@ -29,14 +29,14 @@ namespace ControllerCommon
             REALTIME_PRIORITY_CLASS = 0x100
         }
 
-        public static int GetWindowProcessId(IntPtr hwnd)
+        public static int GetWindowProcessId(nint hwnd)
         {
             int pid;
             GetWindowThreadProcessId(hwnd, out pid);
             return pid;
         }
 
-        public static IntPtr GetforegroundWindow()
+        public static nint GetforegroundWindow()
         {
             return GetForegroundWindow();
         }

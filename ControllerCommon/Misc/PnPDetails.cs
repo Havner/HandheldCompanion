@@ -2,7 +2,7 @@ using ControllerCommon.Managers.Hid;
 using System;
 using System.Runtime.InteropServices;
 
-namespace ControllerCommon
+namespace ControllerCommon.Misc
 {
     [StructLayout(LayoutKind.Sequential)]
     public class PnPDetails

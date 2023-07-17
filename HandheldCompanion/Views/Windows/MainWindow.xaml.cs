@@ -1,6 +1,6 @@
-using ControllerCommon;
 using ControllerCommon.Devices;
 using ControllerCommon.Managers;
+using ControllerCommon.Misc;
 using HandheldCompanion.Managers;
 using HandheldCompanion.Views.Pages;
 using HandheldCompanion.Views.Windows;

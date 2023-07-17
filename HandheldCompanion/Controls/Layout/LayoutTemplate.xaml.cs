@@ -1,5 +1,5 @@
-using ControllerCommon;
 using ControllerCommon.Inputs;
+using ControllerCommon.Misc;
 using GregsStack.InputSimulatorStandard.Native;
 using HandheldCompanion.Actions;
 using Newtonsoft.Json;

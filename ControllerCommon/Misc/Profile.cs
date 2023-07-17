@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace ControllerCommon
+namespace ControllerCommon.Misc
 {
     [Flags]
     public enum ProfileErrorCode
@@ -84,7 +84,7 @@ namespace ControllerCommon
             {
                 for (int i = 0; i < SensivityArraySize; i++)
                 {
-                    double value = (double)i / (double)(SensivityArraySize - 1);
+                    double value = i / (double)(SensivityArraySize - 1);
                     MotionSensivityArray[value] = 0.5f;
                 }
             }
@@ -98,12 +98,12 @@ namespace ControllerCommon
             // string Version = AppProperties.ContainsKey("FileVersion") ? AppProperties["FileVersion"] : "1.0.0.0";
             // string Company = AppProperties.ContainsKey("Company") ? AppProperties["Company"] : AppProperties.ContainsKey("Copyright") ? AppProperties["Copyright"] : "Unknown";
 
-            this.Executable = AppProperties["FileName"];
-            this.Name = ProductName;
-            this.Path = path;
+            Executable = AppProperties["FileName"];
+            Name = ProductName;
+            Path = path;
 
             // enable the below variables when profile is created
-            this.Enabled = true;
+            Enabled = true;
         }
 
         public float GetSensitivityX()

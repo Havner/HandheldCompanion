@@ -1,7 +1,7 @@
 using System;
 using System.Numerics;
 
-namespace ControllerCommon
+namespace ControllerCommon.Misc
 {
     /// <summary>
     /// MadgwickAHRS class. Implementation of Madgwick's IMU and AHRS algorithms.

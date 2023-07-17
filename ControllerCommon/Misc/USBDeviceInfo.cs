@@ -1,7 +1,7 @@
 using System.Management;
 using System.Text.RegularExpressions;
 
-namespace ControllerCommon
+namespace ControllerCommon.Misc
 {
     public class USBDeviceInfo
     {

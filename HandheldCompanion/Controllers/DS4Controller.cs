@@ -1,6 +1,6 @@
-using ControllerCommon;
 using ControllerCommon.Inputs;
 using ControllerCommon.Managers;
+using ControllerCommon.Misc;
 using SharpDX.DirectInput;
 using SharpDX.XInput;
 using System;

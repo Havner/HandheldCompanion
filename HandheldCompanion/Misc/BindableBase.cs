@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace HandheldCompanion
+namespace HandheldCompanion.Misc
 {
     public class BindableBase : INotifyPropertyChanged
     {

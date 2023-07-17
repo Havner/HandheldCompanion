@@ -1,7 +1,7 @@
-﻿using ControllerCommon;
-using ControllerCommon.Actions;
+﻿using ControllerCommon.Actions;
 using ControllerCommon.Controllers;
 using ControllerCommon.Inputs;
+using ControllerCommon.Misc;
 using ControllerCommon.Utils;
 using HandheldCompanion.Views;
 using System;

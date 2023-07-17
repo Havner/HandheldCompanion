@@ -1,5 +1,5 @@
-using ControllerCommon;
 using ControllerCommon.Inputs;
+using ControllerCommon.Misc;
 using HandheldCompanion.Controls;
 using HandheldCompanion.Managers;
 using System;
