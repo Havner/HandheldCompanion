@@ -145,7 +145,7 @@ namespace HandheldCompanion.Managers
 
                 if (keys.Count != 0)
                 {
-                    LogManager.LogDebug("Captured: Buttons: {0}, Type: {1}, IsKeyDown: {2}", currentChord.State, currentChord.InputsType, IsKeyDown);
+                    //LogManager.LogDebug("Captured: Buttons: {0}, Type: {1}, IsKeyDown: {2}", currentChord.State, currentChord.InputsType, IsKeyDown);
 
                     foreach (string key in keys)
                     {
