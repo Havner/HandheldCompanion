@@ -25,10 +25,12 @@ namespace HandheldCompanion.Processor
                 case "906A4": // AlderLake-P
                 case "90672": // AlderLake-S
                 case "90675": // AlderLake-S
-                    canChangeTDP = true;
-                    canChangeGPU = true;
+                    canChangeTDP = false;
+                    canChangeGPU = false;
                     break;
             }
+
+            IsInitialized = true;
         }
 
         public override void SetTDPLimit(uint limit, int result)

@@ -17,14 +17,12 @@ namespace HandheldCompanion.Processor
                 return;
 
             family = RyzenAdj.get_cpu_family(ry);
-            IsInitialized = true;
 
             switch (family)
             {
                 case RyzenFamily.FAM_RENOIR:
                 case RyzenFamily.FAM_LUCIENNE:
                 case RyzenFamily.FAM_CEZANNE:
-                case RyzenFamily.FAM_VANGOGH:
                 case RyzenFamily.FAM_REMBRANDT:
                     canChangeGPU = true;
                     break;
@@ -43,6 +41,8 @@ namespace HandheldCompanion.Processor
                     canChangeTDP = true;
                     break;
             }
+
+            IsInitialized = true;
         }
 
         public override void SetTDPLimit(uint limit, int result)
