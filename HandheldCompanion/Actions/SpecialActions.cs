@@ -46,7 +46,7 @@ namespace HandheldCompanion.Actions
 
             flickStickX /= 1000;
 
-            MouseSimulator.MoveBy((int)-flickStickX, 0);
+            MouseSimulator.MoveBy((int)flickStickX, 0);
         }
     }
 }

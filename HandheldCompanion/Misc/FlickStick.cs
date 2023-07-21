@@ -52,7 +52,7 @@ namespace HandheldCompanion.Misc
                 {
                     // Start flick
                     FlickProgress = 0.0f; // Reset flick timer
-                    FlickSize = (float)Math.Atan2(-Stick.X, Stick.Y); // Stick angle from up/forward
+                    FlickSize = (float)Math.Atan2(Stick.X, Stick.Y); // Stick angle from up/forward
 
                     // Determine flick pulse duration
                     // Partial flick time based on flick size
@@ -66,8 +66,8 @@ namespace HandheldCompanion.Misc
                     // for last flick output to allow for smoother transition.
 
                     // Stick turn along horizontal plane
-                    var StickAngle = (float)Math.Atan2(-StickFiltered.X, StickFiltered.Y); // Stick angle from up/forward
-                    var LastStickAngle = (float)Math.Atan2(-LastStickFiltered.X, LastStickFiltered.Y);
+                    var StickAngle = (float)Math.Atan2(StickFiltered.X, StickFiltered.Y); // Stick angle from up/forward
+                    var LastStickAngle = (float)Math.Atan2(LastStickFiltered.X, LastStickFiltered.Y);
 
                     var AngleChange = (float)WrapMinMax(StickAngle - LastStickAngle, -Math.PI, Math.PI);
 
