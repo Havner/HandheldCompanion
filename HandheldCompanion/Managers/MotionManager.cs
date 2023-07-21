@@ -43,11 +43,7 @@ namespace HandheldCompanion.Managers
         private static MadgwickAHRS madgwickAHRS = new(0.01f, 0.1f);
         private static Inclination inclination = new();
 
-        private static Stopwatch stopwatch;
-
-        private static double TotalMilliseconds;
-        private static double UpdateTimePreviousMilliseconds;
-        private static double DeltaSeconds = 100.0d;
+        private static double PreviousTotalMilliseconds;
 
         public static event SettingsMode0EventHandler SettingsMode0Update;
         public delegate void SettingsMode0EventHandler(Vector3 gyrometer);
@@ -65,22 +61,16 @@ namespace HandheldCompanion.Managers
 
         static MotionManager()
         {
-            // initialize stopwatch
-            stopwatch = new Stopwatch();
         }
 
         public static void Start()
         {
-            stopwatch.Start();
-
             IsInitialized = true;
             Initialized?.Invoke();
         }
 
         public static void Stop()
         {
-            stopwatch.Stop();
-
             IsInitialized = false;
         }
 
@@ -139,9 +129,9 @@ namespace HandheldCompanion.Managers
             Profile current = ProfileManager.GetCurrent();
 
             // update timestamp
-            TotalMilliseconds = stopwatch.Elapsed.TotalMilliseconds;
-            DeltaSeconds = (TotalMilliseconds - UpdateTimePreviousMilliseconds) / 1000L;
-            UpdateTimePreviousMilliseconds = TotalMilliseconds;
+            double TotalMilliseconds = TimerManager.Stopwatch.Elapsed.TotalMilliseconds;
+            double DeltaSeconds = (TotalMilliseconds - PreviousTotalMilliseconds) / 1000L;
+            PreviousTotalMilliseconds = TotalMilliseconds;
 
             // check if motion trigger is pressed
             bool MotionTriggered =
@@ -157,7 +147,7 @@ namespace HandheldCompanion.Managers
             if (MotionMapped && MotionTriggered && (current.MotionInput == MotionInput.PlayerSpace ||
                                                     current.MotionInput == MotionInput.AutoRollYawSwap))
             {
-                sensorFusion.UpdateReport(TotalMilliseconds, DeltaSeconds, gyroscope[(int)SensorIndex.Default], accelerometer[(int)SensorIndex.Default]);
+                sensorFusion.UpdateReport(DeltaSeconds, gyroscope[(int)SensorIndex.Default], accelerometer[(int)SensorIndex.Default]);
             }
 
             if ((MotionMapped && MotionTriggered && current.MotionInput == MotionInput.JoystickSteering)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HandheldCompanion.Managers;
+using System;
 using System.Numerics;
 
 namespace HandheldCompanion.Misc
@@ -19,10 +20,10 @@ namespace HandheldCompanion.Misc
         private Vector2 LastStick;
         private Vector2 LastStickFiltered;
         private Vector2 StickFiltered;
-        private double UpdateTimePreviousMilliSeconds;
+        private double PreviousTotalMilliSeconds;
 
         // Flick stick, flick to initial angle, allow for stick rotation in horizontal plane after
-        public float Handle(Vector2 Stick, float FlickDuration, float StickSensitivity, double TotalMilliseconds)
+        public float Handle(Vector2 Stick, float FlickDuration, float StickSensitivity)
         {
             // Provide -1 to 1 joystickposition range for function.
             // @Benjamin not sure about converting here again from float to short.
@@ -30,17 +31,18 @@ namespace HandheldCompanion.Misc
                 MapShortToMinusOnePlusOneRange((short)Stick.Y));
 
             // Variables
-            var Result = 0.0f;
-            var LastLength = LastStick.Length();
-            var Length = Stick.Length();
+            float Result = 0.0f;
+            float LastLength = LastStick.Length();
+            float Length = Stick.Length();
 
             // Settings
-            var FlickThreshold = 0.9f;
-            var TurnSmoothThreshold = 0.1f;
+            float FlickThreshold = 0.9f;
+            float TurnSmoothThreshold = 0.1f;
 
-            var DeltaTimeSeconds = (TotalMilliseconds - UpdateTimePreviousMilliSeconds) / 1000L;
-            var rate = 1.0 / (TotalMilliseconds - UpdateTimePreviousMilliSeconds);
-            UpdateTimePreviousMilliSeconds = TotalMilliseconds;
+            double TotalMilliseconds = TimerManager.Stopwatch.Elapsed.TotalMilliseconds;
+            double DeltaTimeSeconds = (TotalMilliseconds - PreviousTotalMilliSeconds) / 1000L;
+            double rate = 1.0 / (TotalMilliseconds - PreviousTotalMilliSeconds);
+            PreviousTotalMilliSeconds = TotalMilliseconds;
 
             StickFiltered = new Vector2((float)JoystickFilter.axis1Filter.Filter(Stick.X, rate),
                 (float)JoystickFilter.axis2Filter.Filter(Stick.Y, rate));

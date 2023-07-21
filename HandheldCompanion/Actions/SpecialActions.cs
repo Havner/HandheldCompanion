@@ -41,8 +41,7 @@ namespace HandheldCompanion.Actions
             if (layout.vector == Vector2.Zero)
                 return;
 
-            float flickStickX = flickStick.Handle(layout.vector, FlickstickDuration, FlickstickSensivity,
-                                                  TimerManager.Stopwatch.Elapsed.TotalMilliseconds);
+            float flickStickX = flickStick.Handle(layout.vector, FlickstickDuration, FlickstickSensivity);
 
             flickStickX /= 1000;
 

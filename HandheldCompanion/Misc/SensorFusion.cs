@@ -26,7 +26,7 @@ namespace HandheldCompanion.Misc
         {
         }
 
-        public void UpdateReport(double TotalMilliseconds, double DeltaSeconds, Vector3 AngularVelocity, Vector3 Acceleration)
+        public void UpdateReport(double DeltaSeconds, Vector3 AngularVelocity, Vector3 Acceleration)
         {
             // Check for empty inputs, prevent NaN computes
             Vector3 EmptyVector = new(0f, 0f, 0f);
@@ -38,14 +38,14 @@ namespace HandheldCompanion.Misc
             // Todo, kickstart gravity vector with = acceleration when calculation is either
             // run for the first time or is selcted to be run based on user profile?
 
-            CalculateGravitySimple(TotalMilliseconds, DeltaSeconds, AngularVelocity, Acceleration);
-            //CalculateGravityFancy(TotalMilliseconds, DeltaSeconds, AngularVelocity, Acceleration);
+            CalculateGravitySimple(DeltaSeconds, AngularVelocity, Acceleration);
+            //CalculateGravityFancy(DeltaSeconds, AngularVelocity, Acceleration);
 
-            DeviceAngles(TotalMilliseconds, GravityVectorSimple);
-            PlayerSpace(TotalMilliseconds, DeltaSeconds, AngularVelocity, GravityVectorSimple);
+            DeviceAngles(GravityVectorSimple);
+            PlayerSpace(DeltaSeconds, AngularVelocity, GravityVectorSimple);
         }
 
-        public void CalculateGravitySimple(double TotalMilliseconds, double DeltaMilliseconds, Vector3 AngularVelocity, Vector3 Acceleration)
+        public void CalculateGravitySimple(double DeltaMilliseconds, Vector3 AngularVelocity, Vector3 Acceleration)
         {
             // Gravity determination using sensor fusion, "Something Simple" example from:
             // http://gyrowiki.jibbsmart.com/blog:finding-gravity-with-sensor-fusion
@@ -69,7 +69,7 @@ namespace HandheldCompanion.Misc
             GravityVectorSimple += Vector3.Multiply(0.02f, Vector3.Normalize(gravityDelta));
         }
 
-        public void CalculateGravityFancy(double TotalMilliseconds, double DeltaTimeSec, Vector3 AngularVelocity, Vector3 Acceleration)
+        public void CalculateGravityFancy(double DeltaTimeSec, Vector3 AngularVelocity, Vector3 Acceleration)
         {
             // TODO Does not work yet!!!
 
@@ -185,7 +185,7 @@ namespace HandheldCompanion.Misc
             }
         }
 
-        private void PlayerSpace(double TotalMilliseconds, double DeltaSeconds, Vector3 AngularVelocity, Vector3 GravityVector)
+        private void PlayerSpace(double DeltaSeconds, Vector3 AngularVelocity, Vector3 GravityVector)
         {
             // PlayerSpace
             Vector3 GravityNorm = Vector3.Normalize(GravityVector);
@@ -208,7 +208,7 @@ namespace HandheldCompanion.Misc
             CameraPitchDelta = AngularVelocity.X * AdditionalFactor * DeltaSeconds;
         }
 
-        private void DeviceAngles(double TotalMilliseconds, Vector3 GravityVector)
+        private void DeviceAngles(Vector3 GravityVector)
         {
 
             // Calculate angles around Y and X axis (Theta and Psi) using all 3 directions of accelerometer
