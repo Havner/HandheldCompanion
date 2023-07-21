@@ -160,6 +160,8 @@ namespace HandheldCompanion.Controls
                 // settings
                 Axis2SpecialFlick.Value = ((SpecialActions)this.Actions).FlickSensitivity;
                 Axis2SpecialSweep.Value = ((SpecialActions)this.Actions).SweepSensitivity;
+                Axis2SpecialThreshold.Value = ((SpecialActions)this.Actions).FlickThreshold;
+                Axis2SpecialSpeed.Value = ((SpecialActions)this.Actions).FlickSpeed;
             }
 
             base.Update();
@@ -368,6 +370,36 @@ namespace HandheldCompanion.Controls
             {
                 case ActionType.Special:
                     ((SpecialActions)this.Actions).SweepSensitivity = (float)Axis2SpecialSweep.Value;
+                    break;
+            }
+
+            base.Update();
+        }
+
+        private void Axis2SpecialThreshold_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (this.Actions is null)
+                return;
+
+            switch (this.Actions.ActionType)
+            {
+                case ActionType.Special:
+                    ((SpecialActions)this.Actions).FlickThreshold = (float)Axis2SpecialThreshold.Value;
+                    break;
+            }
+
+            base.Update();
+        }
+
+        private void Axis2SpecialSpeed_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (this.Actions is null)
+                return;
+
+            switch (this.Actions.ActionType)
+            {
+                case ActionType.Special:
+                    ((SpecialActions)this.Actions).FlickSpeed = (int)Axis2SpecialSpeed.Value;
                     break;
             }
 

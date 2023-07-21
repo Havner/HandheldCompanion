@@ -25,6 +25,8 @@ namespace HandheldCompanion.Actions
         // settings
         public float FlickSensitivity = 5.0f;
         public float SweepSensitivity = 5.0f;
+        public float FlickThreshold = 0.75f;
+        public int FlickSpeed = 100;
 
         public SpecialActions()
         {
@@ -41,7 +43,7 @@ namespace HandheldCompanion.Actions
             if (layout.vector == Vector2.Zero)
                 return;
 
-            float flickStickX = flickStick.Handle(layout.vector, FlickSensitivity, SweepSensitivity);
+            float flickStickX = flickStick.Handle(layout.vector, FlickSensitivity, SweepSensitivity, FlickThreshold, FlickSpeed);
 
             MouseSimulator.MoveBy((int)flickStickX, 0);
         }

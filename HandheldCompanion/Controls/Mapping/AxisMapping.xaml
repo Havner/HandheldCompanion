@@ -9,7 +9,7 @@
     xmlns:resx="clr-namespace:HandheldCompanion.Properties"
     xmlns:ui="http://schemas.modernwpf.com/2019"
     d:Background="White"
-    d:DesignHeight="1000"
+    d:DesignHeight="1200"
     d:DesignWidth="800"
     d:Visibility="Visible"
     Visibility="Collapsed"
@@ -442,6 +442,78 @@
                                         TickFrequency="0.1"
                                         ValueChanged="Axis2SpecialSweep_ValueChanged"
                                         AutoToolTipPrecision="1" />
+                                </ui:SimpleStackPanel>
+                            </Grid>
+
+                            <!--  Separator  -->
+                            <Separator
+                                BorderBrush="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
+                                BorderThickness="0,1,0,0"
+                                Opacity="0.25" />
+
+                            <!--  Flick threshold  -->
+                            <Grid>
+                                <ui:SimpleStackPanel Spacing="6">
+                                    <Grid>
+                                        <TextBlock
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BodyTextBlockStyle}"
+                                            Text="Flick threshold" />
+                                        <TextBox
+                                            HorizontalAlignment="Right"
+                                            HorizontalContentAlignment="Center"
+                                            IsReadOnly="True"
+                                            Text="{Binding Value, StringFormat=N2, ElementName=Axis2SpecialThreshold, Mode=OneWay}" />
+                                    </Grid>
+
+                                    <Slider
+                                        x:Name="Axis2SpecialThreshold"
+                                        IsMoveToPointEnabled="True"
+                                        IsSnapToTickEnabled="True"
+                                        Maximum="1.0"
+                                        Minimum="0.1"
+                                        ScrollViewer.PanningMode="HorizontalOnly"
+                                        Style="{DynamicResource SliderStyle1}"
+                                        TickFrequency="0.01"
+                                        ValueChanged="Axis2SpecialThreshold_ValueChanged"
+                                        AutoToolTipPrecision="2" />
+                                </ui:SimpleStackPanel>
+                            </Grid>
+
+                            <!--  Separator  -->
+                            <Separator
+                                BorderBrush="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
+                                BorderThickness="0,1,0,0"
+                                Opacity="0.25" />
+
+                            <!--  Flick speed  -->
+                            <Grid>
+                                <ui:SimpleStackPanel Spacing="6">
+                                    <Grid>
+                                        <TextBlock
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BodyTextBlockStyle}"
+                                            Text="Flick speed" />
+                                        <TextBox
+                                            HorizontalAlignment="Right"
+                                            HorizontalContentAlignment="Center"
+                                            IsReadOnly="True"
+                                            Text="{Binding Value, StringFormat=N0, ElementName=Axis2SpecialSpeed, Mode=OneWay}" />
+                                    </Grid>
+
+                                    <Slider
+                                        x:Name="Axis2SpecialSpeed"
+                                        IsMoveToPointEnabled="True"
+                                        IsSnapToTickEnabled="True"
+                                        Maximum="200"
+                                        Minimum="10"
+                                        ScrollViewer.PanningMode="HorizontalOnly"
+                                        Style="{DynamicResource SliderStyle1}"
+                                        TickFrequency="1"
+                                        ValueChanged="Axis2SpecialSpeed_ValueChanged"
+                                        AutoToolTipPrecision="0" />
                                 </ui:SimpleStackPanel>
                             </Grid>
 
