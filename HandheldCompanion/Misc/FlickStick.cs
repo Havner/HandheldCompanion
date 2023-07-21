@@ -11,7 +11,7 @@ namespace HandheldCompanion.Misc
         // Based on: http://gyrowiki.jibbsmart.com/blog:good-gyro-controls-part-2:the-flick-stick
 
         private float FlickProgress;
-        private float FlickSize;
+        private float FlickAngle;
 
         private float FlickTimePartial = 0.01f;
 
@@ -25,7 +25,7 @@ namespace HandheldCompanion.Misc
         private readonly int FlickFinetune = 62;
 
         // Flick stick, flick to initial angle, allow for stick rotation in horizontal plane after
-        public float Handle(Vector2 Stick, float FlickSensitivity, float SweepSensitivity, float FlickThreshold, int FlickSpeed)
+        public float Handle(Vector2 Stick, float FlickSensitivity, float SweepSensitivity, float FlickThreshold, int FlickSpeed, int FlickFrontAngleDeadzone)
         {
             FlickSensitivity /= FlickFinetune;
             FlickSensitivity *= (100.0f / FlickSpeed);
@@ -55,17 +55,20 @@ namespace HandheldCompanion.Misc
             // Compare last frame to this, determine if flick occured
             if (Length >= FlickThreshold)
             {
-                if (LastLength < FlickThreshold)
+                float flickAngle = (float)Math.Atan2(Stick.X, Stick.Y);
+                float flickAngleDegrees = (float)(flickAngle * 180 / Math.PI);
+
+                if (LastLength < FlickThreshold && Math.Abs(flickAngleDegrees) > FlickFrontAngleDeadzone)
                 {
                     // Start flick
                     FlickProgress = 0.0f; // Reset flick timer
-                    FlickSize = (float)Math.Atan2(Stick.X, Stick.Y); // Stick angle from up/forward
+                    FlickAngle = flickAngle; // Stick angle from up/forward
 
                     // Determine flick pulse duration
                     // Partial flick time based on flick size
                     // Flick duration is 180 degrees, flick partial duration is time needed for partial turn
                     // Note, games that use acceleration and deceleration won't be 100% accurate
-                    FlickTimePartial = FlickSensitivity * Math.Abs(FlickSize) / (float)Math.PI;
+                    FlickTimePartial = FlickSensitivity * Math.Abs(FlickAngle) / (float)Math.PI;
                 }
                 else
                 {
@@ -107,7 +110,7 @@ namespace HandheldCompanion.Misc
                     Result = (float)(1.0f * (FlickTimePartial - FlickProgress) / DeltaTimeSeconds);
 
                 // Apply flick direction
-                Result *= Math.Sign(FlickSize);
+                Result *= Math.Sign(FlickAngle);
 
                 // Increment progress
                 // Possible improvement, determine flickprogress at the start to compensate for timing inaccuracy

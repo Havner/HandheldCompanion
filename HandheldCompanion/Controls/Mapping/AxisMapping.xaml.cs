@@ -162,6 +162,7 @@ namespace HandheldCompanion.Controls
                 Axis2SpecialSweep.Value = ((SpecialActions)this.Actions).SweepSensitivity;
                 Axis2SpecialThreshold.Value = ((SpecialActions)this.Actions).FlickThreshold;
                 Axis2SpecialSpeed.Value = ((SpecialActions)this.Actions).FlickSpeed;
+                Axis2SpecialFrontAngle.Value = ((SpecialActions)this.Actions).FlickFrontAngleDeadzone;
             }
 
             base.Update();
@@ -400,6 +401,21 @@ namespace HandheldCompanion.Controls
             {
                 case ActionType.Special:
                     ((SpecialActions)this.Actions).FlickSpeed = (int)Axis2SpecialSpeed.Value;
+                    break;
+            }
+
+            base.Update();
+        }
+
+        private void Axis2SpecialAngleDeadzone_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (this.Actions is null)
+                return;
+
+            switch (this.Actions.ActionType)
+            {
+                case ActionType.Special:
+                    ((SpecialActions)this.Actions).FlickFrontAngleDeadzone = (int)Axis2SpecialFrontAngle.Value;
                     break;
             }
 

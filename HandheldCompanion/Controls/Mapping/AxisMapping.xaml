@@ -523,6 +523,42 @@
                                 BorderThickness="0,1,0,0"
                                 Opacity="0.25" />
 
+                            <!--  Flick forward angle deadzone  -->
+                            <Grid>
+                                <ui:SimpleStackPanel Spacing="6">
+                                    <Grid>
+                                        <TextBlock
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BodyTextBlockStyle}"
+                                            Text="Flick forward angle deadzone" />
+                                        <TextBox
+                                            HorizontalAlignment="Right"
+                                            HorizontalContentAlignment="Center"
+                                            IsReadOnly="True"
+                                            Text="{Binding Value, StringFormat=N0, ElementName=Axis2SpecialFrontAngle, Mode=OneWay}" />
+                                    </Grid>
+
+                                    <Slider
+                                        x:Name="Axis2SpecialFrontAngle"
+                                        IsMoveToPointEnabled="True"
+                                        IsSnapToTickEnabled="True"
+                                        Maximum="90"
+                                        Minimum="0"
+                                        ScrollViewer.PanningMode="HorizontalOnly"
+                                        Style="{DynamicResource SliderStyle1}"
+                                        TickFrequency="1"
+                                        ValueChanged="Axis2SpecialAngleDeadzone_ValueChanged"
+                                        AutoToolTipPrecision="0" />
+                                </ui:SimpleStackPanel>
+                            </Grid>
+
+                            <!--  Separator  -->
+                            <Separator
+                                BorderBrush="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
+                                BorderThickness="0,1,0,0"
+                                Opacity="0.25" />
+
                         </ui:SimpleStackPanel>
                     </ui:SimpleStackPanel>
                 </Grid>
