@@ -387,6 +387,14 @@ namespace HandheldCompanion.Managers
                             mAction.Execute(InLayout, touched);
                         }
                         break;
+
+                    case ActionType.Special:
+                        {
+                            SpecialActions mAction = action as SpecialActions;
+
+                            mAction.Execute(InLayout);
+                        }
+                        break;
                 }
             }
 

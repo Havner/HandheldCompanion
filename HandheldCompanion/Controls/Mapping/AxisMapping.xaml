@@ -52,6 +52,7 @@
                         <ComboBoxItem Content="Keyboard" IsEnabled="False" />
                         <ComboBoxItem Content="Mouse" IsEnabled="True" />
                         <ComboBoxItem Content="Trigger" IsEnabled="False" />
+                        <ComboBoxItem Content="Special" IsEnabled="True" />
                     </ComboBox>
 
                     <ComboBox
@@ -356,6 +357,91 @@
                                         Style="{DynamicResource SliderStyle1}"
                                         TickFrequency="1"
                                         ValueChanged="Axis2MouseDeadzone_ValueChanged" />
+                                </ui:SimpleStackPanel>
+                            </Grid>
+
+                            <!--  Separator  -->
+                            <Separator
+                                BorderBrush="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
+                                BorderThickness="0,1,0,0"
+                                Opacity="0.25" />
+
+                        </ui:SimpleStackPanel>
+                    </ui:SimpleStackPanel>
+                </Grid>
+
+                <!--  Axis 2 Special  -->
+                <Grid
+                    Name="Axis2Special"
+                    d:Visibility="Visible"
+                    Visibility="{Binding ElementName=ActionComboBox, Path=SelectedIndex, Converter={StaticResource IndexToVisibilityConverter}, ConverterParameter=6}">
+
+                    <ui:SimpleStackPanel Spacing="12">
+                        <ui:SimpleStackPanel Spacing="6">
+
+                            <!--  Duration  -->
+                            <Grid>
+                                <ui:SimpleStackPanel Spacing="6">
+                                    <Grid>
+                                        <TextBlock
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BodyTextBlockStyle}"
+                                            Text="Duration" />
+                                        <TextBox
+                                            HorizontalAlignment="Right"
+                                            HorizontalContentAlignment="Center"
+                                            IsReadOnly="True"
+                                            Text="{Binding Value, StringFormat=N2, ElementName=Axis2SpecialDuration, Mode=OneWay}" />
+                                    </Grid>
+
+                                    <Slider
+                                        x:Name="Axis2SpecialDuration"
+                                        IsMoveToPointEnabled="True"
+                                        IsSnapToTickEnabled="True"
+                                        Maximum="0.8"
+                                        Minimum="0.01"
+                                        ScrollViewer.PanningMode="HorizontalOnly"
+                                        Style="{DynamicResource SliderStyle1}"
+                                        TickFrequency="0.01"
+                                        ValueChanged="Axis2SpecialDuration_ValueChanged"
+                                        AutoToolTipPrecision="2" />
+                                </ui:SimpleStackPanel>
+                            </Grid>
+
+                            <!--  Separator  -->
+                            <Separator
+                                BorderBrush="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
+                                BorderThickness="0,1,0,0"
+                                Opacity="0.25" />
+
+                            <!--  Sensitivity  -->
+                            <Grid>
+                                <ui:SimpleStackPanel Spacing="6">
+                                    <Grid>
+                                        <TextBlock
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BodyTextBlockStyle}"
+                                            Text="Sensitivity" />
+                                        <TextBox
+                                            HorizontalAlignment="Right"
+                                            HorizontalContentAlignment="Center"
+                                            IsReadOnly="True"
+                                            Text="{Binding Value, StringFormat=N1, ElementName=Axis2SpecialSensitivity, Mode=OneWay}" />
+                                    </Grid>
+
+                                    <Slider
+                                        x:Name="Axis2SpecialSensitivity"
+                                        IsMoveToPointEnabled="True"
+                                        IsSnapToTickEnabled="True"
+                                        Maximum="10.0"
+                                        Minimum="0.1"
+                                        ScrollViewer.PanningMode="HorizontalOnly"
+                                        Style="{DynamicResource SliderStyle1}"
+                                        TickFrequency="0.1"
+                                        ValueChanged="Axis2SpecialSensitivity_ValueChanged"
+                                        AutoToolTipPrecision="1" />
                                 </ui:SimpleStackPanel>
                             </Grid>
 

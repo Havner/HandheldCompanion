@@ -77,10 +77,10 @@ namespace HandheldCompanion.Views.Pages
                 buttonMapping.Deleted += (sender) => ButtonMapping_Deleted((ButtonFlags)sender);
             }
 
-            foreach (TriggerMapping AxisMapping in triggersPage.MappingTriggers.Values)
+            foreach (TriggerMapping axisMapping in triggersPage.MappingTriggers.Values)
             {
-                AxisMapping.Updated += (sender, action) => AxisMapping_Updated((AxisLayoutFlags)sender, action);
-                AxisMapping.Deleted += (sender) => AxisMapping_Deleted((AxisLayoutFlags)sender);
+                axisMapping.Updated += (sender, action) => AxisMapping_Updated((AxisLayoutFlags)sender, action);
+                axisMapping.Deleted += (sender) => AxisMapping_Deleted((AxisLayoutFlags)sender);
             }
 
             foreach (AxisMapping axisMapping in joysticksPage.MappingAxis.Values.Union(trackpadsPage.MappingAxis.Values).Union(gyroPage.MappingAxis.Values))

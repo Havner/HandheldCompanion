@@ -142,6 +142,25 @@ namespace HandheldCompanion.Controls
                 Axis2MouseRotation.Value = (((MouseActions)this.Actions).AxisInverted ? 180 : 0) + (((MouseActions)this.Actions).AxisRotated ? 90 : 0);
                 Axis2MouseDeadzone.Value = ((MouseActions)this.Actions).Deadzone;
             }
+            else if (type == ActionType.Special)
+            {
+                if (this.Actions is null || this.Actions is not SpecialActions)
+                    this.Actions = new SpecialActions();
+
+                foreach (SpecialActionsType specialType in Enum.GetValues(typeof(SpecialActionsType)))
+                {
+                    // create a label, store SpecialActionsType as Tag and Label as controller specific string
+                    Label buttonLabel = new Label() { Tag = specialType, Content = EnumUtils.GetDescriptionFromEnumValue(specialType) };
+                    TargetComboBox.Items.Add(buttonLabel);
+
+                    if (specialType.Equals(((SpecialActions)this.Actions).SpecialType))
+                        TargetComboBox.SelectedItem = buttonLabel;
+                }
+
+                // settings
+                Axis2SpecialDuration.Value = ((SpecialActions)this.Actions).FlickstickDuration;
+                Axis2SpecialSensitivity.Value = ((SpecialActions)this.Actions).FlickstickSensivity;
+            }
 
             base.Update();
         }
@@ -172,6 +191,13 @@ namespace HandheldCompanion.Controls
                     {
                         Label buttonLabel = TargetComboBox.SelectedItem as Label;
                         ((MouseActions)this.Actions).MouseType = (MouseActionsType)buttonLabel.Tag;
+                    }
+                    break;
+
+                case ActionType.Special:
+                    {
+                        Label buttonLabel = TargetComboBox.SelectedItem as Label;
+                        ((SpecialActions)this.Actions).SpecialType = (SpecialActionsType)buttonLabel.Tag;
                     }
                     break;
             }
@@ -312,6 +338,36 @@ namespace HandheldCompanion.Controls
             {
                 case ActionType.Mouse:
                     ((MouseActions)this.Actions).Deadzone = (int)Axis2MouseDeadzone.Value;
+                    break;
+            }
+
+            base.Update();
+        }
+
+        private void Axis2SpecialDuration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (this.Actions is null)
+                return;
+
+            switch (this.Actions.ActionType)
+            {
+                case ActionType.Special:
+                    ((SpecialActions)this.Actions).FlickstickDuration = (float)Axis2SpecialDuration.Value;
+                    break;
+            }
+
+            base.Update();
+        }
+
+        private void Axis2SpecialSensitivity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (this.Actions is null)
+                return;
+
+            switch (this.Actions.ActionType)
+            {
+                case ActionType.Special:
+                    ((SpecialActions)this.Actions).FlickstickSensivity = (float)Axis2SpecialSensitivity.Value;
                     break;
             }
 

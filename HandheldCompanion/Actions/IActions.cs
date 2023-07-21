@@ -12,7 +12,8 @@ namespace HandheldCompanion.Actions
         Joystick = 2,
         Keyboard = 3,
         Mouse = 4,
-        Trigger = 5
+        Trigger = 5,
+        Special = 6,
     }
 
     [Serializable]
