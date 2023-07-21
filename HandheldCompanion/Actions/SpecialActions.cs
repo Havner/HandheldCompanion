@@ -21,6 +21,7 @@ namespace HandheldCompanion.Actions
     {
         public SpecialActionsType SpecialType { get; set; }
         private FlickStick flickStick = new();
+        private float remainder = 0;
 
         // settings
         public float FlickSensitivity = 5.0f;
@@ -44,10 +45,14 @@ namespace HandheldCompanion.Actions
             if (layout.vector == Vector2.Zero)
                 return;
 
-            float flickStickX = flickStick.Handle(layout.vector, FlickSensitivity, SweepSensitivity,
-                                                  FlickThreshold, FlickSpeed, FlickFrontAngleDeadzone);
+            float delta = flickStick.Handle(layout.vector, FlickSensitivity, SweepSensitivity,
+                                            FlickThreshold, FlickSpeed, FlickFrontAngleDeadzone);
 
-            MouseSimulator.MoveBy((int)flickStickX, 0);
+            delta += remainder;
+            int intDelta = (int)Math.Truncate(delta);
+            remainder = delta - intDelta;
+
+            MouseSimulator.MoveBy(intDelta, 0);
         }
     }
 }
