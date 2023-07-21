@@ -392,20 +392,20 @@
                                             HorizontalAlignment="Right"
                                             HorizontalContentAlignment="Center"
                                             IsReadOnly="True"
-                                            Text="{Binding Value, StringFormat=N2, ElementName=Axis2SpecialFlick, Mode=OneWay}" />
+                                            Text="{Binding Value, StringFormat=N1, ElementName=Axis2SpecialFlick, Mode=OneWay}" />
                                     </Grid>
 
                                     <Slider
                                         x:Name="Axis2SpecialFlick"
                                         IsMoveToPointEnabled="True"
                                         IsSnapToTickEnabled="True"
-                                        Maximum="0.8"
-                                        Minimum="0.01"
+                                        Maximum="15.0"
+                                        Minimum="1.0"
                                         ScrollViewer.PanningMode="HorizontalOnly"
                                         Style="{DynamicResource SliderStyle1}"
-                                        TickFrequency="0.01"
+                                        TickFrequency="0.1"
                                         ValueChanged="Axis2SpecialFlick_ValueChanged"
-                                        AutoToolTipPrecision="2" />
+                                        AutoToolTipPrecision="1" />
                                 </ui:SimpleStackPanel>
                             </Grid>
 
@@ -435,8 +435,8 @@
                                         x:Name="Axis2SpecialSweep"
                                         IsMoveToPointEnabled="True"
                                         IsSnapToTickEnabled="True"
-                                        Maximum="10.0"
-                                        Minimum="0.1"
+                                        Maximum="15.0"
+                                        Minimum="1.0"
                                         ScrollViewer.PanningMode="HorizontalOnly"
                                         Style="{DynamicResource SliderStyle1}"
                                         TickFrequency="0.1"

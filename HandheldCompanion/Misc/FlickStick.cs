@@ -22,9 +22,13 @@ namespace HandheldCompanion.Misc
         private Vector2 StickFiltered;
         private double PreviousTotalMilliSeconds;
 
+        private readonly int FlickFinetune = 62;
+
         // Flick stick, flick to initial angle, allow for stick rotation in horizontal plane after
         public float Handle(Vector2 Stick, float FlickSensitivity, float SweepSensitivity)
         {
+            FlickSensitivity /= FlickFinetune;
+
             // Provide -1 to 1 joystickposition range for function.
             // @Benjamin not sure about converting here again from float to short.
             Stick = new Vector2(MapShortToMinusOnePlusOneRange((short)Stick.X),
@@ -37,7 +41,7 @@ namespace HandheldCompanion.Misc
 
             // Settings
             // TODO: move some to UI, at least threshold and MaxMove (speed)
-            float FlickThreshold = 0.9f;
+            float FlickThreshold = 0.8f;
             float TurnSmoothThreshold = 0.1f;
             int MaxPixelsPerTick = 100;
 

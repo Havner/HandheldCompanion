@@ -23,8 +23,8 @@ namespace HandheldCompanion.Actions
         private FlickStick flickStick = new();
 
         // settings
-        public float FlickSensitivity = 0.1f;    // 0.1 - 0.8
-        public float SweepSensitivity = 3.0f;    // 0.1 - 10.0
+        public float FlickSensitivity = 5.0f;
+        public float SweepSensitivity = 5.0f;
 
         public SpecialActions()
         {
