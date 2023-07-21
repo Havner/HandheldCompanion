@@ -148,15 +148,22 @@ namespace HandheldCompanion.Utils
             return StickInput * Multiplier * short.MaxValue;
         }
 
-        public static float ApplyAntiDeadzone(float ThumbValue, int DeadzonePercentage)
+        public static float ApplyAntiDeadzone(float ThumbValue, int DeadzonePercentage, int MaxValue)
         {
-            float StickInput = ThumbValue / short.MaxValue;
-
-            if (DeadzonePercentage == 0 || StickInput <= DeadzonePercentage)
+            if (DeadzonePercentage == 0 || ThumbValue == 0.0f)
                 return ThumbValue;
 
-            float Deadzone = DeadzonePercentage / 100.0f * Math.Sign(ThumbValue);
-            return (StickInput + Deadzone) * short.MaxValue;
+            // Convert MaxValue value input to 0 to 1
+            float StickInput = ThumbValue / MaxValue;
+
+            // Convert 0-100% to 0 to 1
+            float Deadzone = DeadzonePercentage / 100.0f;
+
+            // Calculate the new value
+            StickInput = ((1 - Deadzone) * StickInput + Deadzone);
+
+            // Convert 0 to 1 back to MaxValue value and return
+            return StickInput * MaxValue;
         }
 
         public static Vector2 ImproveCircularity(Vector2 ThumbValue)

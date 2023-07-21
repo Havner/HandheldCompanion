@@ -1,4 +1,5 @@
 using HandheldCompanion.Inputs;
+using HandheldCompanion.Utils;
 using System;
 
 namespace HandheldCompanion.Actions
@@ -7,6 +8,10 @@ namespace HandheldCompanion.Actions
     public class TriggerActions : IActions
     {
         public AxisLayoutFlags Axis { get; set; }
+
+        public int AxisDeadZoneInner { get; set; } = 0;
+        public int AxisDeadZoneOuter { get; set; } = 0;
+        public int AxisAntiDeadZone { get; set; } = 0;
 
         public TriggerActions()
         {
@@ -22,8 +27,8 @@ namespace HandheldCompanion.Actions
         public override void Execute(AxisFlags axis, short value)
         {
             // Apply inner and outer deadzone adjustments
-            // value = (short)InputUtils.InnerOuterDeadzone(value, AxisDeadZoneInner, AxisDeadZoneOuter, short.MaxValue);
-            // value = (short)InputUtils.ApplyAntiDeadzone(value, AxisAntiDeadZone);
+            value = (short)InputUtils.InnerOuterDeadzone(value, AxisDeadZoneInner, AxisDeadZoneOuter, byte.MaxValue);
+            value = (short)InputUtils.ApplyAntiDeadzone(value, AxisAntiDeadZone, byte.MaxValue);
 
             this.Value = (short)(value);
         }

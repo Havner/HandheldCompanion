@@ -4,6 +4,7 @@ using HandheldCompanion.Inputs;
 using HandheldCompanion.Managers;
 using ModernWpf.Controls;
 using System.Threading;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace HandheldCompanion.Controls
@@ -100,6 +101,11 @@ namespace HandheldCompanion.Controls
                     if (axis.Equals(((TriggerActions)this.Actions).Axis))
                         TargetComboBox.SelectedItem = buttonLabel;
                 }
+
+                // settings
+                Trigger2TriggerInnerDeadzone.Value = ((TriggerActions)this.Actions).AxisDeadZoneInner;
+                Trigger2TriggerOuterDeadzone.Value = ((TriggerActions)this.Actions).AxisDeadZoneOuter;
+                Trigger2TriggerAntiDeadzone.Value = ((TriggerActions)this.Actions).AxisAntiDeadZone;
             }
 
             base.Update();
@@ -146,6 +152,51 @@ namespace HandheldCompanion.Controls
                 TargetComboBox.SelectedItem = null;
                 Monitor.Exit(updateLock);
             }
+        }
+
+        private void Trigger2TriggerInnerDeadzone_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (this.Actions is null)
+                return;
+
+            switch (this.Actions.ActionType)
+            {
+                case ActionType.Trigger:
+                    ((TriggerActions)this.Actions).AxisDeadZoneInner = (int)Trigger2TriggerInnerDeadzone.Value;
+                    break;
+            }
+
+            base.Update();
+        }
+
+        private void Trigger2TriggerOuterDeadzone_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (this.Actions is null)
+                return;
+
+            switch (this.Actions.ActionType)
+            {
+                case ActionType.Trigger:
+                    ((TriggerActions)this.Actions).AxisDeadZoneOuter = (int)Trigger2TriggerOuterDeadzone.Value;
+                    break;
+            }
+
+            base.Update();
+        }
+
+        private void Trigger2TriggerAntiDeadzone_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (this.Actions is null)
+                return;
+
+            switch (this.Actions.ActionType)
+            {
+                case ActionType.Trigger:
+                    ((TriggerActions)this.Actions).AxisAntiDeadZone = (int)Trigger2TriggerAntiDeadzone.Value;
+                    break;
+            }
+
+            base.Update();
         }
     }
 }
