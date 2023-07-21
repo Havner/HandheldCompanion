@@ -379,7 +379,7 @@
                     <ui:SimpleStackPanel Spacing="12">
                         <ui:SimpleStackPanel Spacing="6">
 
-                            <!--  Duration  -->
+                            <!--  Flick sensitivity  -->
                             <Grid>
                                 <ui:SimpleStackPanel Spacing="6">
                                     <Grid>
@@ -387,16 +387,16 @@
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BodyTextBlockStyle}"
-                                            Text="Duration" />
+                                            Text="Flick sensitivity" />
                                         <TextBox
                                             HorizontalAlignment="Right"
                                             HorizontalContentAlignment="Center"
                                             IsReadOnly="True"
-                                            Text="{Binding Value, StringFormat=N2, ElementName=Axis2SpecialDuration, Mode=OneWay}" />
+                                            Text="{Binding Value, StringFormat=N2, ElementName=Axis2SpecialFlick, Mode=OneWay}" />
                                     </Grid>
 
                                     <Slider
-                                        x:Name="Axis2SpecialDuration"
+                                        x:Name="Axis2SpecialFlick"
                                         IsMoveToPointEnabled="True"
                                         IsSnapToTickEnabled="True"
                                         Maximum="0.8"
@@ -404,7 +404,7 @@
                                         ScrollViewer.PanningMode="HorizontalOnly"
                                         Style="{DynamicResource SliderStyle1}"
                                         TickFrequency="0.01"
-                                        ValueChanged="Axis2SpecialDuration_ValueChanged"
+                                        ValueChanged="Axis2SpecialFlick_ValueChanged"
                                         AutoToolTipPrecision="2" />
                                 </ui:SimpleStackPanel>
                             </Grid>
@@ -415,7 +415,7 @@
                                 BorderThickness="0,1,0,0"
                                 Opacity="0.25" />
 
-                            <!--  Sensitivity  -->
+                            <!--  Sweep sensitivity  -->
                             <Grid>
                                 <ui:SimpleStackPanel Spacing="6">
                                     <Grid>
@@ -423,16 +423,16 @@
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BodyTextBlockStyle}"
-                                            Text="Sensitivity" />
+                                            Text="Sweep sensitivity" />
                                         <TextBox
                                             HorizontalAlignment="Right"
                                             HorizontalContentAlignment="Center"
                                             IsReadOnly="True"
-                                            Text="{Binding Value, StringFormat=N1, ElementName=Axis2SpecialSensitivity, Mode=OneWay}" />
+                                            Text="{Binding Value, StringFormat=N1, ElementName=Axis2SpecialSweep, Mode=OneWay}" />
                                     </Grid>
 
                                     <Slider
-                                        x:Name="Axis2SpecialSensitivity"
+                                        x:Name="Axis2SpecialSweep"
                                         IsMoveToPointEnabled="True"
                                         IsSnapToTickEnabled="True"
                                         Maximum="10.0"
@@ -440,7 +440,7 @@
                                         ScrollViewer.PanningMode="HorizontalOnly"
                                         Style="{DynamicResource SliderStyle1}"
                                         TickFrequency="0.1"
-                                        ValueChanged="Axis2SpecialSensitivity_ValueChanged"
+                                        ValueChanged="Axis2SpecialSweep_ValueChanged"
                                         AutoToolTipPrecision="1" />
                                 </ui:SimpleStackPanel>
                             </Grid>

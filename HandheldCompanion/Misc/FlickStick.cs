@@ -23,7 +23,7 @@ namespace HandheldCompanion.Misc
         private double PreviousTotalMilliSeconds;
 
         // Flick stick, flick to initial angle, allow for stick rotation in horizontal plane after
-        public float Handle(Vector2 Stick, float FlickDuration, float StickSensitivity)
+        public float Handle(Vector2 Stick, float FlickSensitivity, float SweepSensitivity)
         {
             // Provide -1 to 1 joystickposition range for function.
             // @Benjamin not sure about converting here again from float to short.
@@ -62,7 +62,7 @@ namespace HandheldCompanion.Misc
                     // Partial flick time based on flick size
                     // Flick duration is 180 degrees, flick partial duration is time needed for partial turn
                     // Note, games that use acceleration and deceleration won't be 100% accurate
-                    FlickTimePartial = FlickDuration * Math.Abs(FlickSize) / (float)Math.PI;
+                    FlickTimePartial = FlickSensitivity * Math.Abs(FlickSize) / (float)Math.PI;
                 }
                 else
                 {
@@ -75,8 +75,8 @@ namespace HandheldCompanion.Misc
 
                     var AngleChange = (float)WrapMinMax(StickAngle - LastStickAngle, -Math.PI, Math.PI);
 
-                    Result += GetTieredSmoothedStickRotation(AngleChange, TurnSmoothThreshold / 2.0f, TurnSmoothThreshold)
-                              * StickSensitivity * 2;
+                    Result = GetTieredSmoothedStickRotation(AngleChange, TurnSmoothThreshold / 2.0f, TurnSmoothThreshold);
+                    Result *= SweepSensitivity;
                 }
             }
             else

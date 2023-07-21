@@ -158,8 +158,8 @@ namespace HandheldCompanion.Controls
                 }
 
                 // settings
-                Axis2SpecialDuration.Value = ((SpecialActions)this.Actions).FlickstickDuration;
-                Axis2SpecialSensitivity.Value = ((SpecialActions)this.Actions).FlickstickSensivity;
+                Axis2SpecialFlick.Value = ((SpecialActions)this.Actions).FlickSensitivity;
+                Axis2SpecialSweep.Value = ((SpecialActions)this.Actions).SweepSensitivity;
             }
 
             base.Update();
@@ -344,7 +344,7 @@ namespace HandheldCompanion.Controls
             base.Update();
         }
 
-        private void Axis2SpecialDuration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Axis2SpecialFlick_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (this.Actions is null)
                 return;
@@ -352,14 +352,14 @@ namespace HandheldCompanion.Controls
             switch (this.Actions.ActionType)
             {
                 case ActionType.Special:
-                    ((SpecialActions)this.Actions).FlickstickDuration = (float)Axis2SpecialDuration.Value;
+                    ((SpecialActions)this.Actions).FlickSensitivity = (float)Axis2SpecialFlick.Value;
                     break;
             }
 
             base.Update();
         }
 
-        private void Axis2SpecialSensitivity_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Axis2SpecialSweep_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (this.Actions is null)
                 return;
@@ -367,7 +367,7 @@ namespace HandheldCompanion.Controls
             switch (this.Actions.ActionType)
             {
                 case ActionType.Special:
-                    ((SpecialActions)this.Actions).FlickstickSensivity = (float)Axis2SpecialSensitivity.Value;
+                    ((SpecialActions)this.Actions).SweepSensitivity = (float)Axis2SpecialSweep.Value;
                     break;
             }
 
