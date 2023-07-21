@@ -43,8 +43,6 @@ namespace HandheldCompanion.Actions
 
             float flickStickX = flickStick.Handle(layout.vector, FlickstickDuration, FlickstickSensivity);
 
-            flickStickX /= 1000;
-
             MouseSimulator.MoveBy((int)flickStickX, 0);
         }
     }

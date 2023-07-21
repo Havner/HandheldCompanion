@@ -36,8 +36,10 @@ namespace HandheldCompanion.Misc
             float Length = Stick.Length();
 
             // Settings
+            // TODO: move some to UI, at least threshold and MaxMove (speed)
             float FlickThreshold = 0.9f;
             float TurnSmoothThreshold = 0.1f;
+            int MaxPixelsPerTick = 100;
 
             double TotalMilliseconds = TimerManager.Stopwatch.Elapsed.TotalMilliseconds;
             double DeltaTimeSeconds = (TotalMilliseconds - PreviousTotalMilliSeconds) / 1000L;
@@ -112,7 +114,7 @@ namespace HandheldCompanion.Misc
             LastStick = Stick;
             LastStickFiltered = StickFiltered;
 
-            return Result * short.MaxValue;
+            return Result * MaxPixelsPerTick;
         }
 
         private static float MapShortToMinusOnePlusOneRange(short Input)
