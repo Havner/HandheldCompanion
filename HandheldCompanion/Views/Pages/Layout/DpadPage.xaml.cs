@@ -1,7 +1,5 @@
-using HandheldCompanion.Controllers;
 using HandheldCompanion.Controls;
 using HandheldCompanion.Inputs;
-using ModernWpf.Controls;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -31,34 +29,6 @@ namespace HandheldCompanion.Views.Pages
         public DpadPage(string Tag) : this()
         {
             this.Tag = Tag;
-        }
-
-        public override void UpdateController(IController Controller)
-        {
-            // UI thread (async)
-            Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                // controller based
-                foreach (var mapping in MappingButtons)
-                {
-                    ButtonFlags button = mapping.Key;
-                    ButtonMapping buttonMapping = mapping.Value;
-
-                    // update mapping visibility
-                    if (!Controller.HasSourceButton(button))
-                        buttonMapping.Visibility = Visibility.Collapsed;
-                    else
-                    {
-                        buttonMapping.Visibility = Visibility.Visible;
-
-                        // update icon
-                        FontIcon newIcon = Controller.GetFontIcon(button);
-                        string newLabel = Controller.GetButtonName(button);
-
-                        buttonMapping.UpdateIcon(newIcon, newLabel);
-                    }
-                }
-            });
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

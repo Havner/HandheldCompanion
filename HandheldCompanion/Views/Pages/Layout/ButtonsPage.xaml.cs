@@ -63,7 +63,6 @@ namespace HandheldCompanion.Views.Pages
                     continue;
 
                 ButtonMapping buttonMapping = new ButtonMapping(button);
-                buttonMapping.Visibility = Visibility.Visible;
                 OEMStackPanel.Children.Add(buttonMapping);
 
                 MappingButtons.Add(button, buttonMapping);
@@ -73,8 +72,11 @@ namespace HandheldCompanion.Views.Pages
             gridOEM.Visibility = MainWindow.CurrentDevice.OEMButtons.Count() > 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        public override void UpdateController(IController Controller)
+        public override void UpdateController(IController controller)
         {
+            // this will collapse all OEM buttons
+            base.UpdateController(controller);
+
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
@@ -84,27 +86,22 @@ namespace HandheldCompanion.Views.Pages
                     ButtonFlags button = mapping.Key;
                     ButtonMapping buttonMapping = mapping.Value;
 
-                    // update icon
-                    FontIcon newIcon = Controller.GetFontIcon(button);
-                    string newLabel = Controller.GetButtonName(button);
-                    buttonMapping.UpdateIcon(newIcon, newLabel);
-
                     // specific buttons are handled elsewhere
                     if (OEM.Contains(button))
                     {
                         buttonMapping.Name.Text = MainWindow.CurrentDevice.GetButtonName(button);
-                        continue;
-                    }
-
-                    // update mapping visibility
-                    if (!Controller.HasSourceButton(button))
-                        buttonMapping.Visibility = Visibility.Collapsed;
-                    else
                         buttonMapping.Visibility = Visibility.Visible;
+
+                        // update icon
+                        FontIcon newIcon = controller.GetFontIcon(button);
+                        string newLabel = controller.GetButtonName(button);
+
+                        buttonMapping.UpdateIcon(newIcon, newLabel);
+                    }
                 }
 
                 // manage layout pages visibility
-                bool HasBackGrips = Controller.HasSourceButton(ButtonFlags.L4) || Controller.HasSourceButton(ButtonFlags.L5) || Controller.HasSourceButton(ButtonFlags.R4) || Controller.HasSourceButton(ButtonFlags.R5);
+                bool HasBackGrips = controller.HasSourceButton(ButtonFlags.L4) || controller.HasSourceButton(ButtonFlags.L5) || controller.HasSourceButton(ButtonFlags.R4) || controller.HasSourceButton(ButtonFlags.R5);
                 gridBACKGRIPS.Visibility = HasBackGrips ? Visibility.Visible : Visibility.Collapsed;
             });
         }
