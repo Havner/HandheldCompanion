@@ -404,6 +404,42 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to F1.
+        /// </summary>
+        public static string Enum_DefaultDevice_ButtonFlags_OEM1 {
+            get {
+                return ResourceManager.GetString("Enum.DefaultDevice.ButtonFlags.OEM1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to F2.
+        /// </summary>
+        public static string Enum_DefaultDevice_ButtonFlags_OEM2 {
+            get {
+                return ResourceManager.GetString("Enum.DefaultDevice.ButtonFlags.OEM2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to F3.
+        /// </summary>
+        public static string Enum_DefaultDevice_ButtonFlags_OEM3 {
+            get {
+                return ResourceManager.GetString("Enum.DefaultDevice.ButtonFlags.OEM3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to F4.
+        /// </summary>
+        public static string Enum_DefaultDevice_ButtonFlags_OEM4 {
+            get {
+                return ResourceManager.GetString("Enum.DefaultDevice.ButtonFlags.OEM4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cross.
         /// </summary>
         public static string Enum_DS4Controller_ButtonFlags_B1 {

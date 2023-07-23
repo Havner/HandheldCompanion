@@ -1310,4 +1310,16 @@ with motion input enabled, use selected button(s) to disable motion.</value>
   <data name="PlayerSpaceDesc" xml:space="preserve">
     <value>This input will operate as a joystick optimized for controlling a first or third person camera</value>
   </data>
+  <data name="Enum.DefaultDevice.ButtonFlags.OEM1" xml:space="preserve">
+    <value>F1</value>
+  </data>
+  <data name="Enum.DefaultDevice.ButtonFlags.OEM2" xml:space="preserve">
+    <value>F2</value>
+  </data>
+  <data name="Enum.DefaultDevice.ButtonFlags.OEM3" xml:space="preserve">
+    <value>F3</value>
+  </data>
+  <data name="Enum.DefaultDevice.ButtonFlags.OEM4" xml:space="preserve">
+    <value>F4</value>
+  </data>
 </root>
