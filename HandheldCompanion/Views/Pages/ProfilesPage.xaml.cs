@@ -450,6 +450,7 @@ namespace HandheldCompanion.Views.Pages
                 Executable = selectedProfile.Executable,
                 Product = selectedProfile.Name,
             };
+            // TODO: there are too many events flying in circles
             layoutTemplate.Updated += Template_Updated;
 
             MainWindow.layoutPage.UpdateLayout(layoutTemplate);
@@ -459,6 +460,12 @@ namespace HandheldCompanion.Views.Pages
         private void Template_Updated(LayoutTemplate layoutTemplate)
         {
             selectedProfile.LayoutTitle = layoutTemplate.Name;
+
+            // TODO: why it doesn't work?
+            // selectedProfile.Layout is not layoutTemplate.Layout anymore
+            // cloned somewhere in the middle?
+            // selectedProfile.Layout = layoutTemplate.Layout would workaround
+            // mUpdateProfile_Click(new object(), new RoutedEventArgs());
         }
     }
 }

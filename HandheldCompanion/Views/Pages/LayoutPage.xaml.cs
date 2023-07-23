@@ -67,19 +67,19 @@ namespace HandheldCompanion.Views.Pages
                 { "GyroPage", gyroPage },
             };
 
-            foreach (ButtonMapping buttonMapping in buttonsPage.MappingButtons.Values.Union(dpadPage.MappingButtons.Values).Union(triggersPage.MappingButtons.Values).Union(joysticksPage.MappingButtons.Values).Union(trackpadsPage.MappingButtons.Values))
+            foreach (ButtonStack buttonStack in buttonsPage.ButtonStacks.Values.Union(dpadPage.ButtonStacks.Values).Union(triggersPage.ButtonStacks.Values).Union(joysticksPage.ButtonStacks.Values).Union(trackpadsPage.ButtonStacks.Values))
             {
-                buttonMapping.Updated += (sender, action) => ButtonMapping_Updated((ButtonFlags)sender, action);
-                buttonMapping.Deleted += (sender) => ButtonMapping_Deleted((ButtonFlags)sender);
+                buttonStack.Updated += (sender, actions) => ButtonMapping_Updated((ButtonFlags)sender, actions);
+                buttonStack.Deleted += (sender) => ButtonMapping_Deleted((ButtonFlags)sender);
             }
 
-            foreach (TriggerMapping axisMapping in triggersPage.MappingTriggers.Values)
+            foreach (TriggerMapping axisMapping in triggersPage.TriggerMappings.Values)
             {
                 axisMapping.Updated += (sender, action) => AxisMapping_Updated((AxisLayoutFlags)sender, action);
                 axisMapping.Deleted += (sender) => AxisMapping_Deleted((AxisLayoutFlags)sender);
             }
 
-            foreach (AxisMapping axisMapping in joysticksPage.MappingAxis.Values.Union(trackpadsPage.MappingAxis.Values).Union(gyroPage.MappingAxis.Values))
+            foreach (AxisMapping axisMapping in joysticksPage.AxisMappings.Values.Union(trackpadsPage.AxisMappings.Values).Union(gyroPage.AxisMappings.Values))
             {
                 axisMapping.Updated += (sender, action) => AxisMapping_Updated((AxisLayoutFlags)sender, action);
                 axisMapping.Deleted += (sender) => AxisMapping_Deleted((AxisLayoutFlags)sender);
@@ -210,12 +210,12 @@ namespace HandheldCompanion.Views.Pages
             currentTemplate.Layout.RemoveLayout(button);
         }
 
-        private void ButtonMapping_Updated(ButtonFlags button, IActions action)
+        private void ButtonMapping_Updated(ButtonFlags button, List<IActions> actions)
         {
             if (Monitor.IsEntered(updateLock))
                 return;
 
-            currentTemplate.Layout.UpdateLayout(button, action);
+            currentTemplate.Layout.UpdateLayout(button, actions);
         }
 
         private void AxisMapping_Deleted(AxisLayoutFlags axis)
@@ -268,6 +268,8 @@ namespace HandheldCompanion.Views.Pages
 
                 Monitor.Exit(updateLock);
 
+                // TODO: this seems to be circular, UpdatePages are called when layoutTemplate+layout changes
+                // and this event triggers layoutTemplate layout update. Remove together with Layout.UpdateLayout()?
                 currentTemplate.Layout.UpdateLayout();
             }
         }

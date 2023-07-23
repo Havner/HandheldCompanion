@@ -22,10 +22,10 @@ namespace HandheldCompanion.Views.Pages
             // draw UI
             foreach (ButtonFlags button in LeftTrigger)
             {
-                ButtonMapping buttonMapping = new ButtonMapping(button);
-                LeftTriggerButtonsPanel.Children.Add(buttonMapping);
+                ButtonStack panel = new(button);
+                LeftTriggerButtonsPanel.Children.Add(panel);
 
-                MappingButtons.Add(button, buttonMapping);
+                ButtonStacks.Add(button, panel);
             }
 
             foreach (AxisLayoutFlags axis in LeftTriggerAxis)
@@ -33,15 +33,15 @@ namespace HandheldCompanion.Views.Pages
                 TriggerMapping axisMapping = new TriggerMapping(axis);
                 LeftTriggerPanel.Children.Add(axisMapping);
 
-                MappingTriggers.Add(axis, axisMapping);
+                TriggerMappings.Add(axis, axisMapping);
             }
 
             foreach (ButtonFlags button in RightTrigger)
             {
-                ButtonMapping buttonMapping = new ButtonMapping(button);
-                RightTriggerButtonsPanel.Children.Add(buttonMapping);
+                ButtonStack panel = new(button);
+                RightTriggerButtonsPanel.Children.Add(panel);
 
-                MappingButtons.Add(button, buttonMapping);
+                ButtonStacks.Add(button, panel);
             }
 
             foreach (AxisLayoutFlags axis in RightTriggerAxis)
@@ -49,7 +49,7 @@ namespace HandheldCompanion.Views.Pages
                 TriggerMapping axisMapping = new TriggerMapping(axis);
                 RightTriggerPanel.Children.Add(axisMapping);
 
-                MappingTriggers.Add(axis, axisMapping);
+                TriggerMappings.Add(axis, axisMapping);
             }
         }
 

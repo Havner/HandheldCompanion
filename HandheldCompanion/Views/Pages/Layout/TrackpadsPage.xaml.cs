@@ -22,10 +22,10 @@ namespace HandheldCompanion.Views.Pages
             // draw UI
             foreach (ButtonFlags button in LeftButtons)
             {
-                ButtonMapping buttonMapping = new ButtonMapping(button);
-                LeftTrackpadButtonsPanel.Children.Add(buttonMapping);
+                ButtonStack panel = new(button);
+                LeftTrackpadButtonsPanel.Children.Add(panel);
 
-                MappingButtons.Add(button, buttonMapping);
+                ButtonStacks.Add(button, panel);
             }
 
             foreach (AxisLayoutFlags axis in LeftAxis)
@@ -33,15 +33,15 @@ namespace HandheldCompanion.Views.Pages
                 AxisMapping axisMapping = new AxisMapping(axis);
                 LeftTrackpadPanel.Children.Add(axisMapping);
 
-                MappingAxis.Add(axis, axisMapping);
+                AxisMappings.Add(axis, axisMapping);
             }
 
             foreach (ButtonFlags button in RightButtons)
             {
-                ButtonMapping buttonMapping = new ButtonMapping(button);
-                RightTrackpadButtonsPanel.Children.Add(buttonMapping);
+                ButtonStack panel = new(button);
+                RightTrackpadButtonsPanel.Children.Add(panel);
 
-                MappingButtons.Add(button, buttonMapping);
+                ButtonStacks.Add(button, panel);
             }
 
             foreach (AxisLayoutFlags axis in RightAxis)
@@ -49,7 +49,7 @@ namespace HandheldCompanion.Views.Pages
                 AxisMapping axisMapping = new AxisMapping(axis);
                 RightTrackpadPanel.Children.Add(axisMapping);
 
-                MappingAxis.Add(axis, axisMapping);
+                AxisMappings.Add(axis, axisMapping);
             }
         }
 

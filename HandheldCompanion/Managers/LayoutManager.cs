@@ -288,40 +288,40 @@ namespace HandheldCompanion.Managers
                 bool value = buttonState.Value;
 
                 // skip, if not mapped
-                if (!currentLayout.ButtonLayout.TryGetValue(button, out IActions action))
+                if (!currentLayout.ButtonLayout.TryGetValue(button, out List<IActions> actions))
                     continue;
 
-                if (action is null)
-                    continue;
-
-                switch (action.ActionType)
+                foreach (var action in actions)
                 {
-                    // button to button
-                    case ActionType.Button:
-                        {
-                            ButtonActions bAction = action as ButtonActions;
-                            value |= outputState.ButtonState[bAction.Button];
+                    switch (action.ActionType)
+                    {
+                        // button to button
+                        case ActionType.Button:
+                            {
+                                ButtonActions bAction = action as ButtonActions;
+                                value |= outputState.ButtonState[bAction.Button];
 
-                            bAction.Execute(button, value);
-                            outputState.ButtonState[bAction.Button] = bAction.GetValue();
-                        }
-                        break;
+                                bAction.Execute(button, value);
+                                outputState.ButtonState[bAction.Button] = bAction.GetValue();
+                            }
+                            break;
 
-                    // button to keyboard key
-                    case ActionType.Keyboard:
-                        {
-                            KeyboardActions kAction = action as KeyboardActions;
-                            kAction.Execute(button, value);
-                        }
-                        break;
+                        // button to keyboard key
+                        case ActionType.Keyboard:
+                            {
+                                KeyboardActions kAction = action as KeyboardActions;
+                                kAction.Execute(button, value);
+                            }
+                            break;
 
-                    // button to mouse click
-                    case ActionType.Mouse:
-                        {
-                            MouseActions mAction = action as MouseActions;
-                            mAction.Execute(button, value);
-                        }
-                        break;
+                        // button to mouse click
+                        case ActionType.Mouse:
+                            {
+                                MouseActions mAction = action as MouseActions;
+                                mAction.Execute(button, value);
+                            }
+                            break;
+                    }
                 }
             }
 

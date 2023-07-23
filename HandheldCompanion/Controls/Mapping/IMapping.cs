@@ -13,12 +13,10 @@ namespace HandheldCompanion.Controls
 
         protected object updateLock = new();
 
-        #region events
         public event DeletedEventHandler Deleted;
         public delegate void DeletedEventHandler(object sender);
         public event UpdatedEventHandler Updated;
         public delegate void UpdatedEventHandler(object sender, IActions action);
-        #endregion
 
         protected void Update()
         {

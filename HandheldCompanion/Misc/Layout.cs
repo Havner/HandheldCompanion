@@ -10,7 +10,7 @@ namespace HandheldCompanion.Misc
     [Serializable]
     public class Layout : ICloneable, IDisposable
     {
-        public SortedDictionary<ButtonFlags, IActions> ButtonLayout { get; set; } = new();
+        public SortedDictionary<ButtonFlags, List<IActions>> ButtonLayout { get; set; } = new();
         public SortedDictionary<AxisLayoutFlags, IActions> AxisLayout { get; set; } = new();
 
         #region events
@@ -28,7 +28,7 @@ namespace HandheldCompanion.Misc
                 if (!IController.TargetButtons.Contains(button))
                     continue;
 
-                ButtonLayout[button] = new ButtonActions() { Button = button };
+                ButtonLayout[button] = new List<IActions>() { new ButtonActions() { Button = button } };
             }
 
             // generic axis mapping
@@ -50,14 +50,15 @@ namespace HandheldCompanion.Misc
             }
         }
 
+        // TODO: remove
         public void UpdateLayout()
         {
             Updated?.Invoke(this);
         }
 
-        public void UpdateLayout(ButtonFlags button, IActions action)
+        public void UpdateLayout(ButtonFlags button, List<IActions> actions)
         {
-            ButtonLayout[button] = action;
+            ButtonLayout[button] = actions;
             Updated?.Invoke(this);
         }
 

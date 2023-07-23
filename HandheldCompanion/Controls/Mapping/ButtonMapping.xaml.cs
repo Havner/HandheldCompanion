@@ -27,8 +27,6 @@ namespace HandheldCompanion.Controls
         {
             this.Value = button;
             this.prevValue = button;
-
-            this.Icon.Glyph = button.ToString();
         }
 
         public void UpdateIcon(FontIcon newIcon, string newLabel)
@@ -47,7 +45,7 @@ namespace HandheldCompanion.Controls
             this.Update();
         }
 
-        internal void SetIActions(IActions actions)
+        public void SetIActions(IActions actions)
         {
             // reset and update mapping IActions
             Reset();
@@ -55,6 +53,11 @@ namespace HandheldCompanion.Controls
 
             // update UI
             this.ActionComboBox.SelectedIndex = (int)actions.ActionType;
+        }
+
+        public IActions GetIActions()
+        {
+            return Actions;
         }
 
         private void Action_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -91,10 +94,6 @@ namespace HandheldCompanion.Controls
             {
                 if (this.Actions is null || this.Actions is not ButtonActions)
                     this.Actions = new ButtonActions();
-
-                // we need a controller to get compatible buttons
-                if (controller is null)
-                    return;
 
                 foreach (ButtonFlags button in IController.GetTargetButtons())
                 {

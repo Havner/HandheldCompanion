@@ -22,7 +22,7 @@ namespace HandheldCompanion.Views.Pages
                 AxisMapping axisMapping = new AxisMapping(axis);
                 GyroscopePanel.Children.Add(axisMapping);
 
-                MappingAxis.Add(axis, axisMapping);
+                AxisMappings.Add(axis, axisMapping);
             }
         }
 

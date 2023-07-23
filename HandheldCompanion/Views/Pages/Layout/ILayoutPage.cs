@@ -10,9 +10,9 @@ namespace HandheldCompanion.Views.Pages
 {
     public class ILayoutPage : Page
     {
-        public Dictionary<ButtonFlags, ButtonMapping> MappingButtons = new();
-        public Dictionary<AxisLayoutFlags, AxisMapping> MappingAxis = new();
-        public Dictionary<AxisLayoutFlags, TriggerMapping> MappingTriggers = new();
+        public Dictionary<ButtonFlags, ButtonStack> ButtonStacks = new();
+        public Dictionary<AxisLayoutFlags, AxisMapping> AxisMappings = new();
+        public Dictionary<AxisLayoutFlags, TriggerMapping> TriggerMappings = new();
 
         public virtual void UpdateController(IController controller)
         {
@@ -20,32 +20,31 @@ namespace HandheldCompanion.Views.Pages
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
                 // controller based
-                foreach (var mapping in MappingButtons)
+                foreach (var pair in ButtonStacks)
                 {
-                    ButtonFlags button = mapping.Key;
-                    ButtonMapping buttonMapping = mapping.Value;
+                    ButtonFlags button = pair.Key;
+                    ButtonStack buttonStack = pair.Value;
 
                     // update mapping visibility
                     if (!controller.HasSourceButton(button))
-                        buttonMapping.Visibility = Visibility.Collapsed;
+                        buttonStack.Visibility = Visibility.Collapsed;
                     else
                     {
-                        buttonMapping.Visibility = Visibility.Visible;
+                        buttonStack.Visibility = Visibility.Visible;
 
                         // update icon
                         FontIcon newIcon = controller.GetFontIcon(button);
                         string newLabel = controller.GetButtonName(button);
-
-                        buttonMapping.UpdateIcon(newIcon, newLabel);
+                        buttonStack.UpdateIcon(newIcon, newLabel);
                     }
                 }
 
-                foreach (var mapping in MappingAxis)
+                foreach (var pair in AxisMappings)
                 {
-                    AxisLayoutFlags flags = mapping.Key;
+                    AxisLayoutFlags flags = pair.Key;
                     AxisLayout layout = AxisLayout.Layouts[flags];
 
-                    AxisMapping axisMapping = mapping.Value;
+                    AxisMapping axisMapping = pair.Value;
 
                     // update mapping visibility
                     if (!controller.HasSourceAxis(flags))
@@ -61,12 +60,12 @@ namespace HandheldCompanion.Views.Pages
                     }
                 }
 
-                foreach (var mapping in MappingTriggers)
+                foreach (var pair in TriggerMappings)
                 {
-                    AxisLayoutFlags flags = mapping.Key;
+                    AxisLayoutFlags flags = pair.Key;
                     AxisLayout layout = AxisLayout.Layouts[flags];
 
-                    TriggerMapping axisMapping = mapping.Value;
+                    TriggerMapping axisMapping = pair.Value;
 
                     // update mapping visibility
                     if (!controller.HasSourceAxis(flags))
@@ -84,38 +83,32 @@ namespace HandheldCompanion.Views.Pages
             });
         }
 
-        public void Refresh(SortedDictionary<ButtonFlags, IActions> buttonMapping, SortedDictionary<AxisLayoutFlags, IActions> axisMapping)
+        public void Refresh(SortedDictionary<ButtonFlags, List<IActions>> buttonMapping, SortedDictionary<AxisLayoutFlags, IActions> axisMapping)
         {
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                foreach (var pair in MappingButtons)
+                foreach (var pair in ButtonStacks)
                 {
                     ButtonFlags button = pair.Key;
-                    ButtonMapping mapping = pair.Value;
+                    ButtonStack mappings = pair.Value;
 
-                    if (buttonMapping.TryGetValue(button, out IActions actions))
+                    if (buttonMapping.TryGetValue(button, out List<IActions> actions))
                     {
-                        if (actions is null)
-                            actions = new EmptyActions();
-
-                        mapping.SetIActions(actions);
+                        mappings.SetActions(actions);
                         continue;
                     }
 
-                    mapping.Reset();
+                    mappings.Reset();
                 }
 
-                foreach (var pair in MappingAxis)
+                foreach (var pair in AxisMappings)
                 {
                     AxisLayoutFlags axis = pair.Key;
                     AxisMapping mapping = pair.Value;
 
                     if (axisMapping.TryGetValue(axis, out IActions actions))
                     {
-                        if (actions is null)
-                            actions = new EmptyActions();
-
                         mapping.SetIActions(actions);
                         continue;
                     }
@@ -123,16 +116,13 @@ namespace HandheldCompanion.Views.Pages
                     mapping.Reset();
                 }
 
-                foreach (var pair in MappingTriggers)
+                foreach (var pair in TriggerMappings)
                 {
                     AxisLayoutFlags axis = pair.Key;
                     TriggerMapping mapping = pair.Value;
 
                     if (axisMapping.TryGetValue(axis, out IActions actions))
                     {
-                        if (actions is null)
-                            actions = new EmptyActions();
-
                         mapping.SetIActions(actions);
                         continue;
                     }

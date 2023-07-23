@@ -27,34 +27,34 @@ namespace HandheldCompanion.Views.Pages
             // draw UI
             foreach (ButtonFlags button in ABXY)
             {
-                ButtonMapping buttonMapping = new ButtonMapping(button);
-                ButtonsStackPanel.Children.Add(buttonMapping);
+                ButtonStack panel = new(button);
+                ButtonsStackPanel.Children.Add(panel);
 
-                MappingButtons.Add(button, buttonMapping);
+                ButtonStacks.Add(button, panel);
             }
 
             foreach (ButtonFlags button in BUMPERS)
             {
-                ButtonMapping buttonMapping = new ButtonMapping(button);
-                BumpersStackPanel.Children.Add(buttonMapping);
+                ButtonStack panel = new(button);
+                BumpersStackPanel.Children.Add(panel);
 
-                MappingButtons.Add(button, buttonMapping);
+                ButtonStacks.Add(button, panel);
             }
 
             foreach (ButtonFlags button in MENU)
             {
-                ButtonMapping buttonMapping = new ButtonMapping(button);
-                MenuStackPanel.Children.Add(buttonMapping);
+                ButtonStack panel = new(button);
+                MenuStackPanel.Children.Add(panel);
 
-                MappingButtons.Add(button, buttonMapping);
+                ButtonStacks.Add(button, panel);
             }
 
             foreach (ButtonFlags button in BACKGRIPS)
             {
-                ButtonMapping buttonMapping = new ButtonMapping(button);
-                BACKGRIPSStackPanel.Children.Add(buttonMapping);
+                ButtonStack panel = new(button);
+                BACKGRIPSStackPanel.Children.Add(panel);
 
-                MappingButtons.Add(button, buttonMapping);
+                ButtonStacks.Add(button, panel);
             }
 
             foreach (ButtonFlags button in OEM)
@@ -62,10 +62,10 @@ namespace HandheldCompanion.Views.Pages
                 if (!MainWindow.CurrentDevice.OEMButtons.Contains(button))
                     continue;
 
-                ButtonMapping buttonMapping = new ButtonMapping(button);
-                OEMStackPanel.Children.Add(buttonMapping);
+                ButtonStack panel = new(button);
+                OEMStackPanel.Children.Add(panel);
 
-                MappingButtons.Add(button, buttonMapping);
+                ButtonStacks.Add(button, panel);
             }
 
             // manage layout pages visibility
@@ -81,22 +81,22 @@ namespace HandheldCompanion.Views.Pages
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
                 // controller based
-                foreach (var mapping in MappingButtons)
+                foreach (var pair in ButtonStacks)
                 {
-                    ButtonFlags button = mapping.Key;
-                    ButtonMapping buttonMapping = mapping.Value;
+                    ButtonFlags button = pair.Key;
+                    ButtonStack buttonStack = pair.Value;
 
+                    // TODO: simplify or even completely remove OEMs from the mapper
                     // specific buttons are handled elsewhere
                     if (OEM.Contains(button))
                     {
-                        buttonMapping.Name.Text = MainWindow.CurrentDevice.GetButtonName(button);
-                        buttonMapping.Visibility = Visibility.Visible;
+                        buttonStack.Visibility = Visibility.Visible;
 
                         // update icon
                         FontIcon newIcon = controller.GetFontIcon(button);
-                        string newLabel = controller.GetButtonName(button);
+                        string newLabel = MainWindow.CurrentDevice.GetButtonName(button);
 
-                        buttonMapping.UpdateIcon(newIcon, newLabel);
+                        buttonStack.UpdateIcon(newIcon, newLabel);
                     }
                 }
 
