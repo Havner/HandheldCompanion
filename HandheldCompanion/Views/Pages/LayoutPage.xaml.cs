@@ -49,10 +49,6 @@ namespace HandheldCompanion.Views.Pages
         {
             this.Tag = Tag;
 
-            // manage layout pages visibility
-            navTrackpads.Visibility = MainWindow.CurrentDevice.HasTrackpads() ? Visibility.Visible : Visibility.Collapsed;
-            navGyro.Visibility = MainWindow.CurrentDevice.HasMotionSensor() ? Visibility.Visible : Visibility.Collapsed;
-
             // create controller related pages
             this._pages = new()
             {
@@ -93,19 +89,20 @@ namespace HandheldCompanion.Views.Pages
             LayoutManager.Initialized += LayoutManager_Initialized;
             ControllerManager.ControllerSelected += ControllerManager_ControllerSelected;
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
-
-            // auto-sort
-            // cB_Layouts.Items.SortDescriptions.Add(new SortDescription("", ListSortDirection.Descending));
         }
 
-        private void ControllerManager_ControllerSelected(IController Controller)
+        private void ControllerManager_ControllerSelected(IController controller)
         {
             RefreshLayoutList();
+
+            // manage layout pages visibility
+            navTrackpads.Visibility = controller.HasTrackpads() ? Visibility.Visible : Visibility.Collapsed;
+            navGyro.Visibility = controller.HasMotionSensor() ? Visibility.Visible : Visibility.Collapsed;
 
             // cascade update to (sub)pages (async)
             Parallel.ForEach(_pages.Values, new ParallelOptions { MaxDegreeOfParallelism = PerformanceManager.MaxDegreeOfParallelism }, page =>
             {
-                page.UpdateController(Controller);
+                page.UpdateController(controller);
             });
         }
 

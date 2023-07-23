@@ -12,8 +12,6 @@ using System.Windows.Media;
 
 namespace HandheldCompanion.Controllers
 {
-    // TODO: those are unused, instead DeviceCapabilities are used in several place
-    // this will have to be remedied in case of full DS4 or SteamController support
     [Flags]
     public enum ControllerCapabilities : ushort
     {

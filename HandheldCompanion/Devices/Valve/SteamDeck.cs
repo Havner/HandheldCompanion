@@ -51,7 +51,7 @@ namespace HandheldCompanion.Devices
             this.ProductModel = "SteamDeck";
 
             // Steam Controller Neptune
-            this.Capabilities = DeviceCapabilities.MotionSensor | DeviceCapabilities.Trackpads | DeviceCapabilities.FanControl;
+            this.Capabilities = DeviceCapabilities.FanControl;
 
             // https://www.steamdeck.com/en/tech
             this.TDP = new uint[] { 3, 15, 15 };

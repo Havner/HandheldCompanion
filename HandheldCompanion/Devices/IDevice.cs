@@ -13,9 +13,7 @@ namespace HandheldCompanion.Devices
     public enum DeviceCapabilities : ushort
     {
         None = 0,
-        MotionSensor = 1,
-        Trackpads = 2,
-        FanControl = 4,
+        FanControl = 1,
     }
 
     public abstract class IDevice
@@ -93,16 +91,6 @@ namespace HandheldCompanion.Devices
             device.ProductName = ProductName;
 
             return device;
-        }
-
-        public bool HasMotionSensor()
-        {
-            return Capabilities.HasFlag(DeviceCapabilities.MotionSensor);
-        }
-
-        public bool HasTrackpads()
-        {
-            return Capabilities.HasFlag(DeviceCapabilities.Trackpads);
         }
 
         public bool HasFanControl()
