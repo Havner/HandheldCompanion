@@ -68,21 +68,16 @@ namespace HandheldCompanion.Managers
             LogManager.LogInformation("{0} has stopped", "VirtualManager");
         }
 
-        public static async void Resume()
+        public static void Resume()
         {
-            while (vTarget is null || !vTarget.IsConnected)
-            {
-                // reset vigem
-                ResetViGEm();
+            // reset vigem
+            ResetViGEm();
 
-                // create new ViGEm client
-                vClient = new ViGEmClient();
+            // create new ViGEm client
+            vClient = new ViGEmClient();
 
-                // set controller mode
-                SetControllerMode(HIDmode);
-
-                await Task.Delay(1000);
-            }
+            // set controller mode
+            SetControllerMode(HIDmode);
         }
 
         public static void Pause()
