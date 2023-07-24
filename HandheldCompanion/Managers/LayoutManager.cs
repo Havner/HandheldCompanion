@@ -291,6 +291,19 @@ namespace HandheldCompanion.Managers
                 if (!currentLayout.ButtonLayout.TryGetValue(button, out List<IActions> actions))
                     continue;
 
+                // Some long press logic. Unfortunately in case of long press actions are not 100%
+                // independent of eachother. When button is pressed that has long press mapped, short
+                // press should not be triggered on key down. It should only be triggered on keyup, but
+                // only if released before the long timer. If timer passed, short is ignored, long is
+                // pressed. Long story short :-), short press needs to be aware if long press exists.
+
+                // TODO: change to set of ranges so several independent long presses are possible
+                // if there are no long presses nothing changes
+                int maxLongTime = 0;
+                foreach (var action in actions)
+                    if (action.PressType == PressType.Long)
+                        maxLongTime = Math.Max(maxLongTime, action.LongPressTime);
+
                 foreach (var action in actions)
                 {
                     switch (action.ActionType)
@@ -299,7 +312,7 @@ namespace HandheldCompanion.Managers
                         case ActionType.Button:
                             {
                                 ButtonActions bAction = action as ButtonActions;
-                                bAction.Execute(button, value);
+                                bAction.Execute(button, value, maxLongTime);
 
                                 bool outVal = bAction.GetValue() || outputState.ButtonState[bAction.Button];
                                 outputState.ButtonState[bAction.Button] = outVal;
@@ -310,7 +323,7 @@ namespace HandheldCompanion.Managers
                         case ActionType.Keyboard:
                             {
                                 KeyboardActions kAction = action as KeyboardActions;
-                                kAction.Execute(button, value);
+                                kAction.Execute(button, value, maxLongTime);
                             }
                             break;
 
@@ -318,7 +331,7 @@ namespace HandheldCompanion.Managers
                         case ActionType.Mouse:
                             {
                                 MouseActions mAction = action as MouseActions;
-                                mAction.Execute(button, value);
+                                mAction.Execute(button, value, maxLongTime);
                             }
                             break;
                     }

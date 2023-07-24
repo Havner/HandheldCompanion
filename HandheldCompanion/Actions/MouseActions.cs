@@ -63,9 +63,9 @@ namespace HandheldCompanion.Actions
             this.MouseType = type;
         }
 
-        public override void Execute(ButtonFlags button, bool value)
+        public override void Execute(ButtonFlags button, bool value, int longTime)
         {
-            base.Execute(button, value);
+            base.Execute(button, value, longTime);
 
             switch (this.Value)
             {

@@ -17,29 +17,43 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="160" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <ui:FontIcon
-                    Name="Icon"
-                    Height="40"
-                    Margin="0,0,5,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    FontFamily="{DynamicResource PhoneFontFamilyNormal}"
-                    FontSize="14" />
-                <TextBlock
-                    Name="Name"
+                <DockPanel
+                    MinWidth="150">
+                    <ui:FontIcon
+                        Name="Icon"
+                        Height="40"
+                        Margin="0,0,5,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        FontFamily="{DynamicResource PhoneFontFamilyNormal}"
+                        FontSize="14" />
+                    <TextBlock
+                        Name="Name"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        FontSize="14" />
+                </DockPanel>
+
+                <ComboBox
                     Grid.Column="1"
-                    HorizontalAlignment="Left"
+                    Name="PressComboBox"
+                    Width="120"
                     VerticalAlignment="Center"
-                    FontSize="14" />
+                    SelectedIndex="0"
+                    SelectionChanged="Press_SelectionChanged">
+                    <ComboBoxItem Content="Short press" />
+                    <ComboBoxItem Content="Long press" />
+                </ComboBox>
 
                 <DockPanel Grid.Column="2" HorizontalAlignment="Right">
                     <ComboBox
                         Name="ActionComboBox"
                         Width="120"
+                        Margin="12,0,0,0"
                         VerticalAlignment="Center"
                         SelectedIndex="0"
                         SelectionChanged="Action_SelectionChanged">

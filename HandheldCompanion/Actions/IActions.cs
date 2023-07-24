@@ -32,6 +32,13 @@ namespace HandheldCompanion.Actions
     }
 
     [Serializable]
+    public enum PressType
+    {
+        Short = 0,
+        Long = 1,
+    }
+
+    [Serializable]
     public abstract class IActions : ICloneable
     {
         public static Dictionary<ModifierSet, KeyCode[]> ModifierMap = new()
@@ -55,6 +62,10 @@ namespace HandheldCompanion.Actions
 
         protected int Period;
 
+        // TODO: make it configurable, multiple times, etc
+        public PressType PressType = PressType.Short;
+        public int LongPressTime = 450; // default value for steam
+        protected int pressTimer = -1; // -1 inactive, >= 0 active
 
         public bool Turbo;
         public byte TurboDelay = 90;
@@ -69,8 +80,44 @@ namespace HandheldCompanion.Actions
             Period = TimerManager.GetPeriod();
         }
 
-        public virtual void Execute(ButtonFlags button, bool value)
+        // if longDelay == 0 no new logic will be executed
+        public virtual void Execute(ButtonFlags button, bool value, int longTime)
         {
+            // reset failed attempts on button release
+            if (pressTimer >= 0 && !value &&
+                ((PressType == PressType.Short && pressTimer >= longTime) ||
+                 (PressType == PressType.Long && pressTimer < longTime)))
+            {
+                pressTimer = -1;
+                prevValue = false;
+                return;
+            }
+
+            // some long presses exist and button was just pressed, start the timer and quit
+            if (longTime > 0 && value && !(bool)prevValue)
+            {
+                pressTimer = 0;
+                prevValue = true;
+                return;
+            }
+
+            if (pressTimer >= 0)
+            {
+                pressTimer += Period;
+
+                // conditions were met to trigger either short or long, reset state, press buttons
+                if ((!value && PressType == PressType.Short && pressTimer < longTime) ||
+                    (value && PressType == PressType.Long && pressTimer >= longTime))
+                {
+                    pressTimer = -1;
+                    prevValue = false;  // simulate a situation where the button was just pressed
+                    value = true;       // prev = false, current = true, this way toggle works
+                }
+                // timer active, conditions not met, carry on, maybe smth happens, maybe failed attempt
+                else
+                    return;
+            }
+
             if (Toggle)
             {
                 if ((bool)prevValue != value && value)

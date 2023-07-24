@@ -107,6 +107,7 @@ namespace HandheldCompanion.Controls
                 }
 
                 // settings
+                PressComboBox.SelectedIndex = (int)this.Actions.PressType;
                 Toggle_Turbo.IsOn = ((ButtonActions)this.Actions).Turbo;
                 Turbo_Slider.Value = ((ButtonActions)this.Actions).TurboDelay;
                 Toggle_Toggle.IsOn = ((ButtonActions)this.Actions).Toggle;
@@ -127,6 +128,7 @@ namespace HandheldCompanion.Controls
                 }
 
                 // settings
+                PressComboBox.SelectedIndex = (int)this.Actions.PressType;
                 Toggle_Turbo.IsOn = ((KeyboardActions)this.Actions).Turbo;
                 Turbo_Slider.Value = ((KeyboardActions)this.Actions).TurboDelay;
                 Toggle_Toggle.IsOn = ((KeyboardActions)this.Actions).Toggle;
@@ -156,6 +158,7 @@ namespace HandheldCompanion.Controls
                 }
 
                 // settings
+                PressComboBox.SelectedIndex = (int)this.Actions.PressType;
                 Toggle_Turbo.IsOn = ((MouseActions)this.Actions).Turbo;
                 Turbo_Slider.Value = ((MouseActions)this.Actions).TurboDelay;
                 Toggle_Toggle.IsOn = ((MouseActions)this.Actions).Toggle;
@@ -220,6 +223,16 @@ namespace HandheldCompanion.Controls
                 TargetComboBox.SelectedItem = null;
                 Monitor.Exit(updateLock);
             }
+        }
+
+        private void Press_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.Actions is null)
+                return;
+
+            this.Actions.PressType = (PressType)PressComboBox.SelectedIndex;
+
+            base.Update();
         }
 
         private void Modifier_SelectionChanged(object sender, SelectionChangedEventArgs e)
