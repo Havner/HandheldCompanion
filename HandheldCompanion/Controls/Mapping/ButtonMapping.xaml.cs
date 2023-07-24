@@ -107,7 +107,10 @@ namespace HandheldCompanion.Controls
                 }
 
                 // settings
-                PressComboBox.SelectedIndex = (int)this.Actions.PressType;
+                if (TargetComboBox.SelectedItem is not null)
+                    PressComboBox.SelectedIndex = (int)this.Actions.PressType;
+                else
+                    this.Actions.PressType = (PressType)PressComboBox.SelectedIndex;
                 Toggle_Turbo.IsOn = ((ButtonActions)this.Actions).Turbo;
                 Turbo_Slider.Value = ((ButtonActions)this.Actions).TurboDelay;
                 Toggle_Toggle.IsOn = ((ButtonActions)this.Actions).Toggle;
@@ -128,7 +131,10 @@ namespace HandheldCompanion.Controls
                 }
 
                 // settings
-                PressComboBox.SelectedIndex = (int)this.Actions.PressType;
+                if (TargetComboBox.SelectedItem is not null)
+                    PressComboBox.SelectedIndex = (int)this.Actions.PressType;
+                else
+                    this.Actions.PressType = (PressType)PressComboBox.SelectedIndex;
                 Toggle_Turbo.IsOn = ((KeyboardActions)this.Actions).Turbo;
                 Turbo_Slider.Value = ((KeyboardActions)this.Actions).TurboDelay;
                 Toggle_Toggle.IsOn = ((KeyboardActions)this.Actions).Toggle;
@@ -157,8 +163,10 @@ namespace HandheldCompanion.Controls
                         TargetComboBox.SelectedItem = buttonLabel;
                 }
 
-                // settings
-                PressComboBox.SelectedIndex = (int)this.Actions.PressType;
+                if (TargetComboBox.SelectedItem is not null)
+                    PressComboBox.SelectedIndex = (int)this.Actions.PressType;
+                else
+                    this.Actions.PressType = (PressType)PressComboBox.SelectedIndex;
                 Toggle_Turbo.IsOn = ((MouseActions)this.Actions).Turbo;
                 Turbo_Slider.Value = ((MouseActions)this.Actions).TurboDelay;
                 Toggle_Toggle.IsOn = ((MouseActions)this.Actions).Toggle;
