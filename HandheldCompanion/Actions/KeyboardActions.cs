@@ -2,6 +2,7 @@ using GregsStack.InputSimulatorStandard.Native;
 using HandheldCompanion.Inputs;
 using HandheldCompanion.Simulators;
 using System;
+using WindowsInput.Events;
 
 namespace HandheldCompanion.Actions
 {
@@ -10,6 +11,10 @@ namespace HandheldCompanion.Actions
     {
         public VirtualKeyCode Key { get; set; }
         private bool IsKeyDown { get; set; }
+        private KeyCode[] pressed;
+
+        // settings
+        public ModifierSet Modifiers = ModifierSet.None;
 
         public KeyboardActions()
         {
@@ -37,6 +42,8 @@ namespace HandheldCompanion.Actions
                             return;
 
                         IsKeyDown = true;
+                        pressed = ModifierMap[Modifiers];
+                        KeyboardSimulator.KeyDown(pressed);
                         KeyboardSimulator.KeyDown(Key);
                     }
                     break;
@@ -47,6 +54,7 @@ namespace HandheldCompanion.Actions
 
                         IsKeyDown = false;
                         KeyboardSimulator.KeyUp(Key);
+                        KeyboardSimulator.KeyUp(pressed);
                     }
                     break;
             }

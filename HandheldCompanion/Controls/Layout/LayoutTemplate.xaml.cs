@@ -106,7 +106,7 @@ namespace HandheldCompanion.Controls
                             { ButtonFlags.L1, new List<IActions> { new KeyboardActions() { Key = VirtualKeyCode.BACK } } },
                             { ButtonFlags.R1, new List<IActions> { new KeyboardActions() { Key = VirtualKeyCode.SPACE } } },
 
-                            { ButtonFlags.Back, new List<IActions> { new KeyboardActions() { Key = VirtualKeyCode.MENU } } },
+                            { ButtonFlags.Back, new List<IActions> { new KeyboardActions() { Key = VirtualKeyCode.TAB, Modifiers = ModifierSet.Alt } } },
                             { ButtonFlags.Start, new List<IActions> { new KeyboardActions() { Key = VirtualKeyCode.TAB } } },
 
                             { ButtonFlags.DPadUp, new List<IActions> { new KeyboardActions() { Key = VirtualKeyCode.UP } } },

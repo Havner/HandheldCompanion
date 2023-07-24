@@ -42,6 +42,7 @@ namespace HandheldCompanion.Controls
             else
                 this.Icon.SetResourceReference(Control.ForegroundProperty, "SystemControlForegroundBaseMediumBrush");
 
+            // TODO: is this required?
             this.Update();
         }
 
@@ -129,6 +130,7 @@ namespace HandheldCompanion.Controls
                 Toggle_Turbo.IsOn = ((KeyboardActions)this.Actions).Turbo;
                 Turbo_Slider.Value = ((KeyboardActions)this.Actions).TurboDelay;
                 Toggle_Toggle.IsOn = ((KeyboardActions)this.Actions).Toggle;
+                ModifierComboBox.SelectedIndex = (int)((KeyboardActions)this.Actions).Modifiers;
             }
             else if (type == ActionType.Mouse)
             {
@@ -157,6 +159,7 @@ namespace HandheldCompanion.Controls
                 Toggle_Turbo.IsOn = ((MouseActions)this.Actions).Turbo;
                 Turbo_Slider.Value = ((MouseActions)this.Actions).TurboDelay;
                 Toggle_Toggle.IsOn = ((MouseActions)this.Actions).Toggle;
+                ModifierComboBox.SelectedIndex = (int)((MouseActions)this.Actions).Modifiers;
             }
 
             base.Update();
@@ -219,7 +222,26 @@ namespace HandheldCompanion.Controls
             }
         }
 
-        #region Button2Button
+        private void Modifier_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.Actions is null)
+                return;
+
+            ModifierSet mods = (ModifierSet)ModifierComboBox.SelectedIndex;
+
+            switch (this.Actions.ActionType)
+            {
+                case ActionType.Keyboard:
+                    ((KeyboardActions)this.Actions).Modifiers = mods;
+                    break;
+                case ActionType.Mouse:
+                    ((MouseActions)this.Actions).Modifiers = mods;
+                    break;
+            }
+
+            base.Update();
+        }
+
         private void Toggle_Turbo_Toggled(object sender, RoutedEventArgs e)
         {
             if (this.Actions is null)
@@ -282,6 +304,5 @@ namespace HandheldCompanion.Controls
 
             base.Update();
         }
-        #endregion
     }
 }

@@ -3,6 +3,7 @@ using HandheldCompanion.Simulators;
 using System;
 using System.ComponentModel;
 using System.Numerics;
+using WindowsInput.Events;
 
 namespace HandheldCompanion.Actions
 {
@@ -37,8 +38,12 @@ namespace HandheldCompanion.Actions
 
         private bool IsTouched = false;
         private Vector2 remainder = new();
+        private KeyCode[] pressed;
 
-        // settings
+        // settings click
+        public ModifierSet Modifiers = ModifierSet.None;
+
+        // settings axis
         public float Sensivity { get; set; } = 25.0f;
         public float Deadzone { get; set; } = 10.0f;
         public bool AxisRotated { get; set; } = false;
@@ -70,6 +75,8 @@ namespace HandheldCompanion.Actions
                             return;
 
                         IsCursorDown = true;
+                        pressed = ModifierMap[Modifiers];
+                        KeyboardSimulator.KeyDown(pressed);
                         MouseSimulator.MouseDown(MouseType, scrollAmountInClicks);
                     }
                     break;
@@ -80,6 +87,7 @@ namespace HandheldCompanion.Actions
 
                         IsCursorDown = false;
                         MouseSimulator.MouseUp(MouseType);
+                        KeyboardSimulator.KeyUp(pressed);
                     }
                     break;
             }

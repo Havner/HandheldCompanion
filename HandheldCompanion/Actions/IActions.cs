@@ -1,6 +1,8 @@
 using HandheldCompanion.Inputs;
 using HandheldCompanion.Managers;
 using System;
+using System.Collections.Generic;
+using WindowsInput.Events;
 
 namespace HandheldCompanion.Actions
 {
@@ -17,8 +19,33 @@ namespace HandheldCompanion.Actions
     }
 
     [Serializable]
+    public enum ModifierSet
+    {
+        None = 0,
+        Shift = 1,
+        Control = 2,
+        Alt = 3,
+        ShiftControl = 4,
+        ShiftAlt = 5,
+        ControlAlt = 6,
+        ShiftControlAlt = 7,
+    }
+
+    [Serializable]
     public abstract class IActions : ICloneable
     {
+        public static Dictionary<ModifierSet, KeyCode[]> ModifierMap = new()
+        {
+            { ModifierSet.None,            new KeyCode[] { } },
+            { ModifierSet.Shift,           new KeyCode[] { KeyCode.LShift } },
+            { ModifierSet.Control,         new KeyCode[] { KeyCode.LControl } },
+            { ModifierSet.Alt,             new KeyCode[] { KeyCode.LMenu } },
+            { ModifierSet.ShiftControl,    new KeyCode[] { KeyCode.LShift, KeyCode.LControl } },
+            { ModifierSet.ShiftAlt,        new KeyCode[] { KeyCode.LShift, KeyCode.LMenu } },
+            { ModifierSet.ControlAlt,      new KeyCode[] { KeyCode.LControl, KeyCode.LMenu } },
+            { ModifierSet.ShiftControlAlt, new KeyCode[] { KeyCode.LShift, KeyCode.LControl, KeyCode.LMenu } },
+        };
+
         public ActionType ActionType { get; set; } = ActionType.Disabled;
 
         protected object Value;
