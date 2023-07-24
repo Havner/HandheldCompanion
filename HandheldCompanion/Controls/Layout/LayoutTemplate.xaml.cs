@@ -90,10 +90,10 @@ namespace HandheldCompanion.Controls
                     {
                         this.Layout.AxisLayout = new()
                         {
-                            { AxisLayoutFlags.LeftStick, new MouseActions() { MouseType = MouseActionsType.Scroll, Sensivity = 25.0f } },
-                            { AxisLayoutFlags.RightStick, new MouseActions() { MouseType = MouseActionsType.Move, Sensivity = 25.0f } },
-                            { AxisLayoutFlags.LeftPad, new MouseActions() { MouseType = MouseActionsType.Scroll, Sensivity = 25.0f } },
-                            { AxisLayoutFlags.RightPad, new MouseActions() { MouseType = MouseActionsType.Move, Sensivity = 25.0f } },
+                            { AxisLayoutFlags.LeftStick, new MouseActions() { MouseType = MouseActionsType.Scroll } },
+                            { AxisLayoutFlags.RightStick, new MouseActions() { MouseType = MouseActionsType.Move } },
+                            { AxisLayoutFlags.LeftPad, new MouseActions() { MouseType = MouseActionsType.Scroll } },
+                            { AxisLayoutFlags.RightPad, new MouseActions() { MouseType = MouseActionsType.Move } },
                         };
 
                         this.Layout.ButtonLayout = new()
@@ -103,7 +103,7 @@ namespace HandheldCompanion.Controls
                             { ButtonFlags.B3, new List<IActions> { new KeyboardActions() { Key = VirtualKeyCode.NEXT } } },
                             { ButtonFlags.B4, new List<IActions> { new KeyboardActions() { Key = VirtualKeyCode.PRIOR } } },
 
-                            { ButtonFlags.L1, new List<IActions> { new KeyboardActions() { Key = VirtualKeyCode.BACK } } },
+                            { ButtonFlags.L1, new List<IActions> { new KeyboardActions() { Key = VirtualKeyCode.BACK, Turbo = true } } },
                             { ButtonFlags.R1, new List<IActions> { new KeyboardActions() { Key = VirtualKeyCode.SPACE } } },
 
                             { ButtonFlags.Back, new List<IActions> { new KeyboardActions() { Key = VirtualKeyCode.TAB, Modifiers = ModifierSet.Alt } } },
@@ -127,8 +127,8 @@ namespace HandheldCompanion.Controls
                     {
                         this.Layout.AxisLayout = new()
                         {
-                            { AxisLayoutFlags.RightStick, new MouseActions() { MouseType = MouseActionsType.Move, Sensivity = 25.0f } },
-                            { AxisLayoutFlags.RightPad, new MouseActions() { MouseType = MouseActionsType.Move, Sensivity = 25.0f } },
+                            { AxisLayoutFlags.RightStick, new MouseActions() { MouseType = MouseActionsType.Move } },
+                            { AxisLayoutFlags.RightPad, new MouseActions() { MouseType = MouseActionsType.Move } },
                         };
 
                         this.Layout.ButtonLayout = new()
@@ -138,8 +138,8 @@ namespace HandheldCompanion.Controls
                             { ButtonFlags.B3, new List<IActions> { new KeyboardActions() { Key = VirtualKeyCode.VK_R } } },
                             { ButtonFlags.B4, new List<IActions> { new KeyboardActions() { Key = VirtualKeyCode.VK_F } } },
 
-                            { ButtonFlags.L1, new List<IActions> { new MouseActions() { MouseType = MouseActionsType.ScrollUp, Sensivity = 25.0f } } },
-                            { ButtonFlags.R1, new List<IActions> { new MouseActions() { MouseType = MouseActionsType.ScrollDown, Sensivity = 25.0f } } },
+                            { ButtonFlags.L1, new List<IActions> { new MouseActions() { MouseType = MouseActionsType.ScrollUp } } },
+                            { ButtonFlags.R1, new List<IActions> { new MouseActions() { MouseType = MouseActionsType.ScrollDown } } },
 
                             { ButtonFlags.Back, new List<IActions> { new KeyboardActions() { Key = VirtualKeyCode.ESCAPE } } },
                             { ButtonFlags.Start, new List<IActions> { new KeyboardActions() { Key = VirtualKeyCode.TAB } } },

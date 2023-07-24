@@ -111,9 +111,9 @@ namespace HandheldCompanion.Controls
                     PressComboBox.SelectedIndex = (int)this.Actions.PressType;
                 else
                     this.Actions.PressType = (PressType)PressComboBox.SelectedIndex;
-                Toggle_Turbo.IsOn = ((ButtonActions)this.Actions).Turbo;
-                Turbo_Slider.Value = ((ButtonActions)this.Actions).TurboDelay;
-                Toggle_Toggle.IsOn = ((ButtonActions)this.Actions).Toggle;
+                Toggle_Turbo.IsOn = this.Actions.Turbo;
+                Turbo_Slider.Value = this.Actions.TurboDelay;
+                Toggle_Toggle.IsOn = this.Actions.Toggle;
             }
             else if (type == ActionType.Keyboard)
             {
@@ -135,9 +135,9 @@ namespace HandheldCompanion.Controls
                     PressComboBox.SelectedIndex = (int)this.Actions.PressType;
                 else
                     this.Actions.PressType = (PressType)PressComboBox.SelectedIndex;
-                Toggle_Turbo.IsOn = ((KeyboardActions)this.Actions).Turbo;
-                Turbo_Slider.Value = ((KeyboardActions)this.Actions).TurboDelay;
-                Toggle_Toggle.IsOn = ((KeyboardActions)this.Actions).Toggle;
+                Toggle_Turbo.IsOn = this.Actions.Turbo;
+                Turbo_Slider.Value = this.Actions.TurboDelay;
+                Toggle_Toggle.IsOn = this.Actions.Toggle;
                 ModifierComboBox.SelectedIndex = (int)((KeyboardActions)this.Actions).Modifiers;
             }
             else if (type == ActionType.Mouse)
@@ -167,9 +167,9 @@ namespace HandheldCompanion.Controls
                     PressComboBox.SelectedIndex = (int)this.Actions.PressType;
                 else
                     this.Actions.PressType = (PressType)PressComboBox.SelectedIndex;
-                Toggle_Turbo.IsOn = ((MouseActions)this.Actions).Turbo;
-                Turbo_Slider.Value = ((MouseActions)this.Actions).TurboDelay;
-                Toggle_Toggle.IsOn = ((MouseActions)this.Actions).Toggle;
+                Toggle_Turbo.IsOn = this.Actions.Turbo;
+                Turbo_Slider.Value = this.Actions.TurboDelay;
+                Toggle_Toggle.IsOn = this.Actions.Toggle;
                 ModifierComboBox.SelectedIndex = (int)((MouseActions)this.Actions).Modifiers;
             }
 
@@ -268,18 +268,7 @@ namespace HandheldCompanion.Controls
             if (this.Actions is null)
                 return;
 
-            switch (this.Actions.ActionType)
-            {
-                case ActionType.Button:
-                    ((ButtonActions)this.Actions).Turbo = Toggle_Turbo.IsOn;
-                    break;
-                case ActionType.Keyboard:
-                    ((KeyboardActions)this.Actions).Turbo = Toggle_Turbo.IsOn;
-                    break;
-                case ActionType.Mouse:
-                    ((MouseActions)this.Actions).Turbo = Toggle_Turbo.IsOn;
-                    break;
-            }
+            this.Actions.Turbo = Toggle_Turbo.IsOn;
 
             base.Update();
         }
@@ -289,18 +278,7 @@ namespace HandheldCompanion.Controls
             if (this.Actions is null)
                 return;
 
-            switch (this.Actions.ActionType)
-            {
-                case ActionType.Button:
-                    ((ButtonActions)this.Actions).TurboDelay = (byte)Turbo_Slider.Value;
-                    break;
-                case ActionType.Keyboard:
-                    ((KeyboardActions)this.Actions).TurboDelay = (byte)Turbo_Slider.Value;
-                    break;
-                case ActionType.Mouse:
-                    ((MouseActions)this.Actions).TurboDelay = (byte)Turbo_Slider.Value;
-                    break;
-            }
+            this.Actions.TurboDelay = (int)Turbo_Slider.Value;
 
             base.Update();
         }
@@ -310,18 +288,7 @@ namespace HandheldCompanion.Controls
             if (this.Actions is null)
                 return;
 
-            switch (this.Actions.ActionType)
-            {
-                case ActionType.Button:
-                    ((ButtonActions)this.Actions).Toggle = Toggle_Toggle.IsOn;
-                    break;
-                case ActionType.Keyboard:
-                    ((KeyboardActions)this.Actions).Toggle = Toggle_Toggle.IsOn;
-                    break;
-                case ActionType.Mouse:
-                    ((MouseActions)this.Actions).Toggle = Toggle_Toggle.IsOn;
-                    break;
-            }
+            this.Actions.Toggle = Toggle_Toggle.IsOn;
 
             base.Update();
         }

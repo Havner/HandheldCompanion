@@ -44,8 +44,8 @@ namespace HandheldCompanion.Actions
         public ModifierSet Modifiers = ModifierSet.None;
 
         // settings axis
-        public float Sensivity = 25.0f;
-        public float Deadzone = 10.0f;
+        public int Sensivity = 33;
+        public int Deadzone = 10;
         public bool AxisRotated = false;
         public bool AxisInverted = false;
 

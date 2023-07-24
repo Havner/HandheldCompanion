@@ -68,7 +68,7 @@ namespace HandheldCompanion.Actions
         protected int pressTimer = -1; // -1 inactive, >= 0 active
 
         public bool Turbo;
-        public byte TurboDelay = 90;
+        public int TurboDelay = 30;
         protected int TurboIdx;
         protected bool IsTurboed;
 
