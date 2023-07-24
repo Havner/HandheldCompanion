@@ -100,7 +100,7 @@
                                 BorderThickness="0,1,0,0"
                                 Opacity="0.25" />
 
-                            <!--  Axis rotation  -->
+                            <!--  Anti deadzone  -->
                             <Grid>
                                 <ui:SimpleStackPanel Spacing="6">
                                     <Grid>
@@ -108,26 +108,24 @@
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BodyTextBlockStyle}"
-                                            Text="Rotate axis (degrees)" />
+                                            Text="Anti deadzone (%)" />
                                         <TextBox
                                             HorizontalAlignment="Right"
                                             HorizontalContentAlignment="Center"
                                             IsReadOnly="True"
-                                            Text="{Binding Value, ElementName=Axis2AxisRotation, Mode=OneWay}" />
+                                            Text="{Binding Value, ElementName=Axis2AxisAntiDeadzone, Mode=OneWay}" />
                                     </Grid>
 
                                     <Slider
-                                        x:Name="Axis2AxisRotation"
-                                        FlowDirection="LeftToRight"
+                                        x:Name="Axis2AxisAntiDeadzone"
                                         IsMoveToPointEnabled="True"
                                         IsSnapToTickEnabled="True"
-                                        Maximum="270"
+                                        Maximum="100"
                                         Minimum="0"
                                         ScrollViewer.PanningMode="HorizontalOnly"
                                         Style="{DynamicResource SliderStyle1}"
-                                        TickFrequency="90"
-                                        TickPlacement="BottomRight"
-                                        ValueChanged="Axis_Rotation_Slider_ValueChanged" />
+                                        TickFrequency="1"
+                                        ValueChanged="Axis_AntiDeadZone_Slider_ValueChanged" />
                                 </ui:SimpleStackPanel>
                             </Grid>
 
@@ -209,7 +207,7 @@
                                 BorderThickness="0,1,0,0"
                                 Opacity="0.25" />
 
-                            <!--  Anti deadzone  -->
+                            <!--  Axis rotation  -->
                             <Grid>
                                 <ui:SimpleStackPanel Spacing="6">
                                     <Grid>
@@ -217,24 +215,26 @@
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
                                             Style="{StaticResource BodyTextBlockStyle}"
-                                            Text="Anti deadzone (%)" />
+                                            Text="Rotate axis (degrees)" />
                                         <TextBox
                                             HorizontalAlignment="Right"
                                             HorizontalContentAlignment="Center"
                                             IsReadOnly="True"
-                                            Text="{Binding Value, ElementName=Axis2AxisAntiDeadzone, Mode=OneWay}" />
+                                            Text="{Binding Value, ElementName=Axis2AxisRotation, Mode=OneWay}" />
                                     </Grid>
 
                                     <Slider
-                                        x:Name="Axis2AxisAntiDeadzone"
+                                        x:Name="Axis2AxisRotation"
+                                        FlowDirection="LeftToRight"
                                         IsMoveToPointEnabled="True"
                                         IsSnapToTickEnabled="True"
-                                        Maximum="100"
+                                        Maximum="270"
                                         Minimum="0"
                                         ScrollViewer.PanningMode="HorizontalOnly"
                                         Style="{DynamicResource SliderStyle1}"
-                                        TickFrequency="1"
-                                        ValueChanged="Axis_AntiDeadZone_Slider_ValueChanged" />
+                                        TickFrequency="90"
+                                        TickPlacement="BottomRight"
+                                        ValueChanged="Axis_Rotation_Slider_ValueChanged" />
                                 </ui:SimpleStackPanel>
                             </Grid>
 
@@ -256,43 +256,6 @@
 
                     <ui:SimpleStackPanel Spacing="12">
                         <ui:SimpleStackPanel Spacing="6">
-
-                            <!--  Axis rotation  -->
-                            <Grid>
-                                <ui:SimpleStackPanel Spacing="6">
-                                    <Grid>
-                                        <TextBlock
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            Style="{StaticResource BodyTextBlockStyle}"
-                                            Text="Rotate axis (degrees)" />
-                                        <TextBox
-                                            HorizontalAlignment="Right"
-                                            HorizontalContentAlignment="Center"
-                                            IsReadOnly="True"
-                                            Text="{Binding Value, ElementName=Axis2MouseRotation, Mode=OneWay}" />
-                                    </Grid>
-
-                                    <Slider
-                                        x:Name="Axis2MouseRotation"
-                                        FlowDirection="LeftToRight"
-                                        IsMoveToPointEnabled="True"
-                                        IsSnapToTickEnabled="True"
-                                        Maximum="270"
-                                        Minimum="0"
-                                        ScrollViewer.PanningMode="HorizontalOnly"
-                                        Style="{DynamicResource SliderStyle1}"
-                                        TickFrequency="90"
-                                        TickPlacement="BottomRight"
-                                        ValueChanged="Axis2MouseRotation_ValueChanged" />
-                                </ui:SimpleStackPanel>
-                            </Grid>
-
-                            <!--  Separator  -->
-                            <Separator
-                                BorderBrush="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
-                                BorderThickness="0,1,0,0"
-                                Opacity="0.25" />
 
                             <!--  Sensitivity  -->
                             <Grid>
@@ -355,6 +318,43 @@
                                         Style="{DynamicResource SliderStyle1}"
                                         TickFrequency="1"
                                         ValueChanged="Axis2MouseDeadzone_ValueChanged" />
+                                </ui:SimpleStackPanel>
+                            </Grid>
+
+                            <!--  Separator  -->
+                            <Separator
+                                BorderBrush="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
+                                BorderThickness="0,1,0,0"
+                                Opacity="0.25" />
+
+                            <!--  Axis rotation  -->
+                            <Grid>
+                                <ui:SimpleStackPanel Spacing="6">
+                                    <Grid>
+                                        <TextBlock
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BodyTextBlockStyle}"
+                                            Text="Rotate axis (degrees)" />
+                                        <TextBox
+                                            HorizontalAlignment="Right"
+                                            HorizontalContentAlignment="Center"
+                                            IsReadOnly="True"
+                                            Text="{Binding Value, ElementName=Axis2MouseRotation, Mode=OneWay}" />
+                                    </Grid>
+
+                                    <Slider
+                                        x:Name="Axis2MouseRotation"
+                                        FlowDirection="LeftToRight"
+                                        IsMoveToPointEnabled="True"
+                                        IsSnapToTickEnabled="True"
+                                        Maximum="270"
+                                        Minimum="0"
+                                        ScrollViewer.PanningMode="HorizontalOnly"
+                                        Style="{DynamicResource SliderStyle1}"
+                                        TickFrequency="90"
+                                        TickPlacement="BottomRight"
+                                        ValueChanged="Axis2MouseRotation_ValueChanged" />
                                 </ui:SimpleStackPanel>
                             </Grid>
 

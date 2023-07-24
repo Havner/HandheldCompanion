@@ -10,13 +10,11 @@ namespace HandheldCompanion.Actions
     {
         public VirtualKeyCode Key { get; set; }
         private bool IsKeyDown { get; set; }
-        private bool IsKeyUp { get; set; }
 
         public KeyboardActions()
         {
             this.ActionType = ActionType.Keyboard;
             this.IsKeyDown = false;
-            this.IsKeyUp = true;
 
             this.Value = false;
             this.prevValue = false;
@@ -35,20 +33,18 @@ namespace HandheldCompanion.Actions
             {
                 case true:
                     {
-                        if (IsKeyDown || !IsKeyUp)
+                        if (IsKeyDown)
                             return;
 
                         IsKeyDown = true;
-                        IsKeyUp = false;
                         KeyboardSimulator.KeyDown(Key);
                     }
                     break;
                 case false:
                     {
-                        if (IsKeyUp || !IsKeyDown)
+                        if (!IsKeyDown)
                             return;
 
-                        IsKeyUp = true;
                         IsKeyDown = false;
                         KeyboardSimulator.KeyUp(Key);
                     }

@@ -24,6 +24,8 @@ namespace HandheldCompanion.Actions
         protected object Value;
         protected object prevValue;
 
+        // values below are common for button type actions
+
         protected int Period;
 
         public bool Turbo { get; set; }

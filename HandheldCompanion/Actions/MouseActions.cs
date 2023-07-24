@@ -33,20 +33,21 @@ namespace HandheldCompanion.Actions
         public MouseActionsType MouseType { get; set; }
 
         private bool IsCursorDown { get; set; }
-        private bool IsCursorUp { get; set; }
         private int scrollAmountInClicks { get; set; } = 1;
+
+        private bool IsTouched = false;
+        private Vector2 remainder = new();
 
         // settings
         public float Sensivity { get; set; } = 25.0f;
         public float Deadzone { get; set; } = 10.0f;
-        public bool AxisInverted { get; set; } = false;
         public bool AxisRotated { get; set; } = false;
+        public bool AxisInverted { get; set; } = false;
 
         public MouseActions()
         {
             this.ActionType = ActionType.Mouse;
             this.IsCursorDown = false;
-            this.IsCursorUp = true;
 
             this.Value = false;
             this.prevValue = false;
@@ -65,32 +66,24 @@ namespace HandheldCompanion.Actions
             {
                 case true:
                     {
-                        if (IsCursorDown || !IsCursorUp)
+                        if (IsCursorDown)
                             return;
 
                         IsCursorDown = true;
-                        IsCursorUp = false;
                         MouseSimulator.MouseDown(MouseType, scrollAmountInClicks);
                     }
                     break;
                 case false:
                     {
-                        if (IsCursorUp || !IsCursorDown)
+                        if (!IsCursorDown)
                             return;
 
-                        IsCursorUp = true;
                         IsCursorDown = false;
                         MouseSimulator.MouseUp(MouseType);
                     }
                     break;
             }
         }
-
-        public override void Execute(AxisFlags axis, short value)
-        {
-        }
-
-        private bool IsTouched = false;
 
         private bool IsNewTouch(bool value)
         {
@@ -100,9 +93,6 @@ namespace HandheldCompanion.Actions
                 return true;
             return false;
         }
-
-        private Vector2 prevVector = new();
-        private Vector2 restVector = new();
 
         public void Execute(AxisLayout layout, bool touched)
         {
@@ -145,13 +135,13 @@ namespace HandheldCompanion.Actions
                         // touchpad was touched, update entry point for delta calculations
                         if (newTouch)
                         {
-                            prevVector = layout.vector;
+                            prevValue = layout.vector;
                             return;
                         }
 
                         // calculate delta and convert to <0.0-1.0> values
-                        deltaVector = (layout.vector - prevVector) / short.MaxValue;
-                        prevVector = layout.vector;
+                        deltaVector = (layout.vector - (Vector2)prevValue) / short.MaxValue;
+                        prevValue = layout.vector;
 
                         sensitivityFinetune = (MouseType == MouseActionsType.Move ? 9.0f : 3.0f);
                     }
@@ -165,9 +155,9 @@ namespace HandheldCompanion.Actions
             deltaVector *= (AxisInverted ? -1.0f : 1.0f);
 
             // handle the fact that MoveBy()/*Scroll() are int only and we can have movement (0 < abs(delta) < 1)
-            deltaVector += restVector;                                               // add partial previous step
+            deltaVector += remainder;                                               // add partial previous step
             Vector2 intVector = new((int)Math.Truncate(deltaVector.X), (int)Math.Truncate(deltaVector.Y));
-            restVector = deltaVector - intVector;                                    // and save the unused rest
+            remainder = deltaVector - intVector;                                    // and save the unused rest
 
             if (MouseType == MouseActionsType.Move)
             {

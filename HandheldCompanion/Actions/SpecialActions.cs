@@ -1,10 +1,8 @@
 using HandheldCompanion.Inputs;
-using HandheldCompanion.Managers;
 using HandheldCompanion.Misc;
 using HandheldCompanion.Simulators;
 using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Numerics;
 
 namespace HandheldCompanion.Actions

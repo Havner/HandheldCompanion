@@ -3,7 +3,6 @@ using HandheldCompanion.Targets;
 using HandheldCompanion.Utils;
 using Nefarius.ViGEm.Client;
 using System;
-using System.Threading.Tasks;
 
 namespace HandheldCompanion.Managers
 {

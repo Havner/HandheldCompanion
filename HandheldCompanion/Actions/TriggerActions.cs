@@ -9,9 +9,10 @@ namespace HandheldCompanion.Actions
     {
         public AxisLayoutFlags Axis { get; set; }
 
+        // settings
+        public int AxisAntiDeadZone { get; set; } = 0;
         public int AxisDeadZoneInner { get; set; } = 0;
         public int AxisDeadZoneOuter { get; set; } = 0;
-        public int AxisAntiDeadZone { get; set; } = 0;
 
         public TriggerActions()
         {
@@ -30,7 +31,7 @@ namespace HandheldCompanion.Actions
             value = (short)InputUtils.InnerOuterDeadzone(value, AxisDeadZoneInner, AxisDeadZoneOuter, byte.MaxValue);
             value = (short)InputUtils.ApplyAntiDeadzone(value, AxisAntiDeadZone, byte.MaxValue);
 
-            this.Value = (short)(value);
+            this.Value = value;
         }
 
         public short GetValue()
