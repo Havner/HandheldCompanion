@@ -111,14 +111,6 @@ namespace HandheldCompanion.Actions
                 this.Value = value;
         }
 
-        public virtual void Execute(AxisFlags axis, bool value)
-        {
-        }
-
-        public virtual void Execute(AxisFlags axis, short value)
-        {
-        }
-
         // Improve me !
         public object Clone()
         {
