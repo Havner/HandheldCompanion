@@ -5,6 +5,7 @@ using HandheldCompanion.Inputs;
 using ModernWpf.Controls;
 using System.Collections.Generic;
 using System.Windows;
+using Layout = HandheldCompanion.Misc.Layout;
 
 namespace HandheldCompanion.Views.Pages
 {
@@ -83,7 +84,7 @@ namespace HandheldCompanion.Views.Pages
             });
         }
 
-        public void Refresh(SortedDictionary<ButtonFlags, List<IActions>> buttonMapping, SortedDictionary<AxisLayoutFlags, IActions> axisMapping)
+        public void Update(Layout layout)
         {
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>
@@ -93,7 +94,7 @@ namespace HandheldCompanion.Views.Pages
                     ButtonFlags button = pair.Key;
                     ButtonStack mappings = pair.Value;
 
-                    if (buttonMapping.TryGetValue(button, out List<IActions> actions))
+                    if (layout.ButtonLayout.TryGetValue(button, out List<IActions> actions))
                     {
                         mappings.SetActions(actions);
                         continue;
@@ -107,7 +108,7 @@ namespace HandheldCompanion.Views.Pages
                     AxisLayoutFlags axis = pair.Key;
                     AxisMapping mapping = pair.Value;
 
-                    if (axisMapping.TryGetValue(axis, out IActions actions))
+                    if (layout.AxisLayout.TryGetValue(axis, out IActions actions))
                     {
                         mapping.SetIActions(actions);
                         continue;
@@ -121,7 +122,7 @@ namespace HandheldCompanion.Views.Pages
                     AxisLayoutFlags axis = pair.Key;
                     TriggerMapping mapping = pair.Value;
 
-                    if (axisMapping.TryGetValue(axis, out IActions actions))
+                    if (layout.AxisLayout.TryGetValue(axis, out IActions actions))
                     {
                         mapping.SetIActions(actions);
                         continue;

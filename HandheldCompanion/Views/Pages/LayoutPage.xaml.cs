@@ -260,7 +260,7 @@ namespace HandheldCompanion.Views.Pages
                 // cascade update to (sub)pages (async)
                 Parallel.ForEach(_pages.Values, new ParallelOptions { MaxDegreeOfParallelism = PerformanceManager.MaxDegreeOfParallelism }, page =>
                 {
-                    page.Refresh(currentTemplate.Layout.ButtonLayout, currentTemplate.Layout.AxisLayout);
+                    page.Update(currentTemplate.Layout);
                 });
 
                 // clear layout selection
