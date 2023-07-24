@@ -7,12 +7,12 @@ namespace HandheldCompanion.Actions
     [Serializable]
     public class TriggerActions : IActions
     {
-        public AxisLayoutFlags Axis { get; set; }
+        public AxisLayoutFlags Axis;
 
         // settings
-        public int AxisAntiDeadZone { get; set; } = 0;
-        public int AxisDeadZoneInner { get; set; } = 0;
-        public int AxisDeadZoneOuter { get; set; } = 0;
+        public int AxisAntiDeadZone = 0;
+        public int AxisDeadZoneInner = 0;
+        public int AxisDeadZoneOuter = 0;
 
         public TriggerActions()
         {

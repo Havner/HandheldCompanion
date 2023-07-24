@@ -9,8 +9,8 @@ namespace HandheldCompanion.Actions
     [Serializable]
     public class KeyboardActions : IActions
     {
-        public VirtualKeyCode Key { get; set; }
-        private bool IsKeyDown { get; set; }
+        public VirtualKeyCode Key;
+        private bool IsKeyDown;
         private KeyCode[] pressed;
 
         // settings

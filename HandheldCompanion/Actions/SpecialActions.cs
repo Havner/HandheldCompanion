@@ -17,7 +17,7 @@ namespace HandheldCompanion.Actions
     [Serializable]
     public class SpecialActions : IActions
     {
-        public SpecialActionsType SpecialType { get; set; }
+        public SpecialActionsType SpecialType;
         private FlickStick flickStick = new();
         private float remainder = 0;
 

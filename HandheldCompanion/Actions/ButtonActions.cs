@@ -6,7 +6,7 @@ namespace HandheldCompanion.Actions
     [Serializable]
     public class ButtonActions : IActions
     {
-        public ButtonFlags Button { get; set; }
+        public ButtonFlags Button;
 
         public ButtonActions()
         {

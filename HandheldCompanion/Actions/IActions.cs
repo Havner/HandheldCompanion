@@ -46,7 +46,7 @@ namespace HandheldCompanion.Actions
             { ModifierSet.ShiftControlAlt, new KeyCode[] { KeyCode.LShift, KeyCode.LControl, KeyCode.LMenu } },
         };
 
-        public ActionType ActionType { get; set; } = ActionType.Disabled;
+        public ActionType ActionType = ActionType.Disabled;
 
         protected object Value;
         protected object prevValue;
@@ -55,12 +55,13 @@ namespace HandheldCompanion.Actions
 
         protected int Period;
 
-        public bool Turbo { get; set; }
-        public byte TurboDelay { get; set; } = 90;
+
+        public bool Turbo;
+        public byte TurboDelay = 90;
         protected int TurboIdx;
         protected bool IsTurboed;
 
-        public bool Toggle { get; set; }
+        public bool Toggle;
         protected bool IsToggled;
 
         public IActions()

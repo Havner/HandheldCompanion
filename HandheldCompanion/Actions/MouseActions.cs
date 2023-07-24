@@ -31,10 +31,10 @@ namespace HandheldCompanion.Actions
     [Serializable]
     public class MouseActions : IActions
     {
-        public MouseActionsType MouseType { get; set; }
+        public MouseActionsType MouseType;
 
-        private bool IsCursorDown { get; set; }
-        private int scrollAmountInClicks { get; set; } = 1;
+        private bool IsCursorDown;
+        private int scrollAmountInClicks = 1;
 
         private bool IsTouched = false;
         private Vector2 remainder = new();
@@ -44,10 +44,10 @@ namespace HandheldCompanion.Actions
         public ModifierSet Modifiers = ModifierSet.None;
 
         // settings axis
-        public float Sensivity { get; set; } = 25.0f;
-        public float Deadzone { get; set; } = 10.0f;
-        public bool AxisRotated { get; set; } = false;
-        public bool AxisInverted { get; set; } = false;
+        public float Sensivity = 25.0f;
+        public float Deadzone = 10.0f;
+        public bool AxisRotated = false;
+        public bool AxisInverted = false;
 
         public MouseActions()
         {

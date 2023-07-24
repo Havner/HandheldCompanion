@@ -8,15 +8,15 @@ namespace HandheldCompanion.Actions
     [Serializable]
     public class AxisActions : IActions
     {
-        public AxisLayoutFlags Axis { get; set; }
+        public AxisLayoutFlags Axis;
 
         // Axis to axis
-        public bool ImproveCircularity { get; set; } = false;
-        public int AxisAntiDeadZone { get; set; } = 0;
-        public int AxisDeadZoneInner { get; set; } = 0;
-        public int AxisDeadZoneOuter { get; set; } = 0;
-        public bool AxisRotated { get; set; } = false;
-        public bool AxisInverted { get; set; } = false;
+        public bool ImproveCircularity = false;
+        public int AxisAntiDeadZone = 0;
+        public int AxisDeadZoneInner = 0;
+        public int AxisDeadZoneOuter = 0;
+        public bool AxisRotated = false;
+        public bool AxisInverted = false;
 
         public AxisActions()
         {
