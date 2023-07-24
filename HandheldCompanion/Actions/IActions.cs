@@ -41,10 +41,44 @@ namespace HandheldCompanion.Actions
 
         public virtual void Execute(ButtonFlags button, bool value)
         {
-        }
+            if (Toggle)
+            {
+                if ((bool)prevValue != value && value)
+                    IsToggled = !IsToggled;
+            }
+            else
+                IsToggled = false;
 
-        public virtual void Execute(ButtonFlags button, short value)
-        {
+            if (Turbo)
+            {
+                if (value || IsToggled)
+                {
+                    if (TurboIdx % TurboDelay == 0)
+                        IsTurboed = !IsTurboed;
+
+                    TurboIdx += Period;
+                }
+                else
+                {
+                    IsTurboed = false;
+                    TurboIdx = 0;
+                }
+            }
+            else
+                IsTurboed = false;
+
+            // update previous value
+            prevValue = value;
+
+            // update value
+            if (Toggle && Turbo)
+                this.Value = IsToggled && IsTurboed;
+            else if (Toggle)
+                this.Value = IsToggled;
+            else if (Turbo)
+                this.Value = IsTurboed;
+            else
+                this.Value = value;
         }
 
         public virtual void Execute(AxisFlags axis, bool value)
