@@ -49,6 +49,7 @@
                         <ComboBoxItem Content="Keyboard" IsEnabled="False" />
                         <ComboBoxItem Content="Mouse" IsEnabled="False" />
                         <ComboBoxItem Content="Trigger" IsEnabled="True" />
+                        <ComboBoxItem Content="Special" IsEnabled="False" />
                     </ComboBox>
 
                     <ComboBox
