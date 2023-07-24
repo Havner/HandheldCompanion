@@ -299,10 +299,10 @@ namespace HandheldCompanion.Managers
                         case ActionType.Button:
                             {
                                 ButtonActions bAction = action as ButtonActions;
-                                value |= outputState.ButtonState[bAction.Button];
-
                                 bAction.Execute(button, value);
-                                outputState.ButtonState[bAction.Button] = bAction.GetValue();
+
+                                bool outVal = bAction.GetValue() || outputState.ButtonState[bAction.Button];
+                                outputState.ButtonState[bAction.Button] = outVal;
                             }
                             break;
 
