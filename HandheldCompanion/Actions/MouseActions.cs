@@ -34,7 +34,7 @@ namespace HandheldCompanion.Actions
         public MouseActionsType MouseType;
 
         private bool IsCursorDown;
-        private int scrollAmountInClicks = 1;
+        private int scrollAmountInClicks = 20;
 
         private bool IsTouched = false;
         private Vector2 remainder = new();
