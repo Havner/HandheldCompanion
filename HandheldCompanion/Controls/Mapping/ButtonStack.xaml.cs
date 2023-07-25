@@ -20,6 +20,7 @@ namespace HandheldCompanion.Controls
         static Thickness padding = new(2, 2, 0, 0);
 
         private ButtonFlags button;
+        private bool backendUpdate;
 
         public event UpdatedEventHandler Updated;
         public delegate void UpdatedEventHandler(object sender, List<IActions> actions);
@@ -64,6 +65,8 @@ namespace HandheldCompanion.Controls
         // actions cannot be null or empty
         public void SetActions(List<IActions> actions)
         {
+            backendUpdate = true;
+
             int mappingLen = Children.Count;
             int index = 0;
             foreach (var action in actions)
@@ -90,6 +93,8 @@ namespace HandheldCompanion.Controls
             for (int i = actionsLen; i < mappingLen; i++)
                 getGrid(i).Children.Clear();
             Children.RemoveRange(actionsLen, mappingLen - actionsLen);
+
+            backendUpdate = false;
         }
 
         public void Reset()
@@ -106,6 +111,10 @@ namespace HandheldCompanion.Controls
 
         private void ButtonMapping_Updated(ButtonFlags button)
         {
+            // suppress events back to backend when it is the backend that updates
+            if (backendUpdate)
+                return;
+
             List<IActions> actions = new();
             for (int i = 0; i < Children.Count; i++)
             {
