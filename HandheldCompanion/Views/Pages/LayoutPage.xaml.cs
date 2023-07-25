@@ -32,7 +32,7 @@ namespace HandheldCompanion.Views.Pages
         private TrackpadsPage trackpadsPage = new();
         private GyroPage gyroPage = new();
 
-        private Dictionary<string, ILayoutPage> _pages;
+        private Dictionary<string, ILayoutPage> pages;
 
         private string preNavItemTag;
 
@@ -50,7 +50,7 @@ namespace HandheldCompanion.Views.Pages
             this.Tag = Tag;
 
             // create controller related pages
-            this._pages = new()
+            this.pages = new()
             {
                 // buttons
                 { "ButtonsPage", buttonsPage },
@@ -99,22 +99,24 @@ namespace HandheldCompanion.Views.Pages
             navTrackpads.Visibility = controller.HasTrackpads() ? Visibility.Visible : Visibility.Collapsed;
             navGyro.Visibility = controller.HasMotionSensor() ? Visibility.Visible : Visibility.Collapsed;
 
-            // cascade update to (sub)pages (async)
-            Parallel.ForEach(_pages.Values, new ParallelOptions { MaxDegreeOfParallelism = PerformanceManager.MaxDegreeOfParallelism }, page =>
-            {
+            // cascade update to (sub)pages
+            foreach (var page in pages.Values)
                 page.UpdateController(controller);
-            });
         }
 
         private void LayoutManager_Initialized()
         {
-            RefreshLayoutList();
+            // UI thread (async)
+            Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                RefreshLayoutList();
+            });
         }
 
         private void LayoutManager_Updated(LayoutTemplate layoutTemplate)
         {
-            // UI thread
-            Application.Current.Dispatcher.Invoke(() =>
+            // UI thread (async)
+            Application.Current.Dispatcher.BeginInvoke(() =>
             {
                 // Get template separator index
                 int idx = -1;
@@ -255,22 +257,19 @@ namespace HandheldCompanion.Views.Pages
 
         private void UpdatePages()
         {
+            // This is a very important lock, it blocks backward events to the layout when
+            // this is actually the backend that triggered the update. Notifications on higher
+            // levels (pages and mappings) could potentially be blocked for optimization.
             if (Monitor.TryEnter(updateLock))
             {
-                // cascade update to (sub)pages (async)
-                Parallel.ForEach(_pages.Values, new ParallelOptions { MaxDegreeOfParallelism = PerformanceManager.MaxDegreeOfParallelism }, page =>
-                {
+                // cascade update to (sub)pages
+                foreach (var page in pages.Values)
                     page.Update(currentTemplate.Layout);
-                });
 
                 // clear layout selection
                 cB_Layouts.SelectedValue = null;
 
                 Monitor.Exit(updateLock);
-
-                // TODO: this seems to be circular, UpdatePages are called when layoutTemplate+layout changes
-                // and this event triggers layoutTemplate layout update. Remove together with Layout.UpdateLayout()?
-                currentTemplate.Layout.UpdateLayout();
             }
         }
 
@@ -295,7 +294,7 @@ namespace HandheldCompanion.Views.Pages
 
         public void NavView_Navigate(string navItemTag)
         {
-            var item = _pages.FirstOrDefault(p => p.Key.Equals(navItemTag));
+            var item = pages.FirstOrDefault(p => p.Key.Equals(navItemTag));
             Page _page = item.Value;
 
             // Get the page type before navigation so you can prevent duplicate
@@ -402,6 +401,9 @@ namespace HandheldCompanion.Views.Pages
                         currentTemplate.Guid = layoutTemplate.Guid; // not needed
 
                         UpdatePages();
+
+                        // the whole layout has been updated without notification, trigger one
+                        currentTemplate.Layout.UpdateLayout();
                     }
                     break;
             }

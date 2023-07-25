@@ -115,65 +115,55 @@ namespace HandheldCompanion.Managers
 
         private static Layout? ProcessLayout(string fileName)
         {
-            // UI thread (synchronous)
-            // We need to wait for each controller to initialize and take (or not) its slot in the array
-            return Application.Current.Dispatcher.Invoke(() =>
+            Layout layout = null;
+
+            try
             {
-                Layout layout = null;
-
-                try
+                string outputraw = File.ReadAllText(fileName);
+                layout = JsonConvert.DeserializeObject<Layout>(outputraw, new JsonSerializerSettings
                 {
-                    string outputraw = File.ReadAllText(fileName);
-                    layout = JsonConvert.DeserializeObject<Layout>(outputraw, new JsonSerializerSettings
-                    {
-                        TypeNameHandling = TypeNameHandling.All
-                    });
-                }
-                catch (Exception ex)
-                {
-                    LogManager.LogError("Could not parse Layout {0}. {1}", fileName, ex.Message);
-                }
+                    TypeNameHandling = TypeNameHandling.All
+                });
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError("Could not parse Layout {0}. {1}", fileName, ex.Message);
+            }
 
-                // failed to parse
-                if (layout is null)
-                    LogManager.LogError("Could not parse Layout {0}", fileName);
+            // failed to parse
+            if (layout is null)
+                LogManager.LogError("Could not parse Layout {0}", fileName);
 
-                return layout;
-            });
+            return layout;
         }
 
         private static void ProcessLayoutTemplate(string fileName)
         {
-            // UI thread (synchronous)
-            // We need to wait for each controller to initialize and take (or not) its slot in the array
-            Application.Current.Dispatcher.Invoke(() =>
+            LayoutTemplate layoutTemplate = null;
+
+            try
             {
-                LayoutTemplate layoutTemplate = null;
-
-                try
+                string outputraw = File.ReadAllText(fileName);
+                layoutTemplate = JsonConvert.DeserializeObject<LayoutTemplate>(outputraw, new JsonSerializerSettings
                 {
-                    string outputraw = File.ReadAllText(fileName);
-                    layoutTemplate = JsonConvert.DeserializeObject<LayoutTemplate>(outputraw, new JsonSerializerSettings
-                    {
-                        TypeNameHandling = TypeNameHandling.All
-                    });
-                }
-                catch (Exception ex)
-                {
-                    LogManager.LogError("Could not parse LayoutTemplate {0}. {1}", fileName, ex.Message);
-                }
+                    TypeNameHandling = TypeNameHandling.All
+                });
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError("Could not parse LayoutTemplate {0}. {1}", fileName, ex.Message);
+            }
 
-                // failed to parse
-                if (layoutTemplate is null || layoutTemplate.Layout is null)
-                {
-                    LogManager.LogError("Could not parse LayoutTemplate {0}", fileName);
-                    return;
-                }
+            // failed to parse
+            if (layoutTemplate is null || layoutTemplate.Layout is null)
+            {
+                LogManager.LogError("Could not parse LayoutTemplate {0}", fileName);
+                return;
+            }
 
-                // todo: implement deduplication
-                Templates.Add(layoutTemplate);
-                Updated?.Invoke(layoutTemplate);
-            });
+            // todo: implement deduplication
+            Templates.Add(layoutTemplate);
+            Updated?.Invoke(layoutTemplate);
         }
 
         private static void DesktopLayout_Updated(Layout layout)

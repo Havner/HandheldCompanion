@@ -41,16 +41,11 @@ namespace HandheldCompanion.Controls
                 this.Icon.Foreground = newIcon.Foreground;
             else
                 this.Icon.SetResourceReference(Control.ForegroundProperty, "SystemControlForegroundBaseMediumBrush");
-
-            // TODO: is this required?
-            this.Update();
         }
 
         public void SetIActions(IActions actions)
         {
-            // TODO: why is that reset required? Shouldn't update be enough?
-            // reset and update mapping IActions
-            Reset();
+            // update mapping IActions
             base.SetIActions(actions);
 
             // update UI
@@ -69,10 +64,6 @@ namespace HandheldCompanion.Controls
 
             // we're not ready yet
             if (TargetComboBox is null)
-                return;
-
-            // we're busy
-            if (!Monitor.TryEnter(updateLock))
                 return;
 
             // clear current dropdown values
@@ -185,10 +176,6 @@ namespace HandheldCompanion.Controls
             if (TargetComboBox.SelectedItem is null)
                 return;
 
-            // we're busy
-            if (!Monitor.TryEnter(updateLock))
-                return;
-
             // generate IActions based on settings
             switch (this.Actions.ActionType)
             {
@@ -217,21 +204,10 @@ namespace HandheldCompanion.Controls
             base.Update();
         }
 
-        private void Update()
-        {
-            // force full update
-            Action_SelectionChanged(null, null);
-            Target_SelectionChanged(null, null);
-        }
-
         public void Reset()
         {
-            if (Monitor.TryEnter(updateLock))
-            {
-                ActionComboBox.SelectedIndex = 0;
-                TargetComboBox.SelectedItem = null;
-                Monitor.Exit(updateLock);
-            }
+            ActionComboBox.SelectedIndex = 0;
+            TargetComboBox.SelectedItem = null;
         }
 
         private void Press_SelectionChanged(object sender, SelectionChangedEventArgs e)

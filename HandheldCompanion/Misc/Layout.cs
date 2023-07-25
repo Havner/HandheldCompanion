@@ -50,7 +50,6 @@ namespace HandheldCompanion.Misc
             }
         }
 
-        // TODO: remove
         public void UpdateLayout()
         {
             Updated?.Invoke(this);

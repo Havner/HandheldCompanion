@@ -450,7 +450,6 @@ namespace HandheldCompanion.Views.Pages
                 Executable = selectedProfile.Executable,
                 Product = selectedProfile.Name,
             };
-            // TODO: there are too many events flying in circles
             layoutTemplate.Updated += Template_Updated;
 
             MainWindow.layoutPage.UpdateLayout(layoutTemplate);

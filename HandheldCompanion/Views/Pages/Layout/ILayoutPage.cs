@@ -86,51 +86,47 @@ namespace HandheldCompanion.Views.Pages
 
         public void Update(Layout layout)
         {
-            // UI thread (async)
-            Application.Current.Dispatcher.BeginInvoke(() =>
+            foreach (var pair in ButtonStacks)
             {
-                foreach (var pair in ButtonStacks)
+                ButtonFlags button = pair.Key;
+                ButtonStack mappings = pair.Value;
+
+                if (layout.ButtonLayout.TryGetValue(button, out List<IActions> actions))
                 {
-                    ButtonFlags button = pair.Key;
-                    ButtonStack mappings = pair.Value;
-
-                    if (layout.ButtonLayout.TryGetValue(button, out List<IActions> actions))
-                    {
-                        mappings.SetActions(actions);
-                        continue;
-                    }
-
-                    mappings.Reset();
+                    mappings.SetActions(actions);
+                    continue;
                 }
 
-                foreach (var pair in AxisMappings)
+                mappings.Reset();
+            }
+
+            foreach (var pair in AxisMappings)
+            {
+                AxisLayoutFlags axis = pair.Key;
+                AxisMapping mapping = pair.Value;
+
+                if (layout.AxisLayout.TryGetValue(axis, out IActions actions))
                 {
-                    AxisLayoutFlags axis = pair.Key;
-                    AxisMapping mapping = pair.Value;
-
-                    if (layout.AxisLayout.TryGetValue(axis, out IActions actions))
-                    {
-                        mapping.SetIActions(actions);
-                        continue;
-                    }
-
-                    mapping.Reset();
+                    mapping.SetIActions(actions);
+                    continue;
                 }
 
-                foreach (var pair in TriggerMappings)
+                mapping.Reset();
+            }
+
+            foreach (var pair in TriggerMappings)
+            {
+                AxisLayoutFlags axis = pair.Key;
+                TriggerMapping mapping = pair.Value;
+
+                if (layout.AxisLayout.TryGetValue(axis, out IActions actions))
                 {
-                    AxisLayoutFlags axis = pair.Key;
-                    TriggerMapping mapping = pair.Value;
-
-                    if (layout.AxisLayout.TryGetValue(axis, out IActions actions))
-                    {
-                        mapping.SetIActions(actions);
-                        continue;
-                    }
-
-                    mapping.Reset();
+                    mapping.SetIActions(actions);
+                    continue;
                 }
-            });
+
+                mapping.Reset();
+            }
         }
     }
 }
