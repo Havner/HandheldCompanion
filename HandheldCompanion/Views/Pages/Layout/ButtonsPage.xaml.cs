@@ -95,7 +95,6 @@ namespace HandheldCompanion.Views.Pages
                         // update icon
                         FontIcon newIcon = controller.GetFontIcon(button);
                         string newLabel = MainWindow.CurrentDevice.GetButtonName(button);
-
                         buttonStack.UpdateIcon(newIcon, newLabel);
                     }
                 }

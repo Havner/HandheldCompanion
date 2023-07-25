@@ -10,9 +10,13 @@ namespace HandheldCompanion.Views.Pages
     /// </summary>
     public partial class JoysticksPage : ILayoutPage
     {
-        public static List<ButtonFlags> LeftThumbButtons = new() { ButtonFlags.LeftStickClick, ButtonFlags.LeftStickTouch, ButtonFlags.LeftStickUp, ButtonFlags.LeftStickDown, ButtonFlags.LeftStickLeft, ButtonFlags.LeftStickRight };
+        public static List<ButtonFlags> LeftThumbButtons = new() {
+            ButtonFlags.LeftStickClick, ButtonFlags.LeftStickTouch, ButtonFlags.LeftStickOuterRing, ButtonFlags.LeftStickInnerRing,
+            ButtonFlags.LeftStickUp, ButtonFlags.LeftStickDown, ButtonFlags.LeftStickLeft, ButtonFlags.LeftStickRight };
         public static List<AxisLayoutFlags> LeftThumbAxis = new() { AxisLayoutFlags.LeftStick };
-        public static List<ButtonFlags> RightThumbButtons = new() { ButtonFlags.RightStickClick, ButtonFlags.RightStickTouch, ButtonFlags.RightStickUp, ButtonFlags.RightStickDown, ButtonFlags.RightStickLeft, ButtonFlags.RightStickRight };
+        public static List<ButtonFlags> RightThumbButtons = new() {
+            ButtonFlags.RightStickClick, ButtonFlags.RightStickTouch, ButtonFlags.RightStickOuterRing, ButtonFlags.RightStickInnerRing,
+            ButtonFlags.RightStickUp, ButtonFlags.RightStickDown, ButtonFlags.RightStickLeft, ButtonFlags.RightStickRight };
         public static List<AxisLayoutFlags> RightThumbAxis = new() { AxisLayoutFlags.RightStick };
 
         public JoysticksPage()

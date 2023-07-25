@@ -49,6 +49,8 @@ namespace HandheldCompanion.Controllers
             AxisLayoutFlags.LeftPad, AxisLayoutFlags.RightPad,
         };
 
+        public static float RingThreshold = 0.8f;
+
         // Buttons and axes all controllers have that we can map.
         // Additional ones can be added per controller.
         protected List<ButtonFlags> SourceButtons = new()
@@ -63,6 +65,7 @@ namespace HandheldCompanion.Controllers
             ButtonFlags.L2Soft, ButtonFlags.R2Soft, ButtonFlags.L2Full, ButtonFlags.R2Full,
             ButtonFlags.LeftStickUp, ButtonFlags.LeftStickDown, ButtonFlags.LeftStickLeft, ButtonFlags.LeftStickRight,
             ButtonFlags.RightStickUp, ButtonFlags.RightStickDown, ButtonFlags.RightStickLeft, ButtonFlags.RightStickRight,
+            ButtonFlags.LeftStickOuterRing, ButtonFlags.LeftStickInnerRing, ButtonFlags.RightStickOuterRing, ButtonFlags.RightStickInnerRing,
         };
         protected List<AxisLayoutFlags> SourceAxis = new()
         {
@@ -299,13 +302,13 @@ namespace HandheldCompanion.Controllers
             switch (button)
             {
                 case ButtonFlags.DPadUp:
-                    return "\u219F"; // Button A
+                    return "\u219F";
                 case ButtonFlags.DPadDown:
-                    return "\u21A1"; // Button B
+                    return "\u21A1";
                 case ButtonFlags.DPadLeft:
-                    return "\u219E"; // Button X
+                    return "\u219E";
                 case ButtonFlags.DPadRight:
-                    return "\u21A0"; // Button Y
+                    return "\u21A0";
                 case ButtonFlags.LeftStickClick:
                     return "\u21BA";
                 case ButtonFlags.RightStickClick:
@@ -318,6 +321,10 @@ namespace HandheldCompanion.Controllers
                     return "\u21BC";
                 case ButtonFlags.LeftStickRight:
                     return "\u21C0";
+                case ButtonFlags.LeftStickOuterRing:
+                    return "\u21F1";
+                case ButtonFlags.LeftStickInnerRing:
+                    return "\u21DA";
                 case ButtonFlags.RightStickUp:
                     return "\u21BF";
                 case ButtonFlags.RightStickDown:
@@ -326,6 +333,10 @@ namespace HandheldCompanion.Controllers
                     return "\u21BD";
                 case ButtonFlags.RightStickRight:
                     return "\u21C1";
+                case ButtonFlags.RightStickOuterRing:
+                    return "\u21F2";
+                case ButtonFlags.RightStickInnerRing:
+                    return "\u21DB";
                 case ButtonFlags.OEM1:
                     return "\u2780";
                 case ButtonFlags.OEM2:

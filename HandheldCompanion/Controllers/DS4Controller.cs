@@ -26,6 +26,7 @@ namespace HandheldCompanion.Controllers
             SourceButtons.Add(ButtonFlags.RightPadClick);
         }
 
+        // TODO: several mappings (stick directions, rings) are missing here
         public override void UpdateInputs(long ticks)
         {
             // skip if controller isn't connected

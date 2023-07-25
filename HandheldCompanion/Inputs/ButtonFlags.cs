@@ -101,9 +101,18 @@ namespace HandheldCompanion.Inputs
         [Description("Right")]
         RightPadClickRight = 59,
 
+        [Description("Outer Ring")]
+        LeftStickOuterRing = 60,
+        [Description("Inner Ring")]
+        LeftStickInnerRing = 61,
+        [Description("Outer Ring")]
+        RightStickOuterRing = 62,
+        [Description("Inner Ring")]
+        RightStickInnerRing = 63,
+
         [Description("Volume Up")]
-        VolumeUp = 60,
+        VolumeUp = 64,
         [Description("Volume Down")]
-        VolumeDown = 61,
+        VolumeDown = 65,
     }
 }

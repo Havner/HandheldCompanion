@@ -3,6 +3,7 @@ using HandheldCompanion.Managers;
 using SharpDX.XInput;
 using System;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -231,6 +232,10 @@ namespace HandheldCompanion.Controllers
             Inputs.ButtonState[ButtonFlags.LeftStickDown] = Gamepad.LeftThumbY < -Gamepad.LeftThumbDeadZone;
             Inputs.ButtonState[ButtonFlags.LeftStickUp] = Gamepad.LeftThumbY > Gamepad.LeftThumbDeadZone;
 
+            float leftLength = new Vector2(Gamepad.LeftThumbX, Gamepad.LeftThumbY).Length();
+            Inputs.ButtonState[ButtonFlags.LeftStickOuterRing] = leftLength >= (RingThreshold * short.MaxValue);
+            Inputs.ButtonState[ButtonFlags.LeftStickInnerRing] = leftLength >= Gamepad.LeftThumbDeadZone && leftLength < (RingThreshold * short.MaxValue);
+
             Inputs.AxisState[AxisFlags.LeftStickX] = Gamepad.LeftThumbX;
             Inputs.AxisState[AxisFlags.LeftStickY] = Gamepad.LeftThumbY;
 
@@ -239,6 +244,10 @@ namespace HandheldCompanion.Controllers
             Inputs.ButtonState[ButtonFlags.RightStickRight] = Gamepad.RightThumbX > Gamepad.RightThumbDeadZone;
             Inputs.ButtonState[ButtonFlags.RightStickDown] = Gamepad.RightThumbY < -Gamepad.RightThumbDeadZone;
             Inputs.ButtonState[ButtonFlags.RightStickUp] = Gamepad.RightThumbY > Gamepad.RightThumbDeadZone;
+
+            float rightLength = new Vector2(Gamepad.RightThumbX, Gamepad.RightThumbY).Length();
+            Inputs.ButtonState[ButtonFlags.RightStickOuterRing] = rightLength >= (RingThreshold * short.MaxValue);
+            Inputs.ButtonState[ButtonFlags.RightStickInnerRing] = rightLength >= Gamepad.RightThumbDeadZone && rightLength < (RingThreshold * short.MaxValue);
 
             Inputs.AxisState[AxisFlags.RightStickX] = Gamepad.RightThumbX;
             Inputs.AxisState[AxisFlags.RightStickY] = Gamepad.RightThumbY;

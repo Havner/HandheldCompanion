@@ -6,6 +6,7 @@ using neptune_hidapi.net.Hid;
 using SharpDX.XInput;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -168,6 +169,10 @@ namespace HandheldCompanion.Controllers
             Inputs.ButtonState[ButtonFlags.LeftStickDown] = input.State.AxesState[NeptuneControllerAxis.LeftStickY] < -Gamepad.LeftThumbDeadZone;
             Inputs.ButtonState[ButtonFlags.LeftStickUp] = input.State.AxesState[NeptuneControllerAxis.LeftStickY] > Gamepad.LeftThumbDeadZone;
 
+            float leftLength = new Vector2(input.State.AxesState[NeptuneControllerAxis.LeftStickX], input.State.AxesState[NeptuneControllerAxis.LeftStickY]).Length();
+            Inputs.ButtonState[ButtonFlags.LeftStickOuterRing] = leftLength >= (RingThreshold * short.MaxValue);
+            Inputs.ButtonState[ButtonFlags.LeftStickInnerRing] = leftLength >= Gamepad.LeftThumbDeadZone && leftLength < (RingThreshold * short.MaxValue);
+
             Inputs.AxisState[AxisFlags.LeftStickX] = input.State.AxesState[NeptuneControllerAxis.LeftStickX];
             Inputs.AxisState[AxisFlags.LeftStickY] = input.State.AxesState[NeptuneControllerAxis.LeftStickY];
 
@@ -176,6 +181,10 @@ namespace HandheldCompanion.Controllers
             Inputs.ButtonState[ButtonFlags.RightStickRight] = input.State.AxesState[NeptuneControllerAxis.RightStickX] > Gamepad.RightThumbDeadZone;
             Inputs.ButtonState[ButtonFlags.RightStickDown] = input.State.AxesState[NeptuneControllerAxis.RightStickY] < -Gamepad.RightThumbDeadZone;
             Inputs.ButtonState[ButtonFlags.RightStickUp] = input.State.AxesState[NeptuneControllerAxis.RightStickY] > Gamepad.RightThumbDeadZone;
+
+            float rightLength = new Vector2(input.State.AxesState[NeptuneControllerAxis.RightStickX], input.State.AxesState[NeptuneControllerAxis.RightStickY]).Length();
+            Inputs.ButtonState[ButtonFlags.RightStickOuterRing] = rightLength >= (RingThreshold * short.MaxValue);
+            Inputs.ButtonState[ButtonFlags.RightStickInnerRing] = rightLength >= Gamepad.RightThumbDeadZone && rightLength < (RingThreshold * short.MaxValue);
 
             Inputs.AxisState[AxisFlags.RightStickX] = input.State.AxesState[NeptuneControllerAxis.RightStickX];
             Inputs.AxisState[AxisFlags.RightStickY] = input.State.AxesState[NeptuneControllerAxis.RightStickY];
