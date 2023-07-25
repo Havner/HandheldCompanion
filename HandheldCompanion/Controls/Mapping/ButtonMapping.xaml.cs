@@ -48,6 +48,7 @@ namespace HandheldCompanion.Controls
 
         public void SetIActions(IActions actions)
         {
+            // TODO: why is that reset required? Shouldn't update be enough?
             // reset and update mapping IActions
             Reset();
             base.SetIActions(actions);

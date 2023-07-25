@@ -13,11 +13,6 @@ namespace HandheldCompanion.Controls
     public partial class ButtonStack : SimpleStackPanel
     {
         private ButtonFlags button;
-        // must always be kept with at least one element
-        private List<ButtonMapping> buttonMappings;
-
-        FontIcon fontIcon = new();
-        string label = "";
 
         public event UpdatedEventHandler Updated;
         public delegate void UpdatedEventHandler(object sender, List<IActions> actions);
@@ -32,47 +27,82 @@ namespace HandheldCompanion.Controls
         public ButtonStack(ButtonFlags button) : this()
         {
             this.button = button;
-            this.buttonMappings = new() { new ButtonMapping(button) };
 
-            RefreshChildren();
+            // remove the xaml reference entry
+            getGrid(0).Children.Clear(); Children.Clear();
+            // add the first one and never remove it, only modify
+            AddMappingToChildren(new ButtonMapping(button));
+        }
+
+        private Grid getGrid(int index)
+        {
+            return Children[index] as Grid;
+        }
+
+        private Button getButton(int index)
+        {
+            return getGrid(index).Children[0] as Button;
+        }
+
+        private ButtonMapping getMapping(int index)
+        {
+            return getGrid(index).Children[1] as ButtonMapping;
         }
 
         public void UpdateIcon(FontIcon newIcon, string newLabel)
         {
-            this.fontIcon = newIcon;
-            this.label = newLabel;
-
-            buttonMappings[0].UpdateIcon(newIcon, newLabel);
+            getMapping(0).UpdateIcon(newIcon, newLabel);
         }
 
         // actions cannot be null or empty
         public void SetActions(List<IActions> actions)
         {
-            buttonMappings.Clear();
+            int mappingLen = Children.Count;
+            int index = 0;
             foreach (var action in actions)
             {
-                ButtonMapping mapping = new(button);
-                mapping.SetIActions(action);
-                buttonMappings.Add(mapping);
+                // reuse existing mappings
+                if (index < mappingLen)
+                    getMapping(index).SetIActions(action);
+                // we need more
+                else
+                {
+                    ButtonMapping mapping = new(button);
+                    mapping.SetIActions(action);
+                    AddMappingToChildren(mapping);
+                }
+                index++;
             }
 
-            buttonMappings[0].UpdateIcon(fontIcon, label);
-            RefreshChildren();
+            // if there were equal or more actions than mappings we're done
+            int actionsLen = actions.Count;
+            if (mappingLen <= actionsLen)
+                return;
+
+            // if there were more mappings, remove the remaining ones
+            for (int i = actionsLen; i < mappingLen; i++)
+                getGrid(i).Children.Clear();
+            Children.RemoveRange(actionsLen, mappingLen - actionsLen);
         }
 
         public void Reset()
         {
-            this.buttonMappings = new List<ButtonMapping>() { new ButtonMapping(button) };
-            buttonMappings[0].UpdateIcon(fontIcon, label);
-            RefreshChildren();
+            for (int i = 0; i < Children.Count; i++)
+            {
+                if (i == 0)
+                    getMapping(i).Reset();
+                else
+                    getGrid(i).Children.Clear();
+            }
+            Children.RemoveRange(1, Children.Count - 1);
         }
 
         private void ButtonMapping_Updated(ButtonFlags button)
         {
             List<IActions> actions = new();
-            foreach (var mapping in buttonMappings)
+            for (int i = 0; i < Children.Count; i++)
             {
-                IActions action = mapping.GetIActions();
+                IActions action = getMapping(i).GetIActions();
                 if (action is null)
                     continue;
 
@@ -123,22 +153,6 @@ namespace HandheldCompanion.Controls
             Children.Add(grid);
         }
 
-        private void CleanChildren()
-        {
-            foreach (var child in Children)
-                (child as Grid).Children.Clear();
-            Children.Clear();
-        }
-
-        // call this function always after buttonMappings were recreated
-        private void RefreshChildren()
-        {
-            CleanChildren();
-
-            foreach (var mapping in buttonMappings)
-                AddMappingToChildren(mapping);
-        }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             int index = (int)((Button)sender).Tag;
@@ -147,21 +161,18 @@ namespace HandheldCompanion.Controls
             if (index == 0)
             {
                 ButtonMapping mapping = new(button);
-                buttonMappings.Add(mapping);
                 AddMappingToChildren(mapping);
                 // no need to register new mapping, it's empty, will be updated with event
             }
             // Del
             else
             {
-                buttonMappings.RemoveAt(index);
-                (Children[index] as Grid).Children.Clear();
+                getGrid(index).Children.Clear();
                 Children.RemoveAt(index);
 
-                // reindex remaining, Children[0] is [(+)|(-)] button inside grid
-                index = 0;
-                foreach (var child in Children)
-                    ((child as Grid).Children[0] as Button).Tag = index++;
+                // reindex remaining
+                for (int i = 0; i < Children.Count; i++)
+                    getButton(i).Tag = i;
 
                 // removal needs to be registered as mapping disappears without event
                 ButtonMapping_Updated(button);
