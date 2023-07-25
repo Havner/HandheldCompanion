@@ -4,6 +4,7 @@ using ModernWpf.Controls;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace HandheldCompanion.Controls
 {
@@ -12,6 +13,12 @@ namespace HandheldCompanion.Controls
     /// </summary>
     public partial class ButtonStack : SimpleStackPanel
     {
+        static Brush foreground = (Brush)Application.Current.Resources["AccentButtonBackground"];
+        static Style buttonStyle = (Style)Application.Current.Resources["TabViewButtonStyle"];
+        static FontFamily fontFamily = new("Segoe Fluent Icons");
+        static Thickness margin = new(0, 0, 1, 0);
+        static Thickness padding = new(2, 2, 0, 0);
+
         private ButtonFlags button;
 
         public event UpdatedEventHandler Updated;
@@ -127,21 +134,23 @@ namespace HandheldCompanion.Controls
             FontIcon fontIcon = new FontIcon();
             fontIcon.HorizontalAlignment = HorizontalAlignment.Center;
             fontIcon.VerticalAlignment = VerticalAlignment.Center;
-            fontIcon.FontFamily = new("Segoe Fluent Icons");
-            fontIcon.FontSize = 30;
-
-            Button button = new();
-            button.VerticalAlignment = VerticalAlignment.Top;
-            button.Height = 48; button.Width = 48;
-            button.Style = FindResource("AccentButtonStyle") as Style;
-            button.Margin = new Thickness(0, 0, 1, 0);
-            button.Padding = new Thickness(2, 2, 0, 0);  // the glyph is not centered within its box
-            button.Tag = index;
-            button.Click += Button_Click;
+            fontIcon.FontFamily = fontFamily;
+            fontIcon.FontWeight = FontWeights.Bold;
+            fontIcon.FontSize = 24;
             if (index == 0)
                 fontIcon.Glyph = "\uECC8";
             else
                 fontIcon.Glyph = "\uECC9";
+
+            Button button = new();
+            button.VerticalAlignment = VerticalAlignment.Top;
+            button.Height = 48; button.Width = 48;
+            button.Foreground = foreground;
+            button.Margin = margin;
+            button.Padding = padding;  // the glyph is not centered within its box
+            button.Style = buttonStyle;
+            button.Tag = index;
+            button.Click += Button_Click;
             button.Content = fontIcon;
 
             Grid grid = new();
