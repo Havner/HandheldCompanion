@@ -1,4 +1,5 @@
 ﻿using HandheldCompanion.Managers;
+using HandheldCompanion.Utils;
 using System;
 using System.Numerics;
 
@@ -56,7 +57,7 @@ namespace HandheldCompanion.Misc
             if (Length >= FlickThreshold)
             {
                 float flickAngle = (float)Math.Atan2(Stick.X, Stick.Y);
-                float flickAngleDegrees = (float)(flickAngle * 180 / Math.PI);
+                float flickAngleDegrees = InputUtils.rad2deg(flickAngle);
 
                 if (LastLength < FlickThreshold && Math.Abs(flickAngleDegrees) > FlickFrontAngleDeadzone)
                 {
