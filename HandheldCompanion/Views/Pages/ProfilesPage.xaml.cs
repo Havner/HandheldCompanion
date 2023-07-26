@@ -27,6 +27,7 @@ namespace HandheldCompanion.Views.Pages
     {
         // when set on start cannot be null anymore
         public static Profile selectedProfile;
+        private static Layout layoutInEditor;
 
         private SettingsMode0 page0 = new("SettingsMode0");
         private SettingsMode1 page1 = new("SettingsMode1");
@@ -118,9 +119,8 @@ namespace HandheldCompanion.Views.Pages
 
         public void ProfileManager_Updated(Profile profile, ProfileUpdateSource source)
         {
-            // TODO: without profile cloning we could do:
-            //if (source == ProfileUpdateSource.ProfilesPage)
-            //    return;
+            if (source == ProfileUpdateSource.ProfilesPage)
+                return;
 
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>
@@ -290,13 +290,8 @@ namespace HandheldCompanion.Views.Pages
                 SubmitProfile();
             }
 
-            // TODO: as profiles are updated automatically anyway, maybe there is no reason
-            // to clone them all the time, maybe operate directly on one reference per profile?
-            // the TODO below would be solved, see ProfileManager_Updated()
-            Profile profile = (Profile)cB_Profiles.SelectedItem;
-            selectedProfile = profile.Clone() as Profile;
+            selectedProfile = (Profile)cB_Profiles.SelectedItem;
 
-            // todo: find a way to avoid a useless circle of drawing when profile was update from ProfilesPage
             DrawProfile();
         }
 
@@ -498,29 +493,31 @@ namespace HandheldCompanion.Views.Pages
 
         private void ControllerSettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            // prepare layout editor
-            LayoutTemplate layoutTemplate = new(selectedProfile.Layout)
+            if (layoutInEditor != selectedProfile.Layout)
             {
-                Name = selectedProfile.LayoutTitle,
-                Description = "Your modified layout for this executable.",
-                Author = Environment.UserName,
-                Executable = selectedProfile.Executable,
-                Product = selectedProfile.Name,
-            };
-            layoutTemplate.Updated += Template_Updated;
+                // prepare layout editor
+                LayoutTemplate layoutTemplate = new(selectedProfile.Layout)
+                {
+                    Name = selectedProfile.LayoutTitle,
+                    Description = "Your modified layout for this executable.",
+                    Author = Environment.UserName,
+                    Executable = selectedProfile.Executable,
+                    Product = selectedProfile.Name,
+                };
+                layoutTemplate.Updated += Template_Updated;
 
-            // no lock needed here, layout itself will block any events back by its own lock here
-            MainWindow.layoutPage.UpdateLayout(layoutTemplate);
+                layoutInEditor = selectedProfile.Layout;
+
+                // no lock needed here, layout itself will block any events back by its own lock
+                MainWindow.layoutPage.UpdateLayout(layoutTemplate);
+            }
+
             MainWindow.NavView_Navigate(MainWindow.layoutPage);
         }
 
         private void Template_Updated(LayoutTemplate layoutTemplate)
         {
-            // with each consecutive update layoutTemplate.Layout remains the
-            // same one, but selectedProfile might've been recloned, update it
-            // see TODO in Profiles_SelectionChanged()
             selectedProfile.LayoutTitle = layoutTemplate.Name;
-            selectedProfile.Layout = layoutTemplate.Layout;
 
             RequestUpdate();
         }
