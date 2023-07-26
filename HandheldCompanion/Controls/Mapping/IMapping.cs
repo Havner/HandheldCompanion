@@ -8,7 +8,6 @@ namespace HandheldCompanion.Controls
         protected object Value;
 
         protected IActions Actions;
-        protected IActions prevActions;
 
         public event DeletedEventHandler Deleted;
         public delegate void DeletedEventHandler(object sender);
@@ -17,26 +16,18 @@ namespace HandheldCompanion.Controls
 
         protected void Update()
         {
-            // update axis mapping
-            if (Actions != prevActions)
-                Updated?.Invoke(Value, Actions);
-
-            prevActions = Actions.Clone() as IActions;
+            Updated?.Invoke(Value, Actions);
         }
 
         protected void Delete()
         {
             this.Actions = null;
-            this.prevActions = null;
-
             Deleted?.Invoke(Value);
         }
 
         protected void SetIActions(IActions actions)
         {
-            // update mapping IActions
             this.Actions = actions;
-            this.prevActions = actions.Clone() as IActions;
         }
     }
 }
