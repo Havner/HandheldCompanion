@@ -4,6 +4,7 @@ using HandheldCompanion.Controls;
 using HandheldCompanion.Inputs;
 using HandheldCompanion.Managers;
 using HandheldCompanion.Misc;
+using HandheldCompanion.Utils;
 using ModernWpf.Controls;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace HandheldCompanion.Views.Pages
 
         private LayoutTemplate currentTemplate = new();
 
-        protected object updateLock = new();
+        protected LockObject updateLock = new();
 
         public LayoutPage()
         {
@@ -206,7 +207,7 @@ namespace HandheldCompanion.Views.Pages
 
         private void ButtonMapping_Deleted(ButtonFlags button)
         {
-            if (Monitor.IsEntered(updateLock))
+            if (updateLock)
                 return;
 
             currentTemplate.Layout.RemoveLayout(button);
@@ -214,7 +215,7 @@ namespace HandheldCompanion.Views.Pages
 
         private void ButtonMapping_Updated(ButtonFlags button, List<IActions> actions)
         {
-            if (Monitor.IsEntered(updateLock))
+            if (updateLock)
                 return;
 
             currentTemplate.Layout.UpdateLayout(button, actions);
@@ -222,7 +223,7 @@ namespace HandheldCompanion.Views.Pages
 
         private void AxisMapping_Deleted(AxisLayoutFlags axis)
         {
-            if (Monitor.IsEntered(updateLock))
+            if (updateLock)
                 return;
 
             currentTemplate.Layout.RemoveLayout(axis);
@@ -230,7 +231,7 @@ namespace HandheldCompanion.Views.Pages
 
         private void AxisMapping_Updated(AxisLayoutFlags axis, IActions action)
         {
-            if (Monitor.IsEntered(updateLock))
+            if (updateLock)
                 return;
 
             currentTemplate.Layout.UpdateLayout(axis, action);
@@ -264,7 +265,7 @@ namespace HandheldCompanion.Views.Pages
             // This is a very important lock, it blocks backward events to the layout when
             // this is actually the backend that triggered the update. Notifications on higher
             // levels (pages and mappings) could potentially be blocked for optimization.
-            if (Monitor.TryEnter(updateLock))
+            using (new ScopedLock(updateLock))
             {
                 // cascade update to (sub)pages
                 foreach (var page in pages.Values)
@@ -272,8 +273,6 @@ namespace HandheldCompanion.Views.Pages
 
                 // clear layout selection
                 cB_Layouts.SelectedValue = null;
-
-                Monitor.Exit(updateLock);
             }
         }
 
