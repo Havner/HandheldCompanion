@@ -167,6 +167,11 @@ namespace HandheldCompanion.Controls
             }
         }
 
+        public void ClearDelegates()
+        {
+            Updated = null;
+        }
+
         private void Layout_Updated(Layout layout)
         {
             Updated?.Invoke(this);
