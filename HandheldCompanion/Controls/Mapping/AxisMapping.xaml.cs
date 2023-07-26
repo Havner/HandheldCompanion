@@ -43,7 +43,8 @@ namespace HandheldCompanion.Controls
 
         internal void SetIActions(IActions actions)
         {
-            // update mapping IActions
+            // this reset is required to trigger SelectionChanged events
+            Reset();
             base.SetIActions(actions);
 
             // update UI
