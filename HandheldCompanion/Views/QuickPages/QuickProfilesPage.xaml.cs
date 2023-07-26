@@ -1,12 +1,9 @@
 using HandheldCompanion.Controls;
 using HandheldCompanion.Managers;
 using HandheldCompanion.Misc;
-using System.Threading;
-using System.Timers;
+using HandheldCompanion.Utils;
 using System.Windows;
-using Layout = HandheldCompanion.Misc.Layout;
-using Page = System.Windows.Controls.Page;
-using Timer = System.Timers.Timer;
+using System.Windows.Controls;
 
 namespace HandheldCompanion.Views.QuickPages
 {
@@ -18,10 +15,7 @@ namespace HandheldCompanion.Views.QuickPages
         private ProcessEx? currentProcess;
         private Profile? currentProfile;
 
-        private const int UpdateInterval = 500;
-        private Timer UpdateTimer;
-
-        private object updateLock = new();
+        private LockObject updateLock = new();
 
         public QuickProfilesPage()
         {
@@ -32,18 +26,6 @@ namespace HandheldCompanion.Views.QuickPages
             // Applied is also sent when the current profile is updated or deleted.
             ProcessManager.ForegroundChanged += ProcessManager_ForegroundChanged;
             ProfileManager.Applied += ProfileManager_Applied;
-
-            UpdateTimer = new(UpdateInterval);
-            UpdateTimer.AutoReset = false;
-            UpdateTimer.Elapsed += UpdateTimer_Elapsed;
-        }
-
-        private void UpdateTimer_Elapsed(object? sender, ElapsedEventArgs e)
-        {
-            if (currentProfile is null)
-                return;
-
-            ProfileManager.UpdateOrCreateProfile(currentProfile, ProfileUpdateSource.QuickProfilesPage);
         }
 
         // the visibility of this button depends on both, process and profile
@@ -59,31 +41,42 @@ namespace HandheldCompanion.Views.QuickPages
             return vis;
         }
 
-        private void UpdateProfileContent()
+        // this event can come from thread other than main
+        private void ProfileManager_Applied(Profile profile, ProfileUpdateSource source)
         {
+            if (source == ProfileUpdateSource.QuickProfilesPage)
+                return;
+
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                if (currentProfile is null)
+                // don't store or display the default profile
+                if (profile.Default)
                 {
+                    currentProfile = null;
                     b_CreateProfile.Visibility = GetCreateProfileVisibility();
                     GridProfile.Visibility = Visibility.Collapsed;
                 }
                 else
                 {
+                    currentProfile = profile;
                     b_CreateProfile.Visibility = Visibility.Collapsed;
                     GridProfile.Visibility = Visibility.Visible;
 
-                    ProfileToggle.IsOn = currentProfile.Enabled;
+                    using (new ScopedLock(updateLock))
+                        ProfileToggle.IsOn = currentProfile.Enabled;
                 }
             });
         }
 
-        private void UpdateProcessContent()
+        // this event can come from thread other than main
+        private void ProcessManager_ForegroundChanged(ProcessEx process)
         {
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
+                currentProcess = process;
+
                 if (currentProcess is not null)
                 {
                     ProcessIcon.Source = currentProcess.imgSource;
@@ -105,64 +98,19 @@ namespace HandheldCompanion.Views.QuickPages
             });
         }
 
-        private void ProfileManager_Applied(Profile profile, ProfileUpdateSource source)
-        {
-            if (source == ProfileUpdateSource.QuickProfilesPage)
-                return;
-
-            if (Monitor.TryEnter(updateLock))
-            {
-                // if an update is pending, execute it and stop timer
-                if (UpdateTimer.Enabled)
-                {
-                    UpdateTimer.Stop();
-                    ProfileManager.UpdateOrCreateProfile(currentProfile, ProfileUpdateSource.QuickProfilesPage);
-                }
-
-                // don't store or display the default profile
-                if (!profile.Default)
-                    currentProfile = profile.Clone() as Profile;
-                else
-                    currentProfile = null;
-                UpdateProfileContent();
-
-                Monitor.Exit(updateLock);
-            }
-        }
-
-        private void ProcessManager_ForegroundChanged(ProcessEx process)
-        {
-            currentProcess = process;
-            UpdateProcessContent();
-        }
-
-        private void RequestUpdate()
-        {
-            UpdateTimer.Stop();
-            UpdateTimer.Start();
-        }
-
         private void ProfileToggle_Toggled(object sender, RoutedEventArgs e)
         {
-            if (currentProfile is null)
+            if (currentProfile is null || updateLock)
                 return;
 
-            if (Monitor.TryEnter(updateLock))
-            {
-                currentProfile.Enabled = ProfileToggle.IsOn;
-                RequestUpdate();
-
-                Monitor.Exit(updateLock);
-            }
+            currentProfile.Enabled = ProfileToggle.IsOn;
+            ProfileManager.UpdateOrCreateProfile(currentProfile, ProfileUpdateSource.QuickProfilesPage);
         }
 
         private void CreateProfile_Click(object sender, RoutedEventArgs e)
         {
             if (currentProcess is null)
                 return;
-
-            if (UpdateTimer.Enabled)
-                UpdateTimer.Stop();
 
             // create profile
             currentProfile = new(currentProcess.Path)
