@@ -224,7 +224,7 @@
                                 </StackPanel>
 
                                 <ui:SimpleStackPanel
-                                    Name="UMC_Activator"
+                                    Name="AimingSights_Activator"
                                     Grid.Column="1"
                                     Margin="12,0,0,0"
                                     Spacing="6" />
@@ -339,17 +339,17 @@
 
                                     <Button
                                         HorizontalAlignment="Center"
-                                        Click="Button_Click_1"
+                                        Click="Button_Click_Aggressive"
                                         Content="{x:Static resx:Resources.SettingsMode0_CustomResponsePresetAgressive}" />
                                     <Button
                                         Grid.Column="1"
                                         HorizontalAlignment="Center"
-                                        Click="Button_Click"
+                                        Click="Button_Click_Default"
                                         Content="{x:Static resx:Resources.SettingsMode0_CustomResponsePresetDefault}" />
                                     <Button
                                         Grid.Column="2"
                                         HorizontalAlignment="Center"
-                                        Click="Button_Click_2"
+                                        Click="Button_Click_Precise"
                                         Content="{x:Static resx:Resources.SettingsMode0_CustomResponsePresetPrecise}" />
                                 </Grid>
                             </ui:SimpleStackPanel>

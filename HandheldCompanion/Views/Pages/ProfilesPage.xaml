@@ -62,7 +62,8 @@
                                     VerticalAlignment="Center"
                                     SelectionChanged="Profiles_SelectionChanged" />
 
-                                <DockPanel>
+                                <DockPanel
+                                    HorizontalAlignment="Right">
                                     <!--  Create new profile  -->
                                     <Button Click="CreateProfile_Click" Style="{DynamicResource AccentButtonStyle}" MinWidth="180">
                                         <ui:SimpleStackPanel
@@ -100,25 +101,6 @@
                                             <TextBlock
                                                 Style="{StaticResource BodyTextBlockStyle}"
                                                 Text="{x:Static resx:Resources.ProfilesPage_DeleteProfile}" VerticalAlignment="Center" />
-                                        </ui:SimpleStackPanel>
-                                    </Button>
-
-                                    <!--  Update profile  -->
-                                    <Button Click="UpdateProfile_Click" Style="{DynamicResource AccentButtonStyle}" MinWidth="180" HorizontalAlignment="Right">
-                                        <ui:SimpleStackPanel
-                                            HorizontalAlignment="Center"
-                                            Orientation="Horizontal"
-                                            Spacing="12">
-                                            <ui:FontIcon
-                                                Grid.Column="2"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                FontFamily="{DynamicResource SymbolThemeFontFamily}"
-                                                Glyph="&#xE74E;" />
-                                            <TextBlock
-                                                VerticalAlignment="Center"
-                                                Style="{StaticResource BodyTextBlockStyle}"
-                                                Text="{x:Static resx:Resources.ProfilesPage_UpdateProfile}" />
                                         </ui:SimpleStackPanel>
                                     </Button>
                                 </DockPanel>
@@ -193,7 +175,8 @@
                                         Name="tB_ProfileName"
                                         Grid.Column="1"
                                         HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Center" />
+                                        VerticalAlignment="Center"
+                                        TextChanged="ProfileName_TextChanged" />
                                 </DockPanel>
                             </Grid>
 
@@ -322,7 +305,8 @@
                                                 Name="cB_GyroSteering"
                                                 Grid.Column="1"
                                                 HorizontalAlignment="Right"
-                                                MaxColumns="2">
+                                                MaxColumns="2"
+                                                SelectionChanged="GyroSteering_SelectionChanged">
                                                 <ui:SimpleStackPanel Orientation="Horizontal" Spacing="6">
                                                     <ui:FontIcon Glyph="&#xE8B4;" />
                                                     <Label Content="{x:Static resx:Resources.ProfilesPage_Yaw}" />
@@ -356,7 +340,8 @@
                                             Name="Toggle_InvertHorizontal"
                                             Grid.Column="1"
                                             HorizontalAlignment="Right"
-                                            Style="{DynamicResource InvertedToggleSwitchStyle}" />
+                                            Style="{DynamicResource InvertedToggleSwitchStyle}"
+                                            Toggled="Toggle_InvertHorizontal_Toggled" />
                                     </Grid>
 
                                     <!--  Separator  -->
@@ -380,7 +365,8 @@
                                             Name="Toggle_InvertVertical"
                                             Grid.Column="1"
                                             HorizontalAlignment="Right"
-                                            Style="{DynamicResource InvertedToggleSwitchStyle}" />
+                                            Style="{DynamicResource InvertedToggleSwitchStyle}"
+                                            Toggled="Toggle_InvertVertical_Toggled" />
                                     </Grid>
 
                                     <!--  Separator  -->

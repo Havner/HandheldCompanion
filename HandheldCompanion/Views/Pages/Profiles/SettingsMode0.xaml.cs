@@ -2,6 +2,7 @@ using HandheldCompanion.Controls;
 using HandheldCompanion.Inputs;
 using HandheldCompanion.Managers;
 using HandheldCompanion.Misc;
+using HandheldCompanion.Utils;
 using System;
 using System.Numerics;
 using System.Windows;
@@ -20,6 +21,8 @@ namespace HandheldCompanion.Views.Pages.Profiles
     {
         private Hotkey ProfilesPageHotkey;
 
+        private LockObject updateLock = new();
+
         public SettingsMode0()
         {
             InitializeComponent();
@@ -37,41 +40,44 @@ namespace HandheldCompanion.Views.Pages.Profiles
 
         public void SetProfile()
         {
-            SliderSensitivityX.Value = ProfilesPage.selectedProfile.MotionSensivityX;
-            SliderSensitivityY.Value = ProfilesPage.selectedProfile.MotionSensivityY;
-            Toggle_StackCurveEnabled.IsOn = ProfilesPage.selectedProfile.MotionSensivityArrayEnabled;
-            tb_ProfileAimingDownSightsMultiplier.Value = ProfilesPage.selectedProfile.AimingSightsMultiplier;
-
-            // todo: improve me ?
-            ProfilesPageHotkey.inputsChord.State = ProfilesPage.selectedProfile.AimingSightsTrigger.Clone() as ButtonState;
-            ProfilesPageHotkey.DrawInput();
-
-            // temp
-            StackCurve.Children.Clear();
-            foreach (var elem in ProfilesPage.selectedProfile.MotionSensivityArray)
+            using (new ScopedLock(updateLock))
             {
-                // skip first item ?
-                if (elem.Key == 0)
-                    continue;
+                SliderSensitivityX.Value = ProfilesPage.selectedProfile.MotionSensivityX;
+                SliderSensitivityY.Value = ProfilesPage.selectedProfile.MotionSensivityY;
+                Toggle_StackCurveEnabled.IsOn = ProfilesPage.selectedProfile.MotionSensivityArrayEnabled;
+                tb_ProfileAimingDownSightsMultiplier.Value = ProfilesPage.selectedProfile.AimingSightsMultiplier;
 
-                double height = elem.Value * StackCurve.Height;
-                Thumb thumb = new Thumb()
+                // todo: improve me ?
+                ProfilesPageHotkey.inputsChord.State = ProfilesPage.selectedProfile.AimingSightsTrigger.Clone() as ButtonState;
+                ProfilesPageHotkey.DrawInput();
+
+                // temp
+                StackCurve.Children.Clear();
+                foreach (var elem in ProfilesPage.selectedProfile.MotionSensivityArray)
                 {
-                    Tag = elem.Key,
-                    Width = 8,
-                    MaxHeight = StackCurve.Height,
-                    Height = height,
-                    VerticalAlignment = VerticalAlignment.Bottom,
-                    Background = (Brush)Application.Current.Resources["SystemControlHighlightAltListAccentLowBrush"],
-                    BorderThickness = new Thickness(0),
-                    BorderBrush = (Brush)Application.Current.Resources["SystemControlHighlightAltListAccentHighBrush"],
-                    IsEnabled = false // prevent the control from being clickable
-                };
+                    // skip first item ?
+                    if (elem.Key == 0)
+                        continue;
 
-                StackCurve.Children.Add(thumb);
+                    double height = elem.Value * StackCurve.Height;
+                    Thumb thumb = new Thumb()
+                    {
+                        Tag = elem.Key,
+                        Width = 8,
+                        MaxHeight = StackCurve.Height,
+                        Height = height,
+                        VerticalAlignment = VerticalAlignment.Bottom,
+                        Background = (Brush)Application.Current.Resources["SystemControlHighlightAltListAccentLowBrush"],
+                        BorderThickness = new Thickness(0),
+                        BorderBrush = (Brush)Application.Current.Resources["SystemControlHighlightAltListAccentHighBrush"],
+                        IsEnabled = false // prevent the control from being clickable
+                    };
+
+                    StackCurve.Children.Add(thumb);
+                }
+
+                StackCurvePanel.Visibility = ProfilesPage.selectedProfile.MotionSensivityArrayEnabled ? Visibility.Visible : Visibility.Collapsed;
             }
-
-            StackCurvePanel.Visibility = ProfilesPage.selectedProfile.MotionSensivityArrayEnabled ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -89,24 +95,30 @@ namespace HandheldCompanion.Views.Pages.Profiles
 
         private void SliderSensitivityX_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (ProfilesPage.selectedProfile is null)
+            if (!IsLoaded || updateLock)
                 return;
 
             ProfilesPage.selectedProfile.MotionSensivityX = (float)SliderSensitivityX.Value;
+            ProfilesPage.RequestUpdate();
         }
 
         private void SliderSensitivityY_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (ProfilesPage.selectedProfile is null)
+            if (!IsLoaded || updateLock)
                 return;
 
             ProfilesPage.selectedProfile.MotionSensivityY = (float)SliderSensitivityY.Value;
+            ProfilesPage.RequestUpdate();
         }
 
         private void Toggle_StackCurveEnabled_Toggled(object sender, RoutedEventArgs e)
         {
+            if (!IsLoaded || updateLock)
+                return;
+
             ProfilesPage.selectedProfile.MotionSensivityArrayEnabled = Toggle_StackCurveEnabled.IsOn;
             StackCurvePanel.Visibility = ProfilesPage.selectedProfile.MotionSensivityArrayEnabled ? Visibility.Visible : Visibility.Collapsed;
+            ProfilesPage.RequestUpdate();
         }
 
         private void Highlight_Thumb(float value)
@@ -135,9 +147,6 @@ namespace HandheldCompanion.Views.Pages.Profiles
 
         private void StackCurve_MouseMove(object sender, MouseEventArgs e)
         {
-            if (ProfilesPage.selectedProfile is null)
-                return;
-
             Control Thumb = null;
 
             foreach (Control control in StackCurve.Children)
@@ -158,14 +167,14 @@ namespace HandheldCompanion.Views.Pages.Profiles
 
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-
                 double x = (double)Thumb.Tag;
                 Thumb.Height = StackCurve.ActualHeight - e.GetPosition(StackCurve).Y;
                 ProfilesPage.selectedProfile.MotionSensivityArray[x] = Thumb.Height / StackCurve.Height;
+                ProfilesPage.RequestUpdate();
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click_Default(object sender, RoutedEventArgs e)
         {
             // default preset
             foreach (Control Thumb in StackCurve.Children)
@@ -173,10 +182,11 @@ namespace HandheldCompanion.Views.Pages.Profiles
                 double x = (double)Thumb.Tag;
                 Thumb.Height = StackCurve.Height / 2.0f;
                 ProfilesPage.selectedProfile.MotionSensivityArray[x] = Thumb.Height / StackCurve.Height;
+                ProfilesPage.RequestUpdate();
             }
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Button_Click_Aggressive(object sender, RoutedEventArgs e)
         {
             // agressive preset
             float tempx = 24f / Profile.SensivityArraySize;
@@ -187,10 +197,11 @@ namespace HandheldCompanion.Views.Pages.Profiles
 
                 Thumb.Height = StackCurve.Height * value;
                 ProfilesPage.selectedProfile.MotionSensivityArray[x] = Thumb.Height / StackCurve.Height;
+                ProfilesPage.RequestUpdate();
             }
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void Button_Click_Precise(object sender, RoutedEventArgs e)
         {
             // precise preset
             float tempx = 12f / Profile.SensivityArraySize;
@@ -201,6 +212,7 @@ namespace HandheldCompanion.Views.Pages.Profiles
 
                 Thumb.Height = StackCurve.Height * value;
                 ProfilesPage.selectedProfile.MotionSensivityArray[x] = Thumb.Height / StackCurve.Height;
+                ProfilesPage.RequestUpdate();
             }
         }
 
@@ -211,10 +223,11 @@ namespace HandheldCompanion.Views.Pages.Profiles
 
         private void SliderAimingDownSightsMultiplier_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (ProfilesPage.selectedProfile is null)
+            if (!IsLoaded || updateLock)
                 return;
 
             ProfilesPage.selectedProfile.AimingSightsMultiplier = (float)tb_ProfileAimingDownSightsMultiplier.Value;
+            ProfilesPage.RequestUpdate();
         }
 
         private void TriggerCreated(Hotkey hotkey)
@@ -231,8 +244,8 @@ namespace HandheldCompanion.Views.Pages.Profiles
                         if (hotkeyBorder is null || hotkeyBorder.Parent is not null)
                             return;
 
-                        if (UMC_Activator.Children.Count == 0)
-                            UMC_Activator.Children.Add(hotkeyBorder);
+                        if (AimingSights_Activator.Children.Count == 0)
+                            AimingSights_Activator.Children.Add(hotkeyBorder);
                     }
                     break;
             }
@@ -244,6 +257,7 @@ namespace HandheldCompanion.Views.Pages.Profiles
             {
                 case "shortcutProfilesSettingsMode0":
                     ProfilesPage.selectedProfile.AimingSightsTrigger = inputs.State.Clone() as ButtonState;
+                    ProfilesPage.RequestUpdate();
                     break;
             }
         }
