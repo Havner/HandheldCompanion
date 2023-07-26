@@ -67,6 +67,7 @@
                         </lvc:AngularGauge>
 
                         <lvc:CartesianChart
+                            Name="lvCartesianChart"
                             Grid.Column="1"
                             DisableAnimations="True"
                             Hoverable="False"

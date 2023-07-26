@@ -25,6 +25,8 @@ namespace HandheldCompanion.Views.Pages.Profiles
         {
             this.Tag = Tag;
 
+            lvCartesianChart.DataTooltip = null;
+
             MotionManager.SettingsMode1Update += MotionManager_SettingsMode1Update;
 
             SteeringLinearityPoints = new();
