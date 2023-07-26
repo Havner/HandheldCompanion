@@ -3,7 +3,6 @@ using HandheldCompanion.Controllers;
 using HandheldCompanion.Inputs;
 using HandheldCompanion.Managers;
 using ModernWpf.Controls;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 

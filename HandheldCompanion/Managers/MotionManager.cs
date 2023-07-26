@@ -5,7 +5,6 @@ using HandheldCompanion.Misc;
 using HandheldCompanion.Utils;
 using HandheldCompanion.Views;
 using System;
-using System.Diagnostics;
 using System.Numerics;
 using System.Windows;
 

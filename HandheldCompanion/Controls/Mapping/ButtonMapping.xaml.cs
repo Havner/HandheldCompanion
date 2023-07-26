@@ -6,7 +6,6 @@ using HandheldCompanion.Managers;
 using HandheldCompanion.Utils;
 using ModernWpf.Controls;
 using System;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using KeyboardSimulator = HandheldCompanion.Simulators.KeyboardSimulator;
