@@ -26,7 +26,6 @@ namespace HandheldCompanion.Controls
         public ButtonMapping(ButtonFlags button) : this()
         {
             this.Value = button;
-            this.prevValue = button;
         }
 
         public void UpdateIcon(FontIcon newIcon, string newLabel)

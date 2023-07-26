@@ -22,7 +22,6 @@ namespace HandheldCompanion.Controls
         public TriggerMapping(AxisLayoutFlags axis) : this()
         {
             this.Value = axis;
-            this.prevValue = axis;
 
             this.Icon.Glyph = axis.ToString();
         }

@@ -6,7 +6,6 @@ namespace HandheldCompanion.Controls
     public class IMapping : UserControl
     {
         protected object Value;
-        protected object prevValue;
 
         protected IActions Actions;
         protected IActions prevActions;
@@ -19,10 +18,9 @@ namespace HandheldCompanion.Controls
         protected void Update()
         {
             // update axis mapping
-            if (Value != prevValue || Actions != prevActions)
+            if (Actions != prevActions)
                 Updated?.Invoke(Value, Actions);
 
-            prevValue = Value;
             prevActions = Actions.Clone() as IActions;
         }
 
