@@ -103,7 +103,7 @@ namespace HandheldCompanion.Views.QuickPages
                 Application.Current.Dispatcher.Invoke(() =>
                 {
                     // todo: update volume icon on update
-                    SliderVolume.Value = volume;
+                    SliderVolume.Value = Math.Round(volume);
                 });
 
                 Monitor.Exit(volumeLock);
@@ -114,6 +114,7 @@ namespace HandheldCompanion.Views.QuickPages
         {
             if (!IsLoaded)
                 return;
+
             SettingsManager.SetProperty("VibrationStrength", (uint)SliderVibration.Value);
         }
 
@@ -121,6 +122,7 @@ namespace HandheldCompanion.Views.QuickPages
         {
             if (!IsLoaded)
                 return;
+
             if (Monitor.TryEnter(brightnessLock))
             {
                 SystemManager.SetBrightness(SliderBrightness.Value);
@@ -132,6 +134,7 @@ namespace HandheldCompanion.Views.QuickPages
         {
             if (!IsLoaded)
                 return;
+
             if (Monitor.TryEnter(volumeLock))
             {
                 SystemManager.SetVolume(SliderVolume.Value);
