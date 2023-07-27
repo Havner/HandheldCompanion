@@ -60,11 +60,9 @@ namespace HandheldCompanion.Managers
 
         private static uint tdpRequest;
         private static readonly Timer tdpWatchdog;
-        private static object tdpLock = new();
 
         private static uint gpuRequest;
         private static readonly Timer gpuWatchdog;
-        private static object gpuLock = new();
 
         private static short INTERVAL_DEFAULT = 2000;            // default interval between value scans
 
@@ -196,11 +194,7 @@ namespace HandheldCompanion.Managers
             if (processor is null || !processor.IsInitialized)
                 return;
 
-            if (Monitor.TryEnter(tdpLock))
-            {
-                processor.SetTDPLimit(tdpRequest);
-                Monitor.Exit(tdpLock);
-            }
+            processor.SetTDPLimit(tdpRequest);
         }
 
         private static void GPUWatchdog_Elapsed(object? sender, ElapsedEventArgs e)
@@ -208,42 +202,26 @@ namespace HandheldCompanion.Managers
             if (processor is null || !processor.IsInitialized)
                 return;
 
-            if (Monitor.TryEnter(gpuLock))
-            {
-                if (processor.GetType() == typeof(AMDProcessor))
-                    goto notsupported;
-                else if (processor.GetType() == typeof(IntelProcessor))
-                    goto notsupported;
+            if (processor.GetType() == typeof(AMDProcessor))
+                return;
+            else if (processor.GetType() == typeof(IntelProcessor))
+                return;
 
-                processor.SetGPUClock(gpuRequest);
-
-            notsupported:
-                Monitor.Exit(gpuLock);
-            }
+            processor.SetGPUClock(gpuRequest);
         }
 
         public static void RequestTDP(uint value)
         {
-            // update value read by timer
-            if (Monitor.TryEnter(tdpLock))
-            {
-                tdpRequest = Math.Clamp(value, MainWindow.CurrentDevice.TDP[0], MainWindow.CurrentDevice.TDP[2]);
-                tdpWatchdog.Stop();
-                tdpWatchdog.Start();
-                Monitor.Exit(tdpLock);
-            }
+            tdpRequest = Math.Clamp(value, MainWindow.CurrentDevice.TDP[0], MainWindow.CurrentDevice.TDP[2]);
+            tdpWatchdog.Stop();
+            tdpWatchdog.Start();
         }
 
         public static void RequestGPU(uint value)
         {
-            // update value read by timer
-            if (Monitor.TryEnter(gpuLock))
-            {
-                gpuRequest = Math.Clamp(value, MainWindow.CurrentDevice.GPU[0], MainWindow.CurrentDevice.GPU[1]);
-                gpuWatchdog.Stop();
-                gpuWatchdog.Start();
-                Monitor.Exit(gpuLock);
-            }
+            gpuRequest = Math.Clamp(value, MainWindow.CurrentDevice.GPU[0], MainWindow.CurrentDevice.GPU[1]);
+            gpuWatchdog.Stop();
+            gpuWatchdog.Start();
         }
 
         public static void RequestPowerMode(int idx)
