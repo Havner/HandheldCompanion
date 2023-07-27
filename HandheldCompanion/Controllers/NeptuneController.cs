@@ -22,16 +22,15 @@ namespace HandheldCompanion.Controllers
 
         private const short TrackPadInner = 21844;
 
-        private NeptuneControllerInputState prevState;
-
         public byte FeedbackLargeMotor;
         public byte FeedbackSmallMotor;
 
         public const sbyte MinIntensity = -2;
         public const sbyte MaxIntensity = 10;
 
-        private Thread thread;
-        private bool ThreadRunning;
+        // TODO: why not use TimerManager.Tick?
+        private Thread rumbleThread;
+        private bool rumbleThreadRunning;
 
         private Task<byte[]> lastLeftHapticOn;
         private Task<byte[]> lastRightHapticOn;
@@ -41,32 +40,14 @@ namespace HandheldCompanion.Controllers
             if (details is null)
                 return;
 
+            Controller = new();
+            isConnected = true;
+
             Details = details;
             Details.isHooked = true;
 
             Capabilities |= ControllerCapabilities.MotionSensor;
             Capabilities |= ControllerCapabilities.Trackpads;
-
-            try
-            {
-                Controller = new();
-                Controller.Open();
-                isConnected = true;
-            }
-            catch (Exception ex)
-            {
-                LogManager.LogError("Couldn't initialize NeptuneController. Exception: {0}", ex.Message);
-                return;
-            }
-
-            // manage rumble thread
-            ThreadRunning = true;
-            thread = new Thread(ThreadLoop);
-            thread.IsBackground = true;
-
-            // disable lizard state
-            SetLizardMouse(false);
-            SetLizardButtons(false);
 
             bool Muted = SettingsManager.GetBoolean("SteamDeckMuteController");
             SetVirtualMuted(Muted);
@@ -86,9 +67,9 @@ namespace HandheldCompanion.Controllers
             SourceAxis.Add(AxisLayoutFlags.Gyroscope);
         }
 
-        private async void ThreadLoop(object? obj)
+        private async void RumbleThreadLoop(object? obj)
         {
-            while (ThreadRunning)
+            while (rumbleThreadRunning)
             {
                 if (GetHapticIntensity(FeedbackLargeMotor, MaxIntensity, out var leftIntensity))
                     lastLeftHapticOn = Controller.SetHaptic2(HapticPad.Left, HapticStyle.Weak, leftIntensity);
@@ -117,11 +98,6 @@ namespace HandheldCompanion.Controllers
         {
             if (input is null)
                 return;
-
-            /*
-            if (input.State.ButtonState.Equals(prevState.ButtonState) && input.State.AxesState.Equals(prevState.AxesState) && prevInjectedButtons.Equals(InjectedButtons))
-                return;
-            */
 
             Inputs.ButtonState = InjectedButtons.Clone() as ButtonState;
 
@@ -254,9 +230,6 @@ namespace HandheldCompanion.Controllers
             Inputs.GyroState.Gyroscope.Y = -(float)input.State.AxesState[NeptuneControllerAxis.GyroRoll] / short.MaxValue * 2000.0f;   // Pitch
             Inputs.GyroState.Gyroscope.Z = -(float)input.State.AxesState[NeptuneControllerAxis.GyroYaw] / short.MaxValue * 2000.0f;    // Yaw
 
-            // update states
-            prevState = input.State;
-
             base.UpdateInputs(ticks);
         }
 
@@ -265,41 +238,35 @@ namespace HandheldCompanion.Controllers
             return isConnected;
         }
 
-        public bool IsLizardMouseEnabled()
-        {
-            return Controller.LizardMouseEnabled;
-        }
-
-        public bool IsLizardButtonsEnabled()
-        {
-            return Controller.LizardButtonsEnabled;
-        }
-
         public virtual bool IsVirtualMuted()
         {
             return isVirtualMuted;
         }
 
-        public override void Rumble()
-        {
-            Task.Factory.StartNew(async () =>
-            {
-                SetVibration(byte.MaxValue, byte.MaxValue);
-                await Task.Delay(125);
-                SetVibration(0, 0);
-            });
-
-            base.Rumble();
-        }
-
         public override void Plug()
         {
+            try
+            {
+                Controller.Open();
+                Controller.OnControllerInputReceived = input => Task.Run(() => OnControllerInputReceived(input));
+            }
+            catch (Exception ex)
+            {
+                LogManager.LogError("Couldn't initialize NeptuneController. Exception: {0}", ex.Message);
+                return;
+            }
+
+            // disable lizard state
+            SetLizardMouse(false);
+            SetLizardButtons(false);
+
+            // manage rumble thread
+            rumbleThreadRunning = true;
+            rumbleThread = new Thread(RumbleThreadLoop);
+            rumbleThread.IsBackground = true;
+            rumbleThread.Start();
+
             TimerManager.Tick += UpdateInputs;
-
-            thread.Start();
-
-            Controller.OnControllerInputReceived = input => Task.Run(() => OnControllerInputReceived(input));
-
             base.Plug();
         }
 
@@ -310,24 +277,17 @@ namespace HandheldCompanion.Controllers
 
         public override void Unplug()
         {
-            try
-            {
-                // restore lizard state
-                SetLizardButtons(true);
-                SetLizardMouse(true);
-
-                Controller.Close();
-                isConnected = false;
-            }
-            catch
-            {
-                return;
-            }
-
             TimerManager.Tick -= UpdateInputs;
 
+            // restore lizard state
+            SetLizardButtons(true);
+            SetLizardMouse(true);
+
             // kill rumble thread
-            ThreadRunning = false;
+            rumbleThreadRunning = false;
+            rumbleThread.Join();
+
+            Controller.Close();
 
             base.Unplug();
         }
@@ -341,12 +301,6 @@ namespace HandheldCompanion.Controllers
             double value = MinIntensity + (maxIntensity - MinIntensity) * input.Value * VibrationStrength / 255;
             output = (sbyte)(value - 5); // convert from dB to values
             return true;
-        }
-
-        public override void SetVibrationStrength(uint value)
-        {
-            base.SetVibrationStrength(value);
-            this.Rumble();
         }
 
         public override void SetVibration(byte LargeMotor, byte SmallMotor)

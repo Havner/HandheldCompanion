@@ -5,7 +5,6 @@ using System;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 using System.Windows.Media;
 
 namespace HandheldCompanion.Controllers
@@ -122,8 +121,6 @@ namespace HandheldCompanion.Controllers
             ref XInputCapabilitiesEx pCapabilities  // [out] Receives the capabilities
         );
 
-        [DllImport("xinput1_3.dll", EntryPoint = "#100")]
-        protected static extern int XInputGetStateSecret13(int playerIndex, out XInputStateSecret struc);
         [DllImport("xinput1_4.dll", EntryPoint = "#100")]
         protected static extern int XInputGetStateSecret14(int playerIndex, out XInputStateSecret struc);
         #endregion
@@ -131,10 +128,7 @@ namespace HandheldCompanion.Controllers
         private Controller Controller;
         private Gamepad Gamepad;
 
-        private GamepadButtonFlags prevButtons;
-
         private XInputStateSecret State;
-        private XInputStateSecret prevState;
 
         public XInputController()
         { }
@@ -192,12 +186,7 @@ namespace HandheldCompanion.Controllers
             Gamepad = Controller.GetState().Gamepad;
 
             // update secret state
-            XInputGetStateSecret13(UserIndex, out State);
-
-            /*
-            if (prevButtons.Equals(Gamepad.Buttons) && State.wButtons.Equals(prevState.wButtons) && prevInjectedButtons.Equals(InjectedButtons))
-                return;
-            */
+            XInputGetStateSecret14(UserIndex, out State);
 
             Inputs.ButtonState = InjectedButtons.Clone() as ButtonState;
 
@@ -257,10 +246,6 @@ namespace HandheldCompanion.Controllers
             Inputs.AxisState[AxisFlags.L2] = Gamepad.LeftTrigger;
             Inputs.AxisState[AxisFlags.R2] = Gamepad.RightTrigger;
 
-            // update states
-            prevButtons = Gamepad.Buttons;
-            prevState = State;
-
             base.UpdateInputs(ticks);
         }
 
@@ -269,12 +254,6 @@ namespace HandheldCompanion.Controllers
             if (Controller is not null)
                 return Controller.IsConnected;
             return false;
-        }
-
-        public override void SetVibrationStrength(uint value)
-        {
-            base.SetVibrationStrength(value);
-            this.Rumble();
         }
 
         public override void SetVibration(byte LargeMotor, byte SmallMotor)
@@ -287,18 +266,6 @@ namespace HandheldCompanion.Controllers
 
             Vibration vibration = new Vibration() { LeftMotorSpeed = LeftMotorSpeed, RightMotorSpeed = RightMotorSpeed };
             Controller.SetVibration(vibration);
-        }
-
-        public override void Rumble()
-        {
-            Task.Factory.StartNew(async () =>
-            {
-                SetVibration(byte.MaxValue, byte.MaxValue);
-                await Task.Delay(125);
-                SetVibration(0, 0);
-            });
-
-            base.Rumble();
         }
 
         public override void Plug()

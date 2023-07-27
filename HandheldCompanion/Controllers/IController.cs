@@ -6,6 +6,7 @@ using ModernWpf.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -232,6 +233,7 @@ namespace HandheldCompanion.Controllers
         public virtual void SetVibrationStrength(uint value)
         {
             VibrationStrength = value / 100.0d;
+            Rumble();
         }
 
         public virtual void SetVibration(byte LargeMotor, byte SmallMotor)
@@ -242,8 +244,12 @@ namespace HandheldCompanion.Controllers
             return false;
         }
 
-        public virtual void Rumble()
-        { }
+        public virtual async void Rumble()
+        {
+            SetVibration(byte.MaxValue, byte.MaxValue);
+            await Task.Delay(125);
+            SetVibration(0, 0);
+        }
 
         public virtual bool IsPlugged()
         {
@@ -254,6 +260,8 @@ namespace HandheldCompanion.Controllers
         {
             if (isPlugged)
                 return;
+
+            SetVibrationStrength(SettingsManager.GetUInt("VibrationStrength"));
 
             isPlugged = true;
 
