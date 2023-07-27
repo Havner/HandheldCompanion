@@ -1,7 +1,7 @@
 using HandheldCompanion.Managers;
 using HandheldCompanion.Managers.Desktop;
+using HandheldCompanion.Utils;
 using System;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using Page = System.Windows.Controls.Page;
@@ -13,7 +13,7 @@ namespace HandheldCompanion.Views.QuickPages
     /// </summary>
     public partial class QuickPerformancePage : Page
     {
-        private readonly object powerModeLock = new();
+        private LockObject updatePowerLock = new();
 
         public QuickPerformancePage()
         {
@@ -61,16 +61,12 @@ namespace HandheldCompanion.Views.QuickPages
 
         private void PerformanceManager_PowerModeChanged(int idx)
         {
-            if (Monitor.TryEnter(powerModeLock))
+            // UI thread (async)
+            Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                // UI thread
-                Application.Current.Dispatcher.Invoke(() =>
-                {
+                using (new ScopedLock(updatePowerLock))
                     PowerModeSlider.Value = idx;
-                });
-
-                Monitor.Exit(powerModeLock);
-            }
+            });
         }
 
         private void SettingsManager_SettingValueChanged(string name, object value)
@@ -108,6 +104,7 @@ namespace HandheldCompanion.Views.QuickPages
         {
             if (!IsLoaded)
                 return;
+
             SettingsManager.SetProperty("PerformanceTDPValue", (uint)TDPSlider.Value);
         }
 
@@ -115,6 +112,7 @@ namespace HandheldCompanion.Views.QuickPages
         {
             if (!IsLoaded)
                 return;
+
             SettingsManager.SetProperty("PerformanceTDPEnabled", TDPToggle.IsOn);
         }
 
@@ -122,6 +120,7 @@ namespace HandheldCompanion.Views.QuickPages
         {
             if (!IsLoaded)
                 return;
+
             SettingsManager.SetProperty("PerformanceGPUValue", (uint)GPUSlider.Value);
         }
 
@@ -129,7 +128,24 @@ namespace HandheldCompanion.Views.QuickPages
         {
             if (!IsLoaded)
                 return;
+
             SettingsManager.SetProperty("PerformanceGPUEnabled", GPUToggle.IsOn);
+        }
+
+        private void FanControlToggle_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (!IsLoaded)
+                return;
+
+            SettingsManager.SetProperty("FanControlEnabled", FanControlToggle.IsOn);
+        }
+
+        private void FanControlSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (!IsLoaded)
+                return;
+
+            SettingsManager.SetProperty("FanControlValue", (uint)FanControlSlider.Value);
         }
 
         private void PowerModeSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -147,14 +163,10 @@ namespace HandheldCompanion.Views.QuickPages
                 TextBlock.SetResourceReference(Control.ForegroundProperty, "AccentButtonBackground");
             });
 
-            if (!IsLoaded)
+            if (!IsLoaded || updatePowerLock)
                 return;
 
-            if (Monitor.TryEnter(powerModeLock))
-            {
-                PerformanceManager.RequestPowerMode(idx);
-                Monitor.Exit(powerModeLock);
-            }
+            PerformanceManager.RequestPowerMode(idx);
         }
 
         private void ComboBoxResolution_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -195,20 +207,6 @@ namespace HandheldCompanion.Views.QuickPages
 
             // update current screen resolution
             SystemManager.SetResolution(resolution.width, resolution.height, frequency.frequency);
-        }
-
-        private void FanControlToggle_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!IsLoaded)
-                return;
-            SettingsManager.SetProperty("FanControlEnabled", FanControlToggle.IsOn);
-        }
-
-        private void FanControlSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (!IsLoaded)
-                return;
-            SettingsManager.SetProperty("FanControlValue", (uint)FanControlSlider.Value);
         }
     }
 }

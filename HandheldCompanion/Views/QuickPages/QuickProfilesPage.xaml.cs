@@ -79,7 +79,7 @@ namespace HandheldCompanion.Views.QuickPages
 
                 if (currentProcess is not null)
                 {
-                    ProcessIcon.Source = currentProcess.imgSource;
+                    ProcessIcon.Source = currentProcess.icon?.ToImageSource();
                     ProcessName.Text = currentProcess.Executable;
                     ProcessPath.Text = currentProcess.Path;
 

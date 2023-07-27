@@ -50,11 +50,11 @@ namespace HandheldCompanion.Managers
 
         public static void Start()
         {
-            DeviceManager.XUsbDeviceArrived += XUsbDeviceArrived;
-            DeviceManager.XUsbDeviceRemoved += XUsbDeviceRemoved;
+            DeviceManager.XUsbDeviceArrived += DeviceManager_XUsbDeviceArrived;
+            DeviceManager.XUsbDeviceRemoved += DeviceManager_XUsbDeviceRemoved;
 
-            DeviceManager.HidDeviceArrived += HidDeviceArrived;
-            DeviceManager.HidDeviceRemoved += HidDeviceRemoved;
+            DeviceManager.HidDeviceArrived += DeviceManager_HidDeviceArrived;
+            DeviceManager.HidDeviceRemoved += DeviceManager_HidDeviceRemoved;
 
             DeviceManager.Initialized += DeviceManager_Initialized;
 
@@ -89,11 +89,11 @@ namespace HandheldCompanion.Managers
 
             IsInitialized = false;
 
-            DeviceManager.XUsbDeviceArrived -= XUsbDeviceArrived;
-            DeviceManager.XUsbDeviceRemoved -= XUsbDeviceRemoved;
+            DeviceManager.XUsbDeviceArrived -= DeviceManager_XUsbDeviceArrived;
+            DeviceManager.XUsbDeviceRemoved -= DeviceManager_XUsbDeviceRemoved;
 
-            DeviceManager.HidDeviceArrived -= HidDeviceArrived;
-            DeviceManager.HidDeviceRemoved -= HidDeviceRemoved;
+            DeviceManager.HidDeviceArrived -= DeviceManager_HidDeviceArrived;
+            DeviceManager.HidDeviceRemoved -= DeviceManager_HidDeviceRemoved;
 
             SettingsManager.SettingValueChanged -= SettingsManager_SettingValueChanged;
 
@@ -163,54 +163,53 @@ namespace HandheldCompanion.Managers
             targetController?.SetVibration(LargeMotor, SmallMotor);
         }
 
-        private static void HidDeviceArrived(PnPDetails details, DeviceEventArgs obj)
+        // usb thread, IController contains lots of WPF controls
+        private static void DeviceManager_HidDeviceArrived(PnPDetails details, DeviceEventArgs obj)
         {
             DirectInput directInput = new DirectInput();
             int VendorId = details.attributes.VendorID;
             int ProductId = details.attributes.ProductID;
 
-            // UI thread (synchronous)
             // We need to wait for each controller to initialize and take (or not) its slot in the array
-            Application.Current.Dispatcher.Invoke(() =>
+            Joystick joystick = null;
+            IController controller = null;
+
+            // search for the plugged controller
+            foreach (var deviceInstance in directInput.GetDevices(DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices))
             {
-                // initialize controller vars
-                Joystick joystick = null;
-                IController controller = null;
-
-                // search for the plugged controller
-                foreach (var deviceInstance in directInput.GetDevices(DeviceType.Gamepad, DeviceEnumerationFlags.AllDevices))
+                try
                 {
-                    try
+                    // Instantiate the joystick
+                    var lookup_joystick = new Joystick(directInput, deviceInstance.InstanceGuid);
+                    string SymLink = DeviceManager.PathToInstanceId(lookup_joystick.Properties.InterfacePath, obj.InterfaceGuid.ToString());
+
+                    // IG_ means it is an XInput controller and therefore is handled elsewhere
+                    if (lookup_joystick.Properties.InterfacePath.Contains("IG_", StringComparison.InvariantCultureIgnoreCase))
+                        continue;
+
+                    if (SymLink.Equals(details.SymLink, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        // Instantiate the joystick
-                        var lookup_joystick = new Joystick(directInput, deviceInstance.InstanceGuid);
-                        string SymLink = DeviceManager.PathToInstanceId(lookup_joystick.Properties.InterfacePath, obj.InterfaceGuid.ToString());
-
-                        // IG_ means it is an XInput controller and therefore is handled elsewhere
-                        if (lookup_joystick.Properties.InterfacePath.Contains("IG_", StringComparison.InvariantCultureIgnoreCase))
-                            continue;
-
-                        if (SymLink.Equals(details.SymLink, StringComparison.InvariantCultureIgnoreCase))
-                        {
-                            joystick = lookup_joystick;
-                            break;
-                        }
+                        joystick = lookup_joystick;
+                        break;
                     }
-                    catch { }
                 }
+                catch { }
+            }
 
-                if (joystick is not null)
-                {
-                    // supported controller
-                    VendorId = joystick.Properties.VendorId;
-                    ProductId = joystick.Properties.ProductId;
-                }
-                else
-                {
-                    // unsupported controller
-                    LogManager.LogError("Couldn't find matching DInput controller: VID:{0} and PID:{1}", details.GetVendorID(), details.GetProductID());
-                }
+            if (joystick is not null)
+            {
+                // supported controller
+                VendorId = joystick.Properties.VendorId;
+                ProductId = joystick.Properties.ProductId;
+            }
+            else
+            {
+                // unsupported controller
+                LogManager.LogError("Couldn't find matching DInput controller: VID:{0} and PID:{1}", details.GetVendorID(), details.GetProductID());
+            }
 
+            Application.Current.Dispatcher.BeginInvoke(() =>
+            {
                 // search for a supported controller
                 switch (VendorId)
                 {
@@ -286,7 +285,7 @@ namespace HandheldCompanion.Managers
             });
         }
 
-        private static void HidDeviceRemoved(PnPDetails details, DeviceEventArgs obj)
+        private static void DeviceManager_HidDeviceRemoved(PnPDetails details, DeviceEventArgs obj)
         {
             if (!Controllers.TryGetValue(details.deviceInstanceId, out IController controller))
                 return;
@@ -308,7 +307,8 @@ namespace HandheldCompanion.Managers
             ControllerUnplugged?.Invoke(controller);
         }
 
-        private static void XUsbDeviceArrived(PnPDetails details, DeviceEventArgs obj)
+        // usb thread, IController contains lots of WPF controls
+        private static void DeviceManager_XUsbDeviceArrived(PnPDetails details, DeviceEventArgs obj)
         {
             // trying to guess XInput behavior...
             // get first available slot
@@ -324,10 +324,9 @@ namespace HandheldCompanion.Managers
                     break;
             }
 
-            // UI thread (synchronous)
-            // We need to wait for each controller to initialize and take (or not) its slot in the array
-            Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.BeginInvoke(() =>
             {
+                // We need to wait for each controller to initialize and take (or not) its slot in the array
                 XInputController controller = new(_controller);
 
                 // failed to initialize
@@ -357,7 +356,7 @@ namespace HandheldCompanion.Managers
             });
         }
 
-        private static void XUsbDeviceRemoved(PnPDetails details, DeviceEventArgs obj)
+        private static void DeviceManager_XUsbDeviceRemoved(PnPDetails details, DeviceEventArgs obj)
         {
             if (!Controllers.TryGetValue(details.deviceInstanceId, out IController controller))
                 return;
@@ -384,7 +383,7 @@ namespace HandheldCompanion.Managers
             // unplug previous controller
             if (targetController is not null)
             {
-                targetController.InputsUpdated -= UpdateInputs;
+                targetController.InputsUpdated -= TargetController_InputsUpdated;
                 targetController.Unplug();
             }
 
@@ -401,7 +400,7 @@ namespace HandheldCompanion.Managers
             // update target controller
             targetController = controller;
 
-            targetController.InputsUpdated += UpdateInputs;
+            targetController.InputsUpdated += TargetController_InputsUpdated;
 
             targetController.Plug();
 
@@ -435,7 +434,7 @@ namespace HandheldCompanion.Managers
             return Controllers.Values.ToList();
         }
 
-        private static void UpdateInputs(ControllerState controllerState)
+        private static void TargetController_InputsUpdated(ControllerState controllerState)
         {
             // TODO: why clone? InputsManager clones for prevState
             ButtonState InputsState = controllerState.ButtonState.Clone() as ButtonState;

@@ -34,8 +34,8 @@ namespace HandheldCompanion.Views.Pages.Profiles
 
             MotionManager.SettingsMode0Update += MotionManager_SettingsMode0Update;
 
-            HotkeysManager.HotkeyCreated += TriggerCreated;
-            InputsManager.TriggerUpdated += TriggerUpdated;
+            HotkeysManager.HotkeyCreated += HotkeysManager_HotkeyCreated;
+            InputsManager.TriggerUpdated += InputsManager_TriggerUpdated;
         }
 
         public void SetProfile()
@@ -230,7 +230,7 @@ namespace HandheldCompanion.Views.Pages.Profiles
             ProfilesPage.RequestUpdate();
         }
 
-        private void TriggerCreated(Hotkey hotkey)
+        private void HotkeysManager_HotkeyCreated(Hotkey hotkey)
         {
             switch (hotkey.inputsHotkey.Listener)
             {
@@ -251,7 +251,7 @@ namespace HandheldCompanion.Views.Pages.Profiles
             }
         }
 
-        private void TriggerUpdated(string listener, InputsChord inputs, InputsManager.ListenerType type)
+        private void InputsManager_TriggerUpdated(string listener, InputsChord inputs, InputsManager.ListenerType type)
         {
             switch (listener)
             {

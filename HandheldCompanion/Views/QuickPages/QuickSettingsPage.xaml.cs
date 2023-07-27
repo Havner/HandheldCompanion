@@ -1,7 +1,7 @@
 using HandheldCompanion.Managers;
+using HandheldCompanion.Utils;
 using System;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -12,8 +12,8 @@ namespace HandheldCompanion.Views.QuickPages
     /// </summary>
     public partial class QuickSettingsPage : Page
     {
-        private readonly object volumeLock = new();
-        private readonly object brightnessLock = new();
+        private LockObject updateVolumeLock = new();
+        private LockObject updateBrightnessLock = new();
 
         public QuickSettingsPage()
         {
@@ -83,31 +83,23 @@ namespace HandheldCompanion.Views.QuickPages
 
         private void SystemManager_BrightnessNotification(int brightness)
         {
-            if (Monitor.TryEnter(brightnessLock))
+            // UI thread (async)
+            Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                // UI thread
-                Application.Current.Dispatcher.Invoke(() =>
-                {
+                using (new ScopedLock(updateBrightnessLock))
                     SliderBrightness.Value = brightness;
-                });
-
-                Monitor.Exit(brightnessLock);
-            }
+            });
         }
 
-        private void SystemManager_VolumeNotification(float volume)
+        private void SystemManager_VolumeNotification(int volume)
         {
-            if (Monitor.TryEnter(volumeLock))
+            // UI thread (async)
+            Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                // UI thread
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    // todo: update volume icon on update
-                    SliderVolume.Value = Math.Round(volume);
-                });
-
-                Monitor.Exit(volumeLock);
-            }
+                // todo: update volume icon on update
+                using (new ScopedLock(updateVolumeLock))
+                    SliderVolume.Value = volume;
+            });
         }
 
         private void SliderVibration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -120,26 +112,18 @@ namespace HandheldCompanion.Views.QuickPages
 
         private void SliderBrightness_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (!IsLoaded)
+            if (!IsLoaded || updateBrightnessLock)
                 return;
 
-            if (Monitor.TryEnter(brightnessLock))
-            {
-                SystemManager.SetBrightness(SliderBrightness.Value);
-                Monitor.Exit(brightnessLock);
-            }
+            SystemManager.SetBrightness((int)SliderBrightness.Value);
         }
 
         private void SliderVolume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (!IsLoaded)
+            if (!IsLoaded || updateVolumeLock)
                 return;
 
-            if (Monitor.TryEnter(volumeLock))
-            {
-                SystemManager.SetVolume(SliderVolume.Value);
-                Monitor.Exit(volumeLock);
-            }
+            SystemManager.SetVolume((int)SliderVolume.Value);
         }
     }
 }

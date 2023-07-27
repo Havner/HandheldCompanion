@@ -48,8 +48,8 @@ namespace HandheldCompanion.Managers
             if (!Directory.Exists(InstallPath))
                 Directory.CreateDirectory(InstallPath);
 
-            InputsManager.TriggerUpdated += TriggerUpdated;
-            InputsManager.TriggerRaised += TriggerRaised;
+            InputsManager.TriggerUpdated += InputsManager_TriggerUpdated;
+            InputsManager.TriggerRaised += InputsManager_TriggerRaised;
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
             ControllerManager.ControllerSelected += ControllerManager_ControllerSelected;
         }
@@ -192,7 +192,7 @@ namespace HandheldCompanion.Managers
             return Hotkeys.Values.Where(item => item.IsPinned).Count();
         }
 
-        private static void TriggerUpdated(string listener, InputsChord inputs, ListenerType type)
+        private static void InputsManager_TriggerUpdated(string listener, InputsChord inputs, ListenerType type)
         {
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>
@@ -242,7 +242,7 @@ namespace HandheldCompanion.Managers
             HotkeyUpdated?.Invoke(hotkey);
         }
 
-        public static void TriggerRaised(string listener, InputsChord input, InputsHotkeyType type, bool IsKeyDown, bool IsKeyUp)
+        public static void InputsManager_TriggerRaised(string listener, InputsChord input, InputsHotkeyType type, bool IsKeyDown, bool IsKeyUp)
         {
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>

@@ -40,21 +40,17 @@ namespace HandheldCompanion.Views.Pages
             if (type == InputsHotkey.InputsHotkeyType.Embedded)
                 return;
 
-            // UI thread
-            Application.Current.Dispatcher.Invoke(() =>
+            SimpleStackPanel stackPanel = new()
             {
-                SimpleStackPanel stackPanel = new()
-                {
-                    Tag = type,
-                    Spacing = 6
-                };
+                Tag = type,
+                Spacing = 6
+            };
 
-                TextBlock textBlock = new TextBlock() { Text = EnumUtils.GetDescriptionFromEnumValue(type) };
-                textBlock.SetResourceReference(Control.StyleProperty, "BaseTextBlockStyle");
+            TextBlock textBlock = new TextBlock() { Text = EnumUtils.GetDescriptionFromEnumValue(type) };
+            textBlock.SetResourceReference(Control.StyleProperty, "BaseTextBlockStyle");
 
-                stackPanel.Children.Add(textBlock);
-                HotkeysPanel.Children.Add(stackPanel);
-            });
+            stackPanel.Children.Add(textBlock);
+            HotkeysPanel.Children.Add(stackPanel);
         }
 
         private void HotkeysManager_HotkeyCreated(Hotkey hotkey)
@@ -63,16 +59,12 @@ namespace HandheldCompanion.Views.Pages
             if (hotkey.inputsHotkey.hotkeyType == InputsHotkey.InputsHotkeyType.Embedded)
                 return;
 
-            // UI thread
-            Application.Current.Dispatcher.Invoke(() =>
-            {
-                HotkeyControl control = hotkey.GetControl();
+            HotkeyControl control = hotkey.GetControl();
 
-                ushort idx = (ushort)hotkey.inputsHotkey.hotkeyType;
+            ushort idx = (ushort)hotkey.inputsHotkey.hotkeyType;
 
-                SimpleStackPanel stackPanel = (SimpleStackPanel)HotkeysPanel.Children[idx];
-                stackPanel.Children.Add(control);
-            });
+            SimpleStackPanel stackPanel = (SimpleStackPanel)HotkeysPanel.Children[idx];
+            stackPanel.Children.Add(control);
         }
     }
 }

@@ -107,7 +107,7 @@ namespace HandheldCompanion.Managers
 
             m_GlobalHook = Hook.GlobalEvents();
 
-            HotkeysManager.HotkeyCreated += TriggerCreated;
+            HotkeysManager.HotkeyCreated += HotkeysManager_HotkeyCreated;
         }
 
         private static void InputsChordHold_Elapsed()
@@ -621,7 +621,7 @@ namespace HandheldCompanion.Managers
             StopListening();
         }
 
-        private static void TriggerCreated(Hotkey hotkey)
+        private static void HotkeysManager_HotkeyCreated(Hotkey hotkey)
         {
             string listener = hotkey.inputsHotkey.Listener;
 

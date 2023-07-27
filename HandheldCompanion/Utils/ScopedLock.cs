@@ -6,7 +6,7 @@ namespace HandheldCompanion.Utils
     public class LockObject
     {
         public bool locked = false;
-        public LockObject() {}
+        public LockObject() { }
 
         public static implicit operator bool(LockObject o)
         {

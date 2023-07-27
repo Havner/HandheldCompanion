@@ -266,6 +266,8 @@ namespace HandheldCompanion.Managers
             if (currentLayout is null)
                 return controllerState;
 
+            // TODO: this call is not from the main thread, SetActiveLayout is.
+            // proper lock needed here? volatile? Interlocked.Exchange()?
             // set lock
             updateLock = true;
 

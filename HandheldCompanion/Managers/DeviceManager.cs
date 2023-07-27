@@ -391,7 +391,10 @@ namespace HandheldCompanion.Managers
                     XUsbDeviceRemoved?.Invoke(deviceEx, obj);
                 }
             }
-            catch { }
+            catch (Exception e)
+            {
+                LogManager.LogError("Failed to remove XInput device: {0}", e);
+            }
         }
 
         private static async void XUsbDevice_DeviceArrived(DeviceEventArgs obj)
@@ -416,7 +419,10 @@ namespace HandheldCompanion.Managers
                     XUsbDeviceArrived?.Invoke(deviceEx, obj);
                 }
             }
-            catch { }
+            catch (Exception e)
+            {
+                LogManager.LogError("Failed to initialize XInput device: {0}", e);
+            }
         }
 
         private static async void HidDevice_DeviceRemoved(DeviceEventArgs obj)
@@ -440,7 +446,10 @@ namespace HandheldCompanion.Managers
                     HidDeviceRemoved?.Invoke(deviceEx, obj);
                 }
             }
-            catch { }
+            catch (Exception e)
+            {
+                LogManager.LogError("Failed to remove HID device: {0}", e);
+            }
         }
 
         private static async void HidDevice_DeviceArrived(DeviceEventArgs obj)
@@ -463,7 +472,10 @@ namespace HandheldCompanion.Managers
                     HidDeviceArrived?.Invoke(deviceEx, obj);
                 }
             }
-            catch { }
+            catch (Exception e)
+            {
+                LogManager.LogError("Failed to initialize HID device: {0}", e);
+            }
         }
 
         private static void UsbDevice_DeviceRemoved(DeviceEventArgs obj)
@@ -474,7 +486,10 @@ namespace HandheldCompanion.Managers
                 string VendorID = CommonUtils.Between(symLink, "VID_", "&");
                 string ProductID = CommonUtils.Between(symLink, "PID_", "&");
             }
-            catch { }
+            catch (Exception e)
+            {
+                LogManager.LogError("Failed to remove USB device: {0}", e);
+            }
         }
 
         private static void UsbDevice_DeviceArrived(DeviceEventArgs obj)
@@ -485,7 +500,10 @@ namespace HandheldCompanion.Managers
                 string VendorID = CommonUtils.Between(symLink, "VID_", "&");
                 string ProductID = CommonUtils.Between(symLink, "PID_", "&");
             }
-            catch { }
+            catch (Exception e)
+            {
+                LogManager.LogError("Failed to initialize USB device: {0}", e);
+            }
         }
     }
 }

@@ -11,12 +11,12 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
 using Layout = HandheldCompanion.Misc.Layout;
 using Page = System.Windows.Controls.Page;
-using System.Timers;
 
 namespace HandheldCompanion.Views.Pages
 {
@@ -412,20 +412,15 @@ namespace HandheldCompanion.Views.Pages
             }
         }
 
-        // this event can come from a timermanager tick thread
         private void InputsManager_TriggerUpdated(string listener, InputsChord inputs, InputsManager.ListenerType type)
         {
-            // UI thread
-            Application.Current.Dispatcher.Invoke(() =>
+            switch (listener)
             {
-                switch (listener)
-                {
-                    case "shortcutProfilesPage@":
-                        selectedProfile.MotionTrigger = inputs.State.Clone() as ButtonState;
-                        RequestUpdate();
-                        break;
-                }
-            });
+                case "shortcutProfilesPage@":
+                    selectedProfile.MotionTrigger = inputs.State.Clone() as ButtonState;
+                    RequestUpdate();
+                    break;
+            }
         }
 
         private void ProfileName_TextChanged(object sender, TextChangedEventArgs e)

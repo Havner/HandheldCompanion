@@ -182,10 +182,11 @@ namespace HandheldCompanion.Views.Windows
             }
         }
 
+        // non main thread when triggered from hotkey
         public override void UpdateVisibility()
         {
             // UI thread
-            Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.BeginInvoke(() =>
             {
                 switch (Visibility)
                 {

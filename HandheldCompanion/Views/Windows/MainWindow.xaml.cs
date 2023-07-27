@@ -194,10 +194,11 @@ namespace HandheldCompanion.Views
             }
         }
 
+        // non main thread when triggered from hotkey
         public void SwapWindowState()
         {
             // UI thread
-            Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.BeginInvoke(() =>
             {
                 switch (WindowState)
                 {

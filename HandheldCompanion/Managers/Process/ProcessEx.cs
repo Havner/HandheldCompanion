@@ -1,10 +1,8 @@
 using HandheldCompanion.Platforms;
-using HandheldCompanion.Utils;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Windows.Media;
 
 namespace HandheldCompanion.Managers
 {
@@ -22,7 +20,7 @@ namespace HandheldCompanion.Managers
 
         public IntPtr MainWindowHandle;
 
-        public ImageSource imgSource;
+        public Icon? icon;
         public string Path;
         public string Executable;
 
@@ -33,6 +31,7 @@ namespace HandheldCompanion.Managers
         {
         }
 
+        // foreground detection thread
         public ProcessEx(Process process, string path, string executable, ProcessFilter filter) : this()
         {
             Process = process;
@@ -44,11 +43,7 @@ namespace HandheldCompanion.Managers
             Platform = PlatformManager.GetPlatform(Process);
 
             if (File.Exists(Path))
-            {
-                var icon = Icon.ExtractAssociatedIcon(Path);
-                if (icon is not null)
-                    imgSource = icon.ToImageSource();
-            }
+                icon = Icon.ExtractAssociatedIcon(Path);
         }
 
         public int GetProcessId()

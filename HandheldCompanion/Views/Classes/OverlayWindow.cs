@@ -124,10 +124,11 @@ namespace HandheldCompanion.Views.Classes
             }
         }
 
+        // non main thread when triggered from hotkey
         public virtual void UpdateVisibility()
         {
             // UI thread
-            Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.BeginInvoke(() =>
             {
                 switch (Visibility)
                 {

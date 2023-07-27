@@ -4,7 +4,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Windows;
 using Windows.System.Diagnostics;
 using static HandheldCompanion.Managers.ProcessEx;
 using static HandheldCompanion.Misc.WinAPI;
@@ -163,36 +162,32 @@ namespace HandheldCompanion.Managers
                 if (Processes.ContainsKey(proc.Id))
                     return true;
 
-                // UI thread (synchronous)
-                Application.Current.Dispatcher.Invoke(() =>
-                {
-                    // check process path
-                    string path = ProcessUtils.GetPathToApp(proc.Id);
-                    if (string.IsNullOrEmpty(path))
-                        return false;
+                // check process path
+                string path = ProcessUtils.GetPathToApp(proc.Id);
+                if (string.IsNullOrEmpty(path))
+                    return false;
 
-                    string exec = Path.GetFileName(path);
-                    IntPtr hWnd = NativeWindowHandle != 0 ? NativeWindowHandle : proc.MainWindowHandle;
+                string exec = Path.GetFileName(path);
+                IntPtr hWnd = NativeWindowHandle != 0 ? NativeWindowHandle : proc.MainWindowHandle;
 
-                    // get filter
-                    ProcessFilter filter = GetFilter(exec, path);
+                // get filter
+                ProcessFilter filter = GetFilter(exec, path);
 
-                    ProcessEx processEx = new ProcessEx(proc, path, exec, filter);
-                    processEx.MainWindowHandle = hWnd;
+                ProcessEx processEx = new ProcessEx(proc, path, exec, filter);
+                processEx.MainWindowHandle = hWnd;
 
-                    Processes.TryAdd(processEx.GetProcessId(), processEx);
-                    proc.Exited += ProcessHalted;
+                Processes.TryAdd(processEx.GetProcessId(), processEx);
+                proc.Exited += ProcessHalted;
 
-                    if (processEx.Filter != ProcessFilter.Allowed)
-                        return true;
-
-                    // raise event
-                    ProcessStarted?.Invoke(processEx, OnStartup);
-
-                    LogManager.LogDebug("Process detected: {0}", processEx.Executable);
-
+                if (processEx.Filter != ProcessFilter.Allowed)
                     return true;
-                });
+
+                // raise event
+                ProcessStarted?.Invoke(processEx, OnStartup);
+
+                LogManager.LogDebug("Process detected: {0}", processEx.Executable);
+
+                return true;
             }
             catch
             {

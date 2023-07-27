@@ -139,7 +139,7 @@ namespace HandheldCompanion.Managers
         public delegate void PrimaryScreenChangedEventHandler(DesktopScreen screen);
 
         public static event VolumeNotificationEventHandler VolumeNotification;
-        public delegate void VolumeNotificationEventHandler(float volume);
+        public delegate void VolumeNotificationEventHandler(int volume);
 
         public static event BrightnessNotificationEventHandler BrightnessNotification;
         public delegate void BrightnessNotificationEventHandler(int brightness);
@@ -213,7 +213,7 @@ namespace HandheldCompanion.Managers
 
         private static void AudioEndpointVolume_OnVolumeNotification(AudioVolumeNotificationData data)
         {
-            VolumeNotification?.Invoke(data.MasterVolume * 100.0f);
+            VolumeNotification?.Invoke((int)Math.Round(data.MasterVolume * 100.0f));
         }
 
         private static void SetDefaultAudioEndPoint()
@@ -235,7 +235,7 @@ namespace HandheldCompanion.Managers
                 }
 
                 // do this even when no device found, to set to 0
-                VolumeNotification?.Invoke((float)GetVolume());
+                VolumeNotification?.Invoke(GetVolume());
             }
             catch (Exception)
             {
@@ -298,14 +298,14 @@ namespace HandheldCompanion.Managers
 
                 case "increaseVolume":
                     {
-                        int stepRoundDn = (int)Math.Floor(Math.Round(GetVolume() / 5.0d, 2));
+                        int stepRoundDn = (int)Math.Floor(GetVolume() / 5.0d);
                         int volume = stepRoundDn * 5 + 5;
                         SystemManager.SetVolume(volume);
                     }
                     break;
                 case "decreaseVolume":
                     {
-                        int stepRoundUp = (int)Math.Ceiling(Math.Round(GetVolume() / 5.0d, 2));
+                        int stepRoundUp = (int)Math.Ceiling(GetVolume() / 5.0d);
                         int volume = stepRoundUp * 5 - 5;
                         SystemManager.SetVolume(volume);
                     }
@@ -491,20 +491,20 @@ namespace HandheldCompanion.Managers
             return VolumeSupport;
         }
 
-        public static void SetVolume(double volume)
+        public static void SetVolume(int volume)
         {
             if (!VolumeSupport)
                 return;
 
-            multimediaDevice.AudioEndpointVolume.MasterVolumeLevelScalar = (float)(volume / 100.0d);
+            multimediaDevice.AudioEndpointVolume.MasterVolumeLevelScalar = (float)(volume / 100.0f);
         }
 
-        public static double GetVolume()
+        public static int GetVolume()
         {
             if (!VolumeSupport)
-                return 0.0d;
+                return 0;
 
-            return multimediaDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100.0d;
+            return (int)Math.Round(multimediaDevice.AudioEndpointVolume.MasterVolumeLevelScalar * 100.0f);
         }
 
         public static bool HasBrightnessSupport()
@@ -512,7 +512,7 @@ namespace HandheldCompanion.Managers
             return BrightnessSupport;
         }
 
-        public static void SetBrightness(double brightness)
+        public static void SetBrightness(int brightness)
         {
             if (!BrightnessSupport)
                 return;
@@ -526,7 +526,7 @@ namespace HandheldCompanion.Managers
                     {
                         foreach (ManagementObject instance in instances)
                         {
-                            object[] args = new object[] { 1, brightness };
+                            object[] args = new object[] { 1, (byte)brightness };
                             instance.InvokeMethod("WmiSetBrightness", args);
                         }
                     }
@@ -535,7 +535,7 @@ namespace HandheldCompanion.Managers
             catch { }
         }
 
-        public static short GetBrightness()
+        public static int GetBrightness()
         {
             try
             {

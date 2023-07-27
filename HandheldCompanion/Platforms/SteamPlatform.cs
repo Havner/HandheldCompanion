@@ -4,7 +4,6 @@ using HandheldCompanion.Utils;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace HandheldCompanion.Platforms
 {
@@ -81,17 +80,13 @@ namespace HandheldCompanion.Platforms
                 ResetFile(config.Key);
         }
 
-        private void ProcessManager_ProcessStarted(ProcessEx processEx, bool OnStartup)
+        private async void ProcessManager_ProcessStarted(ProcessEx processEx, bool OnStartup)
         {
             if (!OnStartup && processEx.Executable == RunningName)
             {
-                // UI thread (async)
-                Application.Current.Dispatcher.BeginInvoke(async () =>
-                {
-                    LogManager.LogDebug("Steam started, replacing files in 3 seconds");
-                    await Task.Delay(3000);
-                    ReplaceFiles();
-                });
+                LogManager.LogDebug("Steam started, replacing files in 3 seconds");
+                await Task.Delay(3000);
+                ReplaceFiles();
             }
         }
 

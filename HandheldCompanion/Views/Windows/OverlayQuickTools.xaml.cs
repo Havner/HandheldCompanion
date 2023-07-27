@@ -130,10 +130,11 @@ namespace HandheldCompanion.Views.Windows
                 this.Hide();
         }
 
+        // non main thread when triggered from hotkey
         public void UpdateVisibility()
         {
             // UI thread
-            Application.Current.Dispatcher.Invoke(() =>
+            Application.Current.Dispatcher.BeginInvoke(() =>
             {
                 switch (Visibility)
                 {
@@ -167,7 +168,7 @@ namespace HandheldCompanion.Views.Windows
                     case "shortcutDesktop":
                     case "shortcutESC":
                     case "shortcutExpand":
-                        HotkeysManager.TriggerRaised(navItemTag, null, 0, false, true);
+                        HotkeysManager.InputsManager_TriggerRaised(navItemTag, null, 0, false, true);
                         break;
                 }
 
