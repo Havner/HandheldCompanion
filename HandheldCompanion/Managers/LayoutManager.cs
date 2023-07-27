@@ -9,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Layout = HandheldCompanion.Misc.Layout;
+using System.Windows;
 
 namespace HandheldCompanion.Managers
 {
@@ -107,9 +107,14 @@ namespace HandheldCompanion.Managers
             LogManager.LogInformation("{0} has stopped", "LayoutManager");
         }
 
+        // this event is called from non main thread and it creates LayoutTemplate which is a WPF element
         private static void LayoutWatcher_Created(object sender, FileSystemEventArgs e)
         {
-            ProcessLayoutTemplate(e.FullPath);
+            // UI thread (async)
+            Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                ProcessLayoutTemplate(e.FullPath);
+            });
         }
 
         private static Layout? ProcessLayout(string fileName)

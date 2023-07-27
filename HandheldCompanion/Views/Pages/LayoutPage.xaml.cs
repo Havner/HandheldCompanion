@@ -9,12 +9,10 @@ using ModernWpf.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-using Application = System.Windows.Application;
 using Layout = HandheldCompanion.Misc.Layout;
 using Page = System.Windows.Controls.Page;
 
