@@ -295,6 +295,17 @@ namespace HandheldCompanion.Views.Pages
             DrawProfile();
         }
 
+        private void UpdateMotionControlsVisibility()
+        {
+            bool MotionMapped = false;
+            if (selectedProfile.Layout.AxisLayout.TryGetValue(AxisLayoutFlags.Gyroscope, out IActions action))
+                if (action.ActionType != ActionType.Disabled)
+                    MotionMapped = true;
+
+            MotionControlAdditional.Visibility = MotionMapped ? Visibility.Visible : Visibility.Collapsed;
+            MotionControlWarning.Visibility = MotionMapped ? Visibility.Collapsed : Visibility.Visible;
+        }
+
         private void DrawProfile()
         {
             // UI thread (async)
@@ -321,13 +332,7 @@ namespace HandheldCompanion.Views.Pages
                     cB_Input.SelectedIndex = (int)selectedProfile.MotionInput;
                     cB_UMC_MotionDefaultOffOn.SelectedIndex = (int)selectedProfile.MotionMode;
 
-                    bool MotionMapped = false;
-                    if (selectedProfile.Layout.AxisLayout.TryGetValue(AxisLayoutFlags.Gyroscope, out IActions action))
-                        if (action.ActionType != ActionType.Disabled)
-                            MotionMapped = true;
-
-                    MotionControlAdditional.Visibility = MotionMapped ? Visibility.Visible : Visibility.Collapsed;
-                    MotionControlWarning.Visibility = MotionMapped ? Visibility.Collapsed : Visibility.Visible;
+                    UpdateMotionControlsVisibility();
 
                     // todo: improve me ?
                     ProfilesPageHotkey.inputsChord.State = selectedProfile.MotionTrigger.Clone() as ButtonState;
@@ -518,6 +523,8 @@ namespace HandheldCompanion.Views.Pages
         private void Template_Updated(LayoutTemplate layoutTemplate)
         {
             selectedProfile.LayoutTitle = layoutTemplate.Name;
+
+            UpdateMotionControlsVisibility();
 
             RequestUpdate();
         }
