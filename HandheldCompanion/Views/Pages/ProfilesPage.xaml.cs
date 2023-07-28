@@ -27,7 +27,6 @@ namespace HandheldCompanion.Views.Pages
     {
         // when set on start cannot be null anymore
         public static Profile selectedProfile;
-        private static Layout layoutInEditor;
 
         private SettingsMode0 page0 = new("SettingsMode0");
         private SettingsMode1 page1 = new("SettingsMode1");
@@ -493,25 +492,19 @@ namespace HandheldCompanion.Views.Pages
 
         private void ControllerSettingsButton_Click(object sender, RoutedEventArgs e)
         {
-            if (layoutInEditor != selectedProfile.Layout)
+            // prepare layout editor
+            LayoutTemplate layoutTemplate = new(selectedProfile.Layout)
             {
-                // prepare layout editor
-                LayoutTemplate layoutTemplate = new(selectedProfile.Layout)
-                {
-                    Name = selectedProfile.LayoutTitle,
-                    Description = "Your modified layout for this executable.",
-                    Author = Environment.UserName,
-                    Executable = selectedProfile.Executable,
-                    Product = selectedProfile.Name,
-                };
-                layoutTemplate.Updated += Template_Updated;
+                Name = selectedProfile.LayoutTitle,
+                Description = "Your modified layout for this executable.",
+                Author = Environment.UserName,
+                Executable = selectedProfile.Executable,
+                Product = selectedProfile.Name,
+            };
+            layoutTemplate.Updated += Template_Updated;
 
-                layoutInEditor = selectedProfile.Layout;
-
-                // no lock needed here, layout itself will block any events back by its own lock
-                MainWindow.layoutPage.UpdateLayout(layoutTemplate);
-            }
-
+            // no lock needed here, layout itself will block any events back by its own lock
+            MainWindow.layoutPage.UpdateLayout(layoutTemplate);
             MainWindow.NavView_Navigate(MainWindow.layoutPage);
         }
 

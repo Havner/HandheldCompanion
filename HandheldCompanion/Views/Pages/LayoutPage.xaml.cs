@@ -253,9 +253,15 @@ namespace HandheldCompanion.Views.Pages
             // TODO: Not entirely sure what is going on here, but the old templates were still sending
             // events. Shouldn't they be destroyed? Either there is a bug or I don't understand something
             // in C# (probably the latter). Either way this handles/fixes/workarounds the issue.
-            currentTemplate.ClearDelegates();
-            currentTemplate = layoutTemplate;
-            UpdatePages();
+
+            if (layoutTemplate.Layout == currentTemplate.Layout)
+                layoutTemplate.ClearDelegates();
+            else
+            {
+                currentTemplate.ClearDelegates();
+                currentTemplate = layoutTemplate;
+                UpdatePages();
+            }
         }
 
         private void UpdatePages()
