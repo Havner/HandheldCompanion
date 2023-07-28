@@ -77,32 +77,28 @@ namespace HandheldCompanion.Views.Pages
             // this will collapse all OEM buttons
             base.UpdateController(controller);
 
-            // UI thread (async)
-            Application.Current.Dispatcher.BeginInvoke(() =>
+            // controller based
+            foreach (var pair in ButtonStacks)
             {
-                // controller based
-                foreach (var pair in ButtonStacks)
+                ButtonFlags button = pair.Key;
+                ButtonStack buttonStack = pair.Value;
+
+                // TODO: simplify or even completely remove OEMs from the mapper
+                // specific buttons are handled elsewhere
+                if (OEM.Contains(button))
                 {
-                    ButtonFlags button = pair.Key;
-                    ButtonStack buttonStack = pair.Value;
+                    buttonStack.Visibility = Visibility.Visible;
 
-                    // TODO: simplify or even completely remove OEMs from the mapper
-                    // specific buttons are handled elsewhere
-                    if (OEM.Contains(button))
-                    {
-                        buttonStack.Visibility = Visibility.Visible;
-
-                        // update icon
-                        FontIcon newIcon = controller.GetFontIcon(button);
-                        string newLabel = MainWindow.CurrentDevice.GetButtonName(button);
-                        buttonStack.UpdateIcon(newIcon, newLabel);
-                    }
+                    // update icon
+                    FontIcon newIcon = controller.GetFontIcon(button);
+                    string newLabel = MainWindow.CurrentDevice.GetButtonName(button);
+                    buttonStack.UpdateIcon(newIcon, newLabel);
                 }
+            }
 
-                // manage layout pages visibility
-                bool HasBackGrips = controller.HasSourceButton(ButtonFlags.L4) || controller.HasSourceButton(ButtonFlags.L5) || controller.HasSourceButton(ButtonFlags.R4) || controller.HasSourceButton(ButtonFlags.R5);
-                gridBACKGRIPS.Visibility = HasBackGrips ? Visibility.Visible : Visibility.Collapsed;
-            });
+            // manage layout pages visibility
+            bool HasBackGrips = controller.HasSourceButton(ButtonFlags.L4) || controller.HasSourceButton(ButtonFlags.L5) || controller.HasSourceButton(ButtonFlags.R4) || controller.HasSourceButton(ButtonFlags.R5);
+            gridBACKGRIPS.Visibility = HasBackGrips ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public ButtonsPage(string Tag) : this()

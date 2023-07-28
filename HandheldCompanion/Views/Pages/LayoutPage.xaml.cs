@@ -92,15 +92,19 @@ namespace HandheldCompanion.Views.Pages
 
         private void ControllerManager_ControllerSelected(IController controller)
         {
-            RefreshLayoutList();
+            // UI thread (async)
+            Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                RefreshLayoutList();
 
-            // manage layout pages visibility
-            navTrackpads.Visibility = controller.HasTrackpads() ? Visibility.Visible : Visibility.Collapsed;
-            navGyro.Visibility = controller.HasMotionSensor() ? Visibility.Visible : Visibility.Collapsed;
+                // manage layout pages visibility
+                navTrackpads.Visibility = controller.HasTrackpads() ? Visibility.Visible : Visibility.Collapsed;
+                navGyro.Visibility = controller.HasMotionSensor() ? Visibility.Visible : Visibility.Collapsed;
 
-            // cascade update to (sub)pages
-            foreach (var page in pages.Values)
-                page.UpdateController(controller);
+                // cascade update to (sub)pages
+                foreach (var page in pages.Values)
+                    page.UpdateController(controller);
+            });
         }
 
         private void LayoutManager_Initialized()
@@ -266,18 +270,22 @@ namespace HandheldCompanion.Views.Pages
 
         private void UpdatePages()
         {
-            // This is a very important lock, it blocks backward events to the layout when
-            // this is actually the backend that triggered the update. Notifications on higher
-            // levels (pages and mappings) could potentially be blocked for optimization.
-            using (new ScopedLock(updateLock))
+            // UI thread (async)
+            Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                // cascade update to (sub)pages
-                foreach (var page in pages.Values)
-                    page.Update(currentTemplate.Layout);
+                // This is a very important lock, it blocks backward events to the layout when
+                // this is actually the backend that triggered the update. Notifications on higher
+                // levels (pages and mappings) could potentially be blocked for optimization.
+                using (new ScopedLock(updateLock))
+                {
+                    // cascade update to (sub)pages
+                    foreach (var page in pages.Values)
+                        page.Update(currentTemplate.Layout);
 
-                // clear layout selection
-                cB_Layouts.SelectedValue = null;
-            }
+                    // clear layout selection
+                    cB_Layouts.SelectedValue = null;
+                }
+            });
         }
 
         #region UI
@@ -407,10 +415,10 @@ namespace HandheldCompanion.Views.Pages
                         currentTemplate.Description = layoutTemplate.Description;
                         currentTemplate.Guid = layoutTemplate.Guid; // not needed
 
-                        UpdatePages();
-
                         // the whole layout has been updated without notification, trigger one
                         currentTemplate.Layout.UpdateLayout();
+
+                        UpdatePages();
                     }
                     break;
             }
