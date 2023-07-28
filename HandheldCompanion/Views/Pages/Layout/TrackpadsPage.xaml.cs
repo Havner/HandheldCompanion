@@ -10,9 +10,13 @@ namespace HandheldCompanion.Views.Pages
     /// </summary>
     public partial class TrackpadsPage : ILayoutPage
     {
-        public static List<ButtonFlags> LeftButtons = new() { ButtonFlags.LeftPadTouch, ButtonFlags.LeftPadClick, ButtonFlags.LeftPadClickUp, ButtonFlags.LeftPadClickDown, ButtonFlags.LeftPadClickLeft, ButtonFlags.LeftPadClickRight };
+        public static List<ButtonFlags> LeftButtons = new() {
+            ButtonFlags.LeftPadClick, ButtonFlags.LeftPadTouch,
+            ButtonFlags.LeftPadClickUp, ButtonFlags.LeftPadClickDown, ButtonFlags.LeftPadClickLeft, ButtonFlags.LeftPadClickRight };
         public static List<AxisLayoutFlags> LeftAxis = new() { AxisLayoutFlags.LeftPad };
-        public static List<ButtonFlags> RightButtons = new() { ButtonFlags.RightPadTouch, ButtonFlags.RightPadClick, ButtonFlags.RightPadClickUp, ButtonFlags.RightPadClickDown, ButtonFlags.RightPadClickLeft, ButtonFlags.RightPadClickRight };
+        public static List<ButtonFlags> RightButtons = new() {
+            ButtonFlags.RightPadClick, ButtonFlags.RightPadTouch,
+            ButtonFlags.RightPadClickUp, ButtonFlags.RightPadClickDown, ButtonFlags.RightPadClickLeft, ButtonFlags.RightPadClickRight };
         public static List<AxisLayoutFlags> RightAxis = new() { AxisLayoutFlags.RightPad };
 
         public TrackpadsPage()
