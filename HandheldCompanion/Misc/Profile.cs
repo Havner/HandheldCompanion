@@ -41,41 +41,41 @@ namespace HandheldCompanion.Misc
         [JsonIgnore]
         public const int SensivityArraySize = 49;             // x + 1 (hidden)
 
-        public string Name { get; set; } = string.Empty;
-        public string Path { get; set; } = string.Empty;
+        public string Name = string.Empty;
+        public string Path = string.Empty;
 
-        public Guid Guid { get; set; } = Guid.NewGuid();
-        public string Executable { get; set; } = string.Empty;
-        public bool Enabled { get; set; }
-        public bool Default { get; set; }
-        public Version Version { get; set; } = new();
-
-        public string LayoutTitle { get; set; } = string.Empty;
-        public Layout Layout { get; set; } = new();
-
-        public int SteeringAxis { get; set; } = 0;                  // 0 = Roll, 1 = Yaw
-
-        public MotionInput MotionInput { get; set; } = MotionInput.JoystickCamera;
-        public MotionMode MotionMode { get; set; } = MotionMode.Off;
-        public bool MotionInvertHorizontal { get; set; }
-        public bool MotionInvertVertical { get; set; }
-        public float MotionSensivityX { get; set; } = 1.0f;
-        public float MotionSensivityY { get; set; } = 1.0f;
-        public bool MotionSensivityArrayEnabled = false;
-        public SortedDictionary<double, double> MotionSensivityArray { get; set; } = new();
-
-        public ButtonState MotionTrigger { get; set; } = new();
-
-        // steering
-        public float SteeringMaxAngle { get; set; } = 30.0f;
-        public float SteeringPower { get; set; } = 1.0f;
-        public float SteeringDeadzone { get; set; } = 0.0f;
-
-        // Aiming down sights
-        public float AimingSightsMultiplier { get; set; } = 1.0f;
-        public ButtonState AimingSightsTrigger { get; set; } = new();
-
+        public Guid Guid = Guid.NewGuid();
+        public string Executable = string.Empty;
+        public bool Enabled;
+        public bool Default;
+        public Version Version = new();
         public ProfileErrorCode ErrorCode = ProfileErrorCode.None;
+
+        public string LayoutTitle = string.Empty;
+        public Layout Layout = new();
+
+        // generic gyro
+        public int SteeringAxis = 0;                  // 0 = Roll, 1 = Yaw
+        public bool MotionInvertHorizontal;
+        public bool MotionInvertVertical;
+
+        // mapped gyro
+        public MotionInput MotionInput  = MotionInput.JoystickCamera;
+        public MotionMode MotionMode = MotionMode.Off;
+        public ButtonState MotionTrigger = new();
+
+        // mode0
+        public float MotionSensivityX = 1.0f;
+        public float MotionSensivityY = 1.0f;
+        public float AimingSightsMultiplier = 1.0f;
+        public ButtonState AimingSightsTrigger = new();
+        public bool MotionSensivityArrayEnabled = false;
+        public SortedDictionary<double, double> MotionSensivityArray = new();
+
+        // mode1
+        public float SteeringMaxAngle = 30.0f;
+        public float SteeringPower = 1.0f;
+        public float SteeringDeadzone = 0.0f;
 
         public Profile()
         {
