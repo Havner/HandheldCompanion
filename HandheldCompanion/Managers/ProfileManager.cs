@@ -12,6 +12,8 @@ namespace HandheldCompanion.Managers
 {
     public static class ProfileManager
     {
+        private static readonly JsonSerializerSettings jsonSettings = new() { TypeNameHandling = TypeNameHandling.Auto };
+
         public const string DefaultName = "Default";
 
         public static Dictionary<string, Profile> profiles = new(StringComparer.InvariantCultureIgnoreCase);
@@ -228,10 +230,7 @@ namespace HandheldCompanion.Managers
             try
             {
                 string outputraw = File.ReadAllText(fileName);
-                profile = JsonConvert.DeserializeObject<Profile>(outputraw, new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                });
+                profile = JsonConvert.DeserializeObject<Profile>(outputraw, jsonSettings);
             }
             catch (Exception ex)
             {
@@ -253,10 +252,7 @@ namespace HandheldCompanion.Managers
             // update profile version to current build
             profile.Version = new(MainWindow.fileVersionInfo.ProductVersion);
 
-            string jsonString = JsonConvert.SerializeObject(profile, Formatting.Indented, new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.All
-            });
+            string jsonString = JsonConvert.SerializeObject(profile, Formatting.Indented, jsonSettings);
 
             string profilePath = Path.Combine(ProfilesPath, profile.GetFileName());
             File.WriteAllText(profilePath, jsonString);

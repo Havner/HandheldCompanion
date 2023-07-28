@@ -15,6 +15,8 @@ namespace HandheldCompanion.Managers
 {
     static class LayoutManager
     {
+        private static readonly JsonSerializerSettings jsonSettings = new() { TypeNameHandling = TypeNameHandling.Auto };
+
         public static List<LayoutTemplate> Templates = new()
         {
             LayoutTemplate.DefaultLayout,
@@ -124,10 +126,7 @@ namespace HandheldCompanion.Managers
             try
             {
                 string outputraw = File.ReadAllText(fileName);
-                layout = JsonConvert.DeserializeObject<Layout>(outputraw, new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                });
+                layout = JsonConvert.DeserializeObject<Layout>(outputraw, jsonSettings);
             }
             catch (Exception ex)
             {
@@ -148,10 +147,7 @@ namespace HandheldCompanion.Managers
             try
             {
                 string outputraw = File.ReadAllText(fileName);
-                layoutTemplate = JsonConvert.DeserializeObject<LayoutTemplate>(outputraw, new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                });
+                layoutTemplate = JsonConvert.DeserializeObject<LayoutTemplate>(outputraw, jsonSettings);
             }
             catch (Exception ex)
             {
@@ -204,10 +200,7 @@ namespace HandheldCompanion.Managers
 
         public static void SerializeLayout(Layout layout, string fileName)
         {
-            string jsonString = JsonConvert.SerializeObject(layout, Formatting.Indented, new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.All
-            });
+            string jsonString = JsonConvert.SerializeObject(layout, Formatting.Indented, jsonSettings);
 
             fileName = Path.Combine(LayoutsPath, $"{fileName}.json");
             File.WriteAllText(fileName, jsonString);
@@ -215,10 +208,7 @@ namespace HandheldCompanion.Managers
 
         public static void SerializeLayoutTemplate(LayoutTemplate layoutTemplate)
         {
-            string jsonString = JsonConvert.SerializeObject(layoutTemplate, Formatting.Indented, new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.All
-            });
+            string jsonString = JsonConvert.SerializeObject(layoutTemplate, Formatting.Indented, jsonSettings);
 
             string fileName = Path.Combine(TemplatesPath, $"{layoutTemplate.Name}_{layoutTemplate.Author}.json");
             File.WriteAllText(fileName, jsonString);
