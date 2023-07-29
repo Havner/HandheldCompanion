@@ -30,7 +30,7 @@ namespace steam_hidapi.net
         {
             if (e.Buffer[0] == 1)
             {
-                SDCInput input = e.Buffer.ToStructure<SDCInput>();
+                NCInput input = e.Buffer.ToStructure<NCInput>();
                 NeptuneControllerInputState state = new NeptuneControllerInputState(input);
                 if (OnControllerInputReceived != null)
                     OnControllerInputReceived(new NeptuneControllerInputEventArgs(state));
@@ -45,7 +45,7 @@ namespace steam_hidapi.net
 
         public async Task<bool> SetHaptic(byte position, ushort amplitude, ushort period, ushort count)
         {
-            SDCHapticPacket haptic = new SDCHapticPacket();
+            NCHapticPacket haptic = new NCHapticPacket();
 
             haptic.packet_type = 0x8f;
             haptic.len = 0x07;
@@ -61,7 +61,7 @@ namespace steam_hidapi.net
             return true;
         }
 
-        private byte[] GetHapticDataBytes(SDCHapticPacket packet)
+        private byte[] GetHapticDataBytes(NCHapticPacket packet)
         {
             int size = Marshal.SizeOf(packet);
             byte[] arr = new byte[size];
@@ -74,7 +74,7 @@ namespace steam_hidapi.net
 
         public Task<byte[]> SetHaptic2(HapticPad position, HapticStyle style, sbyte intensity)
         {
-            SDCHapticPacket2 haptic = new SDCHapticPacket2();
+            NCHapticPacket2 haptic = new NCHapticPacket2();
 
             haptic.packet_type = 0xea;
             haptic.len = 0xd;
@@ -92,7 +92,7 @@ namespace steam_hidapi.net
             return _hidDevice.RequestFeatureReportAsync(data);
         }
 
-        private byte[] GetHapticDataBytes(SDCHapticPacket2 packet)
+        private byte[] GetHapticDataBytes(NCHapticPacket2 packet)
         {
             int size = Marshal.SizeOf(packet);
             byte[] arr = new byte[size];

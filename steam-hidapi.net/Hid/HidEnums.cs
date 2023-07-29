@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace steam_hidapi.net.Hid
 {
-    internal enum SDCPacketType
+    internal enum NCPacketType
     {
         PT_INPUT = 0x01,
         PT_HOTPLUG = 0x03,
@@ -22,7 +22,7 @@ namespace steam_hidapi.net.Hid
         PT_RESET = 0x95,
         PT_GET_SERIAL = 0xAE,
     }
-    internal enum SDCPacketLength
+    internal enum NCPacketLength
     {
         PL_LED = 0x03,
         PL_OFF = 0x04,
@@ -31,14 +31,14 @@ namespace steam_hidapi.net.Hid
         PL_CONFIGURE_BT = 0x0f,
         PL_GET_SERIAL = 0x15,
     }
-    internal enum SDCConfigType
+    internal enum NCConfigType
     {
         CT_LED = 0x2d,
         CT_CONFIGURE = 0x32,
         CONFIGURE_BT = 0x18,
     }
 
-    internal enum SDCButton0
+    internal enum NCButton0
     {
         BTN_L5              = 0b1000000000000000,
         BTN_OPTIONS         = 0b0100000000000000,
@@ -58,44 +58,44 @@ namespace steam_hidapi.net.Hid
         BTN_R2              = 0b0000000000000001,
     }
 
-    internal enum SDCButton1
+    internal enum NCButton1
     {
         BTN_LSTICK_PRESS    = 0b01000000,
+        BTN_RPAD_TOUCH      = 0b00010000,
         BTN_LPAD_TOUCH      = 0b00001000,
+        BTN_RPAD_PRESS      = 0b00000100,
         BTN_LPAD_PRESS      = 0b00000010,
-        BTN_RPAD_PRESS      = 0b00010000,
-        BTN_RPAD_TOUCH      = 0b00000100,
         BTN_R5              = 0b00000001,
     }
 
-    internal enum SDCButton2
+    internal enum NCButton2
     {
         BTN_RSTICK_PRESS = 0b00000100,
-    }   
+    }
 
-    internal enum SDCButton4
+    internal enum NCButton4
     {
-        BTN_LSTICK_TOUCH    = 0b01000000,
         BTN_RSTICK_TOUCH    = 0b10000000,
+        BTN_LSTICK_TOUCH    = 0b01000000,
         BTN_R4              = 0b00000100,
         BTN_L4              = 0b00000010,
     }
 
-    internal enum SDCButton5
+    internal enum NCButton5
     {
         BTN_QUICK_ACCESS = 0b00000100,
     }
-    
+
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SDCInput
+    internal struct NCInput
     {
         public byte ptype;          //0x00
-        public byte _a1;            //0x01 
-        public byte _a2;            //0x02 
+        public byte _a1;            //0x01
+        public byte _a2;            //0x02
         public byte _a3;            //0x03
-        public UInt32 seq;          //0x04 
-        public UInt16 buttons0;     //0x09 
+        public UInt32 seq;          //0x04
+        public UInt16 buttons0;     //0x09
         public byte buttons1;       //0x0A
         public byte buttons2;       //0x0C
         public byte buttons3;       //0x0D
@@ -126,7 +126,7 @@ namespace steam_hidapi.net.Hid
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SDCHapticPacket
+    internal struct NCHapticPacket
     {
         public byte packet_type; // = 0x8f;
         public byte len; //  = 0x07;
@@ -137,7 +137,7 @@ namespace steam_hidapi.net.Hid
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct SDCHapticPacket2
+    internal struct NCHapticPacket2
     {
         public byte packet_type; // = 0xea;
         public byte len; // = 0xd;
