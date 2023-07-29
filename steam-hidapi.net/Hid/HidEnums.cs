@@ -3,6 +3,29 @@ using System.Runtime.InteropServices;
 
 namespace steam_hidapi.net.Hid
 {
+    internal enum GCPacketType : byte
+    {
+        STEAM_CMD_SET_MAPPINGS         = 0x80,
+        STEAM_CMD_CLEAR_MAPPINGS       = 0x81,
+        STEAM_CMD_GET_MAPPINGS         = 0x82,
+        STEAM_CMD_GET_ATTRIB           = 0x83,
+        STEAM_CMD_GET_ATTRIB_LABEL     = 0x84,
+        STEAM_CMD_DEFAULT_MAPPINGS     = 0x85,
+        STEAM_CMD_FACTORY_RESET        = 0x86,
+        STEAM_CMD_WRITE_REGISTER       = 0x87,
+        STEAM_CMD_CLEAR_REGISTER       = 0x88,
+        STEAM_CMD_READ_REGISTER        = 0x89,
+        STEAM_CMD_GET_REGISTER_LABEL   = 0x8a,
+        STEAM_CMD_GET_REGISTER_MAX     = 0x8b,
+        STEAM_CMD_GET_REGISTER_DEFAULT = 0x8c,
+        STEAM_CMD_SET_MODE             = 0x8d,
+        STEAM_CMD_DEFAULT_MOUSE        = 0x8e,
+        STEAM_CMD_FORCEFEEDBAK         = 0x8f,
+        STEAM_CMD_REQUEST_COMM_STATUS  = 0xb4,
+        STEAM_CMD_GET_SERIAL           = 0xae,
+        STEAM_CMD_HAPTIC_RUMBLE        = 0xeb,
+    }
+
     internal enum GCButton0
     {
         BTN_R2              = 0b00000001,

@@ -12,11 +12,7 @@ namespace steam_hidapi.net
     {
         private HidDevice _hidDevice;
         private ushort _vid = 0x28de, _pid = 0x1142;
-        private Task _configureTask;
-        private bool _active = false;
 
-        public bool LizardMouseEnabled { get; set; }
-        public bool LizardButtonsEnabled { get; set; }
         public string SerialNumber { get; private set; }
         public Func<GordonControllerInputEventArgs, Task> OnControllerInputReceived;
 
@@ -103,35 +99,24 @@ namespace steam_hidapi.net
             return arr;
         }
 
-        private async Task<bool> SetLizardMode(bool mouse, bool buttons)
+        public bool SetLizardMode(bool lizard)
         {
+            byte[] data;
             try
             {
-                if (!mouse)
+                if (!lizard)
                 {
-                    //Disable mouse emulation
-                    byte[] data = new byte[] { 0x87, 0x03, 0x08, 0x07 };
-                    await _hidDevice.RequestFeatureReportAsync(data);
+                    data = new byte[] { (byte)GCPacketType.STEAM_CMD_CLEAR_MAPPINGS };
+                    _hidDevice.RequestFeatureReport(data);
+                    data = new byte[] { (byte)GCPacketType.STEAM_CMD_WRITE_REGISTER, 0x03, 0x08, 0x07 };
+                    _hidDevice.RequestFeatureReport(data);
                 }
                 else
                 {
-                    //Enable mouse emulation
-                    byte[] data = new byte[] { 0x8e, 0x00 };
-                    await _hidDevice.RequestFeatureReportAsync(data);
-                }
-
-                if (!buttons)
-                {
-                    //Disable keyboard/mouse button emulation
-                    byte[] data = new byte[] { 0x81, 0x00 };
-                    await _hidDevice.RequestFeatureReportAsync(data);
-
-                }
-                else
-                {
-                    //Enable keyboard/mouse button emulation
-                    byte[] data = new byte[] { 0x85, 0x00 };
-                    await _hidDevice.RequestFeatureReportAsync(data);
+                    data = new byte[] { (byte)GCPacketType.STEAM_CMD_DEFAULT_MAPPINGS };
+                    _hidDevice.RequestFeatureReport(data);
+                    data = new byte[] { (byte)GCPacketType.STEAM_CMD_DEFAULT_MOUSE };
+                    _hidDevice.RequestFeatureReport(data);
                 }
             }
             catch (Exception)
@@ -139,15 +124,6 @@ namespace steam_hidapi.net
                 return false;
             }
             return true;
-        }
-
-        private async Task ConfigureLoop()
-        {
-            while (_active)
-            {
-                await SetLizardMode(LizardMouseEnabled, LizardButtonsEnabled);
-                await Task.Delay(250);
-            }
         }
 
         public async Task<string> ReadSerialNumberAsync()
@@ -175,8 +151,6 @@ namespace steam_hidapi.net
                 throw new Exception("Could not open device!");
             SerialNumber = await ReadSerialNumberAsync();
             _hidDevice.BeginRead();
-            _active = true;
-            _configureTask = ConfigureLoop();
         }
         public void Open()
         {
@@ -184,8 +158,6 @@ namespace steam_hidapi.net
                 throw new Exception("Could not open device!");
             SerialNumber = ReadSerialNumber();
             _hidDevice.BeginRead();
-            _active = true;
-            _configureTask = ConfigureLoop();
         }
 
         public Task CloseAsync() => Task.Run(() => Close());
@@ -194,7 +166,6 @@ namespace steam_hidapi.net
             if (_hidDevice.IsDeviceValid)
                 _hidDevice.EndRead();
             _hidDevice.Dispose();
-            _active = false;
         }
     }
 }

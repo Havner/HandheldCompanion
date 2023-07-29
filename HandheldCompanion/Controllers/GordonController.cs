@@ -248,8 +248,7 @@ namespace HandheldCompanion.Controllers
             }
 
             // disable lizard state
-            SetLizardMouse(false);
-            SetLizardButtons(false);
+            SetLizardMode(false);
 
             // manage rumble thread
             //rumbleThreadRunning = true;
@@ -271,8 +270,7 @@ namespace HandheldCompanion.Controllers
             TimerManager.Tick -= UpdateInputs;
 
             // restore lizard state
-            SetLizardButtons(true);
-            SetLizardMouse(true);
+            SetLizardMode(true);
 
             // kill rumble thread
             //rumbleThreadRunning = false;
@@ -300,14 +298,9 @@ namespace HandheldCompanion.Controllers
             this.FeedbackSmallMotor = SmallMotor;
         }
 
-        public void SetLizardMouse(bool lizardMode)
+        public void SetLizardMode(bool lizardMode)
         {
-            Controller.LizardMouseEnabled = lizardMode;
-        }
-
-        public void SetLizardButtons(bool lizardMode)
-        {
-            Controller.LizardButtonsEnabled = lizardMode;
+            Controller.SetLizardMode(lizardMode);
         }
 
         public void SetVirtualMuted(bool mute)

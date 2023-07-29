@@ -103,6 +103,8 @@ namespace steam_hidapi.net
             return arr;
         }
 
+        // TODO: remove async
+        // TODO: lizard mode sync, only heartbeat task
         private async Task<bool> SetLizardMode(bool mouse, bool buttons)
         {
             try
