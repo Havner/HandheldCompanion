@@ -120,16 +120,17 @@ namespace HandheldCompanion.Managers
                         SetHIDStrength(VibrationStrength);
                         break;
 
-                    case "SteamDeckMuteController":
+                    case "SteamMuteController":
                         {
                             if (targetController is null)
                                 return;
 
-                            if (typeof(NeptuneController) != targetController.GetType())
-                                return;
-
                             bool Muted = Convert.ToBoolean(value);
-                            ((NeptuneController)targetController).SetVirtualMuted(Muted);
+
+                            if (typeof(NeptuneController) == targetController.GetType())
+                                ((NeptuneController)targetController).SetVirtualMuted(Muted);
+                            else if (typeof(GordonController) == targetController.GetType())
+                                ((GordonController)targetController).SetVirtualMuted(Muted);
                         }
                         break;
                 }

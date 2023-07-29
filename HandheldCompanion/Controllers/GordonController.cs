@@ -50,10 +50,6 @@ namespace HandheldCompanion.Controllers
             Capabilities |= ControllerCapabilities.MotionSensor;
             Capabilities |= ControllerCapabilities.Trackpads;
 
-            // TODO: generalize for steam controller and steam deck
-            bool Muted = SettingsManager.GetBoolean("SteamDeckMuteController");
-            SetVirtualMuted(Muted);
-
             // UI
             DrawControls();
             RefreshControls();
@@ -254,6 +250,8 @@ namespace HandheldCompanion.Controllers
             //rumbleThread = new Thread(RumbleThreadLoop);
             //rumbleThread.IsBackground = true;
             //rumbleThread.Start();
+
+            SetVirtualMuted(SettingsManager.GetBoolean("SteamMuteController"));
 
             TimerManager.Tick += UpdateInputs;
             base.Plug();

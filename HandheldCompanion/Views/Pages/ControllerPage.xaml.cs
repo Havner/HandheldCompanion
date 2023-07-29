@@ -68,7 +68,7 @@ namespace HandheldCompanion.Views.Pages
                     case "DesktopLayoutEnabled":
                         Toggle_DesktopLayout.IsOn = Convert.ToBoolean(value);
                         break;
-                    case "SteamDeckMuteController":
+                    case "SteamMuteController":
                         Toggle_SDMuteController.IsOn = Convert.ToBoolean(value);
                         break;
                     case "HIDmode":
@@ -238,7 +238,7 @@ namespace HandheldCompanion.Views.Pages
             if (!IsLoaded)
                 return;
 
-            SettingsManager.SetProperty("SteamDeckMuteController", Toggle_SDMuteController.IsOn);
+            SettingsManager.SetProperty("SteamMuteController", Toggle_SDMuteController.IsOn);
         }
 
         private void Button_Layout_Click(object sender, RoutedEventArgs e)
