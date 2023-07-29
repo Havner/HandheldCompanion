@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace steam_hidapi.net
 {
+    // TODO: create abstract SteamController with common methods
     public class GordonController
     {
         private HidDevice _hidDevice;
@@ -16,30 +17,67 @@ namespace steam_hidapi.net
         public string SerialNumber { get; private set; }
         public Func<GordonControllerInputEventArgs, Task> OnControllerInputReceived;
 
-        public GordonController(short index)
+        public GordonController(short version, short index)
         {
+            // TODO: verify, utilize
+            switch (version)
+            {
+                case (short)SCVersion.WIRED:
+                    break;
+                case (short)SCVersion.WIRELESS:
+                    break;
+                case (short)SCVersion.STEAMDECK:
+                    break;
+            }
+
             _hidDevice = new HidDevice(_vid, _pid, 64, index);
             _hidDevice.OnInputReceived = input => Task.Run(() => OnInputReceived(input));
         }
 
         private void OnInputReceived(HidDeviceInputReceivedEventArgs e)
         {
-            if (e.Buffer[0] == 1)
-            {
-                GCInput input = e.Buffer.ToStructure<GCInput>();
-                GordonControllerInputState state = new GordonControllerInputState(input);
-                if (OnControllerInputReceived != null)
-                    OnControllerInputReceived(new GordonControllerInputEventArgs(state));
-            }
-            else
-            {
+            // this should always be so
+            if ((e.Buffer[0] != 1) || (e.Buffer[1] != 0))
+                return;
 
+            switch (e.Buffer[2])
+            {
+                case (byte)SCEventType.INPUT_DATA:
+                    {
+                        GCInput input = e.Buffer.ToStructure<GCInput>();
+                        GordonControllerInputState state = new GordonControllerInputState(input);
+                        if (OnControllerInputReceived != null)
+                            OnControllerInputReceived(new GordonControllerInputEventArgs(state));
+                    }
+                    break;
+                case (byte)SCEventType.CONNECT:
+                case (byte)SCEventType.BATTERY:
+                    // TODO: useful?
+                    break;
+                case (byte)SCEventType.DECK_INPUT_DATA:
+                    // TODO: verify, utilize
+                    break;
             }
         }
 
-        private double MapValue(double a, double b, double c) => a / b * c;
+        private byte[] WriteSingleCmd(GCPacketType cmd)
+        {
+            return _hidDevice.RequestFeatureReport(new byte[] { (byte)cmd, 0x00 });
+        }
 
-        public async Task<bool> SetHaptic(byte position, ushort amplitude, ushort period, ushort count)
+        private byte[] WriteRegister(GCRegister reg, ushort value)
+        {
+            byte[] req = new byte[] {
+                (byte)GCPacketType.WRITE_REGISTER,
+                0x03,  // payload size
+                (byte)reg,
+                (byte)(value & 0xFF),  // lo
+                (byte)(value >> 8) };  // hi
+
+            return _hidDevice.RequestFeatureReport(req);
+        }
+
+        public bool SetHaptic(byte position, ushort amplitude, ushort period, ushort count)
         {
             NCHapticPacket haptic = new NCHapticPacket();
 
@@ -52,11 +90,12 @@ namespace steam_hidapi.net
 
             byte[] data = GetHapticDataBytes(haptic);
 
-            await _hidDevice.RequestFeatureReportAsync(data);
+            _hidDevice.RequestFeatureReport(data);
 
             return true;
         }
 
+        // TODO: generic struct to bytes
         private byte[] GetHapticDataBytes(NCHapticPacket packet)
         {
             int size = Marshal.SizeOf(packet);
@@ -88,6 +127,7 @@ namespace steam_hidapi.net
             return _hidDevice.RequestFeatureReportAsync(data);
         }
 
+        // TODO: generic struct to bytes
         private byte[] GetHapticDataBytes(NCHapticPacket2 packet)
         {
             int size = Marshal.SizeOf(packet);
@@ -99,42 +139,33 @@ namespace steam_hidapi.net
             return arr;
         }
 
-        public bool SetLizardMode(bool lizard)
+        public void SetGyroscope(bool gyro)
         {
-            byte[] data;
-            try
+            if (gyro)
             {
-                if (!lizard)
-                {
-                    data = new byte[] { (byte)GCPacketType.STEAM_CMD_CLEAR_MAPPINGS };
-                    _hidDevice.RequestFeatureReport(data);
-                    data = new byte[] { (byte)GCPacketType.STEAM_CMD_WRITE_REGISTER, 0x03, 0x08, 0x07 };
-                    _hidDevice.RequestFeatureReport(data);
-                }
-                else
-                {
-                    data = new byte[] { (byte)GCPacketType.STEAM_CMD_DEFAULT_MAPPINGS };
-                    _hidDevice.RequestFeatureReport(data);
-                    data = new byte[] { (byte)GCPacketType.STEAM_CMD_DEFAULT_MOUSE };
-                    _hidDevice.RequestFeatureReport(data);
-                }
+                WriteRegister(GCRegister.GYRO_MODE,
+                    (ushort)((byte)GCGyroMode.ACCEL | (byte)GCGyroMode.GYRO));
             }
-            catch (Exception)
+            else
             {
-                return false;
+                WriteRegister(GCRegister.GYRO_MODE, 0x00);
             }
-            return true;
         }
 
-        public async Task<string> ReadSerialNumberAsync()
+        public void SetLizardMode(bool lizard)
         {
-            byte[] request = new byte[] { 0xAE, 0x15, 0x01 };
-            byte[] response = await _hidDevice.RequestFeatureReportAsync(request);
-            byte[] serial = new byte[response.Length - 5];
-            Array.Copy(response, 4, serial, 0, serial.Length);
-
-            return Encoding.ASCII.GetString(serial).TrimEnd((Char)0);
+            if (lizard)
+            {
+                WriteSingleCmd(GCPacketType.DEFAULT_MAPPINGS);
+                WriteSingleCmd(GCPacketType.DEFAULT_MOUSE);
+            }
+            else
+            {
+                WriteSingleCmd(GCPacketType.CLEAR_MAPPINGS);
+                WriteRegister(GCRegister.LIZARD_MOUSE, (ushort)GCLizardMouse.OFF);
+            }
         }
+
         public string ReadSerialNumber()
         {
             byte[] request = new byte[] { 0xAE, 0x15, 0x01 };
@@ -145,13 +176,6 @@ namespace steam_hidapi.net
             return Encoding.ASCII.GetString(serial).TrimEnd((Char)0);
         }
 
-        public async Task OpenAsync()
-        {
-            if (!await _hidDevice.OpenDeviceAsync())
-                throw new Exception("Could not open device!");
-            SerialNumber = await ReadSerialNumberAsync();
-            _hidDevice.BeginRead();
-        }
         public void Open()
         {
             if (!_hidDevice.OpenDevice())
@@ -160,7 +184,6 @@ namespace steam_hidapi.net
             _hidDevice.BeginRead();
         }
 
-        public Task CloseAsync() => Task.Run(() => Close());
         public void Close()
         {
             if (_hidDevice.IsDeviceValid)

@@ -51,13 +51,14 @@ namespace steam_hidapi.net
             _buttonState[GordonControllerButton.BtnL4] = (input.buttons1 & (byte)GCButton1.BTN_L4) == (byte)GCButton1.BTN_L4;
             _buttonState[GordonControllerButton.BtnR4] = (input.buttons2 & (byte)GCButton2.BTN_R4) == (byte)GCButton2.BTN_R4;
 
+            bool lpad_touched = (input.buttons2 & (byte)GCButton2.BTN_LPAD_TOUCH) == (byte)GCButton2.BTN_LPAD_TOUCH;
+            bool lpad_and_joy = (input.buttons2 & (byte)GCButton2.BTN_LPAD_AND_JOY) == (byte)GCButton2.BTN_LPAD_AND_JOY;
+
             _buttonState[GordonControllerButton.BtnLPadPress] = (input.buttons2 & (byte)GCButton2.BTN_LPAD_PRESS) == (byte)GCButton2.BTN_LPAD_PRESS;
             _buttonState[GordonControllerButton.BtnRPadPress] = (input.buttons2 & (byte)GCButton2.BTN_RPAD_PRESS) == (byte)GCButton2.BTN_RPAD_PRESS;
-            _buttonState[GordonControllerButton.BtnLPadTouch] = (input.buttons2 & (byte)GCButton2.BTN_LPAD_TOUCH) == (byte)GCButton2.BTN_LPAD_TOUCH;
+            _buttonState[GordonControllerButton.BtnLPadTouch] = lpad_touched || lpad_and_joy;
             _buttonState[GordonControllerButton.BtnRPadTouch] = (input.buttons2 & (byte)GCButton2.BTN_RPAD_TOUCH) == (byte)GCButton2.BTN_RPAD_TOUCH;
             _buttonState[GordonControllerButton.BtnLStickPress] = (input.buttons2 & (byte)GCButton2.BTN_LSTICK_PRESS) == (byte)GCButton2.BTN_LSTICK_PRESS;
-            _buttonState[GordonControllerButton.BtnLPadAndJoy] = (input.buttons2 & (byte)GCButton2.BTN_LPAD_AND_JOY) == (byte)GCButton2.BTN_LPAD_AND_JOY;
-
         }
 
         public bool this[GordonControllerButton button]
@@ -94,8 +95,30 @@ namespace steam_hidapi.net
         {
             _axisState = new Dictionary<GordonControllerAxis, Int16>();
 
-            _axisState[GordonControllerAxis.LeftX] = input.lpad_x;
-            _axisState[GordonControllerAxis.LeftY] = input.lpad_y;
+            // TODO: this logic is for wireless, wired should report those directly
+            bool lpad_touched = (input.buttons2 & (byte)GCButton2.BTN_LPAD_TOUCH) == (byte)GCButton2.BTN_LPAD_TOUCH;
+            bool lpad_and_joy = (input.buttons2 & (byte)GCButton2.BTN_LPAD_AND_JOY) == (byte)GCButton2.BTN_LPAD_AND_JOY;
+            if (lpad_touched)
+            {
+                _axisState[GordonControllerAxis.LeftPadX] = input.lpad_x;
+                _axisState[GordonControllerAxis.LeftPadY] = input.lpad_y;
+            }
+            else
+            {
+                _axisState[GordonControllerAxis.LeftStickX] = input.lpad_x;
+                _axisState[GordonControllerAxis.LeftStickY] = input.lpad_y;
+            }
+            if (lpad_touched && !lpad_and_joy)
+            {
+                _axisState[GordonControllerAxis.LeftStickX] = 0;
+                _axisState[GordonControllerAxis.LeftStickY] = 0;
+            }
+            if (lpad_touched && lpad_and_joy)
+            {
+                _axisState[GordonControllerAxis.LeftPadX] = 0;
+                _axisState[GordonControllerAxis.LeftPadY] = 0;
+            }
+
             _axisState[GordonControllerAxis.RightPadX] = input.rpad_x;
             _axisState[GordonControllerAxis.RightPadY] = input.rpad_y;
 

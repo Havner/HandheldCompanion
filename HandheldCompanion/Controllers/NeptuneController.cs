@@ -71,10 +71,10 @@ namespace HandheldCompanion.Controllers
         {
             while (rumbleThreadRunning)
             {
-                if (GetHapticIntensity(FeedbackLargeMotor, MaxIntensity, out var leftIntensity))
+                if (GetHapticIntensity(FeedbackLargeMotor, MinIntensity, MaxIntensity, out var leftIntensity))
                     lastLeftHapticOn = Controller.SetHaptic2(HapticPad.Left, HapticStyle.Weak, leftIntensity);
 
-                if (GetHapticIntensity(FeedbackSmallMotor, MaxIntensity, out var rightIntensity))
+                if (GetHapticIntensity(FeedbackSmallMotor, MinIntensity, MaxIntensity, out var rightIntensity))
                     lastRightHapticOn = Controller.SetHaptic2(HapticPad.Right, HapticStyle.Weak, rightIntensity);
 
                 await Task.Delay(TimerManager.GetPeriod() * 2);
@@ -292,13 +292,13 @@ namespace HandheldCompanion.Controllers
             base.Unplug();
         }
 
-        public bool GetHapticIntensity(byte? input, sbyte maxIntensity, out sbyte output)
+        public bool GetHapticIntensity(byte? input, sbyte minIntensity, sbyte maxIntensity, out sbyte output)
         {
             output = default;
             if (input is null || input.Value == 0)
                 return false;
 
-            double value = MinIntensity + (maxIntensity - MinIntensity) * input.Value * VibrationStrength / 255;
+            double value = minIntensity + (maxIntensity - minIntensity) * input.Value * VibrationStrength / 255;
             output = (sbyte)(value - 5); // convert from dB to values
             return true;
         }

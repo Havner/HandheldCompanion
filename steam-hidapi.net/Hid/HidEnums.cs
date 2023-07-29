@@ -3,27 +3,64 @@ using System.Runtime.InteropServices;
 
 namespace steam_hidapi.net.Hid
 {
+    internal enum SCVersion : byte
+    {
+        WIRED     = 0x00,
+        WIRELESS  = 0x01,
+        STEAMDECK = 0x02,
+    }
+
+    internal enum SCEventType : byte
+    {
+        INPUT_DATA      = 0x01,
+        CONNECT         = 0x03,
+        BATTERY         = 0x04,
+        DECK_INPUT_DATA = 0x09,
+    }
+
     internal enum GCPacketType : byte
     {
-        STEAM_CMD_SET_MAPPINGS         = 0x80,
-        STEAM_CMD_CLEAR_MAPPINGS       = 0x81,
-        STEAM_CMD_GET_MAPPINGS         = 0x82,
-        STEAM_CMD_GET_ATTRIB           = 0x83,
-        STEAM_CMD_GET_ATTRIB_LABEL     = 0x84,
-        STEAM_CMD_DEFAULT_MAPPINGS     = 0x85,
-        STEAM_CMD_FACTORY_RESET        = 0x86,
-        STEAM_CMD_WRITE_REGISTER       = 0x87,
-        STEAM_CMD_CLEAR_REGISTER       = 0x88,
-        STEAM_CMD_READ_REGISTER        = 0x89,
-        STEAM_CMD_GET_REGISTER_LABEL   = 0x8a,
-        STEAM_CMD_GET_REGISTER_MAX     = 0x8b,
-        STEAM_CMD_GET_REGISTER_DEFAULT = 0x8c,
-        STEAM_CMD_SET_MODE             = 0x8d,
-        STEAM_CMD_DEFAULT_MOUSE        = 0x8e,
-        STEAM_CMD_FORCEFEEDBAK         = 0x8f,
-        STEAM_CMD_REQUEST_COMM_STATUS  = 0xb4,
-        STEAM_CMD_GET_SERIAL           = 0xae,
-        STEAM_CMD_HAPTIC_RUMBLE        = 0xeb,
+        CLEAR_MAPPINGS       = 0x81,
+        GET_MAPPINGS         = 0x82,
+        GET_ATTRIB           = 0x83,
+        GET_ATTRIB_LABEL     = 0x84,
+        DEFAULT_MAPPINGS     = 0x85,
+        FACTORY_RESET        = 0x86,
+        WRITE_REGISTER       = 0x87,
+        CLEAR_REGISTER       = 0x88,
+        READ_REGISTER        = 0x89,
+        GET_REGISTER_LABEL   = 0x8a,
+        GET_REGISTER_MAX     = 0x8b,
+        GET_REGISTER_DEFAULT = 0x8c,
+        SET_MODE             = 0x8d,
+        DEFAULT_MOUSE        = 0x8e,
+        FORCEFEEDBAK         = 0x8f,
+        REQUEST_COMM_STATUS  = 0xb4,
+        GET_SERIAL           = 0xae,
+        HAPTIC_RUMBLE        = 0xeb,
+    }
+
+    internal enum GCRegister : byte
+    {
+        LIZARD_MOUSE        = 0x08,
+        GYRO_MODE           = 0x30,
+        LPAD_CLICK_PRESSURE = 0x34,  // TODO: Steam Deck
+        RPAD_CLICK_PRESSURE = 0x35,  // TODO: Steam Deck
+    }
+
+    internal enum GCLizardMouse : byte
+    {
+        ON  = 0x00,
+        OFF = 0x07,
+    }
+
+    internal enum GCGyroMode : byte
+    {
+        TILT_X  = 0x01,
+        TILT_Y  = 0x02,
+        Q       = 0x04,
+        ACCEL   = 0x08,
+        GYRO    = 0x10,
     }
 
     internal enum GCButton0

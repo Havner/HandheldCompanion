@@ -20,13 +20,14 @@ namespace HandheldCompanion.Controllers
         private bool isConnected = false;
         private bool isVirtualMuted = false;
 
-        private const short TrackPadInner = 21844;
+        private const short TrackPadInner = 12000;
 
         public byte FeedbackLargeMotor;
         public byte FeedbackSmallMotor;
 
-        public const sbyte MinIntensity = -2;
-        public const sbyte MaxIntensity = 10;
+        public const sbyte MinIntensity = 5;
+        public const sbyte MaxIntensity = 15;
+        private readonly ushort RumblePeriod = 80;
 
         // TODO: why not use TimerManager.Tick?
         private Thread rumbleThread;
@@ -40,7 +41,7 @@ namespace HandheldCompanion.Controllers
             if (details is null)
                 return;
 
-            Controller = new(index);
+            Controller = new(details.attributes.VersionNumber, index);
             isConnected = true;
 
             Details = details;
@@ -49,6 +50,7 @@ namespace HandheldCompanion.Controllers
             Capabilities |= ControllerCapabilities.MotionSensor;
             Capabilities |= ControllerCapabilities.Trackpads;
 
+            // TODO: generalize for steam controller and steam deck
             bool Muted = SettingsManager.GetBoolean("SteamDeckMuteController");
             SetVirtualMuted(Muted);
 
@@ -71,10 +73,10 @@ namespace HandheldCompanion.Controllers
         {
             while (rumbleThreadRunning)
             {
-                if (GetHapticIntensity(FeedbackLargeMotor, MaxIntensity, out var leftIntensity))
+                if (GetHapticIntensity(FeedbackLargeMotor, MinIntensity, MaxIntensity, out var leftIntensity))
                     lastLeftHapticOn = Controller.SetHaptic2(HapticPad.Left, HapticStyle.Weak, leftIntensity);
 
-                if (GetHapticIntensity(FeedbackSmallMotor, MaxIntensity, out var rightIntensity))
+                if (GetHapticIntensity(FeedbackSmallMotor, MinIntensity, MaxIntensity, out var rightIntensity))
                     lastRightHapticOn = Controller.SetHaptic2(HapticPad.Right, HapticStyle.Weak, rightIntensity);
 
                 await Task.Delay(TimerManager.GetPeriod() * 2);
@@ -124,42 +126,20 @@ namespace HandheldCompanion.Controllers
             Inputs.ButtonState[ButtonFlags.L2Full] = L2 > Gamepad.TriggerThreshold * 8;
             Inputs.ButtonState[ButtonFlags.R2Full] = R2 > Gamepad.TriggerThreshold * 8;
 
-            Inputs.ButtonState[ButtonFlags.LeftStickClick] = input.State.ButtonState[GordonControllerButton.BtnLStickPress];
+            Inputs.AxisState[AxisFlags.L2] = (short)L2;
+            Inputs.AxisState[AxisFlags.R2] = (short)R2;
 
             Inputs.ButtonState[ButtonFlags.L1] = input.State.ButtonState[GordonControllerButton.BtnL1];
             Inputs.ButtonState[ButtonFlags.R1] = input.State.ButtonState[GordonControllerButton.BtnR1];
             Inputs.ButtonState[ButtonFlags.L4] = input.State.ButtonState[GordonControllerButton.BtnL4];
             Inputs.ButtonState[ButtonFlags.R4] = input.State.ButtonState[GordonControllerButton.BtnR4];
 
-            Inputs.AxisState[AxisFlags.L2] = (short)L2;
-            Inputs.AxisState[AxisFlags.R2] = (short)R2;
+            // Left Stick
+            Inputs.ButtonState[ButtonFlags.LeftStickClick] = input.State.ButtonState[GordonControllerButton.BtnLStickPress];
 
-            // Left Pad and Left Stick first as there is some logic behind them
-            bool lpad_touched = input.State.ButtonState[GordonControllerButton.BtnLPadTouch];
-            bool lpad_and_joy = input.State.ButtonState[GordonControllerButton.BtnLPadAndJoy];
-            if (lpad_touched)
-            {
-                Inputs.AxisState[AxisFlags.LeftPadX] = input.State.AxesState[GordonControllerAxis.LeftX];
-                Inputs.AxisState[AxisFlags.LeftPadY] = input.State.AxesState[GordonControllerAxis.LeftY];
-            }
-            else
-            {
-                Inputs.AxisState[AxisFlags.LeftStickX] = input.State.AxesState[GordonControllerAxis.LeftX];
-                Inputs.AxisState[AxisFlags.LeftStickY] = input.State.AxesState[GordonControllerAxis.LeftY];
-            }
-            if (lpad_touched && !lpad_and_joy)
-            {
-                Inputs.AxisState[AxisFlags.LeftStickX] = 0;
-                Inputs.AxisState[AxisFlags.LeftStickY] = 0;
-            }
-            if (lpad_touched && lpad_and_joy)
-            {
-                Inputs.AxisState[AxisFlags.LeftPadX] = 0;
-                Inputs.AxisState[AxisFlags.LeftPadY] = 0;
-            }
-            Inputs.ButtonState[ButtonFlags.LeftPadTouch] = lpad_touched || lpad_and_joy;
+            Inputs.AxisState[AxisFlags.LeftStickX] = input.State.AxesState[GordonControllerAxis.LeftStickX];
+            Inputs.AxisState[AxisFlags.LeftStickY] = input.State.AxesState[GordonControllerAxis.LeftStickY];
 
-            // Left Stick, the rest
             Inputs.ButtonState[ButtonFlags.LeftStickLeft] = Inputs.AxisState[AxisFlags.LeftStickX] < -Gamepad.LeftThumbDeadZone;
             Inputs.ButtonState[ButtonFlags.LeftStickRight] = Inputs.AxisState[AxisFlags.LeftStickX] > Gamepad.LeftThumbDeadZone;
             Inputs.ButtonState[ButtonFlags.LeftStickDown] = Inputs.AxisState[AxisFlags.LeftStickY] < -Gamepad.LeftThumbDeadZone;
@@ -169,8 +149,21 @@ namespace HandheldCompanion.Controllers
             Inputs.ButtonState[ButtonFlags.LeftStickOuterRing] = leftLength >= (RingThreshold * short.MaxValue);
             Inputs.ButtonState[ButtonFlags.LeftStickInnerRing] = leftLength >= Gamepad.LeftThumbDeadZone && leftLength < (RingThreshold * short.MaxValue);
 
-            // Left Pad, the rest
+            // Left Pad
+            Inputs.ButtonState[ButtonFlags.LeftPadTouch] = input.State.ButtonState[GordonControllerButton.BtnLPadTouch];
             Inputs.ButtonState[ButtonFlags.LeftPadClick] = input.State.ButtonState[GordonControllerButton.BtnLPadPress];
+
+            if (Inputs.ButtonState[ButtonFlags.LeftPadTouch])
+            {
+                Inputs.AxisState[AxisFlags.LeftPadX] = input.State.AxesState[GordonControllerAxis.LeftPadX];
+                Inputs.AxisState[AxisFlags.LeftPadY] = input.State.AxesState[GordonControllerAxis.LeftPadY];
+            }
+            else
+            {
+                Inputs.AxisState[AxisFlags.LeftPadX] = 0;
+                Inputs.AxisState[AxisFlags.LeftPadY] = 0;
+            }
+
             if (Inputs.ButtonState[ButtonFlags.LeftPadClick])
             {
                 if (Inputs.AxisState[AxisFlags.LeftPadY] >= TrackPadInner)
@@ -186,7 +179,9 @@ namespace HandheldCompanion.Controllers
 
             // Right Pad
             Inputs.ButtonState[ButtonFlags.RightPadTouch] = input.State.ButtonState[GordonControllerButton.BtnRPadTouch];
-            if (input.State.ButtonState[GordonControllerButton.BtnRPadTouch])
+            Inputs.ButtonState[ButtonFlags.RightPadClick] = input.State.ButtonState[GordonControllerButton.BtnRPadPress];
+
+            if (Inputs.ButtonState[ButtonFlags.RightPadTouch])
             {
                 Inputs.AxisState[AxisFlags.RightPadX] = input.State.AxesState[GordonControllerAxis.RightPadX];
                 Inputs.AxisState[AxisFlags.RightPadY] = input.State.AxesState[GordonControllerAxis.RightPadY];
@@ -197,7 +192,6 @@ namespace HandheldCompanion.Controllers
                 Inputs.AxisState[AxisFlags.RightPadY] = 0;
             }
 
-            Inputs.ButtonState[ButtonFlags.RightPadClick] = input.State.ButtonState[GordonControllerButton.BtnRPadPress];
             if (Inputs.ButtonState[ButtonFlags.RightPadClick])
             {
                 if (Inputs.AxisState[AxisFlags.RightPadY] >= TrackPadInner)
@@ -219,7 +213,7 @@ namespace HandheldCompanion.Controllers
             // TODO: why Roll/Pitch swapped?
             Inputs.GyroState.Gyroscope.X =  (float)input.State.AxesState[GordonControllerAxis.GyroPitch] / short.MaxValue * 2000.0f;  // Roll
             Inputs.GyroState.Gyroscope.Y = -(float)input.State.AxesState[GordonControllerAxis.GyroRoll] / short.MaxValue * 2000.0f;   // Pitch
-            Inputs.GyroState.Gyroscope.Z = -(float)input.State.AxesState[GordonControllerAxis.GyroYaw] / short.MaxValue * 2000.0f;    // Yaw
+            Inputs.GyroState.Gyroscope.Z =  (float)input.State.AxesState[GordonControllerAxis.GyroYaw] / short.MaxValue * 2000.0f;    // Yaw
 
             base.UpdateInputs(ticks);
         }
@@ -249,6 +243,7 @@ namespace HandheldCompanion.Controllers
 
             // disable lizard state
             SetLizardMode(false);
+            SetGyroscope(true);
 
             // manage rumble thread
             //rumbleThreadRunning = true;
@@ -271,6 +266,7 @@ namespace HandheldCompanion.Controllers
 
             // restore lizard state
             SetLizardMode(true);
+            SetGyroscope(false);
 
             // kill rumble thread
             //rumbleThreadRunning = false;
@@ -281,13 +277,13 @@ namespace HandheldCompanion.Controllers
             base.Unplug();
         }
 
-        public bool GetHapticIntensity(byte? input, sbyte maxIntensity, out sbyte output)
+        public bool GetHapticIntensity(byte? input, sbyte minIntensity, sbyte maxIntensity, out sbyte output)
         {
             output = default;
-            if (input is null || input.Value == 0)
+            if (input is null || input == 0)
                 return false;
 
-            double value = MinIntensity + (maxIntensity - MinIntensity) * input.Value * VibrationStrength / 255;
+            double value = minIntensity + (maxIntensity - minIntensity) * input.Value * VibrationStrength / 255;
             output = (sbyte)(value - 5); // convert from dB to values
             return true;
         }
@@ -296,11 +292,27 @@ namespace HandheldCompanion.Controllers
         {
             this.FeedbackLargeMotor = LargeMotor;
             this.FeedbackSmallMotor = SmallMotor;
+
+            SetHaptic();
+        }
+
+        public void SetHaptic()
+        {
+            GetHapticIntensity(FeedbackLargeMotor, MinIntensity, MaxIntensity, out var leftIntensity);
+            Controller.SetHaptic((byte)HapticPad.Left, (ushort)leftIntensity, RumblePeriod, 1);
+
+            GetHapticIntensity(FeedbackSmallMotor, MinIntensity, MaxIntensity, out var rightIntensity);
+            Controller.SetHaptic((byte)HapticPad.Right, (ushort)rightIntensity, RumblePeriod, 1);
         }
 
         public void SetLizardMode(bool lizardMode)
         {
             Controller.SetLizardMode(lizardMode);
+        }
+
+        public void SetGyroscope(bool gyroMode)
+        {
+            Controller.SetGyroscope(gyroMode);
         }
 
         public void SetVirtualMuted(bool mute)
