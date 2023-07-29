@@ -8,6 +8,7 @@ namespace hidapi
     public class HidDevice : IDisposable
     {
         private ushort _vid, _pid, _inputBufferLen;
+        private short _mi;
         private IntPtr _deviceHandle;
         private object _lock = new object();
         private bool _reading = false;
@@ -16,17 +17,32 @@ namespace hidapi
         public bool IsDeviceValid => _deviceHandle != IntPtr.Zero;
         public bool Reading => _reading;
         public Func<HidDeviceInputReceivedEventArgs, Task> OnInputReceived;
-        public HidDevice(ushort vendorId, ushort productId, ushort inputBufferLen = 64)
+        public HidDevice(ushort vendorId, ushort productId, ushort inputBufferLen = 64, short mi = -1)
         {
             _vid = vendorId;
             _pid = productId;
             _inputBufferLen = inputBufferLen;
+            _mi = mi;
         }
 
         private void ThrowIfDeviceInvalid()
         {
             if (!IsDeviceValid)
                 throw new HidDeviceInvalidException();
+        }
+
+        private static short GetMI(string path)
+        {
+            string low = path.ToLower();
+            int index = low.IndexOf("mi_");
+            if (index == -1)
+                return -1;
+            string mi = low.Substring(index + 3, 2);
+
+            if (short.TryParse(mi, out short number))
+                return number;
+
+            return -1;
         }
 
         public Task<bool> OpenDeviceAsync() => Task.Run(() => OpenDevice());
@@ -42,8 +58,9 @@ namespace hidapi
                     HidDeviceInfo hidDeviceInfo = new HidDeviceInfo(deviceInfo);
 
                     _deviceHandle = HidApiNative.hid_open_path(hidDeviceInfo.Path);
+                    short mi = _mi == -1 ? _mi : GetMI(hidDeviceInfo.Path);
 
-                    if (_deviceHandle != IntPtr.Zero)
+                    if (_deviceHandle != IntPtr.Zero && mi == _mi)
                         break;
 
                     deviceInfo = hidDeviceInfo.NextDevicePtr;
