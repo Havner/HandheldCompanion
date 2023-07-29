@@ -40,8 +40,6 @@ namespace HandheldCompanion.Views.Pages
             foreach (var pair in AxisMappings)
             {
                 AxisLayoutFlags flags = pair.Key;
-                AxisLayout layout = AxisLayout.Layouts[flags];
-
                 AxisMapping axisMapping = pair.Value;
 
                 // update mapping visibility
@@ -61,8 +59,6 @@ namespace HandheldCompanion.Views.Pages
             foreach (var pair in TriggerMappings)
             {
                 AxisLayoutFlags flags = pair.Key;
-                AxisLayout layout = AxisLayout.Layouts[flags];
-
                 TriggerMapping axisMapping = pair.Value;
 
                 // update mapping visibility
