@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace neptune_hidapi.net
+namespace steam_hidapi.net
 {
     public class NeptuneControllerInputEventArgs : EventArgs
     {

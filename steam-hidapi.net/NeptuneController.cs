@@ -1,12 +1,12 @@
 ﻿using hidapi;
-using neptune_hidapi.net.Hid;
-using neptune_hidapi.net.Util;
+using steam_hidapi.net.Hid;
+using steam_hidapi.net.Util;
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace neptune_hidapi.net
+namespace steam_hidapi.net
 {
     public class NeptuneController
     {

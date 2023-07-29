@@ -1,9 +1,9 @@
-﻿using neptune_hidapi.net.Hid;
+﻿using steam_hidapi.net.Hid;
 using System;
 using System.Collections.Generic;
 
 
-namespace neptune_hidapi.net
+namespace steam_hidapi.net
 {
     internal static class Extensions
     {

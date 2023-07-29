@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace neptune_hidapi.net.Util
+namespace steam_hidapi.net.Util
 {
     internal static class StructUtils
     {

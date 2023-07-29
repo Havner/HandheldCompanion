@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace neptune_hidapi.net.Hid
+namespace steam_hidapi.net.Hid
 {
     internal enum SDCPacketType
     {

@@ -1,4 +1,4 @@
-﻿namespace neptune_hidapi.net
+﻿namespace steam_hidapi.net
 {
     public enum NeptuneControllerButton
     {

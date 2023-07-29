@@ -1,8 +1,8 @@
 using HandheldCompanion.Inputs;
 using HandheldCompanion.Managers;
 using HandheldCompanion.Misc;
-using neptune_hidapi.net;
-using neptune_hidapi.net.Hid;
+using steam_hidapi.net;
+using steam_hidapi.net.Hid;
 using SharpDX.XInput;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace HandheldCompanion.Controllers
 {
     public class NeptuneController : IController
     {
-        private neptune_hidapi.net.NeptuneController Controller;
+        private steam_hidapi.net.NeptuneController Controller;
         private NeptuneControllerInputEventArgs input;
 
         private bool isConnected = false;
