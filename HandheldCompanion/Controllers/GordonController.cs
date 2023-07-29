@@ -166,15 +166,17 @@ namespace HandheldCompanion.Controllers
 
             if (Inputs.ButtonState[ButtonFlags.LeftPadClick])
             {
-                if (Inputs.AxisState[AxisFlags.LeftPadY] >= TrackPadInner)
-                    Inputs.ButtonState[ButtonFlags.LeftPadClickUp] = true;
-                else if (Inputs.AxisState[AxisFlags.LeftPadY] <= -TrackPadInner)
-                    Inputs.ButtonState[ButtonFlags.LeftPadClickDown] = true;
-
-                if (Inputs.AxisState[AxisFlags.LeftPadX] >= TrackPadInner)
-                    Inputs.ButtonState[ButtonFlags.LeftPadClickRight] = true;
-                else if (Inputs.AxisState[AxisFlags.LeftPadX] <= -TrackPadInner)
-                    Inputs.ButtonState[ButtonFlags.LeftPadClickLeft] = true;
+                Inputs.ButtonState[ButtonFlags.LeftPadClickUp] = Inputs.AxisState[AxisFlags.LeftPadY] >= TrackPadInner;
+                Inputs.ButtonState[ButtonFlags.LeftPadClickDown] = Inputs.AxisState[AxisFlags.LeftPadY] <= -TrackPadInner;
+                Inputs.ButtonState[ButtonFlags.LeftPadClickRight] = Inputs.AxisState[AxisFlags.LeftPadX] >= TrackPadInner;
+                Inputs.ButtonState[ButtonFlags.LeftPadClickLeft] = Inputs.AxisState[AxisFlags.LeftPadX] <= -TrackPadInner;
+            }
+            else
+            {
+                Inputs.ButtonState[ButtonFlags.LeftPadClickUp] = false;
+                Inputs.ButtonState[ButtonFlags.LeftPadClickDown] = false;
+                Inputs.ButtonState[ButtonFlags.LeftPadClickRight] = false;
+                Inputs.ButtonState[ButtonFlags.LeftPadClickLeft] = false;
             }
 
             // Right Pad
@@ -194,15 +196,17 @@ namespace HandheldCompanion.Controllers
 
             if (Inputs.ButtonState[ButtonFlags.RightPadClick])
             {
-                if (Inputs.AxisState[AxisFlags.RightPadY] >= TrackPadInner)
-                    Inputs.ButtonState[ButtonFlags.RightPadClickUp] = true;
-                else if (Inputs.AxisState[AxisFlags.RightPadY] <= -TrackPadInner)
-                    Inputs.ButtonState[ButtonFlags.RightPadClickDown] = true;
-
-                if (Inputs.AxisState[AxisFlags.RightPadX] >= TrackPadInner)
-                    Inputs.ButtonState[ButtonFlags.RightPadClickRight] = true;
-                else if (Inputs.AxisState[AxisFlags.RightPadX] <= -TrackPadInner)
-                    Inputs.ButtonState[ButtonFlags.RightPadClickLeft] = true;
+                Inputs.ButtonState[ButtonFlags.RightPadClickUp] = Inputs.AxisState[AxisFlags.RightPadY] >= TrackPadInner;
+                Inputs.ButtonState[ButtonFlags.RightPadClickDown] = Inputs.AxisState[AxisFlags.RightPadY] <= -TrackPadInner;
+                Inputs.ButtonState[ButtonFlags.RightPadClickRight] = Inputs.AxisState[AxisFlags.RightPadX] >= TrackPadInner;
+                Inputs.ButtonState[ButtonFlags.RightPadClickLeft] = Inputs.AxisState[AxisFlags.RightPadX] <= -TrackPadInner;
+            }
+            else
+            {
+                Inputs.ButtonState[ButtonFlags.RightPadClickUp] = false;
+                Inputs.ButtonState[ButtonFlags.RightPadClickDown] = false;
+                Inputs.ButtonState[ButtonFlags.RightPadClickRight] = false;
+                Inputs.ButtonState[ButtonFlags.RightPadClickLeft] = false;
             }
 
             // TODO: why Z/Y swapped?
