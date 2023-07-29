@@ -2,7 +2,6 @@
 using steam_hidapi.net.Hid;
 using steam_hidapi.net.Util;
 using System;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -54,23 +53,13 @@ namespace steam_hidapi.net
             haptic.period = period;
             haptic.count = count;
 
-            byte[] data = GetHapticDataBytes(haptic);
+            byte[] data = haptic.ToBytes();
 
             await _hidDevice.RequestFeatureReportAsync(data);
 
             return true;
         }
 
-        private byte[] GetHapticDataBytes(NCHapticPacket packet)
-        {
-            int size = Marshal.SizeOf(packet);
-            byte[] arr = new byte[size];
-            IntPtr ptr = Marshal.AllocHGlobal(size);
-            Marshal.StructureToPtr(packet, ptr, false);
-            Marshal.Copy(ptr, arr, 0, size);
-            Marshal.FreeHGlobal(ptr);
-            return arr;
-        }
 
         public Task<byte[]> SetHaptic2(HapticPad position, HapticStyle style, sbyte intensity)
         {
@@ -87,20 +76,9 @@ namespace steam_hidapi.net
             haptic.tsA = ts;
             haptic.tsB = ts;
 
-            byte[] data = GetHapticDataBytes(haptic);
+            byte[] data = haptic.ToBytes();
 
             return _hidDevice.RequestFeatureReportAsync(data);
-        }
-
-        private byte[] GetHapticDataBytes(NCHapticPacket2 packet)
-        {
-            int size = Marshal.SizeOf(packet);
-            byte[] arr = new byte[size];
-            IntPtr ptr = Marshal.AllocHGlobal(size);
-            Marshal.StructureToPtr(packet, ptr, false);
-            Marshal.Copy(ptr, arr, 0, size);
-            Marshal.FreeHGlobal(ptr);
-            return arr;
         }
 
         // TODO: remove async

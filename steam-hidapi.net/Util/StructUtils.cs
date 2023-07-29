@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace steam_hidapi.net.Util
@@ -17,10 +18,18 @@ namespace steam_hidapi.net.Util
                 handle.Free();
             }
         }
-    }
 
-    internal static class Extensions
-    {
+        public static byte[] ToBytes<T>(this T structure) where T : struct
+        {
+            int size = Marshal.SizeOf(structure);
+            byte[] arr = new byte[size];
+            IntPtr ptr = Marshal.AllocHGlobal(size);
+            Marshal.StructureToPtr(structure, ptr, false);
+            Marshal.Copy(ptr, arr, 0, size);
+            Marshal.FreeHGlobal(ptr);
+            return arr;
+        }
+
         public static bool EqualsWithValues<TKey, TValue>(this Dictionary<TKey, TValue> obj1, Dictionary<TKey, TValue> obj2)
         {
             bool equal = false;
