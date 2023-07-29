@@ -63,6 +63,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GordonController.cs" />
+    <Compile Include="GordonControllerEnums.cs" />
+    <Compile Include="GordonControllerInputEventArgs.cs" />
+    <Compile Include="GordonControllerInputState.cs" />
     <Compile Include="Hid\HidEnums.cs" />
     <Compile Include="NeptuneController.cs" />
     <Compile Include="NeptuneControllerEnums.cs" />

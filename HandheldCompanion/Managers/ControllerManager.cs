@@ -233,6 +233,18 @@ namespace HandheldCompanion.Managers
                         {
                             switch (ProductId)
                             {
+                                // WIRED STEAM CONTROLLER
+                                case 0x1102:
+                                    // TODO: implement
+                                    break;
+                                // WIRELESS STEAM CONTROLLER
+                                case 0x1142:
+                                    // TODO: The dongle registers 4 controller devices, regardless how many are
+                                    // actually connected. There is no easy way to check for connection without
+                                    // actually talking to each controller. Handle only the first for now.
+                                    if (details.GetMI() == 1)
+                                        controller = new GordonController(details, 1);
+                                    break;
                                 // STEAM DECK
                                 case 0x1205:
                                     controller = new NeptuneController(details);

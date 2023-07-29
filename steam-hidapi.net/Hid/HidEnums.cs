@@ -3,6 +3,84 @@ using System.Runtime.InteropServices;
 
 namespace steam_hidapi.net.Hid
 {
+    internal enum GCButton0
+    {
+        BTN_R2              = 0b00000001,
+        BTN_L2              = 0b00000010,
+        BTN_R1              = 0b00000100,
+        BTN_L1              = 0b00001000,
+        BTN_Y               = 0b00010000,
+        BTN_B               = 0b00100000,
+        BTN_X               = 0b01000000,
+        BTN_A               = 0b10000000,
+    }
+
+    internal enum GCButton1
+    {
+        BTN_DPAD_UP         = 0b00000001,
+        BTN_DPAD_RIGHT      = 0b00000010,
+        BTN_DPAD_LEFT       = 0b00000100,
+        BTN_DPAD_DOWN       = 0b00001000,
+        BTN_MENU            = 0b00010000,
+        BTN_STEAM           = 0b00100000,
+        BTN_OPTIONS         = 0b01000000,
+        BTN_L4              = 0b10000000,
+    }
+
+    internal enum GCButton2
+    {
+        BTN_R4              = 0b00000001,
+        BTN_LPAD_PRESS      = 0b00000010,
+        BTN_RPAD_PRESS      = 0b00000100,
+        BTN_LPAD_TOUCH      = 0b00001000,
+        BTN_RPAD_TOUCH      = 0b00010000,
+        BTN_NOP             = 0b00100000,
+        BTN_LSTICK_PRESS    = 0b01000000,
+        BTN_LPAD_AND_JOY    = 0b10000000,
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct GCInput
+    {
+        public byte ptype;          //0x00
+        public byte _a1;            //0x01
+        public byte _a2;            //0x02
+        public byte _a3;            //0x03
+        public UInt32 seq;          //0x04
+        public byte buttons0;       //0x08
+        public byte buttons1;       //0x09
+        public byte buttons2;       //0x0A
+        public byte ltrig;          //0x0B
+        public byte rtrig;          //0x0C
+        public byte nop0;           //0x0D
+        public byte nop1;           //0x0E
+        public byte nop2;           //0x0F
+        public Int16 lpad_x;        //0x10
+        public Int16 lpad_y;        //0x12
+        public Int16 rpad_x;        //0x13
+        public Int16 rpad_y;        //0x16
+        public Int16 w_ltrig;       //0x18
+        public Int16 w_rtrig;       //0x1A
+        public Int16 accel_x;       //0x1C
+        public Int16 accel_y;       //0x1E
+        public Int16 accel_z;       //0x20
+        public Int16 gpitch;        //0x22
+        public Int16 gyaw;          //0x24
+        public Int16 groll;         //0x26
+        public Int16 q1;            //0x28
+        public Int16 q2;            //0x2A
+        public Int16 q3;            //0x2C
+        public Int16 q4;            //0x2E
+        public Int16 nop3;          //0x30
+        public Int16 w_ltrig_u;     //0x32
+        public Int16 w_rtrig_u;     //0x34
+        public Int16 w_joyx_u;      //0x36
+        public Int16 w_joyy_u;      //0x38
+        public Int16 w_lpadx_u;     //0x3A
+        public Int16 w_lpady_u;     //0x3C
+        public UInt16 battery;      //0x3E
+    }
+
     internal enum NCPacketType
     {
         PT_INPUT = 0x01,
