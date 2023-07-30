@@ -39,15 +39,6 @@
             <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="MENU" />
             <ui:SimpleStackPanel Name="MenuStackPanel" Spacing="6" />
 
-            <!--  OEM  -->
-            <ui:SimpleStackPanel
-                x:Name="gridOEM"
-                Spacing="6"
-                Visibility="Collapsed">
-                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="OEM" />
-                <ui:SimpleStackPanel Name="OEMStackPanel" Spacing="6" />
-            </ui:SimpleStackPanel>
-
         </ui:SimpleStackPanel>
     </Grid>
 </local:ILayoutPage>

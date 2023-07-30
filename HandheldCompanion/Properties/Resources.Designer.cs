@@ -674,7 +674,7 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to STEAM.
+        ///   Looks up a localized string similar to Steam.
         /// </summary>
         public static string Enum_NeptuneController_ButtonFlags_Special {
             get {

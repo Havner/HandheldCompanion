@@ -27,92 +27,97 @@ namespace HandheldCompanion.Inputs
         [Description("Right Stick Click")]
         RightStickClick = 8,
 
-        L1 = 9, R1 = 10,
+        L1 = 9,  // Left Shoulder
+        R1 = 10, // Right Shoulder
 
         [Description("Soft pull")]
         L2Soft = 11,
         [Description("Soft pull")]
         R2Soft = 12,
         [Description("Full pull")]
-        L2Full = 44,
+        L2Full = 13,
         [Description("Full pull")]
-        R2Full = 45,
+        R2Full = 14,
 
-        B1 = 13, B2 = 14, B3 = 15, B4 = 16, B5 = 17, B6 = 18, B7 = 19, B8 = 20,
-
-        [Description("Up")]
-        LeftStickUp = 21,
-        [Description("Down")]
-        LeftStickDown = 22,
-        [Description("Left")]
-        LeftStickLeft = 23,
-        [Description("Right")]
-        LeftStickRight = 24,
+        B1 = 15,  // A / Cross
+        B2 = 16,  // B / Circle
+        B3 = 17,  // X / Square
+        B4 = 18,  // Y / Triangle
 
         [Description("Up")]
-        RightStickUp = 25,
+        LeftStickUp = 19,
         [Description("Down")]
-        RightStickDown = 26,
+        LeftStickDown = 20,
         [Description("Left")]
-        RightStickLeft = 27,
+        LeftStickLeft = 21,
         [Description("Right")]
-        RightStickRight = 28,
+        LeftStickRight = 22,
 
-        Special = 29,
+        [Description("Up")]
+        RightStickUp = 23,
+        [Description("Down")]
+        RightStickDown = 24,
+        [Description("Left")]
+        RightStickLeft = 25,
+        [Description("Right")]
+        RightStickRight = 26,
 
-        OEM1 = 30, OEM2 = 31, OEM3 = 32, OEM4 = 33, OEM5 = 34,
-        OEM6 = 35, OEM7 = 36, OEM8 = 37, OEM9 = 38, OEM10 = 39,
+        Special = 27,
+        Quick = 28,   // Steam Deck
 
-        // Steam Deck, DS4
+        // Steam, DS4
         [Description("Left Pad Touch")]
-        LeftPadTouch = 40,
+        LeftPadTouch = 29,
         [Description("Right Pad Touch")]
-        RightPadTouch = 41,
+        RightPadTouch = 30,
 
         [Description("Left Pad Click")]
-        LeftPadClick = 42,
+        LeftPadClick = 31,
         [Description("Right Pad Click")]
-        RightPadClick = 43,
+        RightPadClick = 32,
 
-        // Steam Deck
-        L4 = 46, R4 = 47,
-        L5 = 48, R5 = 49,
+        // Steam
+        L4 = 33, R4 = 34,
+        L5 = 35, R5 = 36,
 
         [Description("Left Stick Touch")]
-        LeftStickTouch = 50,
+        LeftStickTouch = 37,
         [Description("Right Stick Touch")]
-        RightStickTouch = 51,
+        RightStickTouch = 38,
 
         [Description("Up")]
-        LeftPadClickUp = 52,
+        LeftPadClickUp = 39,
         [Description("Down")]
-        LeftPadClickDown = 53,
+        LeftPadClickDown = 40,
         [Description("Left")]
-        LeftPadClickLeft = 54,
+        LeftPadClickLeft = 41,
         [Description("Right")]
-        LeftPadClickRight = 55,
+        LeftPadClickRight = 42,
 
         [Description("Up")]
-        RightPadClickUp = 56,
+        RightPadClickUp = 43,
         [Description("Down")]
-        RightPadClickDown = 57,
+        RightPadClickDown = 44,
         [Description("Left")]
-        RightPadClickLeft = 58,
+        RightPadClickLeft = 45,
         [Description("Right")]
-        RightPadClickRight = 59,
+        RightPadClickRight = 46,
 
         [Description("Outer Ring")]
-        LeftStickOuterRing = 60,
+        LeftStickOuterRing = 47,
         [Description("Inner Ring")]
-        LeftStickInnerRing = 61,
+        LeftStickInnerRing = 48,
         [Description("Outer Ring")]
-        RightStickOuterRing = 62,
+        RightStickOuterRing = 49,
         [Description("Inner Ring")]
-        RightStickInnerRing = 63,
+        RightStickInnerRing = 50,
 
         [Description("Volume Up")]
-        VolumeUp = 64,
+        VolumeUp = 51,
         [Description("Volume Down")]
-        VolumeDown = 65,
+        VolumeDown = 52,
+
+        OEM1 = 53, OEM2 = 54, OEM3 = 55, OEM4 = 56, OEM5 = 57,
+        OEM6 = 58, OEM7 = 59, OEM8 = 60, OEM9 = 61, OEM10 = 62,
     }
 }

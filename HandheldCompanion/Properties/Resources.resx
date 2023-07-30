@@ -1224,7 +1224,7 @@ with motion input enabled, use selected button(s) to disable motion.</value>
     <value>View</value>
   </data>
   <data name="Enum.NeptuneController.ButtonFlags.Special" xml:space="preserve">
-    <value>STEAM</value>
+    <value>Steam</value>
   </data>
   <data name="Enum.NeptuneController.ButtonFlags.Start" xml:space="preserve">
     <value>Menu</value>

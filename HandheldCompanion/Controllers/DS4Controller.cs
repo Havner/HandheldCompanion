@@ -43,11 +43,6 @@ namespace HandheldCompanion.Controllers
             }
             catch { }
 
-            /*
-            if (prevState.Buttons.Equals(State.Buttons) && prevState.PointOfViewControllers.Equals(State.PointOfViewControllers) && prevInjectedButtons.Equals(InjectedButtons))
-                return;
-            */
-
             Inputs.ButtonState = InjectedButtons.Clone() as ButtonState;
 
             Inputs.ButtonState[ButtonFlags.B1] = State.Buttons[1];

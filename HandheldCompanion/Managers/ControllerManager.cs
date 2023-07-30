@@ -464,7 +464,7 @@ namespace HandheldCompanion.Managers
             // TODO: remove and implement mute keys
             // cut the mapper with mute keys
             if (controllerState.ButtonState[ButtonFlags.Special] == true ||
-                controllerState.ButtonState[ButtonFlags.OEM1] == true)
+                controllerState.ButtonState[ButtonFlags.Quick] == true)
                 return;
 
             // pass inputs to Layout manager

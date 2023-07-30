@@ -32,6 +32,18 @@ namespace HandheldCompanion.Devices
                 new List<KeyCode>() { KeyCode.F4 },
                 false, ButtonFlags.OEM4
                 ));
+
+            OEMChords.Add(new DeviceChord("F5",
+                new List<KeyCode>() { KeyCode.F5 },
+                new List<KeyCode>() { KeyCode.F5 },
+                false, ButtonFlags.OEM5
+                ));
+
+            OEMChords.Add(new DeviceChord("F6",
+                new List<KeyCode>() { KeyCode.F6 },
+                new List<KeyCode>() { KeyCode.F6 },
+                false, ButtonFlags.OEM6
+                ));
         }
     }
 }
