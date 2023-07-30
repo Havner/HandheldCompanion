@@ -10,7 +10,9 @@ namespace HandheldCompanion.Actions
     public class KeyboardActions : IActions
     {
         public VirtualKeyCode Key;
-        private bool IsKeyDown;
+
+        // runtime variables
+        private bool IsKeyDown = false;
         private KeyCode[] pressed;
 
         // settings
@@ -19,7 +21,6 @@ namespace HandheldCompanion.Actions
         public KeyboardActions()
         {
             this.ActionType = ActionType.Keyboard;
-            this.IsKeyDown = false;
 
             this.Value = false;
             this.prevValue = false;

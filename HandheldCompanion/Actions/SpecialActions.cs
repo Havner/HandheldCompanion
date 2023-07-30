@@ -18,6 +18,8 @@ namespace HandheldCompanion.Actions
     public class SpecialActions : IActions
     {
         public SpecialActionsType SpecialType;
+
+        // runtime variables
         private FlickStick flickStick = new();
         private float remainder = 0;
 

@@ -1,4 +1,5 @@
 using HandheldCompanion.Inputs;
+using HandheldCompanion.Misc;
 using HandheldCompanion.Simulators;
 using System;
 using System.ComponentModel;
@@ -33,29 +34,37 @@ namespace HandheldCompanion.Actions
     {
         public MouseActionsType MouseType;
 
-        private bool IsCursorDown;
-        private int scrollAmountInClicks = 20;
+        // const settings
+        private const int scrollAmountInClicks = 20;
+        private const float FilterBeta = 0.5f;
 
+        // runtime variables
+        private bool IsCursorDown = false;
         private bool IsTouched = false;
         private Vector2 remainder = new();
         private KeyCode[] pressed;
+        private OneEuroFilterPair mouseFilter;
 
         // settings click
         public ModifierSet Modifiers = ModifierSet.None;
 
         // settings axis
         public int Sensivity = 33;
-        public int Deadzone = 10;
+        public float Acceleration = 1.0f;
+        public int Deadzone = 10;           // stick only
+        public bool Filtering = true;       // pad only
+        public float FilterCutoff = 0.05f;  // pad only
         public bool AxisRotated = false;
         public bool AxisInverted = false;
 
         public MouseActions()
         {
             this.ActionType = ActionType.Mouse;
-            this.IsCursorDown = false;
 
             this.Value = false;
             this.prevValue = false;
+
+            mouseFilter = new(FilterCutoff, FilterBeta);
         }
 
         public MouseActions(MouseActionsType type) : this()
@@ -134,6 +143,13 @@ namespace HandheldCompanion.Actions
                         deltaVector *= 1.0f / (1.0f - deadzone);                                  // rescale to 0.0 - 1.0
 
                         sensitivityFinetune = (MouseType == MouseActionsType.Move ? 0.3f : 0.1f);
+
+                        if (Acceleration != 1.0f)
+                        {
+                            deltaVector.X = (float)(Math.Sign(deltaVector.X) * Math.Pow(Math.Abs(deltaVector.X), Acceleration));
+                            deltaVector.Y = (float)(Math.Sign(deltaVector.Y) * Math.Pow(Math.Abs(deltaVector.Y), Acceleration));
+                            sensitivityFinetune = (float)Math.Pow(sensitivityFinetune, Acceleration);
+                        }
                     }
                     break;
 
@@ -152,6 +168,20 @@ namespace HandheldCompanion.Actions
                         prevValue = layout.vector;
 
                         sensitivityFinetune = (MouseType == MouseActionsType.Move ? 9.0f : 3.0f);
+
+                        if (Filtering)
+                        {
+                            mouseFilter.SetFilterCutoff(FilterCutoff);
+                            deltaVector.X = (float)mouseFilter.axis1Filter.Filter(deltaVector.X, 1);
+                            deltaVector.Y = (float)mouseFilter.axis2Filter.Filter(deltaVector.Y, 1);
+                        }
+
+                        if (Acceleration != 1.0f)
+                        {
+                            deltaVector.X = (float)(Math.Sign(deltaVector.X) * Math.Pow(Math.Abs(deltaVector.X), Acceleration));
+                            deltaVector.Y = (float)(Math.Sign(deltaVector.Y) * Math.Pow(Math.Abs(deltaVector.Y), Acceleration));
+                            sensitivityFinetune = (float)Math.Pow(sensitivityFinetune, Acceleration);
+                        }
                     }
                     break;
             }
