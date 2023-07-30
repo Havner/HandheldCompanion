@@ -92,6 +92,8 @@ namespace steam_hidapi.net
                     //Disable mouse emulation
                     byte[] data = new byte[] { 0x87, 0x03, 0x08, 0x07 };
                     await _hidDevice.RequestFeatureReportAsync(data);
+                    byte[] data2 = new byte[] { 0x87, 0x03, 0x07, 0x07 };
+                    await _hidDevice.RequestFeatureReportAsync(data2);
                 }
                 else
                 {
