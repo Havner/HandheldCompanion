@@ -38,8 +38,8 @@ namespace HandheldCompanion.Views.Pages
 
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
 
-            ControllerManager.ControllerPlugged += ControllerPlugged;
-            ControllerManager.ControllerUnplugged += ControllerUnplugged;
+            ControllerManager.ControllerPlugged += ControllerManager_ControllerPlugged;
+            ControllerManager.ControllerUnplugged += ControllerManager_ControllerUnplugged;
 
             // device specific settings
             Type DeviceType = MainWindow.CurrentDevice.GetType();
@@ -90,7 +90,7 @@ namespace HandheldCompanion.Views.Pages
         {
         }
 
-        private void ControllerUnplugged(IController Controller)
+        private void ControllerManager_ControllerUnplugged(IController Controller)
         {
             LogManager.LogDebug("Controller unplugged: {0}", Controller.ToString());
 
@@ -116,7 +116,7 @@ namespace HandheldCompanion.Views.Pages
             });
         }
 
-        private void ControllerPlugged(IController Controller)
+        private void ControllerManager_ControllerPlugged(IController Controller)
         {
             LogManager.LogDebug("Controller plugged: {0}", Controller.ToString());
 

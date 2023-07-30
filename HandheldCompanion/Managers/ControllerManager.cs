@@ -71,7 +71,7 @@ namespace HandheldCompanion.Managers
             Initialized?.Invoke();
 
             // summon an empty controller, used to feed Layout UI
-            // todo: improve me
+            // TODO: improve me
             ControllerSelected?.Invoke(GetEmulatedController());
 
             LogManager.LogInformation("{0} has started", "ControllerManager");

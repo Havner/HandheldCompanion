@@ -41,6 +41,11 @@ namespace HandheldCompanion.Controls
                 this.Icon.SetResourceReference(Control.ForegroundProperty, "SystemControlForegroundBaseMediumBrush");
         }
 
+        public void UpdateSelections()
+        {
+            Action_SelectionChanged(null, null);
+        }
+
         public void SetIActions(IActions actions)
         {
             // this reset is required to trigger SelectionChanged events

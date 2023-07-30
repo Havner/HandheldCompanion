@@ -20,6 +20,9 @@ namespace HandheldCompanion.Managers
 
         public static bool IsInitialized;
 
+        public static event ControllerSelectedEventHandler ControllerSelected;
+        public delegate void ControllerSelectedEventHandler(IController Controller);
+
         public static event InitializedEventHandler Initialized;
         public delegate void InitializedEventHandler();
 
@@ -151,6 +154,8 @@ namespace HandheldCompanion.Managers
                     vTarget = new Xbox360Target();
                     break;
             }
+
+            ControllerSelected?.Invoke(ControllerManager.GetEmulatedController());
 
             // failed to initialize controller
             if (vTarget is null)

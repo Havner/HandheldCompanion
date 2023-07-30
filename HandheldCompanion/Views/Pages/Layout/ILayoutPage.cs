@@ -99,6 +99,18 @@ namespace HandheldCompanion.Views.Pages
             }
         }
 
+        public virtual void UpdateSelections()
+        {
+            foreach (var pair in ButtonStacks)
+                pair.Value.UpdateSelections();
+
+            foreach (var pair in AxisMappings)
+                pair.Value.UpdateSelections();
+
+            foreach (var pair in TriggerMappings)
+                pair.Value.UpdateSelections();
+        }
+
         public void Update(Layout layout)
         {
             foreach (var pair in ButtonStacks)

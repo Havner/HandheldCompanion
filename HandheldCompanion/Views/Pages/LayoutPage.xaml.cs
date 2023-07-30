@@ -87,6 +87,7 @@ namespace HandheldCompanion.Views.Pages
             LayoutManager.Updated += LayoutManager_Updated;
             LayoutManager.Initialized += LayoutManager_Initialized;
             ControllerManager.ControllerSelected += ControllerManager_ControllerSelected;
+            VirtualManager.ControllerSelected += VirtualManager_ControllerSelected;
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;
         }
 
@@ -103,6 +104,17 @@ namespace HandheldCompanion.Views.Pages
                     page.Item1.UpdateController(controller);
                     page.Item2.IsEnabled = page.Item1.IsEnabled();
                 }
+            });
+        }
+
+        private void VirtualManager_ControllerSelected(IController controller)
+        {
+            // UI thread (async)
+            Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                // cascade update to (sub)pages
+                foreach (var page in pages.Values)
+                    page.Item1.UpdateSelections();
             });
         }
 
