@@ -61,7 +61,7 @@ namespace HandheldCompanion.Managers
                 EnableRaisingEvents = true,
                 IncludeSubdirectories = true,
                 Filter = "*.json",
-                NotifyFilter = NotifyFilters.FileName | NotifyFilters.Size
+                NotifyFilter = NotifyFilters.FileName | NotifyFilters.LastWrite,
             };
 
             // LayoutManager cares only about the currently applied profile.
@@ -91,7 +91,9 @@ namespace HandheldCompanion.Managers
             }
             desktopLayout.Updated += DesktopLayout_Updated;
 
-            layoutWatcher.Created += LayoutWatcher_Created;
+            // TODO: overwritten layout will have different GUID so it will duplicate
+            layoutWatcher.Created += LayoutWatcher_Template;
+            layoutWatcher.Changed += LayoutWatcher_Template;
 
             IsInitialized = true;
             Initialized?.Invoke();
@@ -110,7 +112,7 @@ namespace HandheldCompanion.Managers
         }
 
         // this event is called from non main thread and it creates LayoutTemplate which is a WPF element
-        private static void LayoutWatcher_Created(object sender, FileSystemEventArgs e)
+        private static void LayoutWatcher_Template(object sender, FileSystemEventArgs e)
         {
             // UI thread (async)
             Application.Current.Dispatcher.BeginInvoke(() =>
