@@ -166,6 +166,8 @@ namespace hidapi
         public void EndRead()
         {
             _reading = false;
+            _readThread.Join();
+            _readThread = null;
         }
 
         public void Close()
