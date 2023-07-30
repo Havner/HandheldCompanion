@@ -1,3 +1,4 @@
+using HandheldCompanion.Controllers;
 using HandheldCompanion.Controls;
 using HandheldCompanion.Inputs;
 using System.Collections.Generic;
@@ -24,6 +25,17 @@ namespace HandheldCompanion.Views.Pages
 
                 AxisMappings.Add(axis, axisMapping);
             }
+        }
+
+        public override void UpdateController(IController controller)
+        {
+            base.UpdateController(controller);
+
+            bool gyro = CheckController(controller, Gyroscope);
+
+            gridGyroscope.Visibility = gyro ? Visibility.Visible : Visibility.Collapsed;
+
+            enabled = gyro;
         }
 
         public GyroPage(string Tag) : this()

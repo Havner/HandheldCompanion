@@ -31,7 +31,7 @@ namespace HandheldCompanion.Views.Pages
         private TrackpadsPage trackpadsPage = new();
         private GyroPage gyroPage = new();
 
-        private Dictionary<string, ILayoutPage> pages;
+        private Dictionary<string, (ILayoutPage, NavigationViewItem)> pages;
 
         private string preNavItemTag;
 
@@ -52,18 +52,18 @@ namespace HandheldCompanion.Views.Pages
             this.pages = new()
             {
                 // buttons
-                { "ButtonsPage", buttonsPage },
-                { "DpadPage", dpadPage },
+                { "ButtonsPage", ( buttonsPage, navButtons ) },
+                { "DpadPage", ( dpadPage, navDpad ) },
 
                 // triger
-                { "TriggersPage", triggersPage },
+                { "TriggersPage", ( triggersPage, navTriggers ) },
 
                 // axis
-                { "JoysticksPage", joysticksPage },
-                { "TrackpadsPage", trackpadsPage },
+                { "JoysticksPage", ( joysticksPage, navJoysticks ) },
+                { "TrackpadsPage", ( trackpadsPage, navTrackpads ) },
 
                 // gyro
-                { "GyroPage", gyroPage },
+                { "GyroPage", ( gyroPage, navGyro ) },
             };
 
             foreach (ButtonStack buttonStack in buttonsPage.ButtonStacks.Values.Union(dpadPage.ButtonStacks.Values).Union(triggersPage.ButtonStacks.Values).Union(joysticksPage.ButtonStacks.Values).Union(trackpadsPage.ButtonStacks.Values))
@@ -97,13 +97,12 @@ namespace HandheldCompanion.Views.Pages
             {
                 RefreshLayoutList();
 
-                // manage layout pages visibility
-                navTrackpads.Visibility = controller.HasTrackpads() ? Visibility.Visible : Visibility.Collapsed;
-                navGyro.Visibility = controller.HasMotionSensor() ? Visibility.Visible : Visibility.Collapsed;
-
                 // cascade update to (sub)pages
                 foreach (var page in pages.Values)
-                    page.UpdateController(controller);
+                {
+                    page.Item1.UpdateController(controller);
+                    page.Item2.IsEnabled = page.Item1.IsEnabled();
+                }
             });
         }
 
@@ -280,7 +279,7 @@ namespace HandheldCompanion.Views.Pages
                 {
                     // cascade update to (sub)pages
                     foreach (var page in pages.Values)
-                        page.Update(currentTemplate.Layout);
+                        page.Item1.Update(currentTemplate.Layout);
 
                     // clear layout selection
                     cB_Layouts.SelectedValue = null;
@@ -310,7 +309,7 @@ namespace HandheldCompanion.Views.Pages
         public void NavView_Navigate(string navItemTag)
         {
             var item = pages.FirstOrDefault(p => p.Key.Equals(navItemTag));
-            Page _page = item.Value;
+            Page _page = item.Value.Item1;
 
             // Get the page type before navigation so you can prevent duplicate
             // entries in the backstack.

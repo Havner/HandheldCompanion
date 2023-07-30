@@ -51,7 +51,7 @@ namespace HandheldCompanion.Views.Pages
             foreach (ButtonFlags button in BACKGRIPS)
             {
                 ButtonStack panel = new(button);
-                BACKGRIPSStackPanel.Children.Add(panel);
+                BackgripsStackPanel.Children.Add(panel);
 
                 ButtonStacks.Add(button, panel);
             }
@@ -61,9 +61,17 @@ namespace HandheldCompanion.Views.Pages
         {
             base.UpdateController(controller);
 
-            // manage layout pages visibility
-            bool HasBackGrips = controller.HasSourceButton(ButtonFlags.L4) || controller.HasSourceButton(ButtonFlags.L5) || controller.HasSourceButton(ButtonFlags.R4) || controller.HasSourceButton(ButtonFlags.R5);
-            gridBACKGRIPS.Visibility = HasBackGrips ? Visibility.Visible : Visibility.Collapsed;
+            bool abxy = CheckController(controller, ABXY);
+            bool bumpers = CheckController(controller, BUMPERS);
+            bool menu = CheckController(controller, MENU);
+            bool backgrips = CheckController(controller, BACKGRIPS);
+
+            gridButtons.Visibility = abxy ? Visibility.Visible : Visibility.Collapsed;
+            gridBumpers.Visibility = bumpers ? Visibility.Visible : Visibility.Collapsed;
+            gridMenu.Visibility = menu ? Visibility.Visible : Visibility.Collapsed;
+            gridBackgrips.Visibility = backgrips ? Visibility.Visible : Visibility.Collapsed;
+
+            enabled = abxy || bumpers || menu || backgrips;
         }
 
         public ButtonsPage(string Tag) : this()

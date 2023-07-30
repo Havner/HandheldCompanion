@@ -1,3 +1,4 @@
+using HandheldCompanion.Controllers;
 using HandheldCompanion.Controls;
 using HandheldCompanion.Inputs;
 using System.Collections.Generic;
@@ -51,6 +52,19 @@ namespace HandheldCompanion.Views.Pages
 
                 TriggerMappings.Add(axis, axisMapping);
             }
+        }
+
+        public override void UpdateController(IController controller)
+        {
+            base.UpdateController(controller);
+
+            bool leftTrigger = CheckController(controller, LeftTriggerAxis);
+            bool rightTrigger = CheckController(controller, RightTriggerAxis);
+
+            gridLeftTrigger.Visibility = leftTrigger ? Visibility.Visible : Visibility.Collapsed;
+            gridRightTrigger.Visibility = rightTrigger ? Visibility.Visible : Visibility.Collapsed;
+
+            enabled = leftTrigger || rightTrigger;
         }
 
         public TriggersPage(string Tag) : this()

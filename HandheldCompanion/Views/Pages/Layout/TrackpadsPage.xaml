@@ -18,21 +18,25 @@
     <Grid Name="MainGrid">
         <ui:SimpleStackPanel Spacing="6">
 
-            <!--  LEFT TRACKPAD BUTTONS  -->
-            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="LEFT TRACKPAD BUTTONS" />
-            <ui:SimpleStackPanel Name="LeftTrackpadButtonsPanel" Spacing="6" />
+            <ui:SimpleStackPanel Name="gridLeftPad" Spacing="6">
+                <!--  LEFT TRACKPAD BUTTONS  -->
+                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="LEFT TRACKPAD BUTTONS" />
+                <ui:SimpleStackPanel Name="LeftTrackpadButtonsPanel" Spacing="6" />
 
-            <!--  LEFT TRACKPAD  -->
-            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="LEFT TRACKPAD" />
-            <ui:SimpleStackPanel Name="LeftTrackpadPanel" Spacing="6" />
+                <!--  LEFT TRACKPAD  -->
+                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="LEFT TRACKPAD" />
+                <ui:SimpleStackPanel Name="LeftTrackpadPanel" Spacing="6" />
+            </ui:SimpleStackPanel>
 
-            <!--  RIGHT TRACKPAD BUTTONS  -->
-            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="RIGHT TRACKPAD BUTTONS" />
-            <ui:SimpleStackPanel Name="RightTrackpadButtonsPanel" Spacing="6" />
+            <ui:SimpleStackPanel Name="gridRightPad" Spacing="6">
+                <!--  RIGHT TRACKPAD BUTTONS  -->
+                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="RIGHT TRACKPAD BUTTONS" />
+                <ui:SimpleStackPanel Name="RightTrackpadButtonsPanel" Spacing="6" />
 
-            <!--  RIGHT TRACKPAD  -->
-            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="RIGHT TRACKPAD" />
-            <ui:SimpleStackPanel Name="RightTrackpadPanel" Spacing="6" />
+                <!--  RIGHT TRACKPAD  -->
+                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="RIGHT TRACKPAD" />
+                <ui:SimpleStackPanel Name="RightTrackpadPanel" Spacing="6" />
+            </ui:SimpleStackPanel>
 
         </ui:SimpleStackPanel>
     </Grid>

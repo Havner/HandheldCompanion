@@ -18,7 +18,6 @@ namespace HandheldCompanion.Controllers
     {
         None = 0,
         MotionSensor = 1,
-        Trackpads = 2,
     }
 
     public abstract class IController
@@ -116,11 +115,6 @@ namespace HandheldCompanion.Controllers
         public bool HasMotionSensor()
         {
             return Capabilities.HasFlag(ControllerCapabilities.MotionSensor);
-        }
-
-        public bool HasTrackpads()
-        {
-            return Capabilities.HasFlag(ControllerCapabilities.Trackpads);
         }
 
         public bool IsVirtual()

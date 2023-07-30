@@ -1,3 +1,4 @@
+using HandheldCompanion.Controllers;
 using HandheldCompanion.Controls;
 using HandheldCompanion.Inputs;
 using System.Collections.Generic;
@@ -55,6 +56,19 @@ namespace HandheldCompanion.Views.Pages
 
                 AxisMappings.Add(axis, axisMapping);
             }
+        }
+
+        public override void UpdateController(IController controller)
+        {
+            base.UpdateController(controller);
+
+            bool leftStick = CheckController(controller, LeftThumbAxis);
+            bool rightStick = CheckController(controller, RightThumbAxis);
+
+            gridLeftStick.Visibility = leftStick ? Visibility.Visible : Visibility.Collapsed;
+            gridRightStick.Visibility = rightStick ? Visibility.Visible : Visibility.Collapsed;
+
+            enabled = leftStick || rightStick;
         }
 
         public JoysticksPage(string Tag) : this()

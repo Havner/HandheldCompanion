@@ -18,21 +18,25 @@
     <Grid Name="MainGrid">
         <ui:SimpleStackPanel Spacing="6">
 
-            <!--  LEFT TRIGGER BUTTONS  -->
-            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="LEFT TRIGGER BUTTONS" />
-            <ui:SimpleStackPanel Name="LeftTriggerButtonsPanel" Spacing="6" />
+            <ui:SimpleStackPanel Name="gridLeftTrigger" Spacing="6">
+                <!--  LEFT TRIGGER BUTTONS  -->
+                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="LEFT TRIGGER BUTTONS" />
+                <ui:SimpleStackPanel Name="LeftTriggerButtonsPanel" Spacing="6" />
 
-            <!--  LEFT TRIGGER  -->
-            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="LEFT TRIGGER" />
-            <ui:SimpleStackPanel Name="LeftTriggerPanel" Spacing="6" />
+                <!--  LEFT TRIGGER  -->
+                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="LEFT TRIGGER" />
+                <ui:SimpleStackPanel Name="LeftTriggerPanel" Spacing="6" />
+            </ui:SimpleStackPanel>
 
-            <!--  RIGHT TRIGGER BUTTONS  -->
-            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="RIGHT TRIGGER BUTTONS" />
-            <ui:SimpleStackPanel Name="RightTriggerButtonsPanel" Spacing="6" />
+            <ui:SimpleStackPanel Name="gridRightTrigger" Spacing="6">
+                <!--  RIGHT TRIGGER BUTTONS  -->
+                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="RIGHT TRIGGER BUTTONS" />
+                <ui:SimpleStackPanel Name="RightTriggerButtonsPanel" Spacing="6" />
 
-            <!--  RIGHT TRIGGER  -->
-            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="RIGHT TRIGGER" />
-            <ui:SimpleStackPanel Name="RightTriggerPanel" Spacing="6" />
+                <!--  RIGHT TRIGGER  -->
+                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="RIGHT TRIGGER" />
+                <ui:SimpleStackPanel Name="RightTriggerPanel" Spacing="6" />
+            </ui:SimpleStackPanel>
 
         </ui:SimpleStackPanel>
     </Grid>

@@ -1,3 +1,4 @@
+using HandheldCompanion.Controllers;
 using HandheldCompanion.Controls;
 using HandheldCompanion.Inputs;
 using System.Collections.Generic;
@@ -55,6 +56,19 @@ namespace HandheldCompanion.Views.Pages
 
                 AxisMappings.Add(axis, axisMapping);
             }
+        }
+
+        public override void UpdateController(IController controller)
+        {
+            base.UpdateController(controller);
+
+            bool leftPad = CheckController(controller, LeftAxis);
+            bool rightPad = CheckController(controller, RightAxis);
+
+            gridLeftPad.Visibility = leftPad ? Visibility.Visible : Visibility.Collapsed;
+            gridRightPad.Visibility = rightPad ? Visibility.Visible : Visibility.Collapsed;
+
+            enabled = leftPad || rightPad;
         }
 
         public TrackpadsPage(string Tag) : this()

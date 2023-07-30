@@ -10,7 +10,6 @@ namespace HandheldCompanion.Controllers
         public SteamController() : base()
         {
             Capabilities |= ControllerCapabilities.MotionSensor;
-            Capabilities |= ControllerCapabilities.Trackpads;
         }
 
         public override bool IsConnected()

@@ -1,3 +1,4 @@
+using HandheldCompanion.Controllers;
 using HandheldCompanion.Controls;
 using HandheldCompanion.Inputs;
 using System.Collections.Generic;
@@ -24,6 +25,17 @@ namespace HandheldCompanion.Views.Pages
 
                 ButtonStacks.Add(button, panel);
             }
+        }
+
+        public override void UpdateController(IController controller)
+        {
+            base.UpdateController(controller);
+
+            bool dpad = CheckController(controller, DPAD);
+
+            gridDpad.Visibility = dpad ? Visibility.Visible : Visibility.Collapsed;
+
+            enabled = dpad;
         }
 
         public DpadPage(string Tag) : this()

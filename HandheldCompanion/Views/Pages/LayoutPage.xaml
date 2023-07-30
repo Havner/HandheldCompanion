@@ -201,7 +201,6 @@
 
                 </ui:SimpleStackPanel>
 
-                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="Current Layout" />
                 <ui:Frame
                     Name="ContentFrame"
                     Width="{Binding ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type FrameworkElement}}}"

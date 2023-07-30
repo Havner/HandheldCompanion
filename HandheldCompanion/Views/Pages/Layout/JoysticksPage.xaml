@@ -18,21 +18,25 @@
     <Grid Name="MainGrid">
         <ui:SimpleStackPanel Spacing="6">
 
-            <!--  LEFT JOYSTICK BUTTONS  -->
-            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="LEFT JOYSTICK BUTTONS" />
-            <ui:SimpleStackPanel Name="LeftJoystickButtonsPanel" Spacing="6" />
+            <ui:SimpleStackPanel Name="gridLeftStick" Spacing="6">
+                <!--  LEFT JOYSTICK BUTTONS  -->
+                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="LEFT JOYSTICK BUTTONS" />
+                <ui:SimpleStackPanel Name="LeftJoystickButtonsPanel" Spacing="6" />
 
-            <!--  LEFT JOYSTICK  -->
-            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="LEFT JOYSTICK" />
-            <ui:SimpleStackPanel Name="LeftJoystickPanel" Spacing="6" />
+                <!--  LEFT JOYSTICK  -->
+                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="LEFT JOYSTICK" />
+                <ui:SimpleStackPanel Name="LeftJoystickPanel" Spacing="6" />
+            </ui:SimpleStackPanel>
 
-            <!--  RIGHT JOYSTICK BUTTONS  -->
-            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="RIGHT JOYSTICK BUTTONS" />
-            <ui:SimpleStackPanel Name="RightJoystickButtonsPanel" Spacing="6" />
+            <ui:SimpleStackPanel Name="gridRightStick" Spacing="6">
+                <!--  RIGHT JOYSTICK BUTTONS  -->
+                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="RIGHT JOYSTICK BUTTONS" />
+                <ui:SimpleStackPanel Name="RightJoystickButtonsPanel" Spacing="6" />
 
-            <!--  RIGHT JOYSTICK  -->
-            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="RIGHT JOYSTICK" />
-            <ui:SimpleStackPanel Name="RightJoystickPanel" Spacing="6" />
+                <!--  RIGHT JOYSTICK  -->
+                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="RIGHT JOYSTICK" />
+                <ui:SimpleStackPanel Name="RightJoystickPanel" Spacing="6" />
+            </ui:SimpleStackPanel>
 
         </ui:SimpleStackPanel>
     </Grid>

@@ -19,25 +19,28 @@
         <ui:SimpleStackPanel Spacing="6">
 
             <!--  A,B,X,Y  -->
-            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="A,B,X,Y" />
-            <ui:SimpleStackPanel Name="ButtonsStackPanel" Spacing="6" />
+            <ui:SimpleStackPanel Name="gridButtons" Spacing="6">
+                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="A,B,X,Y" />
+                <ui:SimpleStackPanel Name="ButtonsStackPanel" Spacing="6" />
+            </ui:SimpleStackPanel>
 
             <!--  BUMPERS  -->
-            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="BUMPERS" />
-            <ui:SimpleStackPanel Name="BumpersStackPanel" Spacing="6" />
+            <ui:SimpleStackPanel Name="gridBumpers" Spacing="6">
+                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="BUMPERS" />
+                <ui:SimpleStackPanel Name="BumpersStackPanel" Spacing="6" />
+            </ui:SimpleStackPanel>
 
-            <!--  BACK GRIPS  -->
-            <ui:SimpleStackPanel
-                x:Name="gridBACKGRIPS"
-                Spacing="6"
-                Visibility="Collapsed">
+                <!--  BACK GRIPS  -->
+            <ui:SimpleStackPanel Name="gridBackgrips" Spacing="6">
                 <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="BACK GRIPS" />
-                <ui:SimpleStackPanel Name="BACKGRIPSStackPanel" Spacing="6" />
+                <ui:SimpleStackPanel Name="BackgripsStackPanel" Spacing="6" />
             </ui:SimpleStackPanel>
 
             <!--  MENU  -->
-            <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="MENU" />
-            <ui:SimpleStackPanel Name="MenuStackPanel" Spacing="6" />
+            <ui:SimpleStackPanel Name="gridMenu" Spacing="6">
+                <TextBlock Style="{StaticResource BaseTextBlockStyle}" Text="MENU" />
+                <ui:SimpleStackPanel Name="MenuStackPanel" Spacing="6" />
+            </ui:SimpleStackPanel>
 
         </ui:SimpleStackPanel>
     </Grid>
