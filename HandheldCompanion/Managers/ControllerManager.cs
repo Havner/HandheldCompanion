@@ -117,7 +117,7 @@ namespace HandheldCompanion.Managers
                 {
                     case "VibrationStrength":
                         uint VibrationStrength = Convert.ToUInt32(value);
-                        SetHIDStrength(VibrationStrength);
+                        targetController?.SetVibrationStrength(VibrationStrength);
                         break;
 
                     case "SteamMuteController":
@@ -127,9 +127,9 @@ namespace HandheldCompanion.Managers
 
                             bool Muted = Convert.ToBoolean(value);
 
-                            if (typeof(NeptuneController) == targetController.GetType())
+                            if (typeof(NeptuneController) == targetController?.GetType())
                                 ((NeptuneController)targetController).SetVirtualMuted(Muted);
-                            else if (typeof(GordonController) == targetController.GetType())
+                            else if (typeof(GordonController) == targetController?.GetType())
                                 ((GordonController)targetController).SetVirtualMuted(Muted);
                         }
                         break;
@@ -152,11 +152,6 @@ namespace HandheldCompanion.Managers
                 path = Controllers.Keys.FirstOrDefault();
                 SetTargetController(path);
             }
-        }
-
-        private static void SetHIDStrength(uint value)
-        {
-            targetController?.SetVibrationStrength(value);
         }
 
         private static void VirtualManager_Vibrated(byte LargeMotor, byte SmallMotor)

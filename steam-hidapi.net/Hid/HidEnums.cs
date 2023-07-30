@@ -18,8 +18,9 @@ namespace steam_hidapi.net.Hid
         DECK_INPUT_DATA = 0x09,
     }
 
-    internal enum GCPacketType : byte
+    internal enum SCPacketType : byte
     {
+        // linux kernel
         CLEAR_MAPPINGS       = 0x81,
         GET_MAPPINGS         = 0x82,
         GET_ATTRIB           = 0x83,
@@ -34,25 +35,54 @@ namespace steam_hidapi.net.Hid
         GET_REGISTER_DEFAULT = 0x8c,
         SET_MODE             = 0x8d,
         DEFAULT_MOUSE        = 0x8e,
-        FORCEFEEDBAK         = 0x8f,
+        SET_HAPTIC           = 0x8f,
         REQUEST_COMM_STATUS  = 0xb4,
         GET_SERIAL           = 0xae,
         HAPTIC_RUMBLE        = 0xeb,
+
+        // other sources
+        RESET                = 0x95,
+        OFF                  = 0x9f,
+        CALIBRATE_TRACKPAD   = 0xa7,
+        AUDIO                = 0xb6,
+        CALIBRATE_JOYSTICK   = 0xbf,
+        SET_AUDIO_INDICES    = 0xc1,
+        SET_HAPTIC2          = 0xea,
     }
 
-    internal enum GCRegister : byte
+    internal enum SCRegister : byte
     {
-        LIZARD_MOUSE        = 0x08,
-        GYRO_MODE           = 0x30,
-        LPAD_CLICK_PRESSURE = 0x34,  // TODO: Steam Deck
-        RPAD_CLICK_PRESSURE = 0x35,  // TODO: Steam Deck
+        LPAD_MODE           = 0x07,  // Neptune
+        RPAD_MODE           = 0x08,
+        GYRO_MODE           = 0x30,  // Gordon
+        LPAD_CLICK_PRESSURE = 0x34,  // Neptune
+        RPAD_CLICK_PRESSURE = 0x35,  // Neptune
     }
 
-    internal enum GCLizardMouse : byte
+    internal enum SCLizardMouse : byte
     {
         ON  = 0x00,
         OFF = 0x07,
     }
+
+    public enum SCHapticPad : byte
+    {
+        Left  = 0x00,
+        Right = 0x01,
+    };
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct SCHapticPacket
+    {
+        public byte packet_type; // = 0x8f;
+        public byte len;         // = 0x07;
+        public byte position;    // = 0|1;
+        public UInt16 amplitude;
+        public UInt16 period;
+        public UInt16 count;
+    }
+
+    // GORDON CONTROLLER SPECIFIC
 
     internal enum GCGyroMode : byte
     {
@@ -141,40 +171,7 @@ namespace steam_hidapi.net.Hid
         public UInt16 battery;      //0x3E
     }
 
-    internal enum NCPacketType
-    {
-        PT_INPUT = 0x01,
-        PT_HOTPLUG = 0x03,
-        PT_IDLE = 0x04,
-        PT_OFF = 0x9f,
-        PT_AUDIO = 0xb6,
-        PT_CLEAR_MAPPINGS = 0x81,
-        PT_CONFIGURE = 0x87,
-        PT_LED = 0x87,
-        PT_CALIBRATE_JOYSTICK = 0xbf,
-        PT_CALIBRATE_TRACKPAD = 0xa7,
-        PT_SET_AUDIO_INDICES = 0xc1,
-        PT_LIZARD_BUTTONS = 0x85,
-        PT_LIZARD_MOUSE = 0x8e,
-        PT_FEEDBACK = 0x8f,
-        PT_RESET = 0x95,
-        PT_GET_SERIAL = 0xAE,
-    }
-    internal enum NCPacketLength
-    {
-        PL_LED = 0x03,
-        PL_OFF = 0x04,
-        PL_FEEDBACK = 0x07,
-        PL_CONFIGURE = 0x15,
-        PL_CONFIGURE_BT = 0x0f,
-        PL_GET_SERIAL = 0x15,
-    }
-    internal enum NCConfigType
-    {
-        CT_LED = 0x2d,
-        CT_CONFIGURE = 0x32,
-        CONFIGURE_BT = 0x18,
-    }
+    // NEPTUNE CONTROLLER SPECIFIC
 
     internal enum NCButton0
     {
@@ -224,7 +221,6 @@ namespace steam_hidapi.net.Hid
         BTN_QUICK_ACCESS = 0b00000100,
     }
 
-
     [StructLayout(LayoutKind.Sequential)]
     internal struct NCInput
     {
@@ -238,7 +234,7 @@ namespace steam_hidapi.net.Hid
         public byte buttons2;       //0x0C
         public byte buttons3;       //0x0D
         public byte buttons4;       //0x0E
-        public byte buttons5;       //0x0E
+        public byte buttons5;       //0x0F
         public Int16 lpad_x;        //0x10
         public Int16 lpad_y;        //0x12
         public Int16 rpad_x;        //0x13
@@ -264,37 +260,20 @@ namespace steam_hidapi.net.Hid
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    internal struct NCHapticPacket
-    {
-        public byte packet_type; // = 0x8f;
-        public byte len; //  = 0x07;
-        public byte position; //  = 1;
-        public UInt16 amplitude;
-        public UInt16 period;
-        public UInt16 count;
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
     internal struct NCHapticPacket2
     {
-        public byte packet_type; // = 0xea;
-        public byte len; // = 0xd;
-        public HapticPad position; // = HapticPad.Left;
-        public HapticStyle style; // = HapticStyle.Strong; //
-        public byte unsure2; // = 0x0;
-        public sbyte intensity; // = 0x00; // -7..5 => -2dB..10dB
-        public byte unsure3; // = 0x4;
-        public int tsA; // = 0; // timestamp?
-        public int tsB; // = 0;
+        public byte packet_type;     // = 0xea;
+        public byte len;             // = 0xd;
+        public SCHapticPad position; // = HapticPad.Left;
+        public NCHapticStyle style;  // = HapticStyle.Strong; //
+        public byte unsure2;         // = 0x0;
+        public sbyte intensity;      // = 0x00; // -7..5 => -2dB..10dB
+        public byte unsure3;         // = 0x4;
+        public int tsA;              // = 0; // timestamp?
+        public int tsB;              // = 0;
     }
 
-    public enum HapticPad : byte
-    {
-        Left,
-        Right
-    };
-
-    public enum HapticStyle : byte
+    public enum NCHapticStyle : byte
     {
         Disabled = 0,
         Weak = 1,

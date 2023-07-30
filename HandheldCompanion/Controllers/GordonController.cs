@@ -219,9 +219,9 @@ namespace HandheldCompanion.Controllers
                 return;
             }
 
-            // disable lizard state
-            SetLizardMode(false);
-            SetGyroscope(true);
+            Controller.SetLizardMode(false);
+            // TODO: using more battery?
+            Controller.SetGyroscope(true);
 
             SetVirtualMuted(SettingsManager.GetBoolean("SteamMuteController"));
 
@@ -233,9 +233,8 @@ namespace HandheldCompanion.Controllers
         {
             TimerManager.Tick -= UpdateInputs;
 
-            // restore lizard state
-            SetLizardMode(true);
-            SetGyroscope(false);
+            Controller.SetLizardMode(true);
+            Controller.SetGyroscope(false);
 
             Controller.Close();
 
@@ -269,20 +268,10 @@ namespace HandheldCompanion.Controllers
         public void SetHaptic()
         {
             GetHapticIntensity(FeedbackLargeMotor, MinIntensity, MaxIntensity, out var leftIntensity);
-            Controller.SetHaptic((byte)HapticPad.Left, (ushort)leftIntensity, RumblePeriod, 1);
+            Controller.SetHaptic((byte)SCHapticPad.Left, (ushort)leftIntensity, RumblePeriod, 1);
 
             GetHapticIntensity(FeedbackSmallMotor, MinIntensity, MaxIntensity, out var rightIntensity);
-            Controller.SetHaptic((byte)HapticPad.Right, (ushort)rightIntensity, RumblePeriod, 1);
-        }
-
-        public void SetLizardMode(bool lizardMode)
-        {
-            Controller.SetLizardMode(lizardMode);
-        }
-
-        public void SetGyroscope(bool gyroMode)
-        {
-            Controller.SetGyroscope(gyroMode);
+            Controller.SetHaptic((byte)SCHapticPad.Right, (ushort)rightIntensity, RumblePeriod, 1);
         }
     }
 }

@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SteamController.cs" />
     <Compile Include="GordonController.cs" />
     <Compile Include="GordonControllerEnums.cs" />
     <Compile Include="GordonControllerInputEventArgs.cs" />

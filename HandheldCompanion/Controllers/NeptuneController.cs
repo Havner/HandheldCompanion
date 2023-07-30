@@ -29,15 +29,12 @@ namespace HandheldCompanion.Controllers
         private Thread rumbleThread;
         private bool rumbleThreadRunning;
 
-        private Task<byte[]> lastLeftHapticOn;
-        private Task<byte[]> lastRightHapticOn;
-
         public NeptuneController(PnPDetails details) : base()
         {
             if (details is null)
                 return;
 
-            Controller = new();
+            Controller = new(details.attributes.VersionNumber, -1);
             isConnected = true;
 
             Details = details;
@@ -56,25 +53,6 @@ namespace HandheldCompanion.Controllers
             SourceAxis.Add(AxisLayoutFlags.LeftPad);
             SourceAxis.Add(AxisLayoutFlags.RightPad);
             SourceAxis.Add(AxisLayoutFlags.Gyroscope);
-        }
-
-        private async void RumbleThreadLoop(object? obj)
-        {
-            while (rumbleThreadRunning)
-            {
-                if (GetHapticIntensity(FeedbackLargeMotor, MinIntensity, MaxIntensity, out var leftIntensity))
-                    lastLeftHapticOn = Controller.SetHaptic2(HapticPad.Left, HapticStyle.Weak, leftIntensity);
-
-                if (GetHapticIntensity(FeedbackSmallMotor, MinIntensity, MaxIntensity, out var rightIntensity))
-                    lastRightHapticOn = Controller.SetHaptic2(HapticPad.Right, HapticStyle.Weak, rightIntensity);
-
-                await Task.Delay(TimerManager.GetPeriod() * 2);
-
-                if (lastLeftHapticOn is not null)
-                    await lastLeftHapticOn;
-                if (lastRightHapticOn is not null)
-                    await lastRightHapticOn;
-            }
         }
 
         public override string ToString()
@@ -259,8 +237,7 @@ namespace HandheldCompanion.Controllers
             }
 
             // disable lizard state
-            SetLizardMouse(false);
-            SetLizardButtons(false);
+            Controller.SetLizardMode(false);
 
             // manage rumble thread
             rumbleThreadRunning = true;
@@ -279,8 +256,7 @@ namespace HandheldCompanion.Controllers
             TimerManager.Tick -= UpdateInputs;
 
             // restore lizard state
-            SetLizardButtons(true);
-            SetLizardMouse(true);
+            Controller.SetLizardMode(true);
 
             // kill rumble thread
             rumbleThreadRunning = false;
@@ -313,14 +289,18 @@ namespace HandheldCompanion.Controllers
             this.FeedbackSmallMotor = SmallMotor;
         }
 
-        public void SetLizardMouse(bool lizardMode)
+        private async void RumbleThreadLoop(object? obj)
         {
-            Controller.LizardMouseEnabled = lizardMode;
-        }
+            while (rumbleThreadRunning)
+            {
+                if (GetHapticIntensity(FeedbackLargeMotor, MinIntensity, MaxIntensity, out var leftIntensity))
+                    Controller.SetHaptic2(SCHapticPad.Left, NCHapticStyle.Weak, leftIntensity);
 
-        public void SetLizardButtons(bool lizardMode)
-        {
-            Controller.LizardButtonsEnabled = lizardMode;
+                if (GetHapticIntensity(FeedbackSmallMotor, MinIntensity, MaxIntensity, out var rightIntensity))
+                    Controller.SetHaptic2(SCHapticPad.Right, NCHapticStyle.Weak, rightIntensity);
+
+                await Task.Delay(TimerManager.GetPeriod() * 2);
+            }
         }
     }
 }
