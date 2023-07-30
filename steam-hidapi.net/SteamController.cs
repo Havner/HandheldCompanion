@@ -11,16 +11,17 @@ namespace steam_hidapi.net
     {
         protected HidDevice _hidDevice;
         protected ushort _vid, _pid;
-        protected short _version, _index;
+        protected short _index;
         protected Task _configureTask;
         protected bool _active = false;
         protected bool _lizard = true;
 
         public string SerialNumber { get; private set; }
 
-        public SteamController(short version, short index)
+        public SteamController(ushort vid, ushort pid, short index)
         {
-            _version = version;
+            _vid = vid;
+            _pid = pid;
             _index = index;
         }
 
@@ -76,7 +77,7 @@ namespace steam_hidapi.net
             {
                 WriteSingleCmd(SCPacketType.CLEAR_MAPPINGS);
                 WriteRegister(SCRegister.RPAD_MODE, (ushort)SCLizardMouse.OFF);
-                if (_version == (short)SCVersion.STEAMDECK)
+                if (_pid == (ushort)SCPid.STEAMDECK)
                     WriteRegister(SCRegister.RPAD_MODE, (ushort)SCLizardMouse.OFF);
             }
         }

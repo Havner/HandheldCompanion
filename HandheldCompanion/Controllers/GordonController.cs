@@ -26,12 +26,12 @@ namespace HandheldCompanion.Controllers
         public const sbyte MaxIntensity = 15;
         private readonly ushort RumblePeriod = 80;
 
-        public GordonController(PnPDetails details, short index) : base()
+        public GordonController(PnPDetails details) : base()
         {
             if (details is null)
                 return;
 
-            Controller = new(details.attributes.VersionNumber, index);
+            Controller = new(details.attributes.VendorID, details.attributes.ProductID, details.GetMI());
             isConnected = true;
 
             Details = details;

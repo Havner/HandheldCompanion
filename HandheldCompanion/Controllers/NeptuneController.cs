@@ -34,7 +34,7 @@ namespace HandheldCompanion.Controllers
             if (details is null)
                 return;
 
-            Controller = new(details.attributes.VersionNumber, -1);
+            Controller = new(details.attributes.VendorID, details.attributes.ProductID, details.GetMI());
             isConnected = true;
 
             Details = details;

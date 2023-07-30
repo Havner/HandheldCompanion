@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 namespace steam_hidapi.net
 {
+    // TODO: wired controller has more bytes usable in its packet, use those as well?
+
     public class GordonControllerInputState
     {
         public GordonControllerButtonState ButtonState { get; private set; }

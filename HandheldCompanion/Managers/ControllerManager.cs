@@ -231,15 +231,22 @@ namespace HandheldCompanion.Managers
                             {
                                 // WIRED STEAM CONTROLLER
                                 case 0x1102:
-                                    // TODO: implement
+                                    // MI == 0 is virtual keyboards
+                                    // MI == 1 is virtual mouse
+                                    // MI == 2 is controller proper
+                                    // No idea what's in case of more than one controller connected
+                                    if (details.GetMI() == 2)
+                                        controller = new GordonController(details);
                                     break;
                                 // WIRELESS STEAM CONTROLLER
                                 case 0x1142:
+                                    // MI == 0 is virtual keyboards
+                                    // MI == 1-4 are 4 controllers
                                     // TODO: The dongle registers 4 controller devices, regardless how many are
                                     // actually connected. There is no easy way to check for connection without
                                     // actually talking to each controller. Handle only the first for now.
                                     if (details.GetMI() == 1)
-                                        controller = new GordonController(details, 1);
+                                        controller = new GordonController(details);
                                     break;
                                 // STEAM DECK
                                 case 0x1205:

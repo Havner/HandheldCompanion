@@ -11,21 +11,8 @@ namespace steam_hidapi.net
     {
         public Func<GordonControllerInputEventArgs, Task> OnControllerInputReceived;
 
-        public GordonController(short version, short index) : base(version, index)
+        public GordonController(ushort vid, ushort pid, short index) : base(vid, pid, index)
         {
-            switch (version)
-            {
-                // TODO: verify, what is wired's index?
-                case (short)SCVersion.WIRED:
-                    _vid = 0x28de;
-                    _pid = 0x1102;
-                    break;
-                case (short)SCVersion.WIRELESS:
-                    _vid = 0x28de;
-                    _pid = 0x1142;
-                    break;
-            }
-
             _hidDevice = new HidDevice(_vid, _pid, 64, index);
             _hidDevice.OnInputReceived = input => Task.Run(() => OnInputReceived(input));
         }

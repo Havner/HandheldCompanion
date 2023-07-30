@@ -3,11 +3,11 @@ using System.Runtime.InteropServices;
 
 namespace steam_hidapi.net.Hid
 {
-    internal enum SCVersion : byte
+    internal enum SCPid : ushort
     {
-        WIRED     = 0x00,
-        WIRELESS  = 0x01,
-        STEAMDECK = 0x02,
+        WIRED     = 0x1102,
+        WIRELESS  = 0x1142,
+        STEAMDECK = 0x1205,
     }
 
     internal enum SCEventType : byte
