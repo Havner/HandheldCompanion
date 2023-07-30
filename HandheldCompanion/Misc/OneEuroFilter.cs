@@ -7,23 +7,35 @@ namespace HandheldCompanion.Misc
         public const double DEFAULT_WHEEL_CUTOFF = 0.005;
         public const double DEFAULT_WHEEL_BETA = 0.004;
 
-        public OneEuroFilter axis1Filter = new(DEFAULT_WHEEL_CUTOFF, DEFAULT_WHEEL_BETA);
-        public OneEuroFilter axis2Filter = new(DEFAULT_WHEEL_CUTOFF, DEFAULT_WHEEL_BETA);
-    }
+        public OneEuroFilter axis1Filter;
+        public OneEuroFilter axis2Filter;
 
-    public class OneEuroFilter3D
-    {
-        public const double DEFAULT_WHEEL_CUTOFF = 0.4;
-        public const double DEFAULT_WHEEL_BETA = 0.2;
-
-        public OneEuroFilter axis1Filter = new(DEFAULT_WHEEL_CUTOFF, DEFAULT_WHEEL_BETA);
-        public OneEuroFilter axis2Filter = new(DEFAULT_WHEEL_CUTOFF, DEFAULT_WHEEL_BETA);
-        public OneEuroFilter axis3Filter = new(DEFAULT_WHEEL_CUTOFF, DEFAULT_WHEEL_BETA);
-
-        public void SetFilterAttrs(double minCutoff, double beta)
+        public OneEuroFilterPair()
         {
-            axis1Filter.MinCutoff = axis2Filter.MinCutoff = axis3Filter.MinCutoff = minCutoff;
-            axis1Filter.Beta = axis2Filter.Beta = axis3Filter.Beta = beta;
+            axis1Filter = new(DEFAULT_WHEEL_CUTOFF, DEFAULT_WHEEL_BETA);
+            axis2Filter = new(DEFAULT_WHEEL_CUTOFF, DEFAULT_WHEEL_BETA);
+        }
+
+        public OneEuroFilterPair(double cutoff, double beta)
+        {
+            axis1Filter = new(cutoff, beta);
+            axis2Filter = new(cutoff, beta);
+        }
+
+        public void SetFilterCutoff(double cutoff)
+        {
+            axis1Filter.MinCutoff = axis2Filter.MinCutoff = cutoff;
+        }
+
+        public void SetFilterBeta(double beta)
+        {
+            axis1Filter.Beta = axis2Filter.Beta = beta;
+        }
+
+        public void SetFilterAttrs(double cutoff, double beta)
+        {
+            SetFilterCutoff(cutoff);
+            SetFilterBeta(beta);
         }
     }
 

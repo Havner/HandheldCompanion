@@ -76,6 +76,8 @@ namespace HandheldCompanion.Misc
                     // Possible improvement: already combine stick rotation and flick
                     // for last flick output to allow for smoother transition.
 
+                    // TODO: those one euro filter and tiered smoothed rotation need verification
+
                     // Stick turn along horizontal plane
                     var StickAngle = (float)Math.Atan2(StickFiltered.X, StickFiltered.Y); // Stick angle from up/forward
                     var LastStickAngle = (float)Math.Atan2(LastStickFiltered.X, LastStickFiltered.Y);
