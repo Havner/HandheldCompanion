@@ -36,8 +36,8 @@ namespace steam_hidapi.net.Hid
         SET_MODE             = 0x8d,
         DEFAULT_MOUSE        = 0x8e,
         SET_HAPTIC           = 0x8f,
-        REQUEST_COMM_STATUS  = 0xb4,
         GET_SERIAL           = 0xae,
+        REQUEST_COMM_STATUS  = 0xb4,
         HAPTIC_RUMBLE        = 0xeb,
 
         // other sources
@@ -71,6 +71,8 @@ namespace steam_hidapi.net.Hid
         Right = 0x01,
     };
 
+    // TODO: this should be Pack = 1, due to lack of that the amplitude
+    // here starts at 5th byte, not 4th as it probably should
     [StructLayout(LayoutKind.Sequential)]
     internal struct SCHapticPacket
     {
@@ -124,12 +126,11 @@ namespace steam_hidapi.net.Hid
         BTN_RPAD_PRESS      = 0b00000100,
         BTN_LPAD_TOUCH      = 0b00001000,
         BTN_RPAD_TOUCH      = 0b00010000,
-        BTN_NOP             = 0b00100000,
         BTN_LSTICK_PRESS    = 0b01000000,
         BTN_LPAD_AND_JOY    = 0b10000000,
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal struct GCInput
     {
         public byte ptype;          //0x00
@@ -175,53 +176,57 @@ namespace steam_hidapi.net.Hid
 
     internal enum NCButton0
     {
-        BTN_L5              = 0b1000000000000000,
-        BTN_OPTIONS         = 0b0100000000000000,
-        BTN_STEAM           = 0b0010000000000000,
-        BTN_MENU            = 0b0001000000000000,
-        BTN_DPAD_DOWN       = 0b0000100000000000,
-        BTN_DPAD_LEFT       = 0b0000010000000000,
-        BTN_DPAD_RIGHT      = 0b0000001000000000,
-        BTN_DPAD_UP         = 0b0000000100000000,
-        BTN_A               = 0b0000000010000000,
-        BTN_X               = 0b0000000001000000,
-        BTN_B               = 0b0000000000100000,
-        BTN_Y               = 0b0000000000010000,
-        BTN_L1              = 0b0000000000001000,
-        BTN_R1              = 0b0000000000000100,
-        BTN_L2              = 0b0000000000000010,
-        BTN_R2              = 0b0000000000000001,
+        BTN_R2              = 0b00000001,
+        BTN_L2              = 0b00000010,
+        BTN_R1              = 0b00000100,
+        BTN_L1              = 0b00001000,
+        BTN_Y               = 0b00010000,
+        BTN_B               = 0b00100000,
+        BTN_X               = 0b01000000,
+        BTN_A               = 0b10000000,
     }
 
     internal enum NCButton1
     {
-        BTN_LSTICK_PRESS    = 0b01000000,
-        BTN_RPAD_TOUCH      = 0b00010000,
-        BTN_LPAD_TOUCH      = 0b00001000,
-        BTN_RPAD_PRESS      = 0b00000100,
-        BTN_LPAD_PRESS      = 0b00000010,
-        BTN_R5              = 0b00000001,
+        BTN_DPAD_UP         = 0b00000001,
+        BTN_DPAD_RIGHT      = 0b00000010,
+        BTN_DPAD_LEFT       = 0b00000100,
+        BTN_DPAD_DOWN       = 0b00001000,
+        BTN_MENU            = 0b00010000,
+        BTN_STEAM           = 0b00100000,
+        BTN_OPTIONS         = 0b01000000,
+        BTN_L5              = 0b10000000,
     }
 
     internal enum NCButton2
     {
-        BTN_RSTICK_PRESS = 0b00000100,
+        BTN_R5              = 0b00000001,
+        BTN_LPAD_PRESS      = 0b00000010,
+        BTN_RPAD_PRESS      = 0b00000100,
+        BTN_LPAD_TOUCH      = 0b00001000,
+        BTN_RPAD_TOUCH      = 0b00010000,
+        BTN_LSTICK_PRESS    = 0b01000000,
     }
 
-    internal enum NCButton4
+    internal enum NCButton3
     {
-        BTN_RSTICK_TOUCH    = 0b10000000,
-        BTN_LSTICK_TOUCH    = 0b01000000,
-        BTN_R4              = 0b00000100,
-        BTN_L4              = 0b00000010,
+        BTN_RSTICK_PRESS    = 0b00000100,
     }
 
     internal enum NCButton5
     {
-        BTN_QUICK_ACCESS = 0b00000100,
+        BTN_L4              = 0b00000010,
+        BTN_R4              = 0b00000100,
+        BTN_LSTICK_TOUCH    = 0b01000000,
+        BTN_RSTICK_TOUCH    = 0b10000000,
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    internal enum NCButton6
+    {
+        BTN_QUICK_ACCESS    = 0b00000100,
+    }
+
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal struct NCInput
     {
         public byte ptype;          //0x00
@@ -229,12 +234,14 @@ namespace steam_hidapi.net.Hid
         public byte _a2;            //0x02
         public byte _a3;            //0x03
         public UInt32 seq;          //0x04
-        public UInt16 buttons0;     //0x09
-        public byte buttons1;       //0x0A
-        public byte buttons2;       //0x0C
-        public byte buttons3;       //0x0D
-        public byte buttons4;       //0x0E
-        public byte buttons5;       //0x0F
+        public byte buttons0;       //0x08
+        public byte buttons1;       //0x09
+        public byte buttons2;       //0x0A
+        public byte buttons3;       //0x0B
+        public byte nop0;           //0x0C
+        public byte buttons5;       //0x0D
+        public byte buttons6;       //0x0E
+        public byte nop1;           //0x0F
         public Int16 lpad_x;        //0x10
         public Int16 lpad_y;        //0x12
         public Int16 rpad_x;        //0x13
@@ -259,6 +266,14 @@ namespace steam_hidapi.net.Hid
         public Int16 rpad_pressure;	//0x3A
     }
 
+    public enum NCHapticStyle : byte
+    {
+        Disabled = 0,
+        Weak = 1,
+        Strong = 2
+    };
+
+    // TODO: this should be Pack = 1, whole packet needs verification with USBpcap
     [StructLayout(LayoutKind.Sequential)]
     internal struct NCHapticPacket2
     {
@@ -272,11 +287,4 @@ namespace steam_hidapi.net.Hid
         public int tsA;              // = 0; // timestamp?
         public int tsB;              // = 0;
     }
-
-    public enum NCHapticStyle : byte
-    {
-        Disabled = 0,
-        Weak = 1,
-        Strong = 2
-    };
 }
