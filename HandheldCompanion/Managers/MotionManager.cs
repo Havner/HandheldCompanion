@@ -75,7 +75,7 @@ namespace HandheldCompanion.Managers
 
         public static void UpdateReport(ControllerState controllerState)
         {
-            if (!ControllerManager.GetTargetController().HasMotionSensor())
+            if (ControllerManager.GetTargetController()?.HasMotionSensor() == false)
                 return;
 
             SetupMotion(controllerState);

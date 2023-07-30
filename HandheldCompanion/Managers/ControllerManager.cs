@@ -318,6 +318,14 @@ namespace HandheldCompanion.Managers
 
             // raise event
             ControllerUnplugged?.Invoke(controller);
+
+            // if target is removed it was never properly unplugged
+            // cleanup, destroy it and hope for the best
+            if (controller == targetController)
+            {
+                targetController.Cleanup();
+                targetController = null;
+            }
         }
 
         // usb thread, IController contains lots of WPF controls
@@ -389,15 +397,35 @@ namespace HandheldCompanion.Managers
 
             // raise event
             ControllerUnplugged?.Invoke(controller);
+
+            // if target is removed it was never properly unplugged
+            // cleanup, destroy it and hope for the best
+            if (controller == targetController)
+            {
+                targetController.Cleanup();
+                targetController = null;
+            }
         }
 
+        // setting current target unplugs it it
         public static void SetTargetController(string baseContainerDeviceInstancePath)
         {
-            // unplug previous controller
-            if (targetController is not null)
+            // unplug current controller
+            if (targetController is not null && targetController.IsPlugged())
             {
+                string targetPath = targetController.GetInstancePath();
                 targetController.InputsUpdated -= TargetController_InputsUpdated;
                 targetController.Unplug();
+                targetController = null;
+
+                // if we're setting currently selected, it's unplugged, there is none plugged
+                // reset the UI to the default controller and stop
+                if (targetPath == baseContainerDeviceInstancePath)
+                {
+                    // reset layout UI
+                    ControllerSelected?.Invoke(GetEmulatedController());
+                    return;
+                }
             }
 
             // look for new controller
@@ -412,9 +440,7 @@ namespace HandheldCompanion.Managers
 
             // update target controller
             targetController = controller;
-
             targetController.InputsUpdated += TargetController_InputsUpdated;
-
             targetController.Plug();
 
             if (SettingsManager.GetBoolean("HIDcloakonconnect"))
@@ -484,6 +510,7 @@ namespace HandheldCompanion.Managers
             VirtualManager.UpdateInputs(controllerState);
         }
 
+        // TODO: should this be here or in VirtualManager?
         internal static IController GetEmulatedController()
         {
             HIDmode HIDmode = (HIDmode)SettingsManager.GetInt("HIDmode", true);

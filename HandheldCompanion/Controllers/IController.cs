@@ -193,8 +193,7 @@ namespace HandheldCompanion.Controllers
 
         protected void RefreshControls()
         {
-            ui_button_hook.IsEnabled = !IsPlugged();
-            ui_button_hook.Content = IsPlugged() ? "Connected" : "Connect";
+            ui_button_hook.Content = IsPlugged() ? "Disconnect" : "Connect";
             ui_button_hide.Content = IsHidden() ? "Unhide" : "Hide";
         }
 
@@ -250,11 +249,9 @@ namespace HandheldCompanion.Controllers
             return isPlugged;
         }
 
+        // this function cannot be called twice
         public virtual void Plug()
         {
-            if (isPlugged)
-                return;
-
             SetVibrationStrength(SettingsManager.GetUInt("VibrationStrength"));
 
             isPlugged = true;
@@ -264,14 +261,17 @@ namespace HandheldCompanion.Controllers
             RefreshControls();
         }
 
+        // this function cannot be called twice
         public virtual void Unplug()
         {
-            if (!isPlugged)
-                return;
-
             isPlugged = false;
 
             RefreshControls();
+        }
+
+        // like Unplug but one that can be safely called when controller is already removed
+        public virtual void Cleanup()
+        {
         }
 
         public bool IsHidden()

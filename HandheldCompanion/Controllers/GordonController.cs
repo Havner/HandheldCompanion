@@ -235,6 +235,11 @@ namespace HandheldCompanion.Controllers
             base.Unplug();
         }
 
+        public override void Cleanup()
+        {
+            TimerManager.Tick -= UpdateInputs;
+        }
+
         public bool GetHapticIntensity(byte? input, sbyte minIntensity, sbyte maxIntensity, out sbyte output)
         {
             output = default;
