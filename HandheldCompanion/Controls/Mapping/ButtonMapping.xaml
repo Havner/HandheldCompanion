@@ -198,9 +198,7 @@
 
                                 </ui:SimpleStackPanel>
                             </Grid>
-                        </ui:SimpleStackPanel>
 
-                        <ui:SimpleStackPanel Spacing="6">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*" MinWidth="200" />

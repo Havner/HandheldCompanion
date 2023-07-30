@@ -103,10 +103,10 @@ namespace HandheldCompanion.Controls
 
                 // settings
                 Axis2AxisImproveCircularity.IsOn = ((AxisActions)this.Actions).ImproveCircularity;
-                Axis2AxisRotation.Value = (((AxisActions)this.Actions).AxisInverted ? 180 : 0) + (((AxisActions)this.Actions).AxisRotated ? 90 : 0);
+                Axis2AxisAntiDeadzone.Value = ((AxisActions)this.Actions).AxisAntiDeadZone;
                 Axis2AxisInnerDeadzone.Value = ((AxisActions)this.Actions).AxisDeadZoneInner;
                 Axis2AxisOuterDeadzone.Value = ((AxisActions)this.Actions).AxisDeadZoneOuter;
-                Axis2AxisAntiDeadzone.Value = ((AxisActions)this.Actions).AxisAntiDeadZone;
+                Axis2AxisRotation.Value = (((AxisActions)this.Actions).AxisInverted ? 180 : 0) + (((AxisActions)this.Actions).AxisRotated ? 90 : 0);
             }
             else if (type == ActionType.Mouse)
             {
@@ -136,8 +136,11 @@ namespace HandheldCompanion.Controls
 
                 // settings
                 Axis2MousePointerSpeed.Value = ((MouseActions)this.Actions).Sensivity;
-                Axis2MouseRotation.Value = (((MouseActions)this.Actions).AxisInverted ? 180 : 0) + (((MouseActions)this.Actions).AxisRotated ? 90 : 0);
+                Axis2MouseAcceleration.Value = ((MouseActions)this.Actions).Acceleration;
+                Axis2MouseFiltering.IsOn = ((MouseActions)this.Actions).Filtering;
+                Axis2MouseFilterCutoff.Value = ((MouseActions)this.Actions).FilterCutoff;
                 Axis2MouseDeadzone.Value = ((MouseActions)this.Actions).Deadzone;
+                Axis2MouseRotation.Value = (((MouseActions)this.Actions).AxisInverted ? 180 : 0) + (((MouseActions)this.Actions).AxisRotated ? 90 : 0);
             }
             else if (type == ActionType.Special)
             {
@@ -207,7 +210,7 @@ namespace HandheldCompanion.Controls
             TargetComboBox.SelectedItem = null;
         }
 
-        private void Axis_Rotation_Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Axis2AxisImproveCircularity_Toggled(object sender, RoutedEventArgs e)
         {
             if (this.Actions is null)
                 return;
@@ -215,8 +218,22 @@ namespace HandheldCompanion.Controls
             switch (this.Actions.ActionType)
             {
                 case ActionType.Joystick:
-                    ((AxisActions)this.Actions).AxisInverted = (((int)Axis2AxisRotation.Value / 90) & 2) == 2;
-                    ((AxisActions)this.Actions).AxisRotated = (((int)Axis2AxisRotation.Value / 90) & 1) == 1;
+                    ((AxisActions)this.Actions).ImproveCircularity = Axis2AxisImproveCircularity.IsOn;
+                    break;
+            }
+
+            base.Update();
+        }
+
+        private void Axis_AntiDeadZone_Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (this.Actions is null)
+                return;
+
+            switch (this.Actions.ActionType)
+            {
+                case ActionType.Joystick:
+                    ((AxisActions)this.Actions).AxisAntiDeadZone = (int)Axis2AxisAntiDeadzone.Value;
                     break;
             }
 
@@ -253,7 +270,7 @@ namespace HandheldCompanion.Controls
             base.Update();
         }
 
-        private void Axis_AntiDeadZone_Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void Axis_Rotation_Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (this.Actions is null)
                 return;
@@ -261,22 +278,8 @@ namespace HandheldCompanion.Controls
             switch (this.Actions.ActionType)
             {
                 case ActionType.Joystick:
-                    ((AxisActions)this.Actions).AxisAntiDeadZone = (int)Axis2AxisAntiDeadzone.Value;
-                    break;
-            }
-
-            base.Update();
-        }
-
-        private void Axis2AxisImproveCircularity_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (this.Actions is null)
-                return;
-
-            switch (this.Actions.ActionType)
-            {
-                case ActionType.Joystick:
-                    ((AxisActions)this.Actions).ImproveCircularity = Axis2AxisImproveCircularity.IsOn;
+                    ((AxisActions)this.Actions).AxisInverted = (((int)Axis2AxisRotation.Value / 90) & 2) == 2;
+                    ((AxisActions)this.Actions).AxisRotated = (((int)Axis2AxisRotation.Value / 90) & 1) == 1;
                     break;
             }
 
@@ -292,6 +295,21 @@ namespace HandheldCompanion.Controls
             {
                 case ActionType.Mouse:
                     ((MouseActions)this.Actions).Sensivity = (int)Axis2MousePointerSpeed.Value;
+                    break;
+            }
+
+            base.Update();
+        }
+
+        private void Axis2MouseAcceleration_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (this.Actions is null)
+                return;
+
+            switch (this.Actions.ActionType)
+            {
+                case ActionType.Mouse:
+                    ((MouseActions)this.Actions).Acceleration = (float)Axis2MouseAcceleration.Value;
                     break;
             }
 
@@ -323,6 +341,37 @@ namespace HandheldCompanion.Controls
             {
                 case ActionType.Mouse:
                     ((MouseActions)this.Actions).Deadzone = (int)Axis2MouseDeadzone.Value;
+                    break;
+            }
+
+            base.Update();
+        }
+
+        // TODO: artificially convert to something more human readable?
+        private void Axis2MouseFiltering_Toggled(object sender, RoutedEventArgs e)
+        {
+            if (this.Actions is null)
+                return;
+
+            switch (this.Actions.ActionType)
+            {
+                case ActionType.Mouse:
+                    ((MouseActions)this.Actions).Filtering = Axis2MouseFiltering.IsOn;
+                    break;
+            }
+
+            base.Update();
+        }
+
+        private void Axis2MouseFilterCutoff_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (this.Actions is null)
+                return;
+
+            switch (this.Actions.ActionType)
+            {
+                case ActionType.Mouse:
+                    ((MouseActions)this.Actions).FilterCutoff = (float)Axis2MouseFilterCutoff.Value;
                     break;
             }
 
