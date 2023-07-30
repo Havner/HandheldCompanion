@@ -6,6 +6,7 @@ using HandheldCompanion.Managers;
 using HandheldCompanion.Utils;
 using ModernWpf.Controls;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using KeyboardSimulator = HandheldCompanion.Simulators.KeyboardSimulator;
@@ -17,8 +18,22 @@ namespace HandheldCompanion.Controls
     /// </summary>
     public partial class ButtonMapping : IMapping
     {
+        private static List<Label> keyList = null;
+
         public ButtonMapping()
         {
+            // lazilly initialize
+            if (keyList is null)
+            {
+                keyList = new();
+                foreach (VirtualKeyCode key in Enum.GetValues(typeof(VirtualKeyCode)))
+                {
+                    // create a label, store VirtualKeyCode as Tag and Label as controller specific string
+                    Label buttonLabel = new Label() { Tag = key, Content = KeyboardSimulator.GetVirtualKey(key) };
+                    keyList.Add(buttonLabel);
+                }
+            }
+
             InitializeComponent();
         }
 
@@ -71,6 +86,7 @@ namespace HandheldCompanion.Controls
                 return;
 
             // clear current dropdown values
+            TargetComboBox.ItemsSource = null;
             TargetComboBox.Items.Clear();
             TargetComboBox.IsEnabled = ActionComboBox.SelectedIndex != 0;
 
@@ -116,15 +132,11 @@ namespace HandheldCompanion.Controls
                 if (this.Actions is null || this.Actions is not KeyboardActions)
                     this.Actions = new KeyboardActions();
 
-                foreach (VirtualKeyCode key in Enum.GetValues(typeof(VirtualKeyCode)))
-                {
-                    // create a label, store VirtualKeyCode as Tag and Label as controller specific string
-                    Label buttonLabel = new Label() { Tag = key, Content = KeyboardSimulator.GetVirtualKey(key) };
-                    TargetComboBox.Items.Add(buttonLabel);
+                TargetComboBox.ItemsSource = keyList;
 
-                    if (key.Equals(((KeyboardActions)this.Actions).Key))
-                        TargetComboBox.SelectedItem = buttonLabel;
-                }
+                foreach (var keyLabel in keyList)
+                    if (keyLabel.Tag.Equals(((KeyboardActions)this.Actions).Key))
+                        TargetComboBox.SelectedItem = keyLabel;
 
                 // settings
                 if (TargetComboBox.SelectedItem is not null)
