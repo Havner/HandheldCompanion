@@ -26,10 +26,10 @@ namespace HandheldCompanion.Controls
             if (keyList is null)
             {
                 keyList = new();
-                foreach (VirtualKeyCode key in Enum.GetValues(typeof(VirtualKeyCode)))
+                foreach (KeyFlags key in KeyFlagsOrder.arr)
                 {
                     // create a label, store VirtualKeyCode as Tag and Label as controller specific string
-                    Label buttonLabel = new Label() { Tag = key, Content = KeyboardSimulator.GetVirtualKey(key) };
+                    Label buttonLabel = new Label() { Tag = (VirtualKeyCode)key, Content = EnumUtils.GetDescriptionFromEnumValue(key) };
                     keyList.Add(buttonLabel);
                 }
             }
