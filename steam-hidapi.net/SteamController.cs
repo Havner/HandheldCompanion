@@ -16,6 +16,7 @@ namespace steam_hidapi.net
         protected Task _configureTask;
         protected bool _active = false;
         protected bool _lizard = true;
+        protected bool _gyro = false;
 
         public string SerialNumber { get; private set; }
 
@@ -67,31 +68,41 @@ namespace steam_hidapi.net
             _lizard = lizard;
         }
 
+        public virtual void SetGyroscope(bool gyro)
+        {
+            _gyro = gyro;
+        }
+
         internal virtual void ConfigureLizardMode(bool lizard)
         {
-            try
+            if (lizard)
             {
-                if (lizard)
-                {
-                    WriteSingleCmd(SCPacketType.DEFAULT_MAPPINGS);
-                    WriteSingleCmd(SCPacketType.DEFAULT_MOUSE);
-                }
-                else
-                {
-                    WriteSingleCmd(SCPacketType.CLEAR_MAPPINGS);
-                    WriteRegister(SCRegister.RPAD_MODE, (ushort)SCLizardMouse.OFF);
-                    if (_pid == (ushort)SCPid.STEAMDECK)
-                        WriteRegister(SCRegister.RPAD_MODE, (ushort)SCLizardMouse.OFF);
-                }
+                WriteSingleCmd(SCPacketType.DEFAULT_MAPPINGS);
+                WriteSingleCmd(SCPacketType.DEFAULT_MOUSE);
             }
-            catch { }
+            else
+            {
+                WriteSingleCmd(SCPacketType.CLEAR_MAPPINGS);
+                WriteRegister(SCRegister.RPAD_MODE, (ushort)SCLizardMouse.OFF);
+                if (_pid == (ushort)SCPid.STEAMDECK)
+                    WriteRegister(SCRegister.LPAD_MODE, (ushort)SCLizardMouse.OFF);
+            }
+        }
+
+        internal virtual void ConfigureGyroscope(bool gyro)
+        {
         }
 
         internal virtual async void ConfigureLoop()
         {
             while (_active)
             {
-                ConfigureLizardMode(_lizard);
+                try
+                {
+                    ConfigureLizardMode(_lizard);
+                    ConfigureGyroscope(_gyro);
+                }
+                catch { }
                 await Task.Delay(1000);
             }
         }
@@ -123,6 +134,7 @@ namespace steam_hidapi.net
             _configureTask.Wait();
 
             ConfigureLizardMode(_lizard);
+            ConfigureGyroscope(_gyro);
 
             if (_hidDevice.IsDeviceValid)
                 _hidDevice.EndRead();

@@ -42,7 +42,7 @@ namespace steam_hidapi.net
             }
         }
 
-        public void SetGyroscope(bool gyro)
+        internal override void ConfigureGyroscope(bool gyro)
         {
             if (gyro)
             {
