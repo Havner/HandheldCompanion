@@ -12,6 +12,7 @@ namespace steam_hidapi.net
         protected HidDevice _hidDevice;
         protected ushort _vid, _pid;
         protected short _index;
+        // TODO: why task not thread? HID read loop is a thread, rumble is a thread
         protected Task _configureTask;
         protected bool _active = false;
         protected bool _lizard = true;
@@ -68,18 +69,22 @@ namespace steam_hidapi.net
 
         internal virtual void ConfigureLizardMode(bool lizard)
         {
-            if (lizard)
+            try
             {
-                WriteSingleCmd(SCPacketType.DEFAULT_MAPPINGS);
-                WriteSingleCmd(SCPacketType.DEFAULT_MOUSE);
-            }
-            else
-            {
-                WriteSingleCmd(SCPacketType.CLEAR_MAPPINGS);
-                WriteRegister(SCRegister.RPAD_MODE, (ushort)SCLizardMouse.OFF);
-                if (_pid == (ushort)SCPid.STEAMDECK)
+                if (lizard)
+                {
+                    WriteSingleCmd(SCPacketType.DEFAULT_MAPPINGS);
+                    WriteSingleCmd(SCPacketType.DEFAULT_MOUSE);
+                }
+                else
+                {
+                    WriteSingleCmd(SCPacketType.CLEAR_MAPPINGS);
                     WriteRegister(SCRegister.RPAD_MODE, (ushort)SCLizardMouse.OFF);
+                    if (_pid == (ushort)SCPid.STEAMDECK)
+                        WriteRegister(SCRegister.RPAD_MODE, (ushort)SCLizardMouse.OFF);
+                }
             }
+            catch { }
         }
 
         internal virtual async void ConfigureLoop()
