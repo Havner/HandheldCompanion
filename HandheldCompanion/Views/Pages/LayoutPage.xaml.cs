@@ -33,6 +33,8 @@ namespace HandheldCompanion.Views.Pages
 
         private Dictionary<string, (ILayoutPage, NavigationViewItem)> pages;
 
+        private NavigationView parentNavView;
+
         private string preNavItemTag;
 
         private LayoutTemplate currentTemplate = new();
@@ -44,9 +46,10 @@ namespace HandheldCompanion.Views.Pages
             InitializeComponent();
         }
 
-        public LayoutPage(string Tag) : this()
+        public LayoutPage(string Tag, NavigationView parent) : this()
         {
             this.Tag = Tag;
+            this.parentNavView = parent;
 
             // create controller related pages
             this.pages = new()
@@ -302,20 +305,12 @@ namespace HandheldCompanion.Views.Pages
         #region UI
         private void navView_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
-            if (args.InvokedItemContainer is not null)
-            {
-                NavigationViewItem navItem = (NavigationViewItem)args.InvokedItemContainer;
-                string navItemTag = (string)navItem.Tag;
+            if (args.InvokedItemContainer is null)
+                return;
 
-                switch (navItemTag)
-                {
-                    default:
-                        preNavItemTag = navItemTag;
-                        break;
-                }
-
-                NavView_Navigate(preNavItemTag);
-            }
+            NavigationViewItem navItem = (NavigationViewItem)args.InvokedItemContainer;
+            preNavItemTag = (string)navItem.Tag;
+            NavView_Navigate(preNavItemTag);
         }
 
         public void NavView_Navigate(string navItemTag)
@@ -369,6 +364,10 @@ namespace HandheldCompanion.Views.Pages
 
                 if (!(NavViewItem is null))
                     navView.SelectedItem = NavViewItem;
+
+                string header = currentTemplate.Product.Length > 0 ?
+                    "Profile: " + currentTemplate.Product : "Layout: Desktop";
+                parentNavView.Header = new TextBlock() { Text = header };
             }
         }
         #endregion

@@ -229,7 +229,7 @@ namespace HandheldCompanion.Views
             aboutPage = new AboutPage("about");
             overlayPage = new OverlayPage("overlay");
             hotkeysPage = new HotkeysPage("hotkeys");
-            layoutPage = new LayoutPage("layout");
+            layoutPage = new LayoutPage("layout", navView);
 
             // store pages
             _pages.Add("ControllerPage", controllerPage);
