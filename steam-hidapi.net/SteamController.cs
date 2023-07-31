@@ -52,7 +52,7 @@ namespace steam_hidapi.net
         {
             SCHapticPacket haptic = new SCHapticPacket();
 
-            haptic.packet_type = 0x8f;
+            haptic.packet_type = (byte)SCPacketType.SET_HAPTIC;
             haptic.len = 0x07;
             haptic.position = position;
             haptic.amplitude = amplitude;
@@ -109,7 +109,7 @@ namespace steam_hidapi.net
 
         public virtual string ReadSerialNumber()
         {
-            byte[] request = new byte[] { 0xAE, 0x15, 0x01 };
+            byte[] request = new byte[] { (byte)SCPacketType.GET_SERIAL, 0x15, 0x01 };
             byte[] response = _hidDevice.RequestFeatureReport(request);
             byte[] serial = new byte[response.Length - 5];
             Array.Copy(response, 4, serial, 0, serial.Length);

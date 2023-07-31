@@ -88,6 +88,7 @@ namespace steam_hidapi.net.Hid
 
     internal enum GCGyroMode : byte
     {
+        NONE    = 0x00,
         TILT_X  = 0x01,
         TILT_Y  = 0x02,
         Q       = 0x04,

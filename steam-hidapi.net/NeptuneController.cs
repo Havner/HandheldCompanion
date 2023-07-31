@@ -46,7 +46,7 @@ namespace steam_hidapi.net
         {
             NCHapticPacket2 haptic = new NCHapticPacket2();
 
-            haptic.packet_type = 0xea;
+            haptic.packet_type = (byte)SCPacketType.SET_HAPTIC2;
             haptic.len = 0xd;
             haptic.position = position;
             haptic.style = style;

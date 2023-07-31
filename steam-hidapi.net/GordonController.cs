@@ -46,12 +46,11 @@ namespace steam_hidapi.net
         {
             if (gyro)
             {
-                WriteRegister(SCRegister.GYRO_MODE,
-                    (ushort)((byte)GCGyroMode.ACCEL | (byte)GCGyroMode.GYRO));
+                WriteRegister(SCRegister.GYRO_MODE, (ushort)GCGyroMode.ACCEL | (ushort)GCGyroMode.GYRO);
             }
             else
             {
-                WriteRegister(SCRegister.GYRO_MODE, 0x00);
+                WriteRegister(SCRegister.GYRO_MODE, (ushort)GCGyroMode.NONE);
             }
         }
     }
