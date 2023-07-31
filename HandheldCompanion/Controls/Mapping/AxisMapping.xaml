@@ -278,7 +278,7 @@
                                         IsMoveToPointEnabled="True"
                                         IsSnapToTickEnabled="True"
                                         Value="33"
-                                        Maximum="100"
+                                        Maximum="150"
                                         Minimum="5"
                                         ScrollViewer.PanningMode="HorizontalOnly"
                                         Style="{DynamicResource SliderStyle1}"
