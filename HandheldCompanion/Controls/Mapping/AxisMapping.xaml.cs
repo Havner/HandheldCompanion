@@ -137,9 +137,9 @@ namespace HandheldCompanion.Controls
                 // settings
                 Axis2MousePointerSpeed.Value = ((MouseActions)this.Actions).Sensivity;
                 Axis2MouseAcceleration.Value = ((MouseActions)this.Actions).Acceleration;
+                Axis2MouseDeadzone.Value = ((MouseActions)this.Actions).Deadzone;
                 Axis2MouseFiltering.IsOn = ((MouseActions)this.Actions).Filtering;
                 Axis2MouseFilterCutoff.Value = ((MouseActions)this.Actions).FilterCutoff;
-                Axis2MouseDeadzone.Value = ((MouseActions)this.Actions).Deadzone;
                 Axis2MouseRotation.Value = (((MouseActions)this.Actions).AxisInverted ? 180 : 0) + (((MouseActions)this.Actions).AxisRotated ? 90 : 0);
             }
             else if (type == ActionType.Special)
@@ -316,37 +316,6 @@ namespace HandheldCompanion.Controls
             base.Update();
         }
 
-        private void Axis2MouseRotation_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (this.Actions is null)
-                return;
-
-            switch (this.Actions.ActionType)
-            {
-                case ActionType.Mouse:
-                    ((MouseActions)this.Actions).AxisInverted = (((int)Axis2MouseRotation.Value / 90) & 2) == 2;
-                    ((MouseActions)this.Actions).AxisRotated = (((int)Axis2MouseRotation.Value / 90) & 1) == 1;
-                    break;
-            }
-
-            base.Update();
-        }
-
-        private void Axis2MouseDeadzone_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (this.Actions is null)
-                return;
-
-            switch (this.Actions.ActionType)
-            {
-                case ActionType.Mouse:
-                    ((MouseActions)this.Actions).Deadzone = (int)Axis2MouseDeadzone.Value;
-                    break;
-            }
-
-            base.Update();
-        }
-
         // TODO: artificially convert to something more human readable?
         private void Axis2MouseFiltering_Toggled(object sender, RoutedEventArgs e)
         {
@@ -372,6 +341,37 @@ namespace HandheldCompanion.Controls
             {
                 case ActionType.Mouse:
                     ((MouseActions)this.Actions).FilterCutoff = (float)Axis2MouseFilterCutoff.Value;
+                    break;
+            }
+
+            base.Update();
+        }
+
+        private void Axis2MouseDeadzone_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (this.Actions is null)
+                return;
+
+            switch (this.Actions.ActionType)
+            {
+                case ActionType.Mouse:
+                    ((MouseActions)this.Actions).Deadzone = (int)Axis2MouseDeadzone.Value;
+                    break;
+            }
+
+            base.Update();
+        }
+
+        private void Axis2MouseRotation_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (this.Actions is null)
+                return;
+
+            switch (this.Actions.ActionType)
+            {
+                case ActionType.Mouse:
+                    ((MouseActions)this.Actions).AxisInverted = (((int)Axis2MouseRotation.Value / 90) & 2) == 2;
+                    ((MouseActions)this.Actions).AxisRotated = (((int)Axis2MouseRotation.Value / 90) & 1) == 1;
                     break;
             }
 

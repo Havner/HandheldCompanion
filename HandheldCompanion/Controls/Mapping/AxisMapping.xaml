@@ -330,42 +330,6 @@
                                 BorderThickness="0,1,0,0"
                                 Opacity="0.25" />
 
-                            <!--  Deadzone  -->
-                            <Grid>
-                                <ui:SimpleStackPanel Spacing="6">
-                                    <Grid>
-                                        <TextBlock
-                                            HorizontalAlignment="Left"
-                                            VerticalAlignment="Center"
-                                            Style="{StaticResource BodyTextBlockStyle}"
-                                            Text="Deadzone (joystick only)" />
-                                        <TextBox
-                                            HorizontalAlignment="Right"
-                                            HorizontalContentAlignment="Center"
-                                            IsReadOnly="True"
-                                            Text="{Binding Value, ElementName=Axis2MouseDeadzone, Mode=OneWay}" />
-                                    </Grid>
-
-                                    <Slider
-                                        x:Name="Axis2MouseDeadzone"
-                                        IsMoveToPointEnabled="True"
-                                        IsSnapToTickEnabled="True"
-                                        Value="10"
-                                        Maximum="100"
-                                        Minimum="0"
-                                        ScrollViewer.PanningMode="HorizontalOnly"
-                                        Style="{DynamicResource SliderStyle1}"
-                                        TickFrequency="1"
-                                        ValueChanged="Axis2MouseDeadzone_ValueChanged" />
-                                </ui:SimpleStackPanel>
-                            </Grid>
-
-                            <!--  Separator  -->
-                            <Separator
-                                BorderBrush="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
-                                BorderThickness="0,1,0,0"
-                                Opacity="0.25" />
-
                             <!--  Filtering  -->
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -376,7 +340,7 @@
                                 <TextBlock
                                     VerticalAlignment="Center"
                                     Style="{StaticResource BodyTextBlockStyle}"
-                                    Text="Filtering (touchpad only)" />
+                                    Text="Filtering" />
 
                                 <ui:ToggleSwitch
                                     Name="Axis2MouseFiltering"
@@ -429,6 +393,42 @@
 
                                 </ui:SimpleStackPanel>
                             </Grid>
+
+                            <!--  Deadzone  -->
+                            <Grid>
+                                <ui:SimpleStackPanel Spacing="6">
+                                    <Grid>
+                                        <TextBlock
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BodyTextBlockStyle}"
+                                            Text="Deadzone (joystick/gyro only)" />
+                                        <TextBox
+                                            HorizontalAlignment="Right"
+                                            HorizontalContentAlignment="Center"
+                                            IsReadOnly="True"
+                                            Text="{Binding Value, ElementName=Axis2MouseDeadzone, Mode=OneWay}" />
+                                    </Grid>
+
+                                    <Slider
+                                        x:Name="Axis2MouseDeadzone"
+                                        IsMoveToPointEnabled="True"
+                                        IsSnapToTickEnabled="True"
+                                        Value="10"
+                                        Maximum="100"
+                                        Minimum="0"
+                                        ScrollViewer.PanningMode="HorizontalOnly"
+                                        Style="{DynamicResource SliderStyle1}"
+                                        TickFrequency="1"
+                                        ValueChanged="Axis2MouseDeadzone_ValueChanged" />
+                                </ui:SimpleStackPanel>
+                            </Grid>
+
+                            <!--  Separator  -->
+                            <Separator
+                                BorderBrush="{DynamicResource SystemControlBackgroundChromeMediumBrush}"
+                                BorderThickness="0,1,0,0"
+                                Opacity="0.25" />
 
                             <!--  Axis rotation  -->
                             <Grid>

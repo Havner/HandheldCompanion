@@ -143,13 +143,6 @@ namespace HandheldCompanion.Actions
                         deltaVector *= 1.0f / (1.0f - deadzone);                                  // rescale to 0.0 - 1.0
 
                         sensitivityFinetune = (MouseType == MouseActionsType.Move ? 0.3f : 0.1f);
-
-                        if (Acceleration != 1.0f)
-                        {
-                            deltaVector.X = (float)(Math.Sign(deltaVector.X) * Math.Pow(Math.Abs(deltaVector.X), Acceleration));
-                            deltaVector.Y = (float)(Math.Sign(deltaVector.Y) * Math.Pow(Math.Abs(deltaVector.Y), Acceleration));
-                            sensitivityFinetune = (float)Math.Pow(sensitivityFinetune, Acceleration);
-                        }
                     }
                     break;
 
@@ -168,22 +161,22 @@ namespace HandheldCompanion.Actions
                         prevValue = layout.vector;
 
                         sensitivityFinetune = (MouseType == MouseActionsType.Move ? 9.0f : 3.0f);
-
-                        if (Filtering)
-                        {
-                            mouseFilter.SetFilterCutoff(FilterCutoff);
-                            deltaVector.X = (float)mouseFilter.axis1Filter.Filter(deltaVector.X, 1);
-                            deltaVector.Y = (float)mouseFilter.axis2Filter.Filter(deltaVector.Y, 1);
-                        }
-
-                        if (Acceleration != 1.0f)
-                        {
-                            deltaVector.X = (float)(Math.Sign(deltaVector.X) * Math.Pow(Math.Abs(deltaVector.X), Acceleration));
-                            deltaVector.Y = (float)(Math.Sign(deltaVector.Y) * Math.Pow(Math.Abs(deltaVector.Y), Acceleration));
-                            sensitivityFinetune = (float)Math.Pow(sensitivityFinetune, Acceleration);
-                        }
                     }
                     break;
+            }
+
+            if (Filtering)
+            {
+                mouseFilter.SetFilterCutoff(FilterCutoff);
+                deltaVector.X = (float)mouseFilter.axis1Filter.Filter(deltaVector.X, 1);
+                deltaVector.Y = (float)mouseFilter.axis2Filter.Filter(deltaVector.Y, 1);
+            }
+
+            if (Acceleration != 1.0f)
+            {
+                deltaVector.X = (float)(Math.Sign(deltaVector.X) * Math.Pow(Math.Abs(deltaVector.X), Acceleration));
+                deltaVector.Y = (float)(Math.Sign(deltaVector.Y) * Math.Pow(Math.Abs(deltaVector.Y), Acceleration));
+                sensitivityFinetune = (float)Math.Pow(sensitivityFinetune, Acceleration);
             }
 
             // apply sensitivity, rotation and slider finetune
