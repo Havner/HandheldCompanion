@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:resx="clr-namespace:HandheldCompanion.Properties"
     xmlns:ui="http://schemas.modernwpf.com/2019"
-    Title="{x:Static resx:Resources.MainWindow_HandheldCompanion}"
+    Title="{x:Static resx:Resources.MainWindow_ControllerCompanion}"
     Width="1280"
     Height="720"
     MinWidth="700"

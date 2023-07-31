@@ -20,7 +20,7 @@ namespace HandheldCompanion.Managers
 
         static TaskManager()
         {
-            ServiceName = "HandheldCompanion";
+            ServiceName = "ControllerCompanion";
             ServiceExecutable = MainWindow.CurrentExe;
 
             SettingsManager.SettingValueChanged += SettingsManager_SettingValueChanged;

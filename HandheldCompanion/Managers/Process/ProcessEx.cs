@@ -12,7 +12,7 @@ namespace HandheldCompanion.Managers
         {
             Allowed = 0,
             Restricted = 1,
-            HandheldCompanion = 2,
+            ControllerCompanion = 2,
             Desktop = 3,
         }
 

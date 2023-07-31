@@ -75,7 +75,7 @@ namespace HandheldCompanion.Views
 
             // define current directory
             InstallPath = AppDomain.CurrentDomain.BaseDirectory;
-            SettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "HandheldCompanion");
+            SettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "ControllerCompanion");
 
             // initialiaze path
             if (!Directory.Exists(SettingsPath))

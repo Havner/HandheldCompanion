@@ -18,7 +18,7 @@ namespace HandheldCompanion.Managers
 
         public static SortedDictionary<ushort, InputsHotkey> InputsHotkeys = new()
         {
-            // Handheld Companion hotkeys
+            // Controller Companion hotkeys
             { 10, new InputsHotkey(InputsHotkeyType.HC,       "\uE7FC", "overlayGamepad",                false, true,  string.Empty,           false, true ) },
             { 12, new InputsHotkey(InputsHotkeyType.HC,       "\uE7C4", "shortcutMainWindow",            false, true,  string.Empty,           false, true ) },
             { 13, new InputsHotkey(InputsHotkeyType.HC,       "\uEC7A", "shortcutQuickTools",            false, true,  string.Empty,           false, false) },

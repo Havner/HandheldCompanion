@@ -90,7 +90,7 @@ namespace HandheldCompanion.Managers
                 switch (filter)
                 {
                     // do nothing on QuickTools window, current process is kept
-                    case ProcessFilter.HandheldCompanion:
+                    case ProcessFilter.ControllerCompanion:
                         return;
                     // foreground of those processes is ignored, they fallback to default
                     case ProcessFilter.Desktop:
@@ -205,15 +205,15 @@ namespace HandheldCompanion.Managers
             // manual filtering
             switch (exec.ToLower())
             {
-                // handheld companion
-                case "handheldcompanion.exe":
+                // controller companion
+                case "controllercompanion.exe":
                     {
                         if (!string.IsNullOrEmpty(MainWindowTitle))
                         {
                             switch (MainWindowTitle)
                             {
                                 case "QuickTools":
-                                    return ProcessFilter.HandheldCompanion;
+                                    return ProcessFilter.ControllerCompanion;
                             }
                         }
 

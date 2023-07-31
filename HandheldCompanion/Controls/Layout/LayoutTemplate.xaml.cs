@@ -183,8 +183,8 @@ namespace HandheldCompanion.Controls
             return profile.Name.CompareTo(Name);
         }
 
-        public static readonly LayoutTemplate DesktopLayout = new("Desktop", "Layout for Desktop Browsing", "HandheldCompanion", true);
-        public static readonly LayoutTemplate DefaultLayout = new("Gamepad", "This template is for games that already have built-in gamepad support. Intended for dual stick games such as twin-stick shooters, side-scrollers, etc.", "HandheldCompanion", true);
-        public static readonly LayoutTemplate KeyboardLayout = new("Keyboard (WASD) and Mouse", "This template works great for the games that were designed with a keyboard and mouse in mind, without gamepad support. The controller will drive the game's keyboard based events with buttons, but will make assumptions about which buttons move you around (WASD for movement, space for jump, etc.). The right pad will emulate the movement of a mouse.", "HandheldCompanion", true);
+        public static readonly LayoutTemplate DesktopLayout = new("Desktop", "Layout for Desktop Browsing", "ControllerCompanion", true);
+        public static readonly LayoutTemplate DefaultLayout = new("Gamepad", "This template is for games that already have built-in gamepad support. Intended for dual stick games such as twin-stick shooters, side-scrollers, etc.", "ControllerCompanion", true);
+        public static readonly LayoutTemplate KeyboardLayout = new("Keyboard (WASD) and Mouse", "This template works great for the games that were designed with a keyboard and mouse in mind, without gamepad support. The controller will drive the game's keyboard based events with buttons, but will make assumptions about which buttons move you around (WASD for movement, space for jump, etc.). The right pad will emulate the movement of a mouse.", "ControllerCompanion", true);
     }
 }

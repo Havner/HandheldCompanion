@@ -1,11 +1,11 @@
 [Setup]
-#define MyAppSetupName 'Handheld Companion'
-#define MyBuildId 'HandheldCompanion'
-#define MyAppVersion '0.17'
-#define MyAppPublisher 'BenjaminLSR'
-#define MyAppCopyright 'Copyright © BenjaminLSR'
-#define MyAppURL 'https://github.com/Valkirie/HandheldCompanion'
-#define MyAppExeName "HandheldCompanion.exe"
+#define MyAppSetupName 'Controller Companion'
+#define MyBuildId 'ControllerCompanion'
+#define MyAppVersion '0.18'
+#define MyAppPublisher 'Havner'
+#define MyAppCopyright 'Copyright © BenjaminLSR, Havner'
+#define MyAppURL 'https://github.com/Havner/HandheldCompanion'
+#define MyAppExeName "ControllerCompanion.exe"
 #define MyConfiguration "Release"
 
 #define MyConfigurationExt "net7.0"
@@ -69,7 +69,7 @@ Type: filesandordirs; Name: "{app}"
 
 [Registry]
 Root: HKLM; Subkey: "Software\Microsoft\Windows\Windows Error Reporting\LocalDumps"; Flags: uninsdeletekeyifempty
-Root: HKLM; Subkey: "Software\Microsoft\Windows\Windows Error Reporting\LocalDumps\HandheldCompanion.exe"; ValueType: string; ValueName: "DumpFolder"; ValueData: "{userdocs}\HandheldCompanion\dumps"; Flags: uninsdeletekey
+Root: HKLM; Subkey: "Software\Microsoft\Windows\Windows Error Reporting\LocalDumps\{#MyAppExeName}"; ValueType: string; ValueName: "DumpFolder"; ValueData: "{userdocs}\{#MyBuildId}\dumps"; Flags: uninsdeletekey
 
 [Code]
 function InitializeSetup: Boolean;

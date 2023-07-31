@@ -37,7 +37,7 @@ namespace HandheldCompanion
             FileVersionInfo fileVersionInfo = FileVersionInfo.GetVersionInfo(CurrentAssembly.Location);
 
             // initialize log
-            LogManager.Initialize("HandheldCompanion");
+            LogManager.Initialize("ControllerCompanion");
             LogManager.LogInformation("{0} ({1})", CurrentAssembly.GetName(), fileVersionInfo.FileVersion);
 
             using (Process process = Process.GetCurrentProcess())

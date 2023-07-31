@@ -70,7 +70,7 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A combination of a Windows service and a touch interface optimized GUI to increase your handheld gaming computer experience. Features include: motion control a.k.a. gyro control, virtual controller simulation, quick tools overlay, virtual touchpads, 3D controller model, per application based profile settings system. Handheld Companion relies on ViGEmBus driver and ViGEmClient libraries as well as HidHide kernel-mode filter driver. Motion control algorithms are based on work by Jibbsmart and availible inform [rest of string was truncated]&quot;;.
+        ///   Looks up a localized string similar to This is a fork of Handheld Companion application with a different focus than the original. It has fewer functions related to handhelds and their power management. The focus here is more on being lightweight and on controllers compatibility and their re-mapper. Original links below..
         /// </summary>
         public static string AboutPage_AboutDescription {
             get {
@@ -88,11 +88,20 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Author.
+        ///   Looks up a localized string similar to Fork author.
         /// </summary>
-        public static string AboutPage_Author {
+        public static string AboutPage_AuthorFork {
             get {
-                return ResourceManager.GetString("AboutPage_Author", resourceCulture);
+                return ResourceManager.GetString("AboutPage_AuthorFork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Original author.
+        /// </summary>
+        public static string AboutPage_AuthorOriginal {
+            get {
+                return ResourceManager.GetString("AboutPage_AuthorOriginal", resourceCulture);
             }
         }
         
@@ -1358,11 +1367,11 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Handheld Companion.
+        ///   Looks up a localized string similar to Controller Companion.
         /// </summary>
-        public static string MainWindow_HandheldCompanion {
+        public static string MainWindow_ControllerCompanion {
             get {
-                return ResourceManager.GetString("MainWindow_HandheldCompanion", resourceCulture);
+                return ResourceManager.GetString("MainWindow_ControllerCompanion", resourceCulture);
             }
         }
         

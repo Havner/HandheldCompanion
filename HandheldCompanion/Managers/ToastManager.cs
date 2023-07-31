@@ -9,7 +9,7 @@ namespace HandheldCompanion.Managers
     public static class ToastManager
     {
         private const int m_Interval = 5000;
-        private const string m_Group = "HandheldCompanion";
+        private const string m_Group = "ControllerCompanion";
 
         private static ConcurrentDictionary<string, Timer> m_Threads = new();
 

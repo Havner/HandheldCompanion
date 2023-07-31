@@ -111,7 +111,8 @@
 
                                 <ui:SimpleStackPanel Spacing="12">
                                     <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Static resx:Resources.AboutPage_Version}" />
-                                    <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Static resx:Resources.AboutPage_Author}" />
+                                    <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Static resx:Resources.AboutPage_AuthorFork}" />
+                                    <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Static resx:Resources.AboutPage_AuthorOriginal}" />
                                     <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Static resx:Resources.AboutPage_Contributors}" />
                                     <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Static resx:Resources.AboutPage_Description}" />
                                 </ui:SimpleStackPanel>
@@ -122,6 +123,10 @@
                                         Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                                         Style="{StaticResource BodyTextBlockStyle}"
                                         Text="{x:Static resx:Resources.AboutPage_NotApplicable}" />
+                                    <TextBlock
+                                        Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
+                                        Style="{StaticResource BodyTextBlockStyle}"
+                                        Text="Havner" />
                                     <TextBlock
                                         Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                                         Style="{StaticResource BodyTextBlockStyle}"
