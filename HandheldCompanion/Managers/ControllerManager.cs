@@ -10,6 +10,7 @@ using SharpDX.XInput;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using DeviceType = SharpDX.DirectInput.DeviceType;
 
@@ -499,13 +500,13 @@ namespace HandheldCompanion.Managers
             controllerState = LayoutManager.MapController(controllerState);
 
             // Controller specific scenarios
-            if (targetController?.GetType() == typeof(NeptuneController))
+            if (typeof(SteamController).IsAssignableFrom(targetController?.GetType()))
             {
-                NeptuneController neptuneController = (NeptuneController)targetController;
+                SteamController steamController = (SteamController)targetController;
 
                 // mute virtual controller if foreground process is Steam or Steam-related and user a toggle the mute setting
                 if (foregroundProcess?.Platform == PlatformType.Steam)
-                    if (neptuneController.IsVirtualMuted())
+                    if (steamController.IsVirtualMuted())
                         return;
             }
 

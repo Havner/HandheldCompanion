@@ -5,6 +5,7 @@ using HandheldCompanion.Managers;
 using HandheldCompanion.Utils;
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -40,11 +41,7 @@ namespace HandheldCompanion.Views.Pages
 
             ControllerManager.ControllerPlugged += ControllerManager_ControllerPlugged;
             ControllerManager.ControllerUnplugged += ControllerManager_ControllerUnplugged;
-
-            // device specific settings
-            Type DeviceType = MainWindow.CurrentDevice.GetType();
-            if (DeviceType == typeof(SteamDeck))
-                SteamDeckPanel.Visibility = Visibility.Visible;
+            ControllerManager.ControllerSelected += ControllerManager_ControllerSelected;
         }
 
         public ControllerPage(string Tag) : this()
@@ -69,7 +66,7 @@ namespace HandheldCompanion.Views.Pages
                         Toggle_DesktopLayout.IsOn = Convert.ToBoolean(value);
                         break;
                     case "SteamMuteController":
-                        Toggle_SDMuteController.IsOn = Convert.ToBoolean(value);
+                        Toggle_SCMuteController.IsOn = Convert.ToBoolean(value);
                         break;
                     case "HIDmode":
                         cB_HidMode.SelectedIndex = Convert.ToInt32(value);
@@ -135,6 +132,13 @@ namespace HandheldCompanion.Views.Pages
 
                 ControllerRefresh();
             });
+        }
+
+        private void ControllerManager_ControllerSelected(IController Controller)
+        {
+            Type controllerType = ControllerManager.GetTargetController()?.GetType();
+            Type steamController = typeof(SteamController);
+            SteamControllerPanel.Visibility = steamController.IsAssignableFrom(controllerType) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void ControllerHookClicked(IController Controller)
@@ -233,12 +237,12 @@ namespace HandheldCompanion.Views.Pages
             SettingsManager.SetProperty("HIDuncloakonclose", Toggle_Uncloak.IsOn);
         }
 
-        private void Toggle_SDMuteController_Toggled(object sender, RoutedEventArgs e)
+        private void Toggle_SCMuteController_Toggled(object sender, RoutedEventArgs e)
         {
             if (!IsLoaded)
                 return;
 
-            SettingsManager.SetProperty("SteamMuteController", Toggle_SDMuteController.IsOn);
+            SettingsManager.SetProperty("SteamMuteController", Toggle_SCMuteController.IsOn);
         }
 
         private void Button_Layout_Click(object sender, RoutedEventArgs e)
