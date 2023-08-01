@@ -31,10 +31,10 @@ namespace HandheldCompanion.Views.Pages
 
             foreach (AxisLayoutFlags axis in LeftTriggerAxis)
             {
-                TriggerMapping axisMapping = new TriggerMapping(axis);
-                LeftTriggerPanel.Children.Add(axisMapping);
+                TriggerStack panel = new(axis);
+                LeftTriggerPanel.Children.Add(panel);
 
-                TriggerMappings.Add(axis, axisMapping);
+                TriggerStacks.Add(axis, panel);
             }
 
             foreach (ButtonFlags button in RightTrigger)
@@ -47,10 +47,10 @@ namespace HandheldCompanion.Views.Pages
 
             foreach (AxisLayoutFlags axis in RightTriggerAxis)
             {
-                TriggerMapping axisMapping = new TriggerMapping(axis);
-                RightTriggerPanel.Children.Add(axisMapping);
+                TriggerStack panel = new(axis);
+                RightTriggerPanel.Children.Add(panel);
 
-                TriggerMappings.Add(axis, axisMapping);
+                TriggerStacks.Add(axis, panel);
             }
         }
 

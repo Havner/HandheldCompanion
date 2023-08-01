@@ -11,7 +11,7 @@ namespace HandheldCompanion.Misc
     public class Layout : ICloneable, IDisposable
     {
         public SortedDictionary<ButtonFlags, List<IActions>> ButtonLayout { get; set; } = new();
-        public SortedDictionary<AxisLayoutFlags, IActions> AxisLayout { get; set; } = new();
+        public SortedDictionary<AxisLayoutFlags, List<IActions>> AxisLayout { get; set; } = new();
 
         #region events
         public event UpdatedEventHandler Updated;
@@ -41,10 +41,10 @@ namespace HandheldCompanion.Misc
                 {
                     case AxisLayoutFlags.L2:
                     case AxisLayoutFlags.R2:
-                        AxisLayout[axis] = new TriggerActions() { Axis = axis };
+                        AxisLayout[axis] = new List<IActions>() { new TriggerActions() { Axis = axis } };
                         break;
                     default:
-                        AxisLayout[axis] = new AxisActions() { Axis = axis };
+                        AxisLayout[axis] = new List<IActions>() { new AxisActions() { Axis = axis } };
                         break;
                 }
             }
@@ -61,9 +61,9 @@ namespace HandheldCompanion.Misc
             Updated?.Invoke(this);
         }
 
-        public void UpdateLayout(AxisLayoutFlags axis, IActions action)
+        public void UpdateLayout(AxisLayoutFlags axis, List<IActions> actions)
         {
-            AxisLayout[axis] = action;
+            AxisLayout[axis] = actions;
             Updated?.Invoke(this);
         }
 

@@ -14,8 +14,8 @@ namespace HandheldCompanion.Views.Pages
         protected bool enabled = false;
 
         public Dictionary<ButtonFlags, ButtonStack> ButtonStacks = new();
-        public Dictionary<AxisLayoutFlags, AxisMapping> AxisMappings = new();
-        public Dictionary<AxisLayoutFlags, TriggerMapping> TriggerMappings = new();
+        public Dictionary<AxisLayoutFlags, AxisStack> AxisStacks = new();
+        public Dictionary<AxisLayoutFlags, TriggerStack> TriggerStacks = new();
 
         protected bool CheckController(IController controller, List<ButtonFlags> buttons)
         {
@@ -60,41 +60,41 @@ namespace HandheldCompanion.Views.Pages
                 }
             }
 
-            foreach (var pair in AxisMappings)
+            foreach (var pair in AxisStacks)
             {
                 AxisLayoutFlags flags = pair.Key;
-                AxisMapping axisMapping = pair.Value;
+                AxisStack axisStack = pair.Value;
 
                 // update mapping visibility
                 if (!controller.HasSourceAxis(flags))
-                    axisMapping.Visibility = Visibility.Collapsed;
+                    axisStack.Visibility = Visibility.Collapsed;
                 else
                 {
-                    axisMapping.Visibility = Visibility.Visible;
+                    axisStack.Visibility = Visibility.Visible;
 
                     // update icon
                     FontIcon newIcon = controller.GetFontIcon(flags);
                     string newLabel = controller.GetAxisName(flags);
-                    axisMapping.UpdateIcon(newIcon, newLabel);
+                    axisStack.UpdateIcon(newIcon, newLabel);
                 }
             }
 
-            foreach (var pair in TriggerMappings)
+            foreach (var pair in TriggerStacks)
             {
                 AxisLayoutFlags flags = pair.Key;
-                TriggerMapping axisMapping = pair.Value;
+                TriggerStack axisStack = pair.Value;
 
                 // update mapping visibility
                 if (!controller.HasSourceAxis(flags))
-                    axisMapping.Visibility = Visibility.Collapsed;
+                    axisStack.Visibility = Visibility.Collapsed;
                 else
                 {
-                    axisMapping.Visibility = Visibility.Visible;
+                    axisStack.Visibility = Visibility.Visible;
 
                     // update icon
                     FontIcon newIcon = controller.GetFontIcon(flags);
                     string newLabel = controller.GetAxisName(flags);
-                    axisMapping.UpdateIcon(newIcon, newLabel);
+                    axisStack.UpdateIcon(newIcon, newLabel);
                 }
             }
         }
@@ -104,10 +104,10 @@ namespace HandheldCompanion.Views.Pages
             foreach (var pair in ButtonStacks)
                 pair.Value.UpdateSelections();
 
-            foreach (var pair in AxisMappings)
+            foreach (var pair in AxisStacks)
                 pair.Value.UpdateSelections();
 
-            foreach (var pair in TriggerMappings)
+            foreach (var pair in TriggerStacks)
                 pair.Value.UpdateSelections();
         }
 
@@ -127,32 +127,32 @@ namespace HandheldCompanion.Views.Pages
                 mappings.Reset();
             }
 
-            foreach (var pair in AxisMappings)
+            foreach (var pair in AxisStacks)
             {
                 AxisLayoutFlags axis = pair.Key;
-                AxisMapping mapping = pair.Value;
+                AxisStack mappings = pair.Value;
 
-                if (layout.AxisLayout.TryGetValue(axis, out IActions actions))
+                if (layout.AxisLayout.TryGetValue(axis, out List<IActions> actions))
                 {
-                    mapping.SetIActions(actions);
+                    mappings.SetActions(actions);
                     continue;
                 }
 
-                mapping.Reset();
+                mappings.Reset();
             }
 
-            foreach (var pair in TriggerMappings)
+            foreach (var pair in TriggerStacks)
             {
                 AxisLayoutFlags axis = pair.Key;
-                TriggerMapping mapping = pair.Value;
+                TriggerStack mappings = pair.Value;
 
-                if (layout.AxisLayout.TryGetValue(axis, out IActions actions))
+                if (layout.AxisLayout.TryGetValue(axis, out List<IActions> actions))
                 {
-                    mapping.SetIActions(actions);
+                    mappings.SetActions(actions);
                     continue;
                 }
 
-                mapping.Reset();
+                mappings.Reset();
             }
         }
     }

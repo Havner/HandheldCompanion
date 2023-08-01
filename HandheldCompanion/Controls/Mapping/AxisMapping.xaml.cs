@@ -24,7 +24,6 @@ namespace HandheldCompanion.Controls
         {
             this.Value = axis;
 
-            this.Icon.Glyph = axis.ToString();
         }
 
         public void UpdateIcon(FontIcon newIcon, string newLabel)

@@ -105,6 +105,7 @@ namespace HandheldCompanion.Simulators
             }
         }
 
+        // TODO: unused
         public static string GetVirtualKey(VirtualKeyCode key)
         {
             char c = (char)MapVirtualKey((int)key, (uint)2);

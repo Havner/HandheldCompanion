@@ -1,10 +1,7 @@
 using HandheldCompanion.Controllers;
 using HandheldCompanion.Controls;
 using HandheldCompanion.Inputs;
-using ModernWpf.Controls;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 
 namespace HandheldCompanion.Views.Pages

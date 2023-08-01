@@ -29,5 +29,10 @@ namespace HandheldCompanion.Controls
         {
             this.Actions = actions;
         }
+
+        public IActions GetIActions()
+        {
+            return Actions;
+        }
     }
 }

@@ -35,10 +35,10 @@ namespace HandheldCompanion.Views.Pages
 
             foreach (AxisLayoutFlags axis in LeftAxis)
             {
-                AxisMapping axisMapping = new AxisMapping(axis);
-                LeftTrackpadPanel.Children.Add(axisMapping);
+                AxisStack panel = new(axis);
+                LeftTrackpadPanel.Children.Add(panel);
 
-                AxisMappings.Add(axis, axisMapping);
+                AxisStacks.Add(axis, panel);
             }
 
             foreach (ButtonFlags button in RightButtons)
@@ -51,10 +51,10 @@ namespace HandheldCompanion.Views.Pages
 
             foreach (AxisLayoutFlags axis in RightAxis)
             {
-                AxisMapping axisMapping = new AxisMapping(axis);
+                AxisStack axisMapping = new(axis);
                 RightTrackpadPanel.Children.Add(axisMapping);
 
-                AxisMappings.Add(axis, axisMapping);
+                AxisStacks.Add(axis, axisMapping);
             }
         }
 

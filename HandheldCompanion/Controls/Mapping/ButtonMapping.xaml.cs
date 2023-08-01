@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using KeyboardSimulator = HandheldCompanion.Simulators.KeyboardSimulator;
 
 namespace HandheldCompanion.Controls
 {
@@ -69,11 +68,6 @@ namespace HandheldCompanion.Controls
 
             // update UI
             this.ActionComboBox.SelectedIndex = (int)actions.ActionType;
-        }
-
-        public IActions GetIActions()
-        {
-            return Actions;
         }
 
         private void Action_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -5,6 +5,7 @@ using HandheldCompanion.Misc;
 using HandheldCompanion.Utils;
 using HandheldCompanion.Views;
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using System.Windows;
 
@@ -138,9 +139,10 @@ namespace HandheldCompanion.Managers
                 (current.MotionMode == MotionMode.On && !controllerState.ButtonState.ContainsTrue(current.MotionTrigger));
 
             bool MotionMapped = false;
-            if (current.Layout.AxisLayout.TryGetValue(AxisLayoutFlags.Gyroscope, out IActions action))
-                if (action.ActionType != ActionType.Disabled)
-                    MotionMapped = true;
+            if (current.Layout.AxisLayout.TryGetValue(AxisLayoutFlags.Gyroscope, out List<IActions> actions))
+                foreach (IActions action in actions)
+                    if (action.ActionType != ActionType.Disabled)
+                        MotionMapped = true;
 
             // update sensorFusion, only when needed
             if (MotionMapped && MotionTriggered && (current.MotionInput == MotionInput.PlayerSpace ||

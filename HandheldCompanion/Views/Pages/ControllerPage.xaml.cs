@@ -1,11 +1,9 @@
 using HandheldCompanion.Controllers;
 using HandheldCompanion.Controls;
-using HandheldCompanion.Devices;
 using HandheldCompanion.Managers;
 using HandheldCompanion.Utils;
 using System;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;

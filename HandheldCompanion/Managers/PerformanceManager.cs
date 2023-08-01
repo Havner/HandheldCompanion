@@ -3,7 +3,6 @@ using HandheldCompanion.Utils;
 using HandheldCompanion.Views;
 using System;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Timers;
 using Timer = System.Timers.Timer;
 

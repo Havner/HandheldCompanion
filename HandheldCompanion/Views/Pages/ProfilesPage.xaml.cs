@@ -8,6 +8,7 @@ using HandheldCompanion.Views.Pages.Profiles;
 using Microsoft.Win32;
 using ModernWpf.Controls;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -297,9 +298,10 @@ namespace HandheldCompanion.Views.Pages
         private void UpdateMotionControlsVisibility()
         {
             bool MotionMapped = false;
-            if (selectedProfile.Layout.AxisLayout.TryGetValue(AxisLayoutFlags.Gyroscope, out IActions action))
-                if (action.ActionType != ActionType.Disabled)
-                    MotionMapped = true;
+            if (selectedProfile.Layout.AxisLayout.TryGetValue(AxisLayoutFlags.Gyroscope, out List<IActions> actions))
+                foreach (IActions action in actions)
+                    if (action.ActionType != ActionType.Disabled)
+                        MotionMapped = true;
 
             MotionControlAdditional.Visibility = MotionMapped ? Visibility.Visible : Visibility.Collapsed;
             MotionControlWarning.Visibility = MotionMapped ? Visibility.Collapsed : Visibility.Visible;

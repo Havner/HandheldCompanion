@@ -75,16 +75,16 @@ namespace HandheldCompanion.Views.Pages
                 buttonStack.Deleted += (sender) => ButtonMapping_Deleted((ButtonFlags)sender);
             }
 
-            foreach (TriggerMapping axisMapping in triggersPage.TriggerMappings.Values)
+            foreach (TriggerStack triggerStack in triggersPage.TriggerStacks.Values)
             {
-                axisMapping.Updated += (sender, action) => AxisMapping_Updated((AxisLayoutFlags)sender, action);
-                axisMapping.Deleted += (sender) => AxisMapping_Deleted((AxisLayoutFlags)sender);
+                triggerStack.Updated += (sender, actions) => AxisMapping_Updated((AxisLayoutFlags)sender, actions);
+                triggerStack.Deleted += (sender) => AxisMapping_Deleted((AxisLayoutFlags)sender);
             }
 
-            foreach (AxisMapping axisMapping in joysticksPage.AxisMappings.Values.Union(trackpadsPage.AxisMappings.Values).Union(gyroPage.AxisMappings.Values))
+            foreach (AxisStack axisStack in joysticksPage.AxisStacks.Values.Union(trackpadsPage.AxisStacks.Values).Union(gyroPage.AxisStacks.Values))
             {
-                axisMapping.Updated += (sender, action) => AxisMapping_Updated((AxisLayoutFlags)sender, action);
-                axisMapping.Deleted += (sender) => AxisMapping_Deleted((AxisLayoutFlags)sender);
+                axisStack.Updated += (sender, action) => AxisMapping_Updated((AxisLayoutFlags)sender, action);
+                axisStack.Deleted += (sender) => AxisMapping_Deleted((AxisLayoutFlags)sender);
             }
 
             LayoutManager.Updated += LayoutManager_Updated;
@@ -245,12 +245,12 @@ namespace HandheldCompanion.Views.Pages
             currentTemplate.Layout.RemoveLayout(axis);
         }
 
-        private void AxisMapping_Updated(AxisLayoutFlags axis, IActions action)
+        private void AxisMapping_Updated(AxisLayoutFlags axis, List<IActions> actions)
         {
             if (updateLock)
                 return;
 
-            currentTemplate.Layout.UpdateLayout(axis, action);
+            currentTemplate.Layout.UpdateLayout(axis, actions);
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

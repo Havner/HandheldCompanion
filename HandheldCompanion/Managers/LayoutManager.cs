@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -339,63 +340,64 @@ namespace HandheldCompanion.Managers
                 InLayout.vector.Y = controllerState.AxisState[InAxisY];
 
                 // pull action
-                IActions action = axisLayout.Value;
+                List<IActions> actions = axisLayout.Value;
 
-                if (action is null)
-                    continue;
-
-                switch (action.ActionType)
+                foreach (var action in actions)
                 {
-                    case ActionType.Joystick:
-                        {
-                            AxisActions aAction = action as AxisActions;
-                            aAction.Execute(InLayout);
+                    switch (action.ActionType)
+                    {
+                        case ActionType.Joystick:
+                            {
+                                AxisActions aAction = action as AxisActions;
+                                aAction.Execute(InLayout);
 
-                            // read output axis
-                            AxisLayout OutLayout = AxisLayout.Layouts[aAction.Axis];
-                            AxisFlags OutAxisX = OutLayout.GetAxisFlags('X');
-                            AxisFlags OutAxisY = OutLayout.GetAxisFlags('Y');
+                                // read output axis
+                                AxisLayout OutLayout = AxisLayout.Layouts[aAction.Axis];
+                                AxisFlags OutAxisX = OutLayout.GetAxisFlags('X');
+                                AxisFlags OutAxisY = OutLayout.GetAxisFlags('Y');
 
-                            outputState.AxisState[OutAxisX] =
-                                (short)Math.Clamp(outputState.AxisState[OutAxisX] + aAction.GetValue().X, short.MinValue, short.MaxValue);
-                            outputState.AxisState[OutAxisY] =
-                                (short)Math.Clamp(outputState.AxisState[OutAxisY] + aAction.GetValue().Y, short.MinValue, short.MaxValue);
-                        }
-                        break;
+                                outputState.AxisState[OutAxisX] =
+                                    (short)Math.Clamp(outputState.AxisState[OutAxisX] + aAction.GetValue().X, short.MinValue, short.MaxValue);
+                                outputState.AxisState[OutAxisY] =
+                                    (short)Math.Clamp(outputState.AxisState[OutAxisY] + aAction.GetValue().Y, short.MinValue, short.MaxValue);
+                            }
+                            break;
 
-                    case ActionType.Trigger:
-                        {
-                            TriggerActions tAction = action as TriggerActions;
-                            tAction.Execute(InAxisY, (short)InLayout.vector.Y);
+                        case ActionType.Trigger:
+                            {
+                                TriggerActions tAction = action as TriggerActions;
+                                tAction.Execute(InAxisY, (short)InLayout.vector.Y);
 
-                            // read output axis
-                            AxisLayout OutLayout = AxisLayout.Layouts[tAction.Axis];
-                            AxisFlags OutAxisY = OutLayout.GetAxisFlags('Y');
+                                // read output axis
+                                AxisLayout OutLayout = AxisLayout.Layouts[tAction.Axis];
+                                AxisFlags OutAxisY = OutLayout.GetAxisFlags('Y');
 
-                            outputState.AxisState[OutAxisY] = (short)tAction.GetValue();
-                        }
-                        break;
+                                outputState.AxisState[OutAxisY] =
+                                    (short)Math.Clamp(outputState.AxisState[OutAxisY] + tAction.GetValue(), short.MinValue, short.MaxValue); 
+                            }
+                            break;
 
-                    case ActionType.Mouse:
-                        {
-                            MouseActions mAction = action as MouseActions;
+                        case ActionType.Mouse:
+                            {
+                                MouseActions mAction = action as MouseActions;
 
-                            // This buttonState check won't work here if UpdateInputs is event based, might need a rework in the future
-                            bool touched = false;
-                            if (ControllerState.AxisTouchButtons.TryGetValue(InLayout.flags, out ButtonFlags touchButton))
-                                touched = controllerState.ButtonState[touchButton];
+                                // This buttonState check won't work here if UpdateInputs is event based, might need a rework in the future
+                                bool touched = false;
+                                if (ControllerState.AxisTouchButtons.TryGetValue(InLayout.flags, out ButtonFlags touchButton))
+                                    touched = controllerState.ButtonState[touchButton];
 
-                            mAction.Execute(InLayout, touched);
-                        }
-                        break;
+                                mAction.Execute(InLayout, touched);
+                            }
+                            break;
 
-                    case ActionType.Special:
-                        {
-                            SpecialActions mAction = action as SpecialActions;
+                        case ActionType.Special:
+                            {
+                                SpecialActions mAction = action as SpecialActions;
 
-                            mAction.Execute(InLayout);
-                        }
-                        break;
+                                mAction.Execute(InLayout);
+                            }
+                            break;
+                    }
                 }
             }
 

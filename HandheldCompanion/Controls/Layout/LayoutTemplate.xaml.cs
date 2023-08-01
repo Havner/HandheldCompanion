@@ -90,10 +90,10 @@ namespace HandheldCompanion.Controls
                     {
                         this.Layout.AxisLayout = new()
                         {
-                            { AxisLayoutFlags.LeftStick, new MouseActions() { MouseType = MouseActionsType.Scroll } },
-                            { AxisLayoutFlags.RightStick, new MouseActions() { MouseType = MouseActionsType.Move } },
-                            { AxisLayoutFlags.LeftPad, new MouseActions() { MouseType = MouseActionsType.Scroll } },
-                            { AxisLayoutFlags.RightPad, new MouseActions() { MouseType = MouseActionsType.Move } },
+                            { AxisLayoutFlags.LeftStick, new List<IActions> { new MouseActions() { MouseType = MouseActionsType.Scroll } } },
+                            { AxisLayoutFlags.RightStick, new List<IActions> { new MouseActions() { MouseType = MouseActionsType.Move } } },
+                            { AxisLayoutFlags.LeftPad, new List<IActions> { new MouseActions() { MouseType = MouseActionsType.Scroll } } },
+                            { AxisLayoutFlags.RightPad, new List<IActions> { new MouseActions() { MouseType = MouseActionsType.Move } } },
                         };
 
                         this.Layout.ButtonLayout = new()
@@ -127,8 +127,8 @@ namespace HandheldCompanion.Controls
                     {
                         this.Layout.AxisLayout = new()
                         {
-                            { AxisLayoutFlags.RightStick, new MouseActions() { MouseType = MouseActionsType.Move } },
-                            { AxisLayoutFlags.RightPad, new MouseActions() { MouseType = MouseActionsType.Move } },
+                            { AxisLayoutFlags.RightStick, new List<IActions> { new MouseActions() { MouseType = MouseActionsType.Move } } },
+                            { AxisLayoutFlags.RightPad, new List<IActions> { new MouseActions() { MouseType = MouseActionsType.Move } } },
                         };
 
                         this.Layout.ButtonLayout = new()
