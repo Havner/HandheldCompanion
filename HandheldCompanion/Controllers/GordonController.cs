@@ -22,9 +22,7 @@ namespace HandheldCompanion.Controllers
         public byte FeedbackLargeMotor;
         public byte FeedbackSmallMotor;
 
-        public const sbyte MinIntensity = 5;
-        public const sbyte MaxIntensity = 15;
-        private readonly ushort RumblePeriod = 80;
+        public const ushort MaxIntensity = 2048;
 
         public GordonController(PnPDetails details) : base()
         {
@@ -246,15 +244,9 @@ namespace HandheldCompanion.Controllers
             TimerManager.Tick -= UpdateInputs;
         }
 
-        public bool GetHapticIntensity(byte? input, sbyte minIntensity, sbyte maxIntensity, out sbyte output)
+        public ushort GetHapticIntensity(byte input, ushort maxIntensity)
         {
-            output = default;
-            if (input is null || input == 0)
-                return false;
-
-            double value = minIntensity + (maxIntensity - minIntensity) * input.Value * VibrationStrength / 255;
-            output = (sbyte)(value - 5); // convert from dB to values
-            return true;
+            return (ushort)(input * maxIntensity * VibrationStrength / 255);
         }
 
         public override void SetVibration(byte LargeMotor, byte SmallMotor)
@@ -267,11 +259,11 @@ namespace HandheldCompanion.Controllers
 
         public void SetHaptic()
         {
-            GetHapticIntensity(FeedbackLargeMotor, MinIntensity, MaxIntensity, out var leftIntensity);
-            Controller.SetHaptic((byte)SCHapticPad.Left, (ushort)leftIntensity, RumblePeriod, 1);
+            ushort leftAmplitude = GetHapticIntensity(FeedbackLargeMotor, MaxIntensity);
+            Controller.SetHaptic((byte)SCHapticPad.Left, leftAmplitude, 0, 1);
 
-            GetHapticIntensity(FeedbackSmallMotor, MinIntensity, MaxIntensity, out var rightIntensity);
-            Controller.SetHaptic((byte)SCHapticPad.Right, (ushort)rightIntensity, RumblePeriod, 1);
+            ushort rightAmplitude = GetHapticIntensity(FeedbackSmallMotor, MaxIntensity);
+            Controller.SetHaptic((byte)SCHapticPad.Right, rightAmplitude, 0, 1);
         }
     }
 }

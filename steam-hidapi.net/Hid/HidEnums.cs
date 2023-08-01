@@ -73,7 +73,7 @@ namespace steam_hidapi.net.Hid
 
     // TODO: this should be Pack = 1, due to lack of that the amplitude
     // here starts at 5th byte, not 4th as it probably should
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal struct SCHapticPacket
     {
         public byte packet_type; // = 0x8f;
