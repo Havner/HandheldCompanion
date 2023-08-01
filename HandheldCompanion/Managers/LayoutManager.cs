@@ -342,8 +342,29 @@ namespace HandheldCompanion.Managers
                 // pull action
                 List<IActions> actions = axisLayout.Value;
 
+                // axis shift logic
+                List<ButtonFlags> shiftButtons = new();
+                foreach (var action in actions)
+                    if (action.ShiftButton != ButtonFlags.None)
+                        shiftButtons.Add(action.ShiftButton);
+
                 foreach (var action in actions)
                 {
+                    if (shiftButtons.Count > 0)
+                    {
+                        ButtonFlags shiftButton = action.ShiftButton;
+                        if (shiftButton == ButtonFlags.None)
+                        {
+                            if (shiftButtons.Intersect(controllerState.ButtonState.Buttons).Any())
+                                continue;
+                        }
+                        else
+                        {
+                            if (!controllerState.ButtonState[shiftButton])
+                                continue;
+                        }
+                    }
+
                     switch (action.ActionType)
                     {
                         case ActionType.Joystick:
