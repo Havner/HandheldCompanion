@@ -1,9 +1,10 @@
 using HandheldCompanion.Inputs;
 using HandheldCompanion.Managers;
 using HandheldCompanion.Misc;
+using HandheldCompanion.Utils;
+using SharpDX.XInput;
 using steam_hidapi.net;
 using steam_hidapi.net.Hid;
-using SharpDX.XInput;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
@@ -17,7 +18,7 @@ namespace HandheldCompanion.Controllers
         private steam_hidapi.net.GordonController Controller;
         private GordonControllerInputEventArgs input;
 
-        private const short TrackPadInner = 12000;
+        private const short TrackPadInner = short.MaxValue / 2;
 
         public byte FeedbackLargeMotor;
         public byte FeedbackSmallMotor;
@@ -143,16 +144,17 @@ namespace HandheldCompanion.Controllers
 
             if (Inputs.ButtonState[ButtonFlags.LeftPadClick])
             {
-                Inputs.ButtonState[ButtonFlags.LeftPadClickUp] = Inputs.AxisState[AxisFlags.LeftPadY] >= TrackPadInner;
-                Inputs.ButtonState[ButtonFlags.LeftPadClickDown] = Inputs.AxisState[AxisFlags.LeftPadY] <= -TrackPadInner;
-                Inputs.ButtonState[ButtonFlags.LeftPadClickRight] = Inputs.AxisState[AxisFlags.LeftPadX] >= TrackPadInner;
-                Inputs.ButtonState[ButtonFlags.LeftPadClickLeft] = Inputs.AxisState[AxisFlags.LeftPadX] <= -TrackPadInner;
+                InputUtils.TouchToDirections(Inputs.AxisState[AxisFlags.LeftPadX], Inputs.AxisState[AxisFlags.LeftPadY], TrackPadInner, 15, out bool[] buttons);
+                Inputs.ButtonState[ButtonFlags.LeftPadClickUp] = buttons[0];
+                Inputs.ButtonState[ButtonFlags.LeftPadClickRight] = buttons[1];
+                Inputs.ButtonState[ButtonFlags.LeftPadClickDown] = buttons[2];
+                Inputs.ButtonState[ButtonFlags.LeftPadClickLeft] = buttons[3];
             }
             else
             {
                 Inputs.ButtonState[ButtonFlags.LeftPadClickUp] = false;
-                Inputs.ButtonState[ButtonFlags.LeftPadClickDown] = false;
                 Inputs.ButtonState[ButtonFlags.LeftPadClickRight] = false;
+                Inputs.ButtonState[ButtonFlags.LeftPadClickDown] = false;
                 Inputs.ButtonState[ButtonFlags.LeftPadClickLeft] = false;
             }
 
@@ -173,16 +175,17 @@ namespace HandheldCompanion.Controllers
 
             if (Inputs.ButtonState[ButtonFlags.RightPadClick])
             {
-                Inputs.ButtonState[ButtonFlags.RightPadClickUp] = Inputs.AxisState[AxisFlags.RightPadY] >= TrackPadInner;
-                Inputs.ButtonState[ButtonFlags.RightPadClickDown] = Inputs.AxisState[AxisFlags.RightPadY] <= -TrackPadInner;
-                Inputs.ButtonState[ButtonFlags.RightPadClickRight] = Inputs.AxisState[AxisFlags.RightPadX] >= TrackPadInner;
-                Inputs.ButtonState[ButtonFlags.RightPadClickLeft] = Inputs.AxisState[AxisFlags.RightPadX] <= -TrackPadInner;
+                InputUtils.TouchToDirections(Inputs.AxisState[AxisFlags.RightPadX], Inputs.AxisState[AxisFlags.RightPadY], TrackPadInner, -15, out bool[] buttons);
+                Inputs.ButtonState[ButtonFlags.RightPadClickUp] = buttons[0];
+                Inputs.ButtonState[ButtonFlags.RightPadClickRight] = buttons[1];
+                Inputs.ButtonState[ButtonFlags.RightPadClickDown] = buttons[2];
+                Inputs.ButtonState[ButtonFlags.RightPadClickLeft] = buttons[3];
             }
             else
             {
                 Inputs.ButtonState[ButtonFlags.RightPadClickUp] = false;
-                Inputs.ButtonState[ButtonFlags.RightPadClickDown] = false;
                 Inputs.ButtonState[ButtonFlags.RightPadClickRight] = false;
+                Inputs.ButtonState[ButtonFlags.RightPadClickDown] = false;
                 Inputs.ButtonState[ButtonFlags.RightPadClickLeft] = false;
             }
 
