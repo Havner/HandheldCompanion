@@ -88,6 +88,7 @@ namespace HandheldCompanion.Actions
                         pressed = ModifierMap[Modifiers];
                         KeyboardSimulator.KeyDown(pressed);
                         MouseSimulator.MouseDown(MouseType, scrollAmountInClicks);
+                        SetHaptic(button, false);
                     }
                     break;
                 case false:
@@ -98,6 +99,7 @@ namespace HandheldCompanion.Actions
                         IsCursorDown = false;
                         MouseSimulator.MouseUp(MouseType);
                         KeyboardSimulator.KeyUp(pressed);
+                        SetHaptic(button, true);
                     }
                     break;
             }

@@ -8,6 +8,9 @@ namespace HandheldCompanion.Actions
     {
         public ButtonFlags Button;
 
+        // runtime variables
+        private bool IsKeyDown = false;
+
         public ButtonActions()
         {
             this.ActionType = ActionType.Button;
@@ -19,6 +22,33 @@ namespace HandheldCompanion.Actions
         public ButtonActions(ButtonFlags button) : this()
         {
             this.Button = button;
+        }
+
+        public override void Execute(ButtonFlags button, bool value, int longTime)
+        {
+            base.Execute(button, value, longTime);
+
+            switch (this.Value)
+            {
+                case true:
+                    {
+                        if (IsKeyDown)
+                            return;
+
+                        IsKeyDown = true;
+                        SetHaptic(button, false);
+                    }
+                    break;
+                case false:
+                    {
+                        if (!IsKeyDown)
+                            return;
+
+                        IsKeyDown = false;
+                        SetHaptic(button, true);
+                    }
+                    break;
+            }
         }
 
         public bool GetValue()

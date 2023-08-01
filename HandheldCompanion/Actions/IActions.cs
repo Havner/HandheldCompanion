@@ -39,6 +39,30 @@ namespace HandheldCompanion.Actions
     }
 
     [Serializable]
+    public enum HapticMode
+    {
+        Off = 0,
+        On = 1,
+        LongOnly = 2,
+    }
+
+    [Serializable]
+    public enum HapticWhen
+    {
+        Down = 0,
+        Up = 1,
+        Both = 2,
+    }
+
+    [Serializable]
+    public enum HapticStrength
+    {
+        Low = 0,
+        Medium = 1,
+        High = 2,
+    }
+
+    [Serializable]
     public abstract class IActions : ICloneable
     {
         public static Dictionary<ModifierSet, KeyCode[]> ModifierMap = new()
@@ -62,7 +86,7 @@ namespace HandheldCompanion.Actions
 
         protected int Period;
 
-        // TODO: make it configurable, multiple times, etc
+        // TODO: multiple delay, delay ranges
         public PressType PressType = PressType.Short;
         public int LongPressTime = 450; // default value for steam
         protected int pressTimer = -1; // -1 inactive, >= 0 active
@@ -75,9 +99,23 @@ namespace HandheldCompanion.Actions
         public bool Toggle;
         protected bool IsToggled;
 
+        public HapticMode HapticMode = HapticMode.Off;
+        public HapticWhen HapticWhen = HapticWhen.Down;
+        public HapticStrength HapticStrength = HapticStrength.Low;
+
         public IActions()
         {
             Period = TimerManager.GetPeriod();
+        }
+
+        public virtual void SetHaptic(ButtonFlags button, bool up)
+        {
+            if (this.HapticMode == HapticMode.Off) return;
+            if (this.HapticMode == HapticMode.LongOnly && this.PressType == PressType.Short) return;
+            if (this.HapticWhen == HapticWhen.Down && up) return;
+            if (this.HapticWhen == HapticWhen.Up && !up) return;
+
+            ControllerManager.GetTargetController()?.SetHaptic(this.HapticStrength, button);
         }
 
         // if longDelay == 0 no new logic will be executed

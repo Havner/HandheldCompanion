@@ -294,10 +294,10 @@ namespace HandheldCompanion.Controllers
             while (rumbleThreadRunning)
             {
                 if (GetHapticIntensity(FeedbackLargeMotor, MinIntensity, MaxIntensity, out var leftIntensity))
-                    Controller.SetHaptic2(SCHapticPad.Left, NCHapticStyle.Weak, leftIntensity);
+                    Controller.SetHaptic2(SCHapticMotor.Left, NCHapticStyle.Weak, leftIntensity);
 
                 if (GetHapticIntensity(FeedbackSmallMotor, MinIntensity, MaxIntensity, out var rightIntensity))
-                    Controller.SetHaptic2(SCHapticPad.Right, NCHapticStyle.Weak, rightIntensity);
+                    Controller.SetHaptic2(SCHapticMotor.Right, NCHapticStyle.Weak, rightIntensity);
 
                 await Task.Delay(TimerManager.GetPeriod() * 2);
             }

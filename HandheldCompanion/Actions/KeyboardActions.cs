@@ -46,6 +46,7 @@ namespace HandheldCompanion.Actions
                         pressed = ModifierMap[Modifiers];
                         KeyboardSimulator.KeyDown(pressed);
                         KeyboardSimulator.KeyDown(Key);
+                        SetHaptic(button, false);
                     }
                     break;
                 case false:
@@ -56,6 +57,7 @@ namespace HandheldCompanion.Actions
                         IsKeyDown = false;
                         KeyboardSimulator.KeyUp(Key);
                         KeyboardSimulator.KeyUp(pressed);
+                        SetHaptic(button, true);
                     }
                     break;
             }

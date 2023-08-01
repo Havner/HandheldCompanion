@@ -1,3 +1,4 @@
+using HandheldCompanion.Actions;
 using HandheldCompanion.Inputs;
 using HandheldCompanion.Managers;
 using HandheldCompanion.Misc;
@@ -20,10 +21,7 @@ namespace HandheldCompanion.Controllers
 
         private const short TrackPadInner = short.MaxValue / 2;
 
-        public byte FeedbackLargeMotor;
-        public byte FeedbackSmallMotor;
-
-        public const ushort MaxIntensity = 2048;
+        public const ushort MaxRumbleIntensity = 2048;
 
         public GordonController(PnPDetails details) : base()
         {
@@ -254,19 +252,23 @@ namespace HandheldCompanion.Controllers
 
         public override void SetVibration(byte LargeMotor, byte SmallMotor)
         {
-            this.FeedbackLargeMotor = LargeMotor;
-            this.FeedbackSmallMotor = SmallMotor;
+            ushort leftAmplitude = GetHapticIntensity(LargeMotor, MaxRumbleIntensity);
+            Controller.SetHaptic((byte)SCHapticMotor.Left, leftAmplitude, 0, 1);
 
-            SetHaptic();
+            ushort rightAmplitude = GetHapticIntensity(SmallMotor, MaxRumbleIntensity);
+            Controller.SetHaptic((byte)SCHapticMotor.Right, rightAmplitude, 0, 1);
         }
 
-        public void SetHaptic()
+        public override void SetHaptic(HapticStrength strength, ButtonFlags button)
         {
-            ushort leftAmplitude = GetHapticIntensity(FeedbackLargeMotor, MaxIntensity);
-            Controller.SetHaptic((byte)SCHapticPad.Left, leftAmplitude, 0, 1);
-
-            ushort rightAmplitude = GetHapticIntensity(FeedbackSmallMotor, MaxIntensity);
-            Controller.SetHaptic((byte)SCHapticPad.Right, rightAmplitude, 0, 1);
+            ushort value = strength switch
+            {
+                HapticStrength.Low => 512,
+                HapticStrength.Medium => 1024,
+                HapticStrength.High => 2048,
+                _ => 0,
+            };
+            Controller.SetHaptic((byte)GetMotorForButton(button), value, 0, 1);
         }
     }
 }

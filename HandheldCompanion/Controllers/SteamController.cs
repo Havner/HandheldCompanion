@@ -1,4 +1,5 @@
 using HandheldCompanion.Inputs;
+using steam_hidapi.net.Hid;
 
 namespace HandheldCompanion.Controllers
 {
@@ -128,6 +129,79 @@ namespace HandheldCompanion.Controllers
             }
 
             return base.GetGlyph(axis);
+        }
+
+        protected virtual SCHapticMotor GetMotorForButton(ButtonFlags button)
+        {
+            switch (button)
+            {
+                case ButtonFlags.DPadUp:
+                case ButtonFlags.DPadDown:
+                case ButtonFlags.DPadLeft:
+                case ButtonFlags.DPadRight:
+                case ButtonFlags.L1:
+                case ButtonFlags.L2Soft:
+                case ButtonFlags.L2Full:
+                case ButtonFlags.L4:
+                case ButtonFlags.L5:
+
+                case ButtonFlags.Back:
+                case ButtonFlags.Special:
+
+                case ButtonFlags.LeftStickTouch:
+                case ButtonFlags.LeftStickClick:
+                case ButtonFlags.LeftStickUp:
+                case ButtonFlags.LeftStickDown:
+                case ButtonFlags.LeftStickLeft:
+                case ButtonFlags.LeftStickRight:
+                case ButtonFlags.LeftStickOuterRing:
+                case ButtonFlags.LeftStickInnerRing:
+
+                case ButtonFlags.LeftPadTouch:
+                case ButtonFlags.LeftPadClick:
+                case ButtonFlags.LeftPadClickUp:
+                case ButtonFlags.LeftPadClickDown:
+                case ButtonFlags.LeftPadClickLeft:
+                case ButtonFlags.LeftPadClickRight:
+
+                    return SCHapticMotor.Left;
+
+                case ButtonFlags.B1:
+                case ButtonFlags.B2:
+                case ButtonFlags.B3:
+                case ButtonFlags.B4:
+
+                case ButtonFlags.R1:
+                case ButtonFlags.R2Soft:
+                case ButtonFlags.R2Full:
+                case ButtonFlags.R4:
+                case ButtonFlags.R5:
+
+                case ButtonFlags.Start:
+                case ButtonFlags.Quick:
+
+                case ButtonFlags.RightStickTouch:
+                case ButtonFlags.RightStickClick:
+                case ButtonFlags.RightStickUp:
+                case ButtonFlags.RightStickDown:
+                case ButtonFlags.RightStickLeft:
+                case ButtonFlags.RightStickRight:
+                case ButtonFlags.RightStickOuterRing:
+                case ButtonFlags.RightStickInnerRing:
+
+                case ButtonFlags.RightPadTouch:
+                case ButtonFlags.RightPadClick:
+                case ButtonFlags.RightPadClickUp:
+                case ButtonFlags.RightPadClickDown:
+                case ButtonFlags.RightPadClickLeft:
+                case ButtonFlags.RightPadClickRight:
+
+                    return SCHapticMotor.Right;
+
+                default:
+                    throw new System.Exception(string.Format("Button 2 Rumble button missing: {0}", button.ToString()));
+
+            }
         }
     }
 }

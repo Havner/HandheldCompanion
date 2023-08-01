@@ -1,3 +1,4 @@
+using HandheldCompanion.Actions;
 using HandheldCompanion.Inputs;
 using HandheldCompanion.Managers;
 using HandheldCompanion.Misc;
@@ -230,6 +231,10 @@ namespace HandheldCompanion.Controllers
         }
 
         public virtual void SetVibration(byte LargeMotor, byte SmallMotor)
+        { }
+
+        // let the controller decide itself what motor to use for a specific button
+        public virtual void SetHaptic(HapticStrength strength, ButtonFlags button)
         { }
 
         public virtual bool IsConnected()

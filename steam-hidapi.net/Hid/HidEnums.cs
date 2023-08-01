@@ -76,7 +76,7 @@ namespace steam_hidapi.net.Hid
         OFF = 0x07,
     }
 
-    public enum SCHapticPad : byte
+    public enum SCHapticMotor : byte
     {
         Right = 0x00,
         Left = 0x01,
@@ -289,14 +289,14 @@ namespace steam_hidapi.net.Hid
     [StructLayout(LayoutKind.Sequential)]
     internal struct NCHapticPacket2
     {
-        public byte packet_type;     // = 0xea;
-        public byte len;             // = 0xd;
-        public SCHapticPad position; // = HapticPad.Left;
-        public NCHapticStyle style;  // = HapticStyle.Strong; //
-        public byte unsure2;         // = 0x0;
-        public sbyte intensity;      // = 0x00; // -7..5 => -2dB..10dB
-        public byte unsure3;         // = 0x4;
-        public int tsA;              // = 0; // timestamp?
-        public int tsB;              // = 0;
+        public byte packet_type;       // = 0xea;
+        public byte len;               // = 0xd;
+        public SCHapticMotor position; // = HapticPad.Left;
+        public NCHapticStyle style;    // = HapticStyle.Strong; //
+        public byte unsure2;           // = 0x0;
+        public sbyte intensity;        // = 0x00; // -7..5 => -2dB..10dB
+        public byte unsure3;           // = 0x4;
+        public int tsA;                // = 0; // timestamp?
+        public int tsB;                // = 0;
     }
 }

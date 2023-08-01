@@ -41,7 +41,7 @@ namespace steam_hidapi.net
             }
         }
 
-        public byte[] SetHaptic2(SCHapticPad position, NCHapticStyle style, sbyte intensity)
+        public byte[] SetHaptic2(SCHapticMotor position, NCHapticStyle style, sbyte intensity)
         {
             NCHapticPacket2 haptic = new NCHapticPacket2();
 

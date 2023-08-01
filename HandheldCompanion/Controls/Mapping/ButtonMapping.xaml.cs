@@ -118,38 +118,21 @@ namespace HandheldCompanion.Controls
                         TargetComboBox.SelectedItem = buttonLabel;
                 }
 
-                // settings
-                if (TargetComboBox.SelectedItem is not null)
-                    PressComboBox.SelectedIndex = (int)this.Actions.PressType;
-                else
-                    this.Actions.PressType = (PressType)PressComboBox.SelectedIndex;
-                LongPressDelaySlider.Value = (int)this.Actions.LongPressTime;
-                Button2ButtonPressDelay.Visibility = Actions.PressType == PressType.Long ? Visibility.Visible : Visibility.Collapsed;
-                Toggle_Turbo.IsOn = this.Actions.Turbo;
-                Turbo_Slider.Value = this.Actions.TurboDelay;
-                Toggle_Toggle.IsOn = this.Actions.Toggle;
+                // button specific settings
             }
             else if (type == ActionType.Keyboard)
             {
                 if (this.Actions is null || this.Actions is not KeyboardActions)
                     this.Actions = new KeyboardActions();
 
+                // use optimized lazily created list
                 TargetComboBox.ItemsSource = keyList;
 
                 foreach (var keyLabel in keyList)
                     if (keyLabel.Tag.Equals(((KeyboardActions)this.Actions).Key))
                         TargetComboBox.SelectedItem = keyLabel;
 
-                // settings
-                if (TargetComboBox.SelectedItem is not null)
-                    PressComboBox.SelectedIndex = (int)this.Actions.PressType;
-                else
-                    this.Actions.PressType = (PressType)PressComboBox.SelectedIndex;
-                LongPressDelaySlider.Value = (int)this.Actions.LongPressTime;
-                Button2ButtonPressDelay.Visibility = Actions.PressType == PressType.Long ? Visibility.Visible : Visibility.Collapsed;
-                Toggle_Turbo.IsOn = this.Actions.Turbo;
-                Turbo_Slider.Value = this.Actions.TurboDelay;
-                Toggle_Toggle.IsOn = this.Actions.Toggle;
+                // keyboard specific settings
                 ModifierComboBox.SelectedIndex = (int)((KeyboardActions)this.Actions).Modifiers;
             }
             else if (type == ActionType.Mouse)
@@ -175,17 +158,25 @@ namespace HandheldCompanion.Controls
                         TargetComboBox.SelectedItem = buttonLabel;
                 }
 
-                if (TargetComboBox.SelectedItem is not null)
-                    PressComboBox.SelectedIndex = (int)this.Actions.PressType;
-                else
-                    this.Actions.PressType = (PressType)PressComboBox.SelectedIndex;
-                LongPressDelaySlider.Value = (int)this.Actions.LongPressTime;
-                Button2ButtonPressDelay.Visibility = Actions.PressType == PressType.Long ? Visibility.Visible : Visibility.Collapsed;
-                Toggle_Turbo.IsOn = this.Actions.Turbo;
-                Turbo_Slider.Value = this.Actions.TurboDelay;
-                Toggle_Toggle.IsOn = this.Actions.Toggle;
+                // mouse specific settings
                 ModifierComboBox.SelectedIndex = (int)((MouseActions)this.Actions).Modifiers;
             }
+
+            // press type is treated specially, it can be set before action 
+            if (TargetComboBox.SelectedItem is not null)
+                PressComboBox.SelectedIndex = (int)this.Actions.PressType;
+            else
+                this.Actions.PressType = (PressType)PressComboBox.SelectedIndex;
+            Button2ButtonPressDelay.Visibility = Actions.PressType == PressType.Long ? Visibility.Visible : Visibility.Collapsed;
+
+            // settings
+            LongPressDelaySlider.Value = (int)this.Actions.LongPressTime;
+            Toggle_Turbo.IsOn = this.Actions.Turbo;
+            Turbo_Slider.Value = this.Actions.TurboDelay;
+            Toggle_Toggle.IsOn = this.Actions.Toggle;
+            HapticModeComboBox.SelectedIndex = (int)this.Actions.HapticMode;
+            HapticWhenComboBox.SelectedIndex = (int)this.Actions.HapticWhen;
+            HapticStrengthComboBox.SelectedIndex = (int)this.Actions.HapticStrength;
 
             base.Update();
         }
@@ -229,6 +220,7 @@ namespace HandheldCompanion.Controls
         public void Reset()
         {
             ActionComboBox.SelectedIndex = 0;
+            PressComboBox.SelectedIndex = 0;
             TargetComboBox.SelectedItem = null;
         }
 
@@ -300,6 +292,36 @@ namespace HandheldCompanion.Controls
                 return;
 
             this.Actions.Toggle = Toggle_Toggle.IsOn;
+
+            base.Update();
+        }
+
+        private void HapticMode_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.Actions is null)
+                return;
+
+            this.Actions.HapticMode = (HapticMode)HapticModeComboBox.SelectedIndex;
+            this.HapticWhenComboBox.IsEnabled = Actions.HapticMode == HapticMode.Off ? false : true;
+            this.HapticStrengthComboBox.IsEnabled = Actions.HapticMode == HapticMode.Off ? false : true;
+
+            base.Update();
+        }
+        private void HapticWhen_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.Actions is null)
+                return;
+
+            this.Actions.HapticWhen = (HapticWhen)HapticWhenComboBox.SelectedIndex;
+
+            base.Update();
+        }
+        private void HapticStrength_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.Actions is null)
+                return;
+
+            this.Actions.HapticStrength = (HapticStrength)HapticStrengthComboBox.SelectedIndex;
 
             base.Update();
         }
