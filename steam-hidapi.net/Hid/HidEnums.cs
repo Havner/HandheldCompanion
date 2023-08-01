@@ -52,14 +52,25 @@ namespace steam_hidapi.net.Hid
 
     internal enum SCRegister : byte
     {
-        LPAD_MODE           = 0x07,  // Neptune
-        RPAD_MODE           = 0x08,
+        LPAD_MODE           = 0x07,  // cursor keys
+        RPAD_MODE           = 0x08,  // mouse
+        RPAD_MARGIN         = 0x18,  // dead margin
+        LED_INTENSITY       = 0x2d,  // 0 - 100
+        UNKNOWN1            = 0x2e,  // seen in scc config packet, set to 0x00
         GYRO_MODE           = 0x30,  // Gordon
+        UNKNOWN2            = 0x31,  // seen in scc config packet, set to 0x02
+        UNKNOWN3            = 0x32,  // seen in scc config packet, at the begining?
         LPAD_CLICK_PRESSURE = 0x34,  // Neptune
         RPAD_CLICK_PRESSURE = 0x35,  // Neptune
     }
 
-    internal enum SCLizardMouse : byte
+    internal enum SCRegisterValue : byte
+    {
+        OFF = 0x00,
+        ON = 0x01,
+    }
+
+    internal enum SCLizardMode : byte
     {
         ON  = 0x00,
         OFF = 0x07,

@@ -79,13 +79,17 @@ namespace steam_hidapi.net
             {
                 WriteSingleCmd(SCPacketType.DEFAULT_MAPPINGS);
                 WriteSingleCmd(SCPacketType.DEFAULT_MOUSE);
+                WriteRegister(SCRegister.RPAD_MARGIN, (ushort)SCRegisterValue.ON);
             }
             else
             {
                 WriteSingleCmd(SCPacketType.CLEAR_MAPPINGS);
-                WriteRegister(SCRegister.RPAD_MODE, (ushort)SCLizardMouse.OFF);
-                if (_pid == (ushort)SCPid.STEAMDECK)
-                    WriteRegister(SCRegister.LPAD_MODE, (ushort)SCLizardMouse.OFF);
+                WriteRegister(SCRegister.RPAD_MODE, (ushort)SCLizardMode.OFF);
+                WriteRegister(SCRegister.LPAD_MODE, (ushort)SCLizardMode.OFF);
+                WriteRegister(SCRegister.RPAD_MARGIN, (ushort)SCRegisterValue.OFF);
+                // Steam Deck
+                //WriteRegister(SCRegister.LPAD_CLICK_PRESSURE, 0xFFFF);
+                //WriteRegister(SCRegister.RPAD_CLICK_PRESSURE, 0xFFFF);
             }
         }
 

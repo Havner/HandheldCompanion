@@ -2,7 +2,6 @@
 using steam_hidapi.net.Hid;
 using steam_hidapi.net.Util;
 using System;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace steam_hidapi.net
@@ -62,6 +61,14 @@ namespace steam_hidapi.net
                 0x6f, 0x66, 0x66, 0x21 };
 
             _hidDevice.RequestFeatureReport(req);
+        }
+
+        public void SetLedIntensity(byte value)
+        {
+            if (value > 100)
+                value = 100;
+
+            WriteRegister(SCRegister.LED_INTENSITY, value);
         }
     }
 }

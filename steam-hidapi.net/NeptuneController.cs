@@ -2,7 +2,6 @@
 using steam_hidapi.net.Hid;
 using steam_hidapi.net.Util;
 using System;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace steam_hidapi.net
