@@ -121,9 +121,9 @@ namespace HandheldCompanion.Controls
             }
 
             if (actions.Count > 0)
-                Updated.Invoke(button, actions);
+                Updated?.Invoke(button, actions);
             else
-                Deleted.Invoke(button);
+                Deleted?.Invoke(button);
         }
 
         private void AddMappingToChildren(ButtonMapping mapping)
