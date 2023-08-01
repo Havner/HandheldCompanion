@@ -44,6 +44,7 @@ namespace HandheldCompanion.Actions
         private Vector2 remainder = new();
         private KeyCode[] pressed;
         private OneEuroFilterPair mouseFilter;
+        private Vector2 prevVector = new();
 
         // settings click
         public ModifierSet Modifiers = ModifierSet.None;
@@ -152,13 +153,13 @@ namespace HandheldCompanion.Actions
                         // touchpad was touched, update entry point for delta calculations
                         if (newTouch)
                         {
-                            prevValue = layout.vector;
+                            prevVector = layout.vector;
                             return;
                         }
 
                         // calculate delta and convert to <0.0-1.0> values
-                        deltaVector = (layout.vector - (Vector2)prevValue) / short.MaxValue;
-                        prevValue = layout.vector;
+                        deltaVector = (layout.vector - prevVector) / short.MaxValue;
+                        prevVector = layout.vector;
 
                         sensitivityFinetune = (MouseType == MouseActionsType.Move ? 9.0f : 3.0f);
                     }
