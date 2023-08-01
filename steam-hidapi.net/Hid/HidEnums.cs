@@ -78,8 +78,8 @@ namespace steam_hidapi.net.Hid
 
     public enum SCHapticPad : byte
     {
-        Left  = 0x00,
-        Right = 0x01,
+        Right = 0x00,
+        Left = 0x01,
     };
 
     // TODO: this should be Pack = 1, due to lack of that the amplitude
