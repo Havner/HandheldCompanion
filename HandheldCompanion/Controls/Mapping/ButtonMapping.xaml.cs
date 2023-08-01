@@ -123,6 +123,8 @@ namespace HandheldCompanion.Controls
                     PressComboBox.SelectedIndex = (int)this.Actions.PressType;
                 else
                     this.Actions.PressType = (PressType)PressComboBox.SelectedIndex;
+                LongPressDelaySlider.Value = (int)this.Actions.LongPressTime;
+                Button2ButtonPressDelay.Visibility = Actions.PressType == PressType.Long ? Visibility.Visible : Visibility.Collapsed;
                 Toggle_Turbo.IsOn = this.Actions.Turbo;
                 Turbo_Slider.Value = this.Actions.TurboDelay;
                 Toggle_Toggle.IsOn = this.Actions.Toggle;
@@ -143,6 +145,8 @@ namespace HandheldCompanion.Controls
                     PressComboBox.SelectedIndex = (int)this.Actions.PressType;
                 else
                     this.Actions.PressType = (PressType)PressComboBox.SelectedIndex;
+                LongPressDelaySlider.Value = (int)this.Actions.LongPressTime;
+                Button2ButtonPressDelay.Visibility = Actions.PressType == PressType.Long ? Visibility.Visible : Visibility.Collapsed;
                 Toggle_Turbo.IsOn = this.Actions.Turbo;
                 Turbo_Slider.Value = this.Actions.TurboDelay;
                 Toggle_Toggle.IsOn = this.Actions.Toggle;
@@ -175,6 +179,8 @@ namespace HandheldCompanion.Controls
                     PressComboBox.SelectedIndex = (int)this.Actions.PressType;
                 else
                     this.Actions.PressType = (PressType)PressComboBox.SelectedIndex;
+                LongPressDelaySlider.Value = (int)this.Actions.LongPressTime;
+                Button2ButtonPressDelay.Visibility = Actions.PressType == PressType.Long ? Visibility.Visible : Visibility.Collapsed;
                 Toggle_Turbo.IsOn = this.Actions.Turbo;
                 Turbo_Slider.Value = this.Actions.TurboDelay;
                 Toggle_Toggle.IsOn = this.Actions.Toggle;
@@ -232,6 +238,18 @@ namespace HandheldCompanion.Controls
                 return;
 
             this.Actions.PressType = (PressType)PressComboBox.SelectedIndex;
+
+            Button2ButtonPressDelay.Visibility = Actions.PressType == PressType.Long ? Visibility.Visible : Visibility.Collapsed;
+
+            base.Update();
+        }
+
+        private void LongPressDelaySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (this.Actions is null)
+                return;
+
+            this.Actions.LongPressTime = (int)LongPressDelaySlider.Value;
 
             base.Update();
         }
