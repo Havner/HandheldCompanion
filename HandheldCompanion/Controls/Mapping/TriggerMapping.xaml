@@ -16,25 +16,37 @@
         <Expander.Header>
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="40" />
-                    <ColumnDefinition Width="160" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <ui:FontIcon
-                    Name="Icon"
-                    Width="40"
-                    Height="40"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    FontFamily="{DynamicResource PhoneFontFamilyNormal}"
-                    FontSize="14" />
-                <TextBlock
-                    Name="Name"
+                <DockPanel
+                    MinWidth="300">
+                    <ui:FontIcon
+                        Name="Icon"
+                        Width="40"
+                        Height="40"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        FontFamily="{DynamicResource PhoneFontFamilyNormal}"
+                        FontSize="14" />
+                    <TextBlock
+                        Name="Name"
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center"
+                        FontSize="14" />
+                </DockPanel>
+
+                <ComboBox
                     Grid.Column="1"
-                    HorizontalAlignment="Left"
+                    Name="ShiftComboBox"
+                    Width="120"
                     VerticalAlignment="Center"
-                    FontSize="14" />
+                    SelectedIndex="0"
+                    SelectionChanged="Shift_SelectionChanged">
+                </ComboBox>
 
                 <DockPanel Grid.Column="2" HorizontalAlignment="Right">
                     <ComboBox

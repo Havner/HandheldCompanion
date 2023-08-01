@@ -3,6 +3,7 @@ using HandheldCompanion.Controllers;
 using HandheldCompanion.Inputs;
 using HandheldCompanion.Managers;
 using ModernWpf.Controls;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -22,6 +23,11 @@ namespace HandheldCompanion.Controls
         {
             this.Value = axis;
 
+            foreach (ButtonFlags button in Enum.GetValues(typeof(ButtonFlags)))
+            {
+                Label buttonLabel = new Label() { Tag = button, Content = button.ToString() };
+                ShiftComboBox.Items.Add(buttonLabel);
+            }
         }
 
         public void UpdateIcon(FontIcon newIcon, string newLabel)
@@ -104,6 +110,15 @@ namespace HandheldCompanion.Controls
                 Trigger2TriggerAntiDeadzone.Value = ((TriggerActions)this.Actions).AxisAntiDeadZone;
             }
 
+            if (TargetComboBox.SelectedItem is not null)
+            {
+                foreach (Label label in ShiftComboBox.Items)
+                    if (label.Tag.Equals(this.Actions.ShiftButton))
+                        ShiftComboBox.SelectedItem = label;
+            }
+            else
+                this.Actions.ShiftButton = (ButtonFlags)((Label)ShiftComboBox.SelectedItem).Tag;
+
             base.Update();
         }
 
@@ -133,6 +148,16 @@ namespace HandheldCompanion.Controls
         {
             ActionComboBox.SelectedIndex = 0;
             TargetComboBox.SelectedItem = null;
+        }
+
+        private void Shift_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (this.Actions is null)
+                return;
+
+            this.Actions.ShiftButton = (ButtonFlags)((Label)ShiftComboBox.SelectedItem).Tag;
+
+            base.Update();
         }
 
         private void Trigger2TriggerInnerDeadzone_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

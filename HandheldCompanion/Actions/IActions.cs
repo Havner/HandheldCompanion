@@ -72,6 +72,8 @@ namespace HandheldCompanion.Actions
 
         public ActionType ActionType = ActionType.Disabled;
 
+        public ButtonFlags ShiftButton = ButtonFlags.None;
+
         protected object Value;
         protected object prevValue;
 
