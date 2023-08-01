@@ -51,7 +51,7 @@ namespace steam_hidapi.net
             bool lpad_touched = (input.buttons2 & (byte)GCButton2.BTN_LPAD_TOUCH) == (byte)GCButton2.BTN_LPAD_TOUCH;
             bool lpad_and_joy = (input.buttons2 & (byte)GCButton2.BTN_LPAD_AND_JOY) == (byte)GCButton2.BTN_LPAD_AND_JOY;
 
-            _buttonState[GordonControllerButton.BtnLPadPress] = (input.buttons2 & (byte)GCButton2.BTN_LPAD_PRESS) == (byte)GCButton2.BTN_LPAD_PRESS;
+            _buttonState[GordonControllerButton.BtnLPadPress] = (lpad_touched || lpad_and_joy) && (input.buttons2 & (byte)GCButton2.BTN_LPAD_PRESS) == (byte)GCButton2.BTN_LPAD_PRESS;
             _buttonState[GordonControllerButton.BtnRPadPress] = (input.buttons2 & (byte)GCButton2.BTN_RPAD_PRESS) == (byte)GCButton2.BTN_RPAD_PRESS;
             _buttonState[GordonControllerButton.BtnLPadTouch] = lpad_touched || lpad_and_joy;
             _buttonState[GordonControllerButton.BtnRPadTouch] = (input.buttons2 & (byte)GCButton2.BTN_RPAD_TOUCH) == (byte)GCButton2.BTN_RPAD_TOUCH;
