@@ -53,5 +53,15 @@ namespace steam_hidapi.net
                 WriteRegister(SCRegister.GYRO_MODE, (ushort)GCGyroMode.NONE);
             }
         }
+
+        public void TurnOff()
+        {
+            byte[] req = new byte[] {
+                (byte)SCPacketType.OFF,
+                0x04,  // payload size
+                0x6f, 0x66, 0x66, 0x21 };
+
+            _hidDevice.RequestFeatureReport(req);
+        }
     }
 }
