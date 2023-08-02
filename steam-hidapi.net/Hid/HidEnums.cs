@@ -59,7 +59,7 @@ namespace steam_hidapi.net.Hid
         UNKNOWN1            = 0x2e,  // seen in scc config packet, set to 0x00
         GYRO_MODE           = 0x30,  // Gordon
         UNKNOWN2            = 0x31,  // seen in scc config packet, set to 0x02
-        UNKNOWN3            = 0x32,  // seen in scc config packet, at the begining?
+        IDLE_TIMEOUT        = 0x32,  // in seconds
         LPAD_CLICK_PRESSURE = 0x34,  // Neptune
         RPAD_CLICK_PRESSURE = 0x35,  // Neptune
     }

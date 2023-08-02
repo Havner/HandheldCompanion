@@ -3,20 +3,18 @@ using steam_hidapi.net.Hid;
 using steam_hidapi.net.Util;
 using System;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace steam_hidapi.net
 {
     public class SteamController
     {
+        // device data
         protected HidDevice _hidDevice;
         protected ushort _vid, _pid;
         protected short _index;
-        // TODO: why task not thread? HID read loop is a thread, rumble is a thread
-        protected Task _configureTask;
-        protected bool _active = false;
+
+        // device configuration
         protected bool _lizard = true;
-        protected bool _gyro = false;
 
         public string SerialNumber { get; private set; }
 
@@ -66,15 +64,7 @@ namespace steam_hidapi.net
         public virtual void SetLizardMode(bool lizard)
         {
             _lizard = lizard;
-        }
 
-        public virtual void SetGyroscope(bool gyro)
-        {
-            _gyro = gyro;
-        }
-
-        internal virtual void ConfigureLizardMode(bool lizard)
-        {
             if (lizard)
             {
                 WriteSingleCmd(SCPacketType.DEFAULT_MAPPINGS);
@@ -90,24 +80,6 @@ namespace steam_hidapi.net
                 // Steam Deck
                 //WriteRegister(SCRegister.LPAD_CLICK_PRESSURE, 0xFFFF);
                 //WriteRegister(SCRegister.RPAD_CLICK_PRESSURE, 0xFFFF);
-            }
-        }
-
-        internal virtual void ConfigureGyroscope(bool gyro)
-        {
-        }
-
-        internal virtual async void ConfigureLoop()
-        {
-            while (_active)
-            {
-                try
-                {
-                    ConfigureLizardMode(_lizard);
-                    ConfigureGyroscope(_gyro);
-                }
-                catch { }
-                await Task.Delay(1000);
             }
         }
 
@@ -127,19 +99,10 @@ namespace steam_hidapi.net
                 throw new Exception("Could not open device!");
             SerialNumber = ReadSerialNumber();
             _hidDevice.BeginRead();
-
-            _active = true;
-            _configureTask = Task.Run(ConfigureLoop);
         }
 
         public virtual void Close()
         {
-            _active = false;
-            _configureTask.Wait();
-
-            ConfigureLizardMode(_lizard);
-            ConfigureGyroscope(_gyro);
-
             if (_hidDevice.IsDeviceValid)
                 _hidDevice.EndRead();
             _hidDevice.Dispose();

@@ -8,6 +8,10 @@ namespace steam_hidapi.net
 {
     public class NeptuneController : SteamController
     {
+        // TODO: why task not thread? HID read loop is a thread, rumble is a thread
+        protected Task _configureTask;
+        protected bool _active = false;
+
         public Func<NeptuneControllerInputEventArgs, Task> OnControllerInputReceived;
 
         public NeptuneController(ushort vid, ushort pid, short index) : base(vid, pid, index)
@@ -39,6 +43,41 @@ namespace steam_hidapi.net
                     }
                     break;
             }
+        }
+
+        public override void Open()
+        {
+            base.Open();
+
+            // neptune needs hearbeat loop
+            _active = true;
+            _configureTask = Task.Run(ConfigureLoop);
+        }
+
+        public override void Close()
+        {
+            // stop the loop
+            _active = false;
+            _configureTask.Wait();
+
+            // make sure lizard is as requested, loop might've not done the last request
+            SetLizardMode(_lizard);
+
+            base.Close();
+        }
+
+        internal async void ConfigureLoop()
+        {
+            while (_active)
+            {
+                SetLizardMode(_lizard);
+                await Task.Delay(1000);
+            }
+        }
+
+        public void RequestLizardMode(bool lizard)
+        {
+            _lizard = lizard;
         }
 
         public byte[] SetHaptic2(SCHapticMotor position, NCHapticStyle style, sbyte intensity)

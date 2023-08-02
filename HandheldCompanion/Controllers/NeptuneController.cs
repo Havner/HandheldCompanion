@@ -237,7 +237,7 @@ namespace HandheldCompanion.Controllers
             }
 
             // disable lizard state
-            Controller.SetLizardMode(false);
+            Controller.RequestLizardMode(false);
 
             // manage rumble thread
             rumbleThreadRunning = true;
@@ -256,7 +256,7 @@ namespace HandheldCompanion.Controllers
             TimerManager.Tick -= UpdateInputs;
 
             // restore lizard state
-            Controller.SetLizardMode(true);
+            Controller.RequestLizardMode(true);
 
             // kill rumble thread
             rumbleThreadRunning = false;

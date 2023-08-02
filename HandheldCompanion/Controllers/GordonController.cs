@@ -219,8 +219,8 @@ namespace HandheldCompanion.Controllers
             }
 
             Controller.SetLizardMode(false);
-            // TODO: using more battery?
             Controller.SetGyroscope(true);
+            Controller.SetIdleTimeout(300);  // ~5 min
 
             SetVirtualMuted(SettingsManager.GetBoolean("SteamMuteController"));
 
@@ -234,6 +234,8 @@ namespace HandheldCompanion.Controllers
 
             Controller.SetLizardMode(true);
             Controller.SetGyroscope(false);
+            Controller.SetIdleTimeout(0);
+            //Controller.TurnOff();  // TODO: why not?
 
             Controller.Close();
 
