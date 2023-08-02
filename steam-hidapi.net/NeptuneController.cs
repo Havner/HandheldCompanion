@@ -82,6 +82,9 @@ namespace steam_hidapi.net
 
         public byte[] SetHaptic2(SCHapticMotor position, NCHapticStyle style, sbyte intensity)
         {
+            if (!_hidDevice.IsDeviceValid)
+                return null;
+
             NCHapticPacket2 haptic = new NCHapticPacket2();
 
             haptic.packet_type = (byte)SCPacketType.SET_HAPTIC2;

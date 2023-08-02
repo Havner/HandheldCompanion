@@ -82,8 +82,6 @@ namespace steam_hidapi.net.Hid
         Left = 0x01,
     };
 
-    // TODO: this should be Pack = 1, due to lack of that the amplitude
-    // here starts at 5th byte, not 4th as it probably should
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     internal struct SCHapticPacket
     {

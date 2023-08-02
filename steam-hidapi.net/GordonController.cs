@@ -87,6 +87,9 @@ namespace steam_hidapi.net
 
         public void TurnOff()
         {
+            if (!_hidDevice.IsDeviceValid)
+                return;
+
             byte[] req = new byte[] {
                 (byte)SCPacketType.OFF,
                 0x04,  // payload size

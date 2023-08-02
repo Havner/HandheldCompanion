@@ -9,9 +9,10 @@ namespace steam_hidapi.net
     public class SteamController
     {
         // device data
-        protected HidDevice _hidDevice;
         protected ushort _vid, _pid;
         protected short _index;
+        // subclass is responsible for opening the device
+        protected HidDevice _hidDevice;
 
         // device configuration
         protected bool _lizard = true;
@@ -31,11 +32,17 @@ namespace steam_hidapi.net
 
         internal virtual byte[] WriteSingleCmd(SCPacketType cmd)
         {
+            if (!_hidDevice.IsDeviceValid)
+                return null;
+
             return _hidDevice.RequestFeatureReport(new byte[] { (byte)cmd, 0x00 });
         }
 
         internal virtual byte[] WriteRegister(SCRegister reg, ushort value)
         {
+            if (!_hidDevice.IsDeviceValid)
+                return null;
+
             byte[] req = new byte[] {
                 (byte)SCPacketType.WRITE_REGISTER,
                 0x03,  // payload size
@@ -48,6 +55,9 @@ namespace steam_hidapi.net
 
         public virtual byte[] SetHaptic(byte position, ushort amplitude, ushort period, ushort count)
         {
+            if (!_hidDevice.IsDeviceValid)
+                return null;
+
             SCHapticPacket haptic = new SCHapticPacket();
 
             haptic.packet_type = (byte)SCPacketType.SET_HAPTIC;
@@ -85,10 +95,16 @@ namespace steam_hidapi.net
 
         public virtual string ReadSerialNumber()
         {
-            byte[] request = new byte[] { (byte)SCPacketType.GET_SERIAL, 0x15, 0x01 };
-            byte[] response = _hidDevice.RequestFeatureReport(request);
-            byte[] serial = new byte[response.Length - 5];
-            Array.Copy(response, 4, serial, 0, serial.Length);
+            // ignore if reading serial fails
+            byte[] serial = Encoding.UTF8.GetBytes("XXXXX");
+            try
+            {
+                byte[] request = new byte[] { (byte)SCPacketType.GET_SERIAL, 0x15, 0x01 };
+                byte[] response = _hidDevice.RequestFeatureReport(request);
+                serial = new byte[response.Length - 5];
+                Array.Copy(response, 4, serial, 0, serial.Length);
+            }
+            catch { }
 
             return Encoding.ASCII.GetString(serial).TrimEnd((Char)0);
         }
