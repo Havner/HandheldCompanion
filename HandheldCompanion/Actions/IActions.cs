@@ -42,16 +42,9 @@ namespace HandheldCompanion.Actions
     public enum HapticMode
     {
         Off = 0,
-        On = 1,
-        LongOnly = 2,
-    }
-
-    [Serializable]
-    public enum HapticWhen
-    {
-        Down = 0,
-        Up = 1,
-        Both = 2,
+        Down = 1,
+        Up = 2,
+        Both = 3,
     }
 
     [Serializable]
@@ -100,7 +93,6 @@ namespace HandheldCompanion.Actions
         protected bool IsToggled;
 
         public HapticMode HapticMode = HapticMode.Off;
-        public HapticWhen HapticWhen = HapticWhen.Down;
         public HapticStrength HapticStrength = HapticStrength.Low;
 
         public IActions()
@@ -111,9 +103,8 @@ namespace HandheldCompanion.Actions
         public virtual void SetHaptic(ButtonFlags button, bool up)
         {
             if (this.HapticMode == HapticMode.Off) return;
-            if (this.HapticMode == HapticMode.LongOnly && this.PressType == PressType.Short) return;
-            if (this.HapticWhen == HapticWhen.Down && up) return;
-            if (this.HapticWhen == HapticWhen.Up && !up) return;
+            if (this.HapticMode == HapticMode.Down && up) return;
+            if (this.HapticMode == HapticMode.Up && !up) return;
 
             ControllerManager.GetTargetController()?.SetHaptic(this.HapticStrength, button);
         }

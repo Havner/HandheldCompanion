@@ -175,7 +175,6 @@ namespace HandheldCompanion.Controls
             Turbo_Slider.Value = this.Actions.TurboDelay;
             Toggle_Toggle.IsOn = this.Actions.Toggle;
             HapticModeComboBox.SelectedIndex = (int)this.Actions.HapticMode;
-            HapticWhenComboBox.SelectedIndex = (int)this.Actions.HapticWhen;
             HapticStrengthComboBox.SelectedIndex = (int)this.Actions.HapticStrength;
 
             base.Update();
@@ -302,20 +301,11 @@ namespace HandheldCompanion.Controls
                 return;
 
             this.Actions.HapticMode = (HapticMode)HapticModeComboBox.SelectedIndex;
-            this.HapticWhenComboBox.IsEnabled = Actions.HapticMode == HapticMode.Off ? false : true;
             this.HapticStrengthComboBox.IsEnabled = Actions.HapticMode == HapticMode.Off ? false : true;
 
             base.Update();
         }
-        private void HapticWhen_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (this.Actions is null)
-                return;
 
-            this.Actions.HapticWhen = (HapticWhen)HapticWhenComboBox.SelectedIndex;
-
-            base.Update();
-        }
         private void HapticStrength_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (this.Actions is null)

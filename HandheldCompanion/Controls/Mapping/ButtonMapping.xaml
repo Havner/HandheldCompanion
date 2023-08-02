@@ -300,15 +300,6 @@
                                         SelectedIndex="0"
                                         SelectionChanged="HapticMode_SelectionChanged" Margin="6,0,0,0">
                                         <ComboBoxItem Content="Off" />
-                                        <ComboBoxItem Content="On" />
-                                        <ComboBoxItem Content="Long" />
-                                    </ComboBox>
-                                    <ComboBox
-                                        Name="HapticWhenComboBox"
-                                        Width="105"
-                                        VerticalAlignment="Center"
-                                        SelectedIndex="0"
-                                        SelectionChanged="HapticWhen_SelectionChanged" Margin="6,0,0,0" IsEnabled="False">
                                         <ComboBoxItem Content="Down" />
                                         <ComboBoxItem Content="Up" />
                                         <ComboBoxItem Content="Both" />
