@@ -17,6 +17,7 @@ namespace hidapi
         public bool IsDeviceValid => _deviceHandle != IntPtr.Zero;
         public bool Reading => _reading;
         public Func<HidDeviceInputReceivedEventArgs, Task> OnInputReceived;
+
         public HidDevice(ushort vendorId, ushort productId, ushort inputBufferLen = 64, short mi = -1)
         {
             _vid = vendorId;
@@ -56,13 +57,14 @@ namespace hidapi
                 while (deviceInfo != IntPtr.Zero)
                 {
                     HidDeviceInfo hidDeviceInfo = new HidDeviceInfo(deviceInfo);
+                    if (_mi != -1 && _mi != GetMI(hidDeviceInfo.Path))
+                        goto next;
 
                     _deviceHandle = HidApiNative.hid_open_path(hidDeviceInfo.Path);
-                    short mi = _mi == -1 ? _mi : GetMI(hidDeviceInfo.Path);
-
-                    if (_deviceHandle != IntPtr.Zero && mi == _mi)
+                    if (_deviceHandle != IntPtr.Zero)
                         break;
 
+                next:
                     deviceInfo = hidDeviceInfo.NextDevicePtr;
                 }
 
@@ -81,7 +83,6 @@ namespace hidapi
                 int length = HidApiNative.hid_read_timeout(_deviceHandle, buffer, (uint)buffer.Length, timeout);
                 return buffer;
             }
-
         }
 
         public Task<int> ReadAsync(byte[] data) => Task.Run(() => Read(data));
@@ -96,7 +97,6 @@ namespace hidapi
                 int length = HidApiNative.hid_read_timeout(_deviceHandle, buffer, _inputBufferLen, timeout);
                 return length;
             }
-
         }
 
         public Task<byte[]> RequestFeatureReportAsync(byte[] request) => Task.Run(() => RequestFeatureReport(request));
@@ -113,32 +113,15 @@ namespace hidapi
 
             int err = HidApiNative.hid_send_feature_report(_deviceHandle, request_full, (uint)(_inputBufferLen + 1));
             if (err < 0)
-            {
                 throw new Exception($"Could not send report to hid device. Error: {err}");
-            }
+
             err = HidApiNative.hid_get_feature_report(_deviceHandle, response, (uint)(_inputBufferLen + 1));
             if (err < 0)
-            {
                 throw new Exception($"Could not get report from hid device. Error: {err}");
-            }
 
             return response;
         }
 
-        private void ReadLoop()
-        {
-            byte[] buffer = new byte[_inputBufferLen];
-            int len = 0;
-            while (_reading)
-            {
-                len = Read(buffer);
-                if (len > 0)
-                {
-                    if (OnInputReceived != null)
-                        _ = OnInputReceived(new HidDeviceInputReceivedEventArgs(this, buffer));
-                }
-            }
-        }
         public Task WriteAsync(byte[] data) => Task.Run(() => Write(data));
         public void Write(byte[] data)
         {
@@ -149,10 +132,17 @@ namespace hidapi
             byte[] buffer = new byte[_inputBufferLen];
             Array.Copy(data, buffer, data.Length);
 
-            if (HidApiNative.hid_write(_deviceHandle, buffer, (uint)buffer.Length) < 0)
-            {
-                throw new Exception("Failed to write to HID device.");
-            }
+            int err = HidApiNative.hid_write(_deviceHandle, buffer, (uint)buffer.Length);
+            if (err < 0)
+                throw new Exception($"Failed to write to HID device. Error: {err}");
+        }
+
+        private void ReadLoop()
+        {
+            byte[] buffer = new byte[_inputBufferLen];
+            while (_reading)
+                if (Read(buffer) > 0 && OnInputReceived != null)
+                    _ = OnInputReceived(new HidDeviceInputReceivedEventArgs(this, buffer));
         }
 
         public void BeginRead()
