@@ -1,3 +1,4 @@
+using HandheldCompanion.Actions;
 using HandheldCompanion.Inputs;
 using HandheldCompanion.Managers;
 using HandheldCompanion.Misc;
@@ -301,6 +302,18 @@ namespace HandheldCompanion.Controllers
 
                 await Task.Delay(TimerManager.GetPeriod() * 2);
             }
+        }
+
+        public override void SetHaptic(HapticStrength strength, ButtonFlags button)
+        {
+            ushort value = strength switch
+            {
+                HapticStrength.Low => 512,
+                HapticStrength.Medium => 1024,
+                HapticStrength.High => 2048,
+                _ => 0,
+            };
+            Controller.SetHaptic((byte)GetMotorForButton(button), value, 0, 1);
         }
     }
 }
