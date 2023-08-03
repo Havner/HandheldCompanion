@@ -5,6 +5,7 @@ using System;
 using System.ComponentModel;
 using System.Numerics;
 using WindowsInput.Events;
+using Vector2D = HandheldCompanion.Utils.Vector2D;
 
 namespace HandheldCompanion.Actions
 {
@@ -41,10 +42,10 @@ namespace HandheldCompanion.Actions
         // runtime variables
         private bool IsCursorDown = false;
         private bool IsTouched = false;
-        private Vector2 remainder = new();
+        private Vector2D remainder = new();
         private KeyCode[] pressed;
         private OneEuroFilterPair mouseFilter;
-        private Vector2 prevVector = new();
+        private Vector2D prevVector = new();
 
         // settings click
         public ModifierSet Modifiers = ModifierSet.None;
@@ -124,8 +125,9 @@ namespace HandheldCompanion.Actions
 
             layout.vector.Y *= -1;
 
-            Vector2 deltaVector;
-            float sensitivityFinetune;
+            Vector2D layoutVector = new(layout.vector);
+            Vector2D deltaVector;
+            double sensitivityFinetune;
 
             switch (layout.flags)
             {
@@ -135,17 +137,17 @@ namespace HandheldCompanion.Actions
                 default:
                     {
                         // convert to <0.0-1.0> values
-                        deltaVector = layout.vector / short.MaxValue;
-                        float deadzone = Deadzone / 100.0f;
+                        deltaVector = layoutVector / short.MaxValue;
+                        double deadzone = Deadzone / 100.0;
 
                         // apply deadzone
                         if (deltaVector.Length() < deadzone)
                             return;
 
                         deltaVector *= (deltaVector.Length() - deadzone) / deltaVector.Length();  // shorten by deadzone
-                        deltaVector *= 1.0f / (1.0f - deadzone);                                  // rescale to 0.0 - 1.0
+                        deltaVector *= 1.0 / (1.0 - deadzone);                                    // rescale to 0.0 - 1.0
 
-                        sensitivityFinetune = (MouseType == MouseActionsType.Move ? 0.3f : 0.1f);
+                        sensitivityFinetune = (MouseType == MouseActionsType.Move ? 0.3 : 0.1);
                     }
                     break;
 
@@ -155,15 +157,15 @@ namespace HandheldCompanion.Actions
                         // touchpad was touched, update entry point for delta calculations
                         if (newTouch)
                         {
-                            prevVector = layout.vector;
+                            prevVector = layoutVector;
                             return;
                         }
 
                         // calculate delta and convert to <0.0-1.0> values
-                        deltaVector = (layout.vector - prevVector) / short.MaxValue;
-                        prevVector = layout.vector;
+                        deltaVector = (layoutVector - prevVector) / short.MaxValue;
+                        prevVector = layoutVector;
 
-                        sensitivityFinetune = (MouseType == MouseActionsType.Move ? 9.0f : 3.0f);
+                        sensitivityFinetune = (MouseType == MouseActionsType.Move ? 9.0 : 3.0);
                     }
                     break;
             }
@@ -177,20 +179,20 @@ namespace HandheldCompanion.Actions
 
             if (Acceleration != 1.0f)
             {
-                deltaVector.X = (float)(Math.Sign(deltaVector.X) * Math.Pow(Math.Abs(deltaVector.X), Acceleration));
-                deltaVector.Y = (float)(Math.Sign(deltaVector.Y) * Math.Pow(Math.Abs(deltaVector.Y), Acceleration));
-                sensitivityFinetune = (float)Math.Pow(sensitivityFinetune, Acceleration);
+                deltaVector.X = Math.Sign(deltaVector.X) * Math.Pow(Math.Abs(deltaVector.X), Acceleration);
+                deltaVector.Y = Math.Sign(deltaVector.Y) * Math.Pow(Math.Abs(deltaVector.Y), Acceleration);
+                sensitivityFinetune = Math.Pow(sensitivityFinetune, Acceleration);
             }
 
             // apply sensitivity, rotation and slider finetune
             deltaVector *= Sensivity * sensitivityFinetune;
             if (AxisRotated)
                 deltaVector = new(-deltaVector.Y, deltaVector.X);
-            deltaVector *= (AxisInverted ? -1.0f : 1.0f);
+            deltaVector *= (AxisInverted ? -1.0 : 1.0);
 
             // handle the fact that MoveBy()/*Scroll() are int only and we can have movement (0 < abs(delta) < 1)
             deltaVector += remainder;                                               // add partial previous step
-            Vector2 intVector = new((int)Math.Truncate(deltaVector.X), (int)Math.Truncate(deltaVector.Y));
+            Vector2D intVector = new((int)Math.Truncate(deltaVector.X), (int)Math.Truncate(deltaVector.Y));
             remainder = deltaVector - intVector;                                    // and save the unused rest
 
             if (MouseType == MouseActionsType.Move)

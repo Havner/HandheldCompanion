@@ -46,6 +46,55 @@ namespace HandheldCompanion.Utils
         SteamDeck = 6,
     }
 
+    public struct Vector2D
+    {
+        public double X;
+        public double Y;
+
+        public Vector2D()
+        {
+            X = 0;
+            Y = 0;
+        }
+
+        public Vector2D(Vector2 from)
+        {
+            X = from.X;
+            Y = from.Y;
+        }
+
+        public Vector2D(double x, double y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        public double Length()
+        {
+            return Math.Sqrt(X * X + Y * Y);
+        }
+
+        public static Vector2D operator *(Vector2D vector, double scalar)
+        {
+            return new Vector2D(vector.X * scalar, vector.Y * scalar);
+        }
+
+        public static Vector2D operator /(Vector2D vector, double scalar)
+        {
+            return new Vector2D(vector.X / scalar, vector.Y / scalar);
+        }
+
+        public static Vector2D operator -(Vector2D v1, Vector2D v2)
+        {
+            return new Vector2D(v1.X - v2.X, v1.Y - v2.Y);
+        }
+
+        public static Vector2D operator +(Vector2D v1, Vector2D v2)
+        {
+            return new Vector2D(v1.X + v2.X, v1.Y + v2.Y);
+        }
+    }
+
     public static class InputUtils
     {
         public static float Clamp(float value, float min, float max)
