@@ -52,9 +52,9 @@ namespace steam_hidapi.net.Hid
 
     internal enum SCRegister : byte
     {
-        LPAD_MODE           = 0x07,  // cursor keys
+        LPAD_MODE           = 0x07,  // cursor keys, haptic on SD
         RPAD_MODE           = 0x08,  // mouse
-        RPAD_MARGIN         = 0x18,  // dead margin
+        RPAD_MARGIN         = 0x18,  // dead margin, eliminating small movements, noise, on by default
         LED_INTENSITY       = 0x2d,  // 0 - 100
         UNKNOWN1            = 0x2e,  // seen in scc config packet, set to 0x00
         GYRO_MODE           = 0x30,  // Gordon
