@@ -41,6 +41,11 @@ namespace steam_hidapi.net
             _buttonState[GordonControllerButton.BtnR1] = (input.buttons0 & (byte)GCButton0.BTN_R1) == (byte)GCButton0.BTN_R1;
             _buttonState[GordonControllerButton.BtnR2] = (input.buttons0 & (byte)GCButton0.BTN_R2) == (byte)GCButton0.BTN_R2;
 
+            _buttonState[GordonControllerButton.BtnDpadDown] = (input.buttons1 & (byte)GCButton1.BTN_DPAD_DOWN) == (byte)GCButton1.BTN_DPAD_DOWN;
+            _buttonState[GordonControllerButton.BtnDpadUp] = (input.buttons1 & (byte)GCButton1.BTN_DPAD_UP) == (byte)GCButton1.BTN_DPAD_UP;
+            _buttonState[GordonControllerButton.BtnDpadLeft] = (input.buttons1 & (byte)GCButton1.BTN_DPAD_LEFT) == (byte)GCButton1.BTN_DPAD_LEFT;
+            _buttonState[GordonControllerButton.BtnDpadRight] = (input.buttons1 & (byte)GCButton1.BTN_DPAD_RIGHT) == (byte)GCButton1.BTN_DPAD_RIGHT;
+
             _buttonState[GordonControllerButton.BtnMenu] = (input.buttons1 & (byte)GCButton1.BTN_MENU) == (byte)GCButton1.BTN_MENU;
             _buttonState[GordonControllerButton.BtnSteam] = (input.buttons1 & (byte)GCButton1.BTN_STEAM) == (byte)GCButton1.BTN_STEAM;
             _buttonState[GordonControllerButton.BtnOptions] = (input.buttons1 & (byte)GCButton1.BTN_OPTIONS) == (byte)GCButton1.BTN_OPTIONS;

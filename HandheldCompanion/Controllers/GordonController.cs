@@ -54,10 +54,6 @@ namespace HandheldCompanion.Controllers
             SourceAxis.Add(AxisLayoutFlags.Gyroscope);
 
             // This is a very original controller, it doesn't have few things
-            SourceButtons.Remove(ButtonFlags.DPadUp);
-            SourceButtons.Remove(ButtonFlags.DPadDown);
-            SourceButtons.Remove(ButtonFlags.DPadLeft);
-            SourceButtons.Remove(ButtonFlags.DPadRight);
             SourceButtons.Remove(ButtonFlags.RightStickClick);
             SourceButtons.Remove(ButtonFlags.RightStickUp);
             SourceButtons.Remove(ButtonFlags.RightStickDown);
@@ -88,6 +84,11 @@ namespace HandheldCompanion.Controllers
             Inputs.ButtonState[ButtonFlags.B2] = input.State.ButtonState[GordonControllerButton.BtnB];
             Inputs.ButtonState[ButtonFlags.B3] = input.State.ButtonState[GordonControllerButton.BtnX];
             Inputs.ButtonState[ButtonFlags.B4] = input.State.ButtonState[GordonControllerButton.BtnY];
+
+            Inputs.ButtonState[ButtonFlags.DPadUp] = input.State.ButtonState[GordonControllerButton.BtnDpadUp];
+            Inputs.ButtonState[ButtonFlags.DPadDown] = input.State.ButtonState[GordonControllerButton.BtnDpadDown];
+            Inputs.ButtonState[ButtonFlags.DPadLeft] = input.State.ButtonState[GordonControllerButton.BtnDpadLeft];
+            Inputs.ButtonState[ButtonFlags.DPadRight] = input.State.ButtonState[GordonControllerButton.BtnDpadRight];
 
             Inputs.ButtonState[ButtonFlags.Start] = input.State.ButtonState[GordonControllerButton.BtnOptions];
             Inputs.ButtonState[ButtonFlags.Back] = input.State.ButtonState[GordonControllerButton.BtnMenu];
