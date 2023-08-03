@@ -143,7 +143,7 @@ namespace HandheldCompanion.Controllers
 
             if (Inputs.ButtonState[ButtonFlags.LeftPadClick])
             {
-                InputUtils.TouchToDirections(Inputs.AxisState[AxisFlags.LeftPadX], Inputs.AxisState[AxisFlags.LeftPadY], TrackPadInner, 15, out bool[] buttons);
+                InputUtils.TouchToDirections(Inputs.AxisState[AxisFlags.LeftPadX], Inputs.AxisState[AxisFlags.LeftPadY], TrackPadInner, 0, out bool[] buttons);
                 Inputs.ButtonState[ButtonFlags.LeftPadClickUp] = buttons[0];
                 Inputs.ButtonState[ButtonFlags.LeftPadClickRight] = buttons[1];
                 Inputs.ButtonState[ButtonFlags.LeftPadClickDown] = buttons[2];
@@ -174,7 +174,7 @@ namespace HandheldCompanion.Controllers
 
             if (Inputs.ButtonState[ButtonFlags.RightPadClick])
             {
-                InputUtils.TouchToDirections(Inputs.AxisState[AxisFlags.RightPadX], Inputs.AxisState[AxisFlags.RightPadY], TrackPadInner, -15, out bool[] buttons);
+                InputUtils.TouchToDirections(Inputs.AxisState[AxisFlags.RightPadX], Inputs.AxisState[AxisFlags.RightPadY], TrackPadInner, 0, out bool[] buttons);
                 Inputs.ButtonState[ButtonFlags.RightPadClickUp] = buttons[0];
                 Inputs.ButtonState[ButtonFlags.RightPadClickRight] = buttons[1];
                 Inputs.ButtonState[ButtonFlags.RightPadClickDown] = buttons[2];
