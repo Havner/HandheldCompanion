@@ -22,6 +22,7 @@ namespace HandheldCompanion.Controllers
         private const short TrackPadInner = short.MaxValue / 2;
 
         public const ushort MaxRumbleIntensity = 2048;
+        public const ushort RightPadRotate = 15;
 
         public GordonController(PnPDetails details) : base()
         {
@@ -161,10 +162,14 @@ namespace HandheldCompanion.Controllers
             Inputs.ButtonState[ButtonFlags.RightPadTouch] = input.State.ButtonState[GordonControllerButton.BtnRPadTouch];
             Inputs.ButtonState[ButtonFlags.RightPadClick] = input.State.ButtonState[GordonControllerButton.BtnRPadPress];
 
+            int rawX = 0, rawY = 0;
             if (Inputs.ButtonState[ButtonFlags.RightPadTouch])
             {
-                Inputs.AxisState[AxisFlags.RightPadX] = input.State.AxesState[GordonControllerAxis.RightPadX];
-                Inputs.AxisState[AxisFlags.RightPadY] = input.State.AxesState[GordonControllerAxis.RightPadY];
+                rawX = input.State.AxesState[GordonControllerAxis.RightPadX];
+                rawY = input.State.AxesState[GordonControllerAxis.RightPadY];
+                (int newX, int newY) = InputUtils.RotateVector(rawX, rawY, RightPadRotate);
+                Inputs.AxisState[AxisFlags.RightPadX] = (short)(Math.Clamp(newX, short.MinValue, short.MaxValue));
+                Inputs.AxisState[AxisFlags.RightPadY] = (short)(Math.Clamp(newY, short.MinValue, short.MaxValue));
             }
             else
             {
@@ -174,7 +179,7 @@ namespace HandheldCompanion.Controllers
 
             if (Inputs.ButtonState[ButtonFlags.RightPadClick])
             {
-                InputUtils.TouchToDirections(Inputs.AxisState[AxisFlags.RightPadX], Inputs.AxisState[AxisFlags.RightPadY], TrackPadInner, 0, out bool[] buttons);
+                InputUtils.TouchToDirections(rawX, rawY, TrackPadInner, 0, out bool[] buttons);
                 Inputs.ButtonState[ButtonFlags.RightPadClickUp] = buttons[0];
                 Inputs.ButtonState[ButtonFlags.RightPadClickRight] = buttons[1];
                 Inputs.ButtonState[ButtonFlags.RightPadClickDown] = buttons[2];
