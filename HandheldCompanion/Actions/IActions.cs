@@ -85,6 +85,7 @@ namespace HandheldCompanion.Actions
         public PressType PressType = PressType.Short;
         public int LongPressTime = 450; // default value for steam
         protected int pressTimer = -1; // -1 inactive, >= 0 active
+        protected int singleProgress = 0;
 
         public bool Turbo;
         public int TurboDelay = 30;
@@ -132,6 +133,13 @@ namespace HandheldCompanion.Actions
                 return;
             }
 
+            if (singleProgress > 0)
+            {
+                prevValue = true;
+                value = true;
+                singleProgress--;
+            }
+
             if (pressTimer >= 0)
             {
                 pressTimer += Period;
@@ -143,6 +151,7 @@ namespace HandheldCompanion.Actions
                     pressTimer = -1;
                     prevValue = false;  // simulate a situation where the button was just pressed
                     value = true;       // prev = false, current = true, this way toggle works
+                    singleProgress = 2;
                 }
                 // timer active, conditions not met, carry on, maybe smth happens, maybe failed attempt
                 else
