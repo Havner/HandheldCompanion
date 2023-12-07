@@ -512,6 +512,51 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A.
+        /// </summary>
+        public static string Enum_GordonController_ButtonFlags_B1 {
+            get {
+                return ResourceManager.GetString("Enum.GordonController.ButtonFlags.B1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to B.
+        /// </summary>
+        public static string Enum_GordonController_ButtonFlags_B2 {
+            get {
+                return ResourceManager.GetString("Enum.GordonController.ButtonFlags.B2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to X.
+        /// </summary>
+        public static string Enum_GordonController_ButtonFlags_B3 {
+            get {
+                return ResourceManager.GetString("Enum.GordonController.ButtonFlags.B3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Y.
+        /// </summary>
+        public static string Enum_GordonController_ButtonFlags_B4 {
+            get {
+                return ResourceManager.GetString("Enum.GordonController.ButtonFlags.B4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Steam.
+        /// </summary>
+        public static string Enum_GordonController_ButtonFlags_Special {
+            get {
+                return ResourceManager.GetString("Enum.GordonController.ButtonFlags.Special", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Emulated DualShock 4 controller.
         /// </summary>
         public static string Enum_HIDmode_DualShock4Controller {

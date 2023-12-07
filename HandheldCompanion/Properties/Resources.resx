@@ -1325,4 +1325,19 @@ with motion input enabled, use selected button(s) to disable motion.</value>
   <data name="AboutPage_AuthorFork" xml:space="preserve">
     <value>Fork author</value>
   </data>
+  <data name="Enum.GordonController.ButtonFlags.B1" xml:space="preserve">
+    <value>A</value>
+  </data>
+  <data name="Enum.GordonController.ButtonFlags.B2" xml:space="preserve">
+    <value>B</value>
+  </data>
+  <data name="Enum.GordonController.ButtonFlags.B3" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="Enum.GordonController.ButtonFlags.B4" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="Enum.GordonController.ButtonFlags.Special" xml:space="preserve">
+    <value>Steam</value>
+  </data>
 </root>
