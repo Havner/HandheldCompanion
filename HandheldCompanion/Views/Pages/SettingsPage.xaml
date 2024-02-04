@@ -92,7 +92,7 @@
                         </DockPanel>
 
                         <ui:ToggleSwitch
-                            Name="Toggle_Background"
+                            Name="Toggle_StartHidden"
                             Grid.Column="1"
                             HorizontalAlignment="Right"
                             Style="{DynamicResource InvertedToggleSwitchStyle}"
@@ -120,17 +120,17 @@
                                 Glyph="&#xE921;" />
 
                             <ui:SimpleStackPanel Margin="12,0,0,0" VerticalAlignment="Center">
-                                <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Static resx:Resources.SettingsPage_CloseMinimizes}" />
+                                <TextBlock Style="{StaticResource BodyTextBlockStyle}" Text="{x:Static resx:Resources.SettingsPage_CloseHides}" />
                                 <TextBlock
                                     Foreground="{DynamicResource SystemControlForegroundBaseMediumBrush}"
                                     Style="{StaticResource CaptionTextBlockStyle}"
-                                    Text="{x:Static resx:Resources.SettingsPage_CloseMinimizesDesc}"
+                                    Text="{x:Static resx:Resources.SettingsPage_CloseHidesDesc}"
                                     TextWrapping="Wrap" />
                             </ui:SimpleStackPanel>
                         </DockPanel>
 
                         <ui:ToggleSwitch
-                            Name="Toggle_CloseMinimizes"
+                            Name="Toggle_CloseHides"
                             Grid.Column="1"
                             HorizontalAlignment="Right"
                             Style="{DynamicResource InvertedToggleSwitchStyle}"

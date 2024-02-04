@@ -39,11 +39,11 @@ namespace HandheldCompanion.Views.Pages
                     case "RunAtStartup":
                         Toggle_AutoStart.IsOn = Convert.ToBoolean(value);
                         break;
-                    case "StartMinimized":
-                        Toggle_Background.IsOn = Convert.ToBoolean(value);
+                    case "StartHidden":
+                        Toggle_StartHidden.IsOn = Convert.ToBoolean(value);
                         break;
-                    case "CloseMinimises":
-                        Toggle_CloseMinimizes.IsOn = Convert.ToBoolean(value);
+                    case "CloseHides":
+                        Toggle_CloseHides.IsOn = Convert.ToBoolean(value);
                         break;
                     case "DesktopProfileOnStart":
                         Toggle_DesktopProfileOnStart.IsOn = Convert.ToBoolean(value);
@@ -76,7 +76,7 @@ namespace HandheldCompanion.Views.Pages
             if (!IsLoaded)
                 return;
 
-            SettingsManager.SetProperty("StartMinimized", Toggle_Background.IsOn);
+            SettingsManager.SetProperty("StartHidden", Toggle_StartHidden.IsOn);
         }
 
         private void Toggle_CloseMinimizes_Toggled(object? sender, System.Windows.RoutedEventArgs? e)
@@ -84,7 +84,7 @@ namespace HandheldCompanion.Views.Pages
             if (!IsLoaded)
                 return;
 
-            SettingsManager.SetProperty("CloseMinimises", Toggle_CloseMinimizes.IsOn);
+            SettingsManager.SetProperty("CloseHides", Toggle_CloseHides.IsOn);
         }
 
         private void Toggle_DesktopProfileOnStart_Toggled(object? sender, System.Windows.RoutedEventArgs? e)

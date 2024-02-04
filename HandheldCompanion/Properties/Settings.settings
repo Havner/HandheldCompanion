@@ -8,10 +8,10 @@
     <Setting Name="RunAtStartup" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="StartMinimized" Type="System.Boolean" Scope="User">
+    <Setting Name="StartHidden" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="CloseMinimises" Type="System.Boolean" Scope="User">
+    <Setting Name="CloseHides" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="MainWindowHeight" Type="System.Double" Scope="User">

@@ -3285,20 +3285,20 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Close minimizes.
+        ///   Looks up a localized string similar to Close hides.
         /// </summary>
-        public static string SettingsPage_CloseMinimizes {
+        public static string SettingsPage_CloseHides {
             get {
-                return ResourceManager.GetString("SettingsPage_CloseMinimizes", resourceCulture);
+                return ResourceManager.GetString("SettingsPage_CloseHides", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The application will be minimized instead of closed.
+        ///   Looks up a localized string similar to The application will be hidden instead of closed.
         /// </summary>
-        public static string SettingsPage_CloseMinimizesDesc {
+        public static string SettingsPage_CloseHidesDesc {
             get {
-                return ResourceManager.GetString("SettingsPage_CloseMinimizesDesc", resourceCulture);
+                return ResourceManager.GetString("SettingsPage_CloseHidesDesc", resourceCulture);
             }
         }
         
@@ -3402,7 +3402,7 @@ namespace HandheldCompanion.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The application will initially start minimized and appear on the taskbar.
+        ///   Looks up a localized string similar to The application will initially start hidden and appear on the taskbar.
         /// </summary>
         public static string SettingsPage_OpenAppBackgroundDesc {
             get {

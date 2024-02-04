@@ -883,11 +883,11 @@ with motion input enabled, use selected button(s) to disable motion.</value>
   <data name="SettingsPage_CheckForUpdates" xml:space="preserve">
     <value>Check for updates</value>
   </data>
-  <data name="SettingsPage_CloseMinimizes" xml:space="preserve">
-    <value>Close minimizes</value>
+  <data name="SettingsPage_CloseHides" xml:space="preserve">
+    <value>Close hides</value>
   </data>
-  <data name="SettingsPage_CloseMinimizesDesc" xml:space="preserve">
-    <value>The application will be minimized instead of closed</value>
+  <data name="SettingsPage_CloseHidesDesc" xml:space="preserve">
+    <value>The application will be hidden instead of closed</value>
   </data>
   <data name="SettingsPage_Download" xml:space="preserve">
     <value>Download</value>
@@ -923,7 +923,7 @@ with motion input enabled, use selected button(s) to disable motion.</value>
     <value>Open application in background</value>
   </data>
   <data name="SettingsPage_OpenAppBackgroundDesc" xml:space="preserve">
-    <value>The application will initially start minimized and appear on the taskbar</value>
+    <value>The application will initially start hidden and appear on the taskbar</value>
   </data>
   <data name="SettingsPage_SensorExternal" xml:space="preserve">
     <value>External</value>

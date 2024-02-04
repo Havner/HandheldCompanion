@@ -200,16 +200,20 @@ namespace HandheldCompanion.Views
             // UI thread
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                switch (WindowState)
+                switch (Visibility)
                 {
-                    case WindowState.Normal:
-                    case WindowState.Maximized:
-                        WindowState = WindowState.Minimized;
-                        break;
-                    case WindowState.Minimized:
+                    case Visibility.Collapsed:
+                    case Visibility.Hidden:
+                        this.Show();
+                        this.Activate();
+                        this.Focus();
                         WindowState = visibleWindowState;
                         break;
+                    case Visibility.Visible:
+                        this.Hide();
+                        break;
                 }
+
             });
         }
 
@@ -298,8 +302,11 @@ namespace HandheldCompanion.Views
                 return;
 
             // home page has loaded, display main window
-            WindowState = SettingsManager.GetBoolean("StartMinimized") ? WindowState.Minimized : (WindowState)SettingsManager.GetInt("MainWindowVisibleState");
             visibleWindowState = (WindowState)SettingsManager.GetInt("MainWindowVisibleState");
+            WindowState = visibleWindowState;
+
+            if (SettingsManager.GetBoolean("StartHidden"))
+                this.Hide();
 
             IsReady = true;
         }
@@ -396,10 +403,10 @@ namespace HandheldCompanion.Views
             SettingsManager.SetProperty("MainWindowVisibleState", (int)visibleWindowState);
             SettingsManager.SetProperty("MainWindowIsPaneOpen", navView.IsPaneOpen);
 
-            if (SettingsManager.GetBoolean("CloseMinimises") && !appClosing)
+            if (SettingsManager.GetBoolean("CloseHides") && !appClosing)
             {
                 e.Cancel = true;
-                WindowState = WindowState.Minimized;
+                this.Hide();
                 return;
             }
         }
@@ -409,13 +416,10 @@ namespace HandheldCompanion.Views
             switch (WindowState)
             {
                 case WindowState.Minimized:
-                    ShowInTaskbar = false;
                     break;
 
                 case WindowState.Normal:
                 case WindowState.Maximized:
-                    ShowInTaskbar = true;
-                    this.Activate();
                     visibleWindowState = WindowState;
                     break;
             }
