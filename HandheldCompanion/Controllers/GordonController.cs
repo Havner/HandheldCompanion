@@ -22,7 +22,7 @@ namespace HandheldCompanion.Controllers
         private const short TrackPadInner = short.MaxValue / 2;
 
         public const ushort MaxRumbleIntensity = 2048;
-        public const ushort RightPadRotate = 15;
+        public const double RightPadRotate = 0.261799; // 15 degrees
 
         public GordonController(PnPDetails details) : base()
         {

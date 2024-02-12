@@ -369,12 +369,10 @@ namespace HandheldCompanion.Utils
                                AngularVelocityDeg.X);
         }
 
-        public static (int x, int y) RotateVector(int x, int y, int radialShift)
+        public static (int x, int y) RotateVector(int x, int y, double radianShift)
         {
             float length = new Vector2(x, y).Length();
-            double angle = Math.Atan2(x, y) * (180 / Math.PI) + radialShift;
-
-            angle = angle * (Math.PI / 180.0);
+            double angle = Math.Atan2(x, y) + radianShift;
 
             double rx = length * Math.Cos(angle);
             double ry = length * Math.Sin(angle);
