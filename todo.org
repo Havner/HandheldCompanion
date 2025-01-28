@@ -1,0 +1,58 @@
+* Haptic feedback
+- buttons first
+- mode: off/on/only on long
+- strengh: low/medium/high
+- function in IAction calling the current controller?
+- check button side (left/right) to trigger one motor
+
+* InputManager
+- understand it
+- what is inject? what for?
+- simplify
+
+* Profile/Template files
+- delete template button
+- detect creation (profile)
+- detect deletion (template/profile)
+- some better key to distinguish/deduplicate templates
+
+* Remapper rework
+- split source axis (joystick, touchpad) and their params for circular and not
+  (in general do a map of source <-> target and check what makes sense, what
+  doesn't and make more specialized actions with more specialized params)
+- decide on long press UI
+- add long press time configure (visible only when long selected)
+
+* Concurency
+- remove as much as possible
+- remove ConcurrentDictionaries
+- check updating the Desktop profile while using Desktop profile (race/crash?)
+- check InjectedButtons race
+- check threads (both in code and in debugger)
+
+* DSUServer
+- test
+- mapping bugs? (short/byte)
+
+* What about DS4Touch
+- integrate with DS4Controller?
+
+* question mark? undecided, what to do?
+- ProcessUtils
+- WinApi
+- "using static"? What for? Eliminate?
+
+* Mute keys implementation
+- talk with Benjamin about UI
+- mute touch events for hotkeys?
+
+* Performance profiling
+- profiler
+- update inputs rework?
+- optimize USBHID buffer reading with all those allocations on all layers
+
+* HC enhancements:
+- export template
+- remapper: hold key
+- don't press original for combos
+- brightness shortcuts
