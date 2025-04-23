@@ -114,6 +114,23 @@ namespace HandheldCompanion.Controls
 
                 // button specific settings
             }
+            else if (type == ActionType.Trigger)
+            {
+                if (this.Actions is null || this.Actions is not TriggerActions)
+                    this.Actions = new TriggerActions();
+
+                foreach (AxisLayoutFlags axis in IController.GetTargetTriggers())
+                {
+                    // create a label, store AxisLayoutFlags as Tag and Label as controller specific string
+                    Label buttonLabel = new Label() { Tag = axis, Content = controller.GetAxisName(axis) };
+                    TargetComboBox.Items.Add(buttonLabel);
+
+                    if (axis.Equals(((TriggerActions)this.Actions).Axis))
+                        TargetComboBox.SelectedItem = buttonLabel;
+                }
+
+                // trigger specific settings
+            }
             else if (type == ActionType.Keyboard)
             {
                 if (this.Actions is null || this.Actions is not KeyboardActions)
@@ -161,7 +178,7 @@ namespace HandheldCompanion.Controls
                 PressComboBox.SelectedIndex = (int)this.Actions.PressType;
             else
                 this.Actions.PressType = (PressType)PressComboBox.SelectedIndex;
-            Button2ButtonPressDelay.Visibility = Actions.PressType == PressType.Long ? Visibility.Visible : Visibility.Collapsed;
+            Button2ButtonPressDelay.Visibility = this.Actions.PressType == PressType.Long ? Visibility.Visible : Visibility.Collapsed;
 
             // settings
             LongPressDelaySlider.Value = (int)this.Actions.LongPressTime;
@@ -189,6 +206,13 @@ namespace HandheldCompanion.Controls
                     {
                         Label buttonLabel = TargetComboBox.SelectedItem as Label;
                         ((ButtonActions)this.Actions).Button = (ButtonFlags)buttonLabel.Tag;
+                    }
+                    break;
+
+                case ActionType.Trigger:
+                    {
+                        Label buttonLabel = TargetComboBox.SelectedItem as Label;
+                        ((TriggerActions)this.Actions).Axis = (AxisLayoutFlags)buttonLabel.Tag;
                     }
                     break;
 

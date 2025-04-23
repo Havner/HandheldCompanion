@@ -9,6 +9,9 @@ namespace HandheldCompanion.Actions
     {
         public AxisLayoutFlags Axis;
 
+        // runtime button variables
+        private bool IsKeyDown = false;
+
         // settings
         public int AxisAntiDeadZone = 0;
         public int AxisDeadZoneInner = 0;
@@ -18,6 +21,7 @@ namespace HandheldCompanion.Actions
         {
             this.ActionType = ActionType.Trigger;
             this.Value = (short)0;
+            this.prevValue = false;
         }
 
         public TriggerActions(AxisLayoutFlags axis) : this()
@@ -34,9 +38,39 @@ namespace HandheldCompanion.Actions
             this.Value = value;
         }
 
+        public override void Execute(ButtonFlags button, bool value, int longTime)
+        {
+            base.Execute(button, value, longTime);
+
+            switch (this.Value)
+            {
+                case true:
+                    {
+                        if (IsKeyDown)
+                            return;
+
+                        IsKeyDown = true;
+                        SetHaptic(button, false);
+                    }
+                    break;
+                case false:
+                    {
+                        if (!IsKeyDown)
+                            return;
+
+                        IsKeyDown = false;
+                        SetHaptic(button, true);
+                    }
+                    break;
+            }
+        }
+
         public short GetValue()
         {
-            return (short)this.Value;
+            if (this.Value is bool)
+                return (bool)this.Value ? (short)byte.MaxValue : (short)0;
+            else
+                return (short)this.Value;
         }
     }
 }

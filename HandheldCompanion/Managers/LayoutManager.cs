@@ -308,6 +308,24 @@ namespace HandheldCompanion.Managers
                             }
                             break;
 
+                        // button to trigger
+                        case ActionType.Trigger:
+                            {
+                                TriggerActions tAction = action as TriggerActions;
+                                tAction.Execute(button, value, maxLongTime);
+
+                                // read output axis
+                                AxisLayout OutLayout = AxisLayout.Layouts[tAction.Axis];
+                                AxisFlags OutAxisY = OutLayout.GetAxisFlags('Y');
+
+                                outputState.AxisState[OutAxisY] =
+                                    (short)Math.Clamp(outputState.AxisState[OutAxisY] + tAction.GetValue(), short.MinValue, short.MaxValue);
+
+                                //bool outVal = bAction.GetValue() || outputState.ButtonState[bAction.Button];
+                                //outputState.ButtonState[bAction.Button] = outVal;
+                            }
+                            break;
+
                         // button to keyboard key
                         case ActionType.Keyboard:
                             {
